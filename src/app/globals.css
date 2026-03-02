@@ -600,15 +600,6 @@ body::after {
   opacity: 0;
 }
 
-.s-void__bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 50% 50% at 58% 42%, rgba(10, 9, 8, 0.4), transparent 70%),
-    radial-gradient(ellipse 80% 80% at 50% 50%, rgba(10, 9, 8, 0.15), transparent 70%),
-    linear-gradient(to bottom, rgba(10, 9, 8, 0.06) 0%, transparent 30%, transparent 60%, rgba(10, 9, 8, 0.12) 100%);
-}
 
 .s-void__bottom-blur {
   position: absolute;
@@ -855,8 +846,8 @@ body::after {
    S3 — DATA ARCHIVE
    ══════════════════════════════════════════ */
 .s-data {
-  background: var(--color-warm-ivory);
-  color: var(--color-earth-muted);
+  background: #0a0908;
+  color: rgba(236, 234, 230, 0.85);
   display: flex;
   align-items: center;
   min-height: 100vh;
@@ -865,19 +856,6 @@ body::after {
   overflow: hidden;
 }
 
-.s-data::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url('/images/d1.webp');
-  background-size: cover;
-  background-position: center;
-  opacity: 0.02;
-  mix-blend-mode: multiply;
-  filter: contrast(1.8);
-  pointer-events: none;
-  z-index: 0;
-}
 
 .s-data__inner {
   position: relative;
@@ -903,9 +881,9 @@ body::after {
   font-weight: 400;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(49, 46, 42, 0.5);
-  background: rgba(49, 46, 42, 0.04);
-  border: 0.5px solid rgba(49, 46, 42, 0.1);
+  color: rgba(236, 234, 230, 0.5);
+  background: rgba(236, 234, 230, 0.06);
+  border: 0.5px solid rgba(236, 234, 230, 0.12);
   padding: 6px 16px;
   border-radius: 2px;
   margin-bottom: 20px;
@@ -922,7 +900,7 @@ body::after {
   font-family: var(--font-jj);
   font-size: 50px;
   font-weight: 400;
-  color: rgba(49, 46, 42, 0.75);
+  color: rgba(236, 234, 230, 0.8);
   letter-spacing: 0.02em;
 }
 
@@ -938,13 +916,13 @@ body::after {
   font-size: 1rem;
   font-weight: 300;
   line-height: 2;
-  color: rgba(49, 46, 42, 0.65);
+  color: rgba(236, 234, 230, 0.6);
 }
 
 /* "설계된 것이다." highlight */
 .s-data__highlight {
-  background: rgba(204, 173, 123, 0.35);
-  color: rgba(49, 46, 42, 0.85);
+  background: rgba(204, 173, 123, 0.2);
+  color: rgba(236, 234, 230, 0.9);
   padding: 2px 8px;
   border-radius: 2px;
   font-style: normal;
@@ -954,7 +932,7 @@ body::after {
 .s-data__rule {
   border: none;
   height: 0.5px;
-  background: rgba(49, 46, 42, 0.12);
+  background: rgba(236, 234, 230, 0.12);
   margin: 48px 0;
 }
 
@@ -967,25 +945,12 @@ body::after {
   overflow: hidden;
 }
 
-/* Blurred image layer — frosted glass base */
-.s-data__panel::before {
-  content: '';
-  position: absolute;
-  inset: -24px;
-  background-image: url('/images/d1.webp');
-  background-size: cover;
-  background-position: center;
-  filter: blur(48px);
-  opacity: 0.3;
-  z-index: 0;
-}
-
-/* White frost overlay */
+/* Dark glass overlay */
 .s-data__panel::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 4px;
   z-index: 0;
 }
@@ -995,7 +960,7 @@ body::after {
   z-index: 1;
   padding: 28px 24px 24px;
   border-bottom: 0.5px solid rgba(49, 46, 42, 0.06);
-  border-right: 0.5px solid rgba(49, 46, 42, 0.06);
+  border-right: 0.5px solid rgba(236, 234, 230, 0.08);
 }
 
 .s-data__metric:nth-child(3n) {
@@ -1023,7 +988,7 @@ body::after {
 .s-data__metric-label {
   font-size: 0.75rem;
   font-weight: 400;
-  color: rgba(49, 46, 42, 0.5);
+  color: rgba(236, 234, 230, 0.4);
 }
 
 .s-data__metric-sub {
@@ -1032,7 +997,7 @@ body::after {
   font-weight: 400;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(49, 46, 42, 0.22);
+  color: rgba(236, 234, 230, 0.35);
 }
 
 /* Value — small, right-aligned */
@@ -1054,7 +1019,7 @@ body::after {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 300;
-  color: rgba(49, 46, 42, 0.3);
+  color: rgba(236, 234, 230, 0.35);
 }
 
 /* Sparkline SVG */
@@ -1073,7 +1038,7 @@ body::after {
   font-weight: 300;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(49, 46, 42, 0.25);
+  color: rgba(236, 234, 230, 0.3);
   text-align: center;
 }
 
@@ -1086,15 +1051,15 @@ body::after {
   font-size: 0.8125rem;
   font-weight: 300;
   letter-spacing: 0.06em;
-  color: rgba(49, 46, 42, 0.4);
-  border-bottom: 0.5px solid rgba(49, 46, 42, 0.12);
+  color: rgba(236, 234, 230, 0.5);
+  border-bottom: 0.5px solid rgba(236, 234, 230, 0.15);
   padding-bottom: 3px;
   transition: all 0.4s var(--ease-water);
 }
 
 .s-data__cta:hover {
-  color: rgba(49, 46, 42, 0.7);
-  border-color: rgba(49, 46, 42, 0.25);
+  color: rgba(236, 234, 230, 0.9);
+  border-color: rgba(236, 234, 230, 0.25);
 }
 
 /* ══════════════════════════════════════════
@@ -1888,7 +1853,7 @@ body::after {
   }
 
   .s-data__metric:nth-child(3n) {
-    border-right: 0.5px solid rgba(49, 46, 42, 0.06);
+    border-right: 0.5px solid rgba(236, 234, 230, 0.08);
   }
 
   .s-data__metric:nth-child(2n) {
@@ -1896,7 +1861,7 @@ body::after {
   }
 
   .s-data__metric:nth-child(n+3) {
-    border-bottom: 0.5px solid rgba(49, 46, 42, 0.06);
+    border-bottom: 0.5px solid rgba(236, 234, 230, 0.08);
   }
 
   .s-data__metric:nth-child(n+5) {

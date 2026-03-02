@@ -42,7 +42,7 @@ export default function Header() {
   /* 헤더 색상 전환 — 현재 섹션 배경 밝기에 따라 자동 전환 */
   useEffect(() => {
     /** 라이트 배경 섹션 id 목록 (다크 텍스트 필요) */
-    const LIGHT_SECTIONS = new Set(["observation", "data-archive", "the-maker", "archive", "professionals"]);
+    const LIGHT_SECTIONS = new Set(["observation", "the-maker", "archive", "professionals"]);
 
     function checkHeaderColor() {
       // 히어로 섹션을 벗어나면 스크롤 상태 활성화
