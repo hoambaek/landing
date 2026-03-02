@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive Section — Layout Options</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: #1a1815;
+    color: #E8E4DF;
+  }
+
+  /* ── Nav ── */
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    padding: 16px 24px;
+    background: rgba(26, 24, 21, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 0.5px solid rgba(232, 228, 223, 0.06);
+  }
+  .nav a {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: rgba(232, 228, 223, 0.35);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 0.5px solid rgba(232, 228, 223, 0.08);
+    transition: all 0.3s ease;
+  }
+  .nav a:hover, .nav a.active {
+    color: rgba(204, 173, 123, 0.7);
+    border-color: rgba(204, 173, 123, 0.2);
+  }
+
+  /* ── Section wrapper ── */
+  .option {
+    min-height: 100vh;
+    padding: 120px 80px 80px;
+    border-bottom: 0.5px solid rgba(232, 228, 223, 0.06);
+  }
+  .option-label {
+    font-size: 0.625rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(204, 173, 123, 0.4);
+    margin-bottom: 8px;
+  }
+  .option-name {
+    font-size: clamp(20px, 2vw, 28px);
+    font-weight: 300;
+    color: rgba(232, 228, 223, 0.6);
+    margin-bottom: 8px;
+  }
+  .option-desc {
+    font-size: 0.8125rem;
+    font-weight: 300;
+    color: rgba(232, 228, 223, 0.25);
+    margin-bottom: 56px;
+    max-width: 600px;
+    line-height: 1.8;
+  }
+
+  /* ── Shared ── */
+  .section-bg {
+    background: #E8E5E1;
+    padding: 80px;
+    border-radius: 4px;
+  }
+  .section-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .section-title {
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    color: #312E2A;
+    margin-bottom: 12px;
+  }
+  .section-sub {
+    font-size: 0.8125rem;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: rgba(49, 46, 42, 0.35);
+  }
+
+  .placeholder {
+    background: linear-gradient(135deg,
+      rgba(49, 46, 42, 0.06) 0%,
+      rgba(49, 46, 42, 0.03) 100%);
+    border: 0.5px solid rgba(49, 46, 42, 0.06);
+    position: relative;
+  }
+  .placeholder::after {
+    content: attr(data-label);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.6875rem;
+    font-style: italic;
+    color: rgba(49, 46, 42, 0.2);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  .cuvee-label {
+    font-size: 0.6875rem;
+    font-style: italic;
+    letter-spacing: 0.15em;
+    color: rgba(49, 46, 42, 0.25);
+    margin-top: 16px;
+  }
+  .cuvee-name {
+    font-size: clamp(16px, 1.8vw, 22px);
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(49, 46, 42, 0.6);
+    margin-top: 8px;
+  }
+  .cuvee-desc {
+    font-size: 0.75rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba(49, 46, 42, 0.35);
+    margin-top: 8px;
+  }
+
+  /* ═══════════════════════════════════════
+     OPTION A — Asymmetric Grid
+     ═══════════════════════════════════════ */
+  .grid-asym {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 2px;
+  }
+  .grid-asym .card-a1 {
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+  .grid-asym .card-a1 .placeholder { aspect-ratio: 3 / 5; }
+  .grid-asym .card-a2 { grid-column: 2; grid-row: 1; }
+  .grid-asym .card-a3 { grid-column: 3; grid-row: 1; }
+  .grid-asym .card-a4 { grid-column: 2; grid-row: 2; }
+  .grid-asym .card-a5 { grid-column: 3; grid-row: 2; }
+  .grid-asym .card-a2 .placeholder,
+  .grid-asym .card-a3 .placeholder,
+  .grid-asym .card-a4 .placeholder,
+  .grid-asym .card-a5 .placeholder { aspect-ratio: 3 / 4; }
+
+  /* ═══════════════════════════════════════
+     OPTION B — Archive Index
+     ═══════════════════════════════════════ */
+  .index-list {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .index-row {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding: 28px 0;
+    border-bottom: 0.5px solid rgba(49, 46, 42, 0.06);
+    transition: background 0.4s ease;
+    cursor: pointer;
+  }
+  .index-row:hover {
+    background: rgba(49, 46, 42, 0.02);
+  }
+  .index-row:first-child {
+    border-top: 0.5px solid rgba(49, 46, 42, 0.06);
+  }
+  .index-img {
+    flex: 0 0 64px;
+  }
+  .index-img .placeholder {
+    width: 64px;
+    aspect-ratio: 2 / 3;
+  }
+  .index-number {
+    flex: 0 0 140px;
+    font-size: 0.6875rem;
+    font-style: italic;
+    letter-spacing: 0.12em;
+    color: rgba(49, 46, 42, 0.25);
+  }
+  .index-name {
+    flex: 1;
+    font-size: clamp(18px, 2vw, 24px);
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(49, 46, 42, 0.55);
+  }
+  .index-detail {
+    flex: 0 0 200px;
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: rgba(49, 46, 42, 0.3);
+    text-align: right;
+  }
+  .index-arrow {
+    flex: 0 0 24px;
+    font-size: 0.875rem;
+    color: rgba(49, 46, 42, 0.15);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: all 0.3s ease;
+  }
+  .index-row:hover .index-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* ═══════════════════════════════════════
+     OPTION C — Vertical Narrative
+     ═══════════════════════════════════════ */
+  .narrative {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .chapter {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    padding: 80px 0;
+    border-bottom: 0.5px solid rgba(49, 46, 42, 0.06);
+  }
+  .chapter:nth-child(even) .chapter-img { order: 2; }
+  .chapter:nth-child(even) .chapter-text { order: 1; }
+  .chapter-img .placeholder { aspect-ratio: 3 / 4; }
+  .chapter-number {
+    font-size: clamp(60px, 8vw, 100px);
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(49, 46, 42, 0.04);
+    line-height: 0.8;
+    margin-bottom: -12px;
+  }
+  .chapter-label {
+    font-size: 0.6875rem;
+    font-style: italic;
+    letter-spacing: 0.12em;
+    color: rgba(49, 46, 42, 0.25);
+    margin-bottom: 8px;
+  }
+  .chapter-name {
+    font-size: clamp(20px, 2.5vw, 32px);
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(49, 46, 42, 0.6);
+    margin-bottom: 16px;
+  }
+  .chapter-desc {
+    font-size: 0.8125rem;
+    font-weight: 300;
+    line-height: 2;
+    color: rgba(49, 46, 42, 0.35);
+  }
+  /* Last card — climax */
+  .chapter--climax {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 120px 0 80px;
+    border-bottom: none;
+  }
+  .chapter--climax .chapter-img {
+    max-width: 360px;
+    margin: 0 auto;
+    order: 0 !important;
+  }
+  .chapter--climax .chapter-text {
+    order: 0 !important;
+    margin-top: 40px;
+  }
+
+  /* ═══════════════════════════════════════
+     OPTION D — Masonry Grid
+     ═══════════════════════════════════════ */
+  .masonry {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 60px;
+    gap: 24px;
+  }
+  .masonry-card { position: relative; }
+  .masonry .m1 { grid-row-end: span 8; }
+  .masonry .m2 { grid-row-end: span 6; }
+  .masonry .m3 { grid-row-end: span 8; }
+  .masonry .m4 { grid-row-end: span 5; }
+  .masonry .m5 { grid-row-end: span 6; grid-column: 3; }
+
+  .masonry .placeholder {
+    width: 100%;
+    height: 70%;
+  }
+  .masonry .cuvee-label { margin-top: 12px; }
+
+  /* ═══════════════════════════════════════
+     Responsive
+     ═══════════════════════════════════════ */
+  @media (max-width: 767px) {
+    .option { padding: 100px 24px 60px; }
+    .section-bg { padding: 48px 24px; }
+    .grid-asym {
+      grid-template-columns: 1fr 1fr;
+    }
+    .grid-asym .card-a1 {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+    .grid-asym .card-a1 .placeholder { aspect-ratio: 16 / 9; }
+    .index-row { gap: 16px; }
+    .index-img { flex: 0 0 40px; }
+    .index-img .placeholder { width: 40px; }
+    .index-number { flex: 0 0 auto; }
+    .index-detail { display: none; }
+    .chapter { grid-template-columns: 1fr; gap: 32px; padding: 48px 0; }
+    .chapter:nth-child(even) .chapter-img { order: 0; }
+    .chapter:nth-child(even) .chapter-text { order: 0; }
+    .masonry { grid-template-columns: 1fr 1fr; grid-auto-rows: 50px; }
+    .masonry .m5 { grid-column: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<div class="nav">
+  <a href="#option-a" class="active">A. 비대칭 그리드</a>
+  <a href="#option-b">B. 아카이브 목록</a>
+  <a href="#option-c">C. 버티컬 내러티브</a>
+  <a href="#option-d">D. 마소너리</a>
+</div>
+
+<!-- ═══════════════════════════════════════
+     OPTION A — Asymmetric Grid
+     ═══════════════════════════════════════ -->
+<div class="option" id="option-a">
+  <div class="option-label">option a</div>
+  <div class="option-name">에디토리얼 비대칭 그리드</div>
+  <div class="option-desc">
+    01번 큐베가 대형으로 지배. 나머지 4개가 작은 그리드로 배치.
+    Krug.com의 "하나의 제품이 페이지를 지배한다" 원칙.
+  </div>
+
+  <div class="section-bg">
+    <div class="section-header">
+      <div class="section-title">the five.</div>
+      <div class="section-sub">다섯 개의 큐베. 하나의 바다.</div>
+    </div>
+
+    <div class="grid-asym">
+      <div class="card-a1">
+        <div class="placeholder" data-label="En Lieu Sûr"></div>
+        <div class="cuvee-label">cuvée 01 · core</div>
+        <div class="cuvee-name">En Lieu Sûr.</div>
+        <div class="cuvee-desc">Brut.<br>떼루아 시리즈의 기둥.</div>
+      </div>
+      <div class="card-a2">
+        <div class="placeholder" data-label="Magnum"></div>
+        <div class="cuvee-label">cuvée 02 · limited</div>
+        <div class="cuvee-name">En Lieu Sûr Magnum.</div>
+      </div>
+      <div class="card-a3">
+        <div class="placeholder" data-label="Surprise"></div>
+        <div class="cuvee-label">cuvée 03 · limited</div>
+        <div class="cuvee-name">Élément de Surprise.</div>
+      </div>
+      <div class="card-a4">
+        <div class="placeholder" data-label="1yr"></div>
+        <div class="cuvee-label">cuvée 04 · collector's</div>
+        <div class="cuvee-name">Atomes Crochus 1yr.</div>
+      </div>
+      <div class="card-a5">
+        <div class="placeholder" data-label="3yr · 40병"></div>
+        <div class="cuvee-label">cuvée 05 · collector's</div>
+        <div class="cuvee-name">Atomes Crochus 3yr.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     OPTION B — Archive Index
+     ═══════════════════════════════════════ -->
+<div class="option" id="option-b">
+  <div class="option-label">option b</div>
+  <div class="option-name">아카이브 인덱스 목록</div>
+  <div class="option-desc">
+    와인 리스트, 경매 카탈로그 형태. 행 목록으로 전체가 한눈에.
+    hover 시 화살표 등장. Kinfolk 인덱스 스타일.
+  </div>
+
+  <div class="section-bg">
+    <div class="section-header">
+      <div class="section-title">the five.</div>
+      <div class="section-sub">다섯 개의 큐베. 하나의 바다.</div>
+    </div>
+
+    <div class="index-list">
+      <div class="index-row">
+        <div class="index-img"><div class="placeholder" data-label=""></div></div>
+        <div class="index-number">cuvée 01 · core</div>
+        <div class="index-name">En Lieu Sûr.</div>
+        <div class="index-detail">Brut</div>
+        <div class="index-arrow">→</div>
+      </div>
+      <div class="index-row">
+        <div class="index-img"><div class="placeholder" data-label=""></div></div>
+        <div class="index-number">cuvée 02 · limited</div>
+        <div class="index-name">En Lieu Sûr Magnum.</div>
+        <div class="index-detail">1500ml</div>
+        <div class="index-arrow">→</div>
+      </div>
+      <div class="index-row">
+        <div class="index-img"><div class="placeholder" data-label=""></div></div>
+        <div class="index-number">cuvée 03 · limited</div>
+        <div class="index-name">Élément de Surprise.</div>
+        <div class="index-detail">Blanc de Blancs</div>
+        <div class="index-arrow">→</div>
+      </div>
+      <div class="index-row">
+        <div class="index-img"><div class="placeholder" data-label=""></div></div>
+        <div class="index-number">cuvée 04 · collector's</div>
+        <div class="index-name">Atomes Crochus 1yr.</div>
+        <div class="index-detail">해저 12개월</div>
+        <div class="index-arrow">→</div>
+      </div>
+      <div class="index-row">
+        <div class="index-img"><div class="placeholder" data-label=""></div></div>
+        <div class="index-number">cuvée 05 · collector's</div>
+        <div class="index-name">Atomes Crochus 3yr.</div>
+        <div class="index-detail">해저 36개월 · 40병 한정</div>
+        <div class="index-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     OPTION C — Vertical Narrative
+     ═══════════════════════════════════════ -->
+<div class="option" id="option-c">
+  <div class="option-label">option c</div>
+  <div class="option-name">버티컬 내러티브 (좌우 교차)</div>
+  <div class="option-desc">
+    각 큐베가 챕터처럼 좌우 교차로 펼쳐짐. 마지막 05번은
+    풀 너비 클라이막스. 럭셔리 룩북 스타일.
+  </div>
+
+  <div class="section-bg">
+    <div class="section-header">
+      <div class="section-title">the five.</div>
+      <div class="section-sub">다섯 개의 큐베. 하나의 바다.</div>
+    </div>
+
+    <div class="narrative">
+      <!-- 01 -->
+      <div class="chapter">
+        <div class="chapter-img">
+          <div class="placeholder" data-label="En Lieu Sûr"></div>
+        </div>
+        <div class="chapter-text">
+          <div class="chapter-number">01</div>
+          <div class="chapter-label">cuvée 01 · core</div>
+          <div class="chapter-name">En Lieu Sûr.</div>
+          <div class="chapter-desc">
+            Brut.<br>
+            떼루아 시리즈의 기둥. 바다가 처음 만지는 병.
+          </div>
+        </div>
+      </div>
+      <!-- 02 -->
+      <div class="chapter">
+        <div class="chapter-img">
+          <div class="placeholder" data-label="Magnum"></div>
+        </div>
+        <div class="chapter-text">
+          <div class="chapter-number">02</div>
+          <div class="chapter-label">cuvée 02 · limited</div>
+          <div class="chapter-name">En Lieu Sûr Magnum.</div>
+          <div class="chapter-desc">
+            1500ml.<br>
+            더 큰 병. 더 깊은 숙성. 더 느린 시간.
+          </div>
+        </div>
+      </div>
+      <!-- 03 -->
+      <div class="chapter">
+        <div class="chapter-img">
+          <div class="placeholder" data-label="Surprise"></div>
+        </div>
+        <div class="chapter-text">
+          <div class="chapter-number">03</div>
+          <div class="chapter-label">cuvée 03 · limited</div>
+          <div class="chapter-name">Élément de Surprise.</div>
+          <div class="chapter-desc">
+            Blanc de Blancs.<br>
+            Chardonnay의 순수한 표현. 미네랄의 변화가 가장 선명한 큐베.
+          </div>
+        </div>
+      </div>
+      <!-- 04 -->
+      <div class="chapter">
+        <div class="chapter-img">
+          <div class="placeholder" data-label="1yr"></div>
+        </div>
+        <div class="chapter-text">
+          <div class="chapter-number">04</div>
+          <div class="chapter-label">cuvée 04 · collector's</div>
+          <div class="chapter-name">Atomes Crochus 1yr.</div>
+          <div class="chapter-desc">
+            해저 12개월.<br>
+            포도와 바다의 교감. 화학적 친화력이라는 이름.
+          </div>
+        </div>
+      </div>
+      <!-- 05 — Climax -->
+      <div class="chapter chapter--climax">
+        <div class="chapter-img">
+          <div class="placeholder" data-label="3yr · 40병 한정"></div>
+        </div>
+        <div class="chapter-text">
+          <div class="chapter-number">05</div>
+          <div class="chapter-label">cuvée 05 · collector's</div>
+          <div class="chapter-name">Atomes Crochus 3yr.</div>
+          <div class="chapter-desc">
+            해저 36개월. 40병 한정.<br>
+            가장 긴 시간. 가장 적은 수량. 가장 깊은 기록.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     OPTION D — Masonry Grid
+     ═══════════════════════════════════════ -->
+<div class="option" id="option-d">
+  <div class="option-label">option d</div>
+  <div class="option-name">매거진 마소너리 그리드</div>
+  <div class="option-desc">
+    카드 높이가 의도적으로 다름. 럭셔리 매거진 화보 레이아웃.
+    시선이 능동적으로 움직이는 편집된 컬렉션 느낌.
+  </div>
+
+  <div class="section-bg">
+    <div class="section-header">
+      <div class="section-title">the five.</div>
+      <div class="section-sub">다섯 개의 큐베. 하나의 바다.</div>
+    </div>
+
+    <div class="masonry">
+      <div class="masonry-card m1">
+        <div class="placeholder" data-label="En Lieu Sûr"></div>
+        <div class="cuvee-label">cuvée 01 · core</div>
+        <div class="cuvee-name">En Lieu Sûr.</div>
+      </div>
+      <div class="masonry-card m2">
+        <div class="placeholder" data-label="Magnum"></div>
+        <div class="cuvee-label">cuvée 02 · limited</div>
+        <div class="cuvee-name">En Lieu Sûr Magnum.</div>
+      </div>
+      <div class="masonry-card m3">
+        <div class="placeholder" data-label="Surprise"></div>
+        <div class="cuvee-label">cuvée 03 · limited</div>
+        <div class="cuvee-name">Élément de Surprise.</div>
+      </div>
+      <div class="masonry-card m4">
+        <div class="placeholder" data-label="1yr"></div>
+        <div class="cuvee-label">cuvée 04 · collector's</div>
+        <div class="cuvee-name">Atomes Crochus 1yr.</div>
+      </div>
+      <div class="masonry-card m5">
+        <div class="placeholder" data-label="3yr · 40병"></div>
+        <div class="cuvee-label">cuvée 05 · collector's</div>
+        <div class="cuvee-name">Atomes Crochus 3yr.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Nav active state
+  const links = document.querySelectorAll('.nav a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.option').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

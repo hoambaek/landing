@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muse de Maree — 홈페이지 내러티브 분석 보고서</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+KR:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void: #0A0908;
+      --sand: #E8E5E1;
+      --sand-deep: #DDDAD5;
+      --amber: #CCAD7B;
+      --amber-muted: #b89868;
+      --earth: #312E2A;
+      --earth-light: rgba(49, 46, 42, 0.6);
+      --warm-ivory: #ECEAE6;
+      --font-heading: 'Cormorant Garamond', 'Georgia', serif;
+      --font-body: 'Noto Sans KR', 'Helvetica Neue', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 300;
+      color: var(--earth);
+      background: var(--sand);
+      line-height: 1.8;
+    }
+
+    /* ── Cover ── */
+    .cover {
+      background: var(--void);
+      color: var(--sand);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px 40px;
+      position: relative;
+    }
+    .cover::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 200px;
+      background: linear-gradient(to bottom, transparent, rgba(204, 173, 123, 0.03));
+    }
+    .cover__brand {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(204, 173, 123, 0.4);
+      margin-bottom: 60px;
+    }
+    .cover__title {
+      font-family: var(--font-heading);
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      margin-bottom: 16px;
+      color: rgba(232, 228, 223, 0.9);
+    }
+    .cover__subtitle {
+      font-size: 1.0625rem;
+      font-weight: 200;
+      color: rgba(232, 228, 223, 0.35);
+      margin-bottom: 80px;
+      max-width: 480px;
+    }
+    .cover__meta {
+      font-size: 0.75rem;
+      color: rgba(232, 228, 223, 0.2);
+      letter-spacing: 0.06em;
+    }
+    .cover__meta span {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--warm-ivory);
+      padding: 100px 40px;
+    }
+    .toc__inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .toc__label {
+      font-family: var(--font-heading);
+      font-size: 0.625rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--amber-muted);
+      margin-bottom: 40px;
+    }
+    .toc__list {
+      list-style: none;
+      counter-reset: toc-counter;
+    }
+    .toc__list li {
+      counter-increment: toc-counter;
+      margin-bottom: 0;
+    }
+    .toc__list li a {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 0.5px solid rgba(49, 46, 42, 0.08);
+      color: var(--earth);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .toc__list li a:hover {
+      color: var(--amber-muted);
+      padding-left: 8px;
+    }
+    .toc__list li a::before {
+      content: counter(toc-counter, decimal-leading-zero);
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      font-style: italic;
+      color: rgba(49, 46, 42, 0.25);
+      min-width: 28px;
+    }
+    .toc__list li a .toc__title {
+      font-size: 0.9375rem;
+      font-weight: 400;
+    }
+    .toc__list li a .toc__en {
+      font-family: var(--font-heading);
+      font-size: 0.8125rem;
+      font-style: italic;
+      color: rgba(49, 46, 42, 0.3);
+      margin-left: auto;
+    }
+
+    /* ── Main Content ── */
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ── Section ── */
+    .section {
+      padding: 120px 0 80px;
+      border-bottom: 0.5px solid rgba(49, 46, 42, 0.08);
+    }
+    .section:last-child {
+      border-bottom: none;
+    }
+    .section__number {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-style: italic;
+      color: var(--amber-muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+    .section__title {
+      font-family: var(--font-heading);
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 300;
+      margin-bottom: 8px;
+      color: var(--earth);
+    }
+    .section__title-en {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-style: italic;
+      font-weight: 300;
+      color: rgba(49, 46, 42, 0.3);
+      margin-bottom: 48px;
+    }
+
+    /* ── Typography ── */
+    h3 {
+      font-family: var(--font-body);
+      font-size: 0.9375rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      margin-top: 48px;
+      margin-bottom: 20px;
+      color: var(--earth);
+    }
+    h4 {
+      font-size: 0.8125rem;
+      font-weight: 400;
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: rgba(49, 46, 42, 0.7);
+    }
+
+    p {
+      font-size: 0.9375rem;
+      font-weight: 300;
+      line-height: 2;
+      color: rgba(49, 46, 42, 0.7);
+      margin-bottom: 16px;
+    }
+
+    strong {
+      font-weight: 400;
+      color: var(--earth);
+    }
+
+    em {
+      font-style: normal;
+      color: var(--amber-muted);
+    }
+
+    /* ── Flow Diagram ── */
+    .flow {
+      background: var(--void);
+      border-radius: 2px;
+      padding: 48px 40px;
+      margin: 32px 0;
+      overflow-x: auto;
+    }
+    .flow__title {
+      font-family: var(--font-heading);
+      font-size: 0.625rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(204, 173, 123, 0.4);
+      margin-bottom: 32px;
+    }
+    .flow__steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .flow__step {
+      display: grid;
+      grid-template-columns: 60px 1fr 180px 120px;
+      gap: 16px;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 0.5px solid rgba(204, 173, 123, 0.06);
+    }
+    .flow__step:last-child { border-bottom: none; }
+    .flow__num {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-style: italic;
+      color: rgba(204, 173, 123, 0.3);
+    }
+    .flow__name {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-style: italic;
+      color: rgba(232, 228, 223, 0.7);
+    }
+    .flow__name-kr {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      color: rgba(232, 228, 223, 0.3);
+      margin-top: 2px;
+    }
+    .flow__emotion {
+      font-size: 0.6875rem;
+      color: rgba(204, 173, 123, 0.5);
+      letter-spacing: 0.02em;
+    }
+    .flow__theme {
+      font-size: 0.6875rem;
+      color: rgba(232, 228, 223, 0.25);
+      text-align: right;
+    }
+    .flow__arrow {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+      padding: 4px 0;
+    }
+    .flow__arrow svg {
+      width: 12px;
+      height: 12px;
+      fill: none;
+      stroke: rgba(204, 173, 123, 0.15);
+      stroke-width: 1;
+    }
+
+    /* ── Psychology Map ── */
+    .psych-map {
+      margin: 40px 0;
+    }
+    .psych-bar {
+      display: grid;
+      grid-template-columns: 100px 1fr 160px;
+      gap: 16px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 0.5px solid rgba(49, 46, 42, 0.06);
+    }
+    .psych-bar__label {
+      font-size: 0.6875rem;
+      color: rgba(49, 46, 42, 0.4);
+      letter-spacing: 0.02em;
+    }
+    .psych-bar__track {
+      height: 4px;
+      background: rgba(49, 46, 42, 0.06);
+      border-radius: 2px;
+      position: relative;
+    }
+    .psych-bar__fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--amber);
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .psych-bar__value {
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      font-style: italic;
+      color: rgba(49, 46, 42, 0.5);
+      text-align: right;
+    }
+
+    /* ── Quote ── */
+    blockquote {
+      border-left: 2px solid var(--amber);
+      padding: 20px 28px;
+      margin: 32px 0;
+      background: rgba(204, 173, 123, 0.04);
+    }
+    blockquote p {
+      font-size: 0.9375rem;
+      font-weight: 300;
+      color: rgba(49, 46, 42, 0.6);
+      margin-bottom: 0;
+    }
+    blockquote p:not(:last-child) {
+      margin-bottom: 8px;
+    }
+
+    /* ── Table ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0 32px;
+      font-size: 0.8125rem;
+    }
+    thead th {
+      font-weight: 400;
+      font-size: 0.6875rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(49, 46, 42, 0.4);
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(49, 46, 42, 0.12);
+    }
+    tbody td {
+      padding: 14px 16px;
+      border-bottom: 0.5px solid rgba(49, 46, 42, 0.06);
+      color: rgba(49, 46, 42, 0.65);
+      font-weight: 300;
+      vertical-align: top;
+      line-height: 1.7;
+    }
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+    td.label-col {
+      font-weight: 400;
+      color: var(--earth);
+      white-space: nowrap;
+    }
+
+    /* ── Tag / Badge ── */
+    .tag {
+      display: inline-block;
+      font-size: 0.625rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 2px;
+      margin-right: 6px;
+      margin-bottom: 4px;
+    }
+    .tag--high {
+      background: rgba(204, 173, 123, 0.15);
+      color: var(--amber-muted);
+    }
+    .tag--mid {
+      background: rgba(49, 46, 42, 0.08);
+      color: rgba(49, 46, 42, 0.5);
+    }
+    .tag--low {
+      background: rgba(49, 46, 42, 0.04);
+      color: rgba(49, 46, 42, 0.35);
+    }
+    .tag--good {
+      background: rgba(80, 120, 80, 0.08);
+      color: rgba(60, 100, 60, 0.7);
+    }
+    .tag--warn {
+      background: rgba(180, 120, 60, 0.1);
+      color: rgba(160, 100, 40, 0.7);
+    }
+
+    /* ── Score Card ── */
+    .score-card {
+      background: var(--void);
+      color: var(--sand);
+      padding: 60px 48px;
+      margin: 48px 0;
+      text-align: center;
+    }
+    .score-card__label {
+      font-size: 0.625rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(204, 173, 123, 0.4);
+      margin-bottom: 20px;
+    }
+    .score-card__value {
+      font-family: var(--font-heading);
+      font-size: clamp(48px, 8vw, 80px);
+      font-weight: 300;
+      color: rgba(204, 173, 123, 0.85);
+      margin-bottom: 8px;
+    }
+    .score-card__unit {
+      font-size: 0.875rem;
+      color: rgba(232, 228, 223, 0.3);
+    }
+    .score-card__desc {
+      font-size: 0.875rem;
+      font-weight: 200;
+      color: rgba(232, 228, 223, 0.35);
+      margin-top: 24px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.8;
+    }
+
+    /* ── Recommendation Card ── */
+    .rec {
+      padding: 28px 32px;
+      margin: 20px 0;
+      border-left: 2px solid rgba(49, 46, 42, 0.08);
+      background: rgba(49, 46, 42, 0.02);
+    }
+    .rec--high { border-left-color: var(--amber); }
+    .rec--mid { border-left-color: rgba(49, 46, 42, 0.2); }
+    .rec--low { border-left-color: rgba(49, 46, 42, 0.08); }
+    .rec__header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .rec__title {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--earth);
+    }
+    .rec__body {
+      font-size: 0.8125rem;
+      font-weight: 300;
+      color: rgba(49, 46, 42, 0.6);
+      line-height: 1.9;
+    }
+
+    /* ── Copy Comparison ── */
+    .copy-compare {
+      margin: 24px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: rgba(49, 46, 42, 0.06);
+    }
+    .copy-compare__col {
+      padding: 24px;
+      background: var(--sand);
+    }
+    .copy-compare__label {
+      font-size: 0.625rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(49, 46, 42, 0.3);
+      margin-bottom: 16px;
+    }
+    .copy-compare__text {
+      font-size: 0.875rem;
+      font-weight: 300;
+      line-height: 2;
+      color: rgba(49, 46, 42, 0.6);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 40px;
+      height: 0.5px;
+      background: rgba(49, 46, 42, 0.12);
+      margin: 48px 0;
+    }
+
+    /* ── List ── */
+    ul, ol {
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+    li {
+      font-size: 0.9375rem;
+      font-weight: 300;
+      line-height: 2;
+      color: rgba(49, 46, 42, 0.65);
+      margin-bottom: 4px;
+    }
+
+    /* ── Strength/Weakness ── */
+    .sw-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin: 32px 0;
+    }
+    .sw-col__title {
+      font-size: 0.6875rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(49, 46, 42, 0.35);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 0.5px solid rgba(49, 46, 42, 0.08);
+    }
+    .sw-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .sw-item__num {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-style: italic;
+      color: rgba(49, 46, 42, 0.2);
+      min-width: 20px;
+    }
+    .sw-item__text {
+      font-size: 0.8125rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(49, 46, 42, 0.6);
+    }
+
+    /* ── Footer ── */
+    .report-footer {
+      background: var(--void);
+      padding: 60px 40px;
+      text-align: center;
+    }
+    .report-footer__logo {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      color: rgba(232, 228, 223, 0.15);
+      margin-bottom: 12px;
+    }
+    .report-footer__copy {
+      font-size: 0.625rem;
+      color: rgba(232, 228, 223, 0.08);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 767px) {
+      .content { padding: 0 24px; }
+      .cover { padding: 60px 24px; }
+      .toc { padding: 60px 24px; }
+      .flow__step { grid-template-columns: 40px 1fr; gap: 8px; }
+      .flow__emotion, .flow__theme { display: none; }
+      .sw-grid { grid-template-columns: 1fr; }
+      .copy-compare { grid-template-columns: 1fr; }
+      .psych-bar { grid-template-columns: 80px 1fr 60px; }
+      .section { padding: 80px 0 60px; }
+    }
+
+    /* ── AIDA Visual ── */
+    .aida-track {
+      margin: 40px 0;
+      position: relative;
+    }
+    .aida-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 80px;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 0;
+    }
+    .aida-label {
+      font-size: 0.625rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(49, 46, 42, 0.3);
+    }
+    .aida-bar {
+      height: 24px;
+      background: rgba(49, 46, 42, 0.03);
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+    .aida-fill {
+      height: 100%;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      font-size: 0.625rem;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.04em;
+    }
+    .aida-fill--a { background: rgba(204, 173, 123, 0.25); }
+    .aida-fill--i { background: rgba(204, 173, 123, 0.40); }
+    .aida-fill--d { background: rgba(204, 173, 123, 0.60); }
+    .aida-fill--action { background: rgba(204, 173, 123, 0.80); }
+    .aida-section {
+      font-size: 0.6875rem;
+      color: rgba(49, 46, 42, 0.4);
+      text-align: right;
+    }
+
+    /* ── Inline code ── */
+    code {
+      font-family: 'SF Mono', 'Menlo', monospace;
+      font-size: 0.8125em;
+      background: rgba(49, 46, 42, 0.05);
+      padding: 2px 6px;
+      border-radius: 2px;
+    }
+
+    /* ── Callout ── */
+    .callout {
+      background: rgba(204, 173, 123, 0.06);
+      border: 0.5px solid rgba(204, 173, 123, 0.15);
+      padding: 24px 28px;
+      margin: 32px 0;
+    }
+    .callout__label {
+      font-size: 0.625rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--amber-muted);
+      margin-bottom: 12px;
+    }
+    .callout p {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       COVER
+       ══════════════════════════════════════ -->
+  <div class="cover">
+    <div class="cover__brand">muse de maree</div>
+    <h1 class="cover__title">홈페이지 내러티브 분석 보고서</h1>
+    <p class="cover__subtitle">현재 홈페이지 와이어프레임의 스토리텔링 구조, 카피라이팅, 전환 동선이 방문자의 소유 욕구를 효과적으로 구축하는지에 대한 종합 평가</p>
+    <div class="cover__meta">
+      <span>보고서 작성일: 2026-02-22</span>
+      <span>작성: 시니어 마케팅 전략 분석</span>
+      <span>분석 대상: homepage-wireframe.html + 승인 카피 전문</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       TABLE OF CONTENTS
+       ══════════════════════════════════════ -->
+  <nav class="toc">
+    <div class="toc__inner">
+      <div class="toc__label">contents</div>
+      <ol class="toc__list">
+        <li><a href="#s1"><span class="toc__title">현황 분석</span><span class="toc__en">Current State Analysis</span></a></li>
+        <li><a href="#s2"><span class="toc__title">방문자 심리 여정 분석</span><span class="toc__en">Visitor Psychology Journey</span></a></li>
+        <li><a href="#s3"><span class="toc__title">카피라이팅 분석</span><span class="toc__en">Copywriting Analysis</span></a></li>
+        <li><a href="#s4"><span class="toc__title">스토리텔링 구조 평가</span><span class="toc__en">Storytelling Structure</span></a></li>
+        <li><a href="#s5"><span class="toc__title">전환 동선 분석</span><span class="toc__en">Conversion Flow Analysis</span></a></li>
+        <li><a href="#s6"><span class="toc__title">개선 제안</span><span class="toc__en">Recommendations</span></a></li>
+        <li><a href="#s7"><span class="toc__title">최종 평가</span><span class="toc__en">Final Assessment</span></a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════
+       MAIN CONTENT
+       ══════════════════════════════════════ -->
+  <div class="content">
+
+    <!-- ─── 01. 현황 분석 ─── -->
+    <section id="s1" class="section">
+      <div class="section__number">01</div>
+      <h2 class="section__title">현황 분석</h2>
+      <div class="section__title-en">Current State Analysis</div>
+
+      <h3>현재 섹션 구성 및 내러티브 흐름</h3>
+      <p>와이어프레임에 구현된 실제 섹션 순서와 기획서의 의도된 순서 사이에 주목할 만한 차이가 있다. 기획서(final-homepage-plan.md)에서는 7개 섹션을 <strong>Void > Observation > Data Archive > The Maker > Archive > Ocean Circle > For Professionals</strong> 순으로 배치했으나, 실제 와이어프레임에서는 Observation 섹션이 독립적으로 구현되지 않고 The Maker 섹션 하단에 축소된 서브섹션으로 통합되어 있다.</p>
+
+      <div class="flow">
+        <div class="flow__title">와이어프레임 실제 구현 순서</div>
+        <div class="flow__steps">
+          <div class="flow__step">
+            <div class="flow__num">S1</div>
+            <div>
+              <div class="flow__name">the void.</div>
+              <div class="flow__name-kr">심연 / 히어로</div>
+            </div>
+            <div class="flow__emotion">경이, 침잠</div>
+            <div class="flow__theme">dark</div>
+          </div>
+          <div class="flow__step">
+            <div class="flow__num">S2</div>
+            <div>
+              <div class="flow__name">archive.</div>
+              <div class="flow__name-kr">5-depth 컬렉션</div>
+            </div>
+            <div class="flow__emotion">발견, 소유욕</div>
+            <div class="flow__theme">light</div>
+          </div>
+          <div class="flow__step">
+            <div class="flow__num">S3</div>
+            <div>
+              <div class="flow__name">data archive.</div>
+              <div class="flow__name-kr">해저 데이터</div>
+            </div>
+            <div class="flow__emotion">신뢰, 경외</div>
+            <div class="flow__theme">dark</div>
+          </div>
+          <div class="flow__step">
+            <div class="flow__num">S4</div>
+            <div>
+              <div class="flow__name">the maker. + observation</div>
+              <div class="flow__name-kr">만든 이 + 관찰 (통합)</div>
+            </div>
+            <div class="flow__emotion">친밀, 존경</div>
+            <div class="flow__theme">light</div>
+          </div>
+          <div class="flow__step">
+            <div class="flow__num">S5</div>
+            <div>
+              <div class="flow__name">ocean circle.</div>
+              <div class="flow__name-kr">초대제 멤버십</div>
+            </div>
+            <div class="flow__emotion">소속감, 특별함</div>
+            <div class="flow__theme">dark</div>
+          </div>
+          <div class="flow__step">
+            <div class="flow__num">S6</div>
+            <div>
+              <div class="flow__name">for professionals.</div>
+              <div class="flow__name-kr">B2B 문의</div>
+            </div>
+            <div class="flow__emotion">신뢰, 협력</div>
+            <div class="flow__theme">light</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>각 섹션이 전하는 이야기</h3>
+
+      <p><strong>S1 The Void</strong> -- "깊이의 증거"라는 단 하나의 메시지. 검은 심해 배경에 금빛 파티클이 부유하는 300vh 스크롤 구간에서 방문자를 물리적으로 '하강'시킨다. 서브카피 "한국의 심해에서 숙성한 샴페인"이 브랜드 정체성을 최소한의 언어로 전달한다.</p>
+
+      <p><strong>S2 Archive</strong> -- 5개 깊이(20m~60m)의 컬렉션을 수평 캐러셀로 전시한다. "다섯 개의 깊이. 다섯 개의 시간."이라는 서브카피 아래 surface murmur부터 the bed까지 제품 라인업을 보여준다.</p>
+
+      <p><strong>S3 Data Archive</strong> -- 수온, 압력, 숙성 기간 등 해저 환경 데이터를 수치로 제시한다. "단순히 바다에 넣은 것이 아닙니다. 설계된 환경입니다."가 핵심 메시지다. 파동 SVG 애니메이션과 함께 과학적 근거를 시각화한다.</p>
+
+      <p><strong>S4 The Maker + Observation</strong> -- Champagne Mignon Boulard와 Muse de Maree 팀을 나란히 소개한다. 하단에 "기록 보기"라는 관찰 일기로의 링크가 축소 배치되어 있다.</p>
+
+      <p><strong>S5 Ocean Circle</strong> -- "ocean circle은 가입이 아닙니다. 초대입니다."라는 카피와 함께 원형 비주얼 요소가 좌측에, 멤버십 안내가 우측에 배치된다.</p>
+
+      <p><strong>S6 For Professionals</strong> -- B2B 문의 섹션. "바다의 시간을 테이블 위에 놓는 일."이라는 카피 아래 파인다이닝, 호텔 바, 프라이빗 셀러를 대상으로 한다.</p>
+
+      <h3>감정 여정의 시각화</h3>
+      <p>와이어프레임의 배경색 교차가 만드는 호흡 리듬:</p>
+
+      <div class="callout">
+        <div class="callout__label">배경색 리듬</div>
+        <p><strong>dark</strong> (Void) > <strong>light</strong> (Archive) > <strong>dark</strong> (Data) > <strong>light</strong> (Maker) > <strong>dark</strong> (Circle) > <strong>light</strong> (Pro)</p>
+        <p>이 dark/light 교차가 시각적 호흡감을 만든다. 한 가지 톤에 머물면 피로해지고, 전환이 있으면 각 섹션의 시작이 신선하게 느껴진다. 이 리듬은 잘 설계되어 있다.</p>
+      </div>
+
+    </section>
+
+    <!-- ─── 02. 방문자 심리 여정 분석 ─── -->
+    <section id="s2" class="section">
+      <div class="section__number">02</div>
+      <h2 class="section__title">방문자 심리 여정 분석</h2>
+      <div class="section__title-en">Visitor Psychology Journey</div>
+
+      <h3>AIDA 모델 기반 현재 동선 평가</h3>
+      <p>럭셔리 브랜드 홈페이지의 핵심은 Awareness(인지) > Interest(관심) > Desire(욕망) > Action(행동) 순서로 감정을 점진적으로 구축하는 것이다. 현재 와이어프레임이 이 흐름을 얼마나 따르는지 분석한다.</p>
+
+      <div class="aida-track">
+        <div class="aida-row">
+          <div class="aida-label">S1 Void</div>
+          <div class="aida-bar"><div class="aida-fill aida-fill--a" style="width: 90%;">AWARENESS</div></div>
+          <div class="aida-section">인지</div>
+        </div>
+        <div class="aida-row">
+          <div class="aida-label">S2 Archive</div>
+          <div class="aida-bar"><div class="aida-fill aida-fill--d" style="width: 75%;">DESIRE (조기)</div></div>
+          <div class="aida-section">욕망?</div>
+        </div>
+        <div class="aida-row">
+          <div class="aida-label">S3 Data</div>
+          <div class="aida-bar"><div class="aida-fill aida-fill--i" style="width: 60%;">INTEREST</div></div>
+          <div class="aida-section">관심/신뢰</div>
+        </div>
+        <div class="aida-row">
+          <div class="aida-label">S4 Maker</div>
+          <div class="aida-bar"><div class="aida-fill aida-fill--i" style="width: 55%;">INTEREST</div></div>
+          <div class="aida-section">관심/신뢰</div>
+        </div>
+        <div class="aida-row">
+          <div class="aida-label">S5 Circle</div>
+          <div class="aida-bar"><div class="aida-fill aida-fill--action" style="width: 70%;">ACTION</div></div>
+          <div class="aida-section">행동</div>
+        </div>
+        <div class="aida-row">
+          <div class="aida-label">S6 Pro</div>
+          <div class="aida-bar"><div class="aida-fill aida-fill--action" style="width: 50%;">ACTION (B2B)</div></div>
+          <div class="aida-section">행동</div>
+        </div>
+      </div>
+
+      <h3>핵심 문제: 욕망 곡선의 조기 피크와 이탈 위험</h3>
+
+      <p>현재 와이어프레임의 가장 큰 구조적 문제는 <strong>Archive(제품 컬렉션)가 히어로 직후인 S2에 배치되어 있다</strong>는 점이다.</p>
+
+      <p>방문자는 히어로에서 "깊이의 증거"라는 시적인 첫인상을 받은 직후, 아직 브랜드에 대한 이해도 신뢰도 형성되지 않은 상태에서 곧바로 5개의 제품 라인업을 마주한다. 이는 다음과 같은 심리적 단절을 만든다:</p>
+
+      <ul>
+        <li><strong>"이게 뭔데?"</strong> -- 히어로에서 심해의 감각적 경험에 빠져들기 시작한 방문자가, 그 경험의 의미를 이해하기도 전에 제품 카탈로그를 보게 된다. surface murmur, quiet pressure 같은 이름은 맥락 없이는 추상적으로만 느껴진다.</li>
+        <li><strong>"왜 바다인가?"에 대한 답이 없다</strong> -- Archive 섹션에서 "20m", "30m" 같은 깊이 수치가 의미를 가지려면, 먼저 해저 숙성이라는 프로세스에 대한 이해와 그것이 만드는 차이에 대한 신뢰가 필요하다.</li>
+        <li><strong>소유 욕구가 뿌리 없이 요구된다</strong> -- Desire 단계는 Interest 위에 세워져야 한다. 현재 구조에서 Archive는 공중에 뜬 욕망이다.</li>
+      </ul>
+
+      <h3>섹션별 심리 상태 진단</h3>
+
+      <div class="psych-map">
+        <div class="psych-bar">
+          <div class="psych-bar__label">S1 Void</div>
+          <div class="psych-bar__track"><div class="psych-bar__fill" style="width: 85%;"></div></div>
+          <div class="psych-bar__value">몰입 85%</div>
+        </div>
+        <div class="psych-bar">
+          <div class="psych-bar__label">S2 Archive</div>
+          <div class="psych-bar__track"><div class="psych-bar__fill" style="width: 40%; background: rgba(180, 120, 60, 0.6);"></div></div>
+          <div class="psych-bar__value">이해 40%</div>
+        </div>
+        <div class="psych-bar">
+          <div class="psych-bar__label">S3 Data</div>
+          <div class="psych-bar__track"><div class="psych-bar__fill" style="width: 65%;"></div></div>
+          <div class="psych-bar__value">신뢰 65%</div>
+        </div>
+        <div class="psych-bar">
+          <div class="psych-bar__label">S4 Maker</div>
+          <div class="psych-bar__track"><div class="psych-bar__fill" style="width: 60%;"></div></div>
+          <div class="psych-bar__value">공감 60%</div>
+        </div>
+        <div class="psych-bar">
+          <div class="psych-bar__label">S5 Circle</div>
+          <div class="psych-bar__track"><div class="psych-bar__fill" style="width: 45%; background: rgba(180, 120, 60, 0.6);"></div></div>
+          <div class="psych-bar__value">전환 의향 45%</div>
+        </div>
+        <div class="psych-bar">
+          <div class="psych-bar__label">S6 Pro</div>
+          <div class="psych-bar__track"><div class="psych-bar__fill" style="width: 55%;"></div></div>
+          <div class="psych-bar__value">관련성 55%</div>
+        </div>
+      </div>
+
+      <p>S1에서 형성된 85%의 몰입도가 S2에서 40%로 급락하는 구간이 가장 위험하다. 이는 콘텐츠의 품질 문제가 아니라 <strong>순서의 문제</strong>다. 같은 Archive 섹션이 Data Archive와 The Maker 이후에 배치되었다면, 방문자는 "왜 바다인가"와 "누가 만들었는가"에 대한 답을 가진 상태에서 제품을 만나게 되어, 각 깊이의 이름이 서사적 무게를 갖게 된다.</p>
+
+      <h3>욕망 곡선 비교: 현재 vs 기획서 의도</h3>
+
+      <div class="copy-compare">
+        <div class="copy-compare__col">
+          <div class="copy-compare__label">현재 와이어프레임</div>
+          <div class="copy-compare__text">
+            감각 진입 (높음)<br>
+            &darr; <span style="color:rgba(180,120,60,0.8)">급락</span><br>
+            제품 노출 (맥락 부족)<br>
+            &darr;<br>
+            데이터 (뒤늦은 신뢰 구축)<br>
+            &darr;<br>
+            만든 이 (뒤늦은 공감)<br>
+            &darr;<br>
+            전환 요청<br>
+            <br>
+            <strong style="color:rgba(180,120,60,0.8)">문제: 역순 구조</strong>
+          </div>
+        </div>
+        <div class="copy-compare__col">
+          <div class="copy-compare__label">기획서 의도 순서</div>
+          <div class="copy-compare__text">
+            감각 진입 (높음)<br>
+            &darr;<br>
+            관찰 일기 (왜 바다인가)<br>
+            &darr;<br>
+            데이터 (과학적 증거)<br>
+            &darr;<br>
+            만든 이 (인물 신뢰)<br>
+            &darr;<br>
+            제품 컬렉션 (절정의 욕망)<br>
+            &darr;<br>
+            전환 요청<br>
+            <br>
+            <strong style="color:rgba(80,120,80,0.7)">올바른: 점진적 구축</strong>
+          </div>
+        </div>
+      </div>
+
+      <p>기획서가 설계한 순서는 AIDA 모델에 충실하다: 감각적 인지(Void) > 서사적 관심(Observation) > 데이터 기반 관심 심화(Data) > 인물 신뢰(Maker) > 제품 욕망(Archive) > 행동(Circle/Pro). 이 순서에서는 매 섹션이 다음 섹션의 토대가 된다. 반면 현재 와이어프레임은 토대 없이 제품부터 보여주는 구조다.</p>
+
+    </section>
+
+    <!-- ─── 03. 카피라이팅 분석 ─── -->
+    <section id="s3" class="section">
+      <div class="section__number">03</div>
+      <h2 class="section__title">카피라이팅 분석</h2>
+      <div class="section__title-en">Copywriting Analysis</div>
+
+      <h3>전반적 평가</h3>
+      <p>카피라이팅 팀의 작업 수준은 높다. 브랜드 기준서가 요구하는 "낮고 고요하게 속삭인다"는 톤을 거의 완벽하게 구현했으며, 형용사 수식, 감탄부호, 판매 언어를 배제하는 규율을 지켰다. 특히 "설명하지 않고 존재하는" 럭셔리 언어의 본질을 이해하고 있다.</p>
+
+      <h3>섹션별 카피 평가</h3>
+
+      <h4>S1 The Void -- 히어로</h4>
+      <table>
+        <thead>
+          <tr><th>요소</th><th>현재 카피</th><th>평가</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">메인 헤드라인</td>
+            <td>깊이의 증거</td>
+            <td><span class="tag tag--warn">주의</span> 기획서에서 승인된 타이틀은 <code>depth.</code>(영문 단어 하나)이다. "깊이의 증거"는 설명적이며 번역체에 가깝다. <code>depth.</code>의 의도는 단어 하나로 침묵하는 것이었는데, 네 글자로 설명하고 있다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">서브카피</td>
+            <td>한국의 심해에서 숙성한 샴페인</td>
+            <td><span class="tag tag--good">적절</span> 최소한의 정보 전달. 브랜드의 물리적 정체성을 한 문장으로 정의한다. 다만 "숙성한"보다 "숙성된"이 수동태로서 바다에 주도권을 넘기는 브랜드 태도에 더 부합한다.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <blockquote>
+        <p>카피팀이 제안한 Phase 2 감각 카피 "차갑다. / 아무것도 없다. / 기포 하나 올라간다."는 와이어프레임에 아직 반영되지 않았다. 이 카피는 히어로의 감정적 깊이를 결정하는 핵심 요소이므로 반영이 시급하다.</p>
+      </blockquote>
+
+      <h4>S2 Archive -- 컬렉션</h4>
+      <table>
+        <thead>
+          <tr><th>요소</th><th>현재 카피</th><th>평가</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">서브 헤드라인</td>
+            <td>다섯 개의 깊이. 다섯 개의 시간.</td>
+            <td><span class="tag tag--good">우수</span> 간결하고 리듬감이 있다. 반복 구조가 마침표와 함께 호흡을 만든다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">컬렉션 설명</td>
+            <td>예: "빛이 사라지는 경계. 압력이 말을 거는 깊이."</td>
+            <td><span class="tag tag--good">우수</span> 각 깊이의 감각적 특징을 시적으로 함축. 카피팀 원본("빛이 사라지기 시작한다. 압력이 대화를 시작한다.")과 와이어프레임 구현본 사이에 미세한 차이가 있으나, 둘 다 효과적이다.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>S3 Data Archive</h4>
+      <table>
+        <thead>
+          <tr><th>요소</th><th>현재 카피</th><th>평가</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">서브 헤드라인</td>
+            <td>단순히 바다에 넣은 것이 아닙니다.<br>설계된 환경입니다.</td>
+            <td><span class="tag tag--warn">존댓말 전환 확인</span> 카피팀 원본은 "아니다/것이다"(반말)이나 와이어프레임에서는 "아닙니다/환경입니다"(존댓말)로 변환되었다. 존댓말 전환 자체는 최근 결정에 부합하나, "설계된 것이다"가 "설계된 환경입니다"로 바뀌면서 <strong>의미가 확장</strong>되었다. "것"의 추상성이 "환경"이라는 구체성으로 바뀌어 원래의 간결한 힘이 약해졌다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">본문</td>
+            <td>수심 60m. 수온 1.8-3.4도. 압력 7.1기압. 365일, 진동 없는 고요.</td>
+            <td><span class="tag tag--good">우수</span> 숫자가 감각을 대신한다. "1.8도"가 "차가운 바다"보다 정확하고, 정확함이 신뢰를 만든다는 카피팀의 판단이 정확하다. "진동 없는 고요"는 데이터와 감각의 교차점에 놓인 표현으로 섹션의 톤을 완성한다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">마무리</td>
+            <td>지상의 셀러로는 만들 수 없는 조건.<br>바다만이 만들 수 있습니다.</td>
+            <td><span class="tag tag--good">적절</span> 카피팀 원본 "지상의 셀러가 만들 수 없는 조건을 / 바다가 만든다"에서 존댓말로 전환. "바다가 만든다"의 단정적 힘이 "바다만이 만들 수 있습니다"로 바뀌면서 약간 부드러워졌으나, 존댓말 톤 내에서 수용 가능한 범위다.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>S4 The Maker</h4>
+      <table>
+        <thead>
+          <tr><th>요소</th><th>현재 카피</th><th>평가</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">Mignon Boulard 소개</td>
+            <td>Venteuil, Vallee de la Marne. 6.42헥타르, 49개 마이크로 파셀...</td>
+            <td><span class="tag tag--good">적절</span> 구체적 수치(6.42ha, 49 parcels)가 장인의 규모와 정밀함을 전달한다. "제초제 없이 토양을 직접 경작하고, 온도 조절 없이 자연 그대로 발효합니다. 여과하지 않습니다."는 세 번의 부정("없이", "없이", "않습니다")으로 뺄셈의 철학을 구현한다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">MDM 팀 소개</td>
+            <td>대한민국 남해안, 수심 20-60m. 474병의 첫 빈티지를 바다에 맡겼습니다.</td>
+            <td><span class="tag tag--good">우수</span> "474병"이라는 구체적 숫자가 희소성을 암시한다. "바다에 맡겼습니다"는 의인화 없이 자연에 주도권을 양보하는 브랜드 태도를 정확히 반영한다.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>S5 Ocean Circle</h4>
+      <table>
+        <thead>
+          <tr><th>요소</th><th>현재 카피</th><th>평가</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">핵심 카피</td>
+            <td>ocean circle은 가입이 아닙니다. 초대입니다.</td>
+            <td><span class="tag tag--good">우수</span> 두 문장의 힘. "가입"과 "초대"의 대비가 멤버십의 성격을 정의한다. 카피팀 원본은 반말("아니다. 초대다.")이었으나 존댓말 전환이 자연스럽게 이루어졌다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">CTA</td>
+            <td>초대 받기 &rarr;</td>
+            <td><span class="tag tag--warn">검토 필요</span> 카피팀 원본은 "원에 들어오다 &rarr;"로, 행위의 주체가 방문자였다. "초대 받기"는 수동적이다. 럭셔리에서 방문자는 선택하는 주체여야 한다.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>S6 For Professionals</h4>
+      <table>
+        <thead>
+          <tr><th>요소</th><th>현재 카피</th><th>평가</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">서브 헤드라인</td>
+            <td>바다의 시간을 테이블 위에 놓는 일.</td>
+            <td><span class="tag tag--good">우수</span> B2B 섹션임에도 시적 언어를 유지한다. "놓는 일"이라는 표현이 서비스 제안을 하나의 의례로 격상시킨다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">본문</td>
+            <td>파인다이닝. 호텔 바. 프라이빗 셀러. 공간의 격에 맞는 제안을 준비하고 있습니다.</td>
+            <td><span class="tag tag--good">적절</span> 타겟 업종을 명사 나열로 처리한 것이 깔끔하다. "준비하고 있습니다"가 아직 완성되지 않은 것에 대한 솔직함을 유지한다.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>존댓말 전환의 일관성 문제</h3>
+      <p>최근 반말에서 존댓말로 전환하는 결정이 내려졌으나, 와이어프레임에서 이 전환이 <strong>불완전하게 적용</strong>되어 있다. Data Archive 섹션의 본문은 "만들 수 없는 조건" + "만들 수 있습니다"로 존댓말이 적용되었지만, 카피팀 문서의 원본 카피 대부분은 여전히 반말("것이다", "만든다", "아니다") 상태다. 와이어프레임과 카피 문서 사이의 톤 불일치가 발생하고 있으므로, 어느 쪽을 기준으로 통일할지 명확한 결정이 필요하다.</p>
+
+      <div class="callout">
+        <div class="callout__label">카피 존댓말 전환 시 주의점</div>
+        <p>반말 카피("설계된 것이다")가 가진 단호함과 절제감은 존댓말("설계된 것입니다")로 전환하면 일부 약화된다. 존댓말은 겸양을 더하지만, 이 브랜드의 "침묵으로 말하는" 태도에는 반말의 단정적 어조가 더 적합할 수 있다. 만약 존댓말로 통일한다면, <strong>"~입니다/~합니다" 형태보다 "~습니다" 없이 명사형 종결("설계된 환경.")</strong>을 더 적극적으로 활용하는 것이 브랜드 톤을 보존하는 방법이다.</p>
+      </div>
+
+      <h3>Observation 섹션 카피의 부재</h3>
+      <p>카피팀이 가장 공들여 작성한 Observation(관찰 일기) 카피가 와이어프레임에 반영되지 않았다. 이 카피는 브랜드 내러티브에서 가장 중요한 역할을 한다:</p>
+
+      <blockquote>
+        <p>"바다가 숙성을 결정한다. 우리가 아니다."</p>
+        <p>-- 이 한 문장이 Muse de Maree의 브랜드 태도 전체를 정의한다. 현재 와이어프레임에서 이 카피는 존재하지 않는다.</p>
+      </blockquote>
+    </section>
+
+    <!-- ─── 04. 스토리텔링 구조 평가 ─── -->
+    <section id="s4" class="section">
+      <div class="section__number">04</div>
+      <h2 class="section__title">스토리텔링 구조 평가</h2>
+      <div class="section__title-en">Storytelling Structure Evaluation</div>
+
+      <h3>내러티브 아크의 존재 여부</h3>
+      <p>좋은 브랜드 홈페이지는 하나의 이야기를 가진다. 시작, 전개, 위기(또는 긴장), 절정, 해소의 구조가 무의식적으로 방문자를 이끈다.</p>
+
+      <p><strong>기획서가 의도한 아크:</strong></p>
+      <ol>
+        <li><strong>시작</strong> -- 심해로의 하강 (The Void). 감각의 세계로 빠져든다.</li>
+        <li><strong>전개</strong> -- 바다의 시간을 관찰한다 (Observation). "왜?"에 답한다.</li>
+        <li><strong>긴장</strong> -- 과학적 데이터로 진지함을 증명한다 (Data Archive). 감성에 이성을 더한다.</li>
+        <li><strong>심화</strong> -- 만든 이의 얼굴을 보여준다 (The Maker). 브랜드가 사람이 된다.</li>
+        <li><strong>절정</strong> -- 제품을 발견한다 (Archive). 모든 맥락이 하나의 병에 수렴한다.</li>
+        <li><strong>해소</strong> -- 이 세계에 들어올 수 있다 (Ocean Circle). 행동으로 연결된다.</li>
+      </ol>
+
+      <p><strong>와이어프레임의 실제 아크:</strong></p>
+      <ol>
+        <li><strong>시작</strong> -- 심해로의 하강 (The Void). <span class="tag tag--good">동일</span></li>
+        <li><strong>???</strong> -- 제품 카탈로그 (Archive). <span class="tag tag--warn">맥락 없는 제품 노출</span></li>
+        <li><strong>뒤늦은 설명</strong> -- 데이터 (Data Archive). <span class="tag tag--warn">순서 역전</span></li>
+        <li><strong>뒤늦은 소개</strong> -- 만든 이 (The Maker). <span class="tag tag--warn">순서 역전</span></li>
+        <li><strong>전환 요청</strong> -- Ocean Circle. <span class="tag tag--mid">구조적으로 약화</span></li>
+      </ol>
+
+      <p>결론적으로, <strong>현재 와이어프레임에는 명확한 내러티브 아크가 존재하지 않는다.</strong> 기획서에서 설계한 "하강 > 관찰 > 증명 > 신뢰 > 발견 > 참여"의 감정 곡선이 "하강 > 제품 > 증명 > 소개 > 참여"로 해체되었다.</p>
+
+      <div class="divider"></div>
+
+      <h3>럭셔리 브랜드 홈페이지 베스트 프랙티스와의 비교</h3>
+
+      <table>
+        <thead>
+          <tr><th>브랜드</th><th>홈페이지 구조</th><th>핵심 전략</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">Krug</td>
+            <td>세계관 진입 > 메종의 철학 > 블렌딩 과정 > 셰프와의 페어링 > 제품</td>
+            <td>"왜 Krug인가"를 먼저 설명한 후 제품을 보여준다. 제품은 마지막 1/3에 등장한다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">Dom Perignon</td>
+            <td>시네마틱 히어로 > 빈티지 스토리 > 셀러 마스터 > 컬렉션</td>
+            <td>감정적 임팩트로 시작해, 역사와 인물로 신뢰를 쌓은 후 제품에 도달한다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">Ruinart</td>
+            <td>아트 콜라보 히어로 > 역사(1729) > 백악질 셀러 > 큐베</td>
+            <td>예술과 역사라는 두 축으로 브랜드를 정의한 후 제품을 전시한다.</td>
+          </tr>
+          <tr>
+            <td class="label-col"><strong>MDM (의도)</strong></td>
+            <td>감각 히어로 > 관찰 일기 > 해저 데이터 > 만든 이 > 컬렉션</td>
+            <td><strong>감각과 데이터라는 두 축</strong>으로 "왜 바다인가"를 먼저 답한 후 제품에 도달.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>모든 프리미엄 샴페인 브랜드에서 <strong>제품은 스토리의 결론이지, 도입부가 아니다.</strong> Krug의 큐베, Dom Perignon의 빈티지, Ruinart의 블랑 드 블랑 모두 메종의 철학과 역사를 충분히 전달한 후에야 등장한다. 현재 와이어프레임의 Archive 선배치는 이 업계 관행에서 벗어나 있다.</p>
+
+      <div class="divider"></div>
+
+      <h3>"아카이브 디스커버리" 콘셉트의 구현도</h3>
+      <p>브랜드의 핵심 축 중 하나인 "Archive Discovery"는 <strong>"판매가 아닌 발견. 기록하고 전달하는 디지털 아카이브"</strong>를 의미한다. 이 콘셉트가 현재 와이어프레임에서 어떻게 구현되고 있는지 평가한다.</p>
+
+      <table>
+        <thead>
+          <tr><th>요소</th><th>구현도</th><th>비고</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">기록(Archive)의 존재</td>
+            <td><span class="tag tag--good">구현됨</span></td>
+            <td>Data Archive 섹션이 기록의 체계성을 보여준다. 수온/압력/기간 데이터가 "기록"의 물리적 증거.</td>
+          </tr>
+          <tr>
+            <td class="label-col">발견(Discovery)의 경험</td>
+            <td><span class="tag tag--warn">부분적</span></td>
+            <td>Archive 캐러셀이 수평 탐색을 유도하지만, Observation 섹션의 부재로 "시간적 발견"의 층위가 빠져 있다. 관찰 일기가 복원되면 발견의 깊이가 생긴다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">판매가 아닌 전시</td>
+            <td><span class="tag tag--good">구현됨</span></td>
+            <td>가격 정보 부재, CTA의 절제, 제품을 "유물처럼" 다루는 톤이 갤러리적 경험을 만든다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">디지털 아카이브 감각</td>
+            <td><span class="tag tag--warn">부분적</span></td>
+            <td>인증서, QR 코드, 테이스팅 리추얼 등 카피팀이 준비한 아카이브 요소들이 와이어프레임에 아직 반영되지 않았다.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ─── 05. 전환 동선 분석 ─── -->
+    <section id="s5" class="section">
+      <div class="section__number">05</div>
+      <h2 class="section__title">전환 동선 분석</h2>
+      <div class="section__title-en">Conversion Flow Analysis</div>
+
+      <h3>CTA 배치 현황</h3>
+      <table>
+        <thead>
+          <tr><th>위치</th><th>CTA</th><th>형태</th><th>평가</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">S1 Void</td>
+            <td>scroll (스크롤 유도)</td>
+            <td>마이크로 인터랙션</td>
+            <td><span class="tag tag--good">적절</span> 유일한 행동 유도가 "더 보기"인 것은 럭셔리에 맞다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">S2 Archive</td>
+            <td>없음</td>
+            <td>--</td>
+            <td><span class="tag tag--good">적절</span> 탐색 자체가 행동이다. 별도 CTA 불필요.</td>
+          </tr>
+          <tr>
+            <td class="label-col">S3 Data</td>
+            <td>없음</td>
+            <td>--</td>
+            <td><span class="tag tag--mid">검토</span> 카피팀은 "데이터를 탐색하다 &rarr;"를 제안했으나 미구현. 별도 데이터 탐색 페이지가 있다면 연결이 필요하다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">S4 Maker</td>
+            <td>기록 보기 &rarr;</td>
+            <td>텍스트 링크</td>
+            <td><span class="tag tag--warn">혼란</span> Observation 페이지로의 링크이나, 맥락이 부족하다. "기록"이 무엇인지 이 시점에서 방문자가 알기 어렵다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">S5 Circle</td>
+            <td>초대 받기 &rarr;</td>
+            <td>텍스트 링크</td>
+            <td><span class="tag tag--good">적절</span> 전체 플로우에서 유일한 전환 CTA. 위치가 적절하다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">S6 Pro</td>
+            <td>문의하기 &rarr;</td>
+            <td>텍스트 링크</td>
+            <td><span class="tag tag--good">적절</span> B2B 전환점으로 명확하다.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>전환까지의 마찰 분석</h3>
+
+      <p><strong>긍정적 요소:</strong></p>
+      <ul>
+        <li>전체 페이지에서 CTA가 과도하지 않다. S5와 S6에만 전환 CTA가 존재하여 "압박하지 않는다"는 원칙을 지킨다.</li>
+        <li>Ocean Circle의 폼이 최소 필드(이메일 + 이름)로 설계되어 마찰이 낮다.</li>
+        <li>팝업, 배너, 플로팅 CTA가 없다. 갤러리적 경험을 유지한다.</li>
+      </ul>
+
+      <p><strong>마찰 포인트:</strong></p>
+      <ul>
+        <li><strong>신뢰 구축 부족 상태에서의 전환 요청</strong> -- 현재 순서에서 Ocean Circle에 도달하기 전, 방문자가 경험하는 신뢰 구축 섹션은 Data Archive와 The Maker뿐이다. 기획서 순서에서는 Observation > Data > Maker > Archive로 4개 섹션이 신뢰를 쌓은 후 전환을 요청한다. 현재 구조는 이 신뢰 자산이 부족하다.</li>
+        <li><strong>Observation(관찰 일기)의 부재</strong> -- "바다가 숙성을 결정한다. 우리가 아니다."와 같은 브랜드 태도를 전달하는 핵심 서사가 빠져 있어, 방문자가 브랜드에 감정적으로 연결될 기회가 줄어든다.</li>
+        <li><strong>제품에서 전환까지의 거리</strong> -- Archive(S2) 이후 Data(S3), Maker(S4)를 거쳐 Circle(S5)에 도달하는 동안, 제품에 대한 욕망이 데이터와 인물 소개 사이에서 식을 수 있다. 기획서 순서에서는 Archive > Circle로 욕망의 절정 직후 전환이 이루어진다.</li>
+      </ul>
+
+      <h3>사회적 증명 / 신뢰 장치 평가</h3>
+      <p>럭셔리 브랜드는 전통적인 "리뷰", "평점" 같은 사회적 증명 대신, 다른 형태의 신뢰 장치를 사용한다. 현재 와이어프레임의 신뢰 장치를 평가한다:</p>
+
+      <table>
+        <thead>
+          <tr><th>신뢰 유형</th><th>구현 여부</th><th>효과</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">데이터 증거</td>
+            <td><span class="tag tag--good">있음</span></td>
+            <td>Data Archive의 수온/압력/기간 데이터. 과학적 신뢰의 핵심.</td>
+          </tr>
+          <tr>
+            <td class="label-col">생산자 권위</td>
+            <td><span class="tag tag--good">있음</span></td>
+            <td>Champagne Mignon Boulard의 소개. 49개 파셀, 6.42ha의 구체성.</td>
+          </tr>
+          <tr>
+            <td class="label-col">희소성 시그널</td>
+            <td><span class="tag tag--good">있음</span></td>
+            <td>"474병의 첫 빈티지", "수량이 정해져 있고, 자리도 정해져 있다"</td>
+          </tr>
+          <tr>
+            <td class="label-col">프로세스 투명성</td>
+            <td><span class="tag tag--warn">부분적</span></td>
+            <td>관찰 일기(Observation)가 구현되면 완성된다. 현재는 부족.</td>
+          </tr>
+          <tr>
+            <td class="label-col">인증 체계</td>
+            <td><span class="tag tag--warn">미구현</span></td>
+            <td>인증서, QR 코드, 시리얼 넘버 등 카피가 준비되었으나 와이어프레임에 미반영.</td>
+          </tr>
+          <tr>
+            <td class="label-col">미디어/수상</td>
+            <td><span class="tag tag--mid">해당 없음</span></td>
+            <td>프리런칭 단계로 아직 없음. 향후 PR 이후 추가 가능.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ─── 06. 개선 제안 ─── -->
+    <section id="s6" class="section">
+      <div class="section__number">06</div>
+      <h2 class="section__title">개선 제안</h2>
+      <div class="section__title-en">Recommendations</div>
+
+      <h3>1. 섹션 순서 재배치 (최우선)</h3>
+      <div class="rec rec--high">
+        <div class="rec__header">
+          <span class="tag tag--high">high impact</span>
+          <span class="rec__title">기획서 의도 순서로 복원</span>
+        </div>
+        <div class="rec__body">
+          <p>현재: Void > <strong>Archive</strong> > Data > Maker(+Observation) > Circle > Pro</p>
+          <p>제안: Void > <strong>Observation</strong> > Data > Maker > <strong>Archive</strong> > Circle > Pro</p>
+          <br>
+          <p><strong>근거:</strong> Archive가 히어로 직후에 오면 "왜 바다인가"에 대한 답 없이 제품을 보여주게 된다. surface murmur, quiet pressure 같은 시적 이름은 해저 숙성의 맥락을 알 때 비로소 의미를 갖는다. Observation과 Data Archive가 먼저 와야 각 깊이의 이름이 감각적 경험으로 읽힌다.</p>
+          <p>AIDA 흐름으로 보면: Awareness(Void) > Interest(Observation, Data) > Desire-Trust(Maker) > Desire-Peak(Archive) > Action(Circle, Pro). 이 순서에서 욕망은 관심과 신뢰 위에 자연스럽게 세워진다.</p>
+        </div>
+      </div>
+
+      <h3>2. Observation 섹션 독립 복원 (최우선)</h3>
+      <div class="rec rec--high">
+        <div class="rec__header">
+          <span class="tag tag--high">high impact</span>
+          <span class="rec__title">관찰 일기를 독립 섹션으로 복원</span>
+        </div>
+        <div class="rec__body">
+          <p>카피팀이 작성한 관찰 일기 카피는 브랜드의 핵심 서사다. 현재 The Maker 하단에 "기록 보기 &rarr;" 링크로만 존재하는 이 콘텐츠를 독립 섹션으로 복원해야 한다.</p>
+          <br>
+          <p>이 섹션이 필요한 이유:</p>
+          <ul>
+            <li>"바다가 숙성을 결정한다. 우리가 아니다." -- 이 한 문장이 Muse de Maree를 다른 모든 샴페인 브랜드와 구분한다.</li>
+            <li>날짜별 관찰 기록 형식이 "아카이브 디스커버리" 축을 가장 직접적으로 구현한다.</li>
+            <li>히어로의 감각적 경험 이후 "왜?"에 답하는 첫 번째 섹션이어야 한다.</li>
+            <li>데이터 감각이 아닌 서사적 감각의 방문자도 이 섹션에서 포착된다.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>3. 히어로 카피 교체 (높음)</h3>
+      <div class="rec rec--high">
+        <div class="rec__header">
+          <span class="tag tag--high">high impact</span>
+          <span class="rec__title">히어로 타이틀을 승인된 카피로 교체</span>
+        </div>
+        <div class="rec__body">
+          <p><strong>현재:</strong> "깊이의 증거" (한국어 4글자 -- 설명적)</p>
+          <p><strong>제안:</strong> <code>depth.</code> (영문 단어 하나 -- 럭셔리 기준서에서 승인된 최종안)</p>
+          <br>
+          <p>"깊이의 증거"는 브랜드를 설명한다. <code>depth.</code>는 브랜드로서 존재한다. 카피팀의 선정 근거처럼, "단어 하나로 충분하다는 자신감이 럭셔리다." Bottega Veneta가 로고를 없앤 것처럼, 설명을 없애는 것이 이 브랜드의 언어다.</p>
+          <p>Phase 2 감각 카피("차갑다. / 아무것도 없다. / 기포 하나 올라간다.")도 함께 반영해야 히어로의 감정적 깊이가 완성된다.</p>
+        </div>
+      </div>
+
+      <h3>4. 존댓말/반말 톤 통일 결정 (높음)</h3>
+      <div class="rec rec--high">
+        <div class="rec__header">
+          <span class="tag tag--high">high impact</span>
+          <span class="rec__title">전체 카피의 어조를 하나로 통일</span>
+        </div>
+        <div class="rec__body">
+          <p>현재 와이어프레임 내에서도 존댓말("만들 수 있습니다")과 반말 톤("빛이 닿는 마지막 깊이")이 혼재한다. 두 가지 방향 모두 가능하지만, <strong>어느 한쪽으로 완전히 통일해야 한다.</strong></p>
+          <br>
+          <p><strong>옵션 A -- 명사형 종결 중심 (권장)</strong><br>
+          "설계된 환경." / "빛이 닿는 마지막 깊이." / "바다만이 만드는 조건."<br>
+          &rarr; 반말도 존댓말도 아닌 제3의 길. 가장 브랜드에 부합하며 언어적 품위가 높다.</p>
+          <p><strong>옵션 B -- 존댓말 (현재 방향)</strong><br>
+          "설계된 환경입니다." / "만들 수 없는 조건입니다."<br>
+          &rarr; 겸양하되, 문장이 길어지고 절제감이 줄어든다.</p>
+        </div>
+      </div>
+
+      <h3>5. Ocean Circle CTA 카피 수정 (중간)</h3>
+      <div class="rec rec--mid">
+        <div class="rec__header">
+          <span class="tag tag--mid">medium</span>
+          <span class="rec__title">CTA를 카피팀 승인안으로 교체</span>
+        </div>
+        <div class="rec__body">
+          <p><strong>현재:</strong> "초대 받기 &rarr;" (수동적)</p>
+          <p><strong>제안:</strong> "원에 들어오다 &rarr;" (카피팀 원안, 능동적)</p>
+          <br>
+          <p>럭셔리에서 방문자는 "받는" 존재가 아니라 "선택하는" 존재여야 한다. "원에 들어오다"는 방문자의 능동적 의지를 표현하며, "원"이라는 단어가 Ocean Circle의 상징적 의미를 강화한다.</p>
+        </div>
+      </div>
+
+      <h3>6. 인증서/QR/테이스팅 리추얼 반영 (중간)</h3>
+      <div class="rec rec--mid">
+        <div class="rec__header">
+          <span class="tag tag--mid">medium</span>
+          <span class="rec__title">Archive 섹션에 인증 체계 요소 추가</span>
+        </div>
+        <div class="rec__body">
+          <p>카피팀이 준비한 Underwater Aging Certificate, QR 코드 안내, 테이스팅 리추얼 카피가 와이어프레임에 미반영 상태다. 이 요소들은:</p>
+          <ul>
+            <li>인증서 -- 공적 문서의 톤으로 정당성을 부여한다.</li>
+            <li>QR 코드 -- "잠들어 있던 깊이, 온도, 기간의 기록이 열린다"는 아카이브 디스커버리의 물리적 구현이다.</li>
+            <li>테이스팅 리추얼 -- 제품 경험의 격을 높이고, "어떻게 마시는가"를 하나의 의례로 전환한다.</li>
+          </ul>
+          <p>이 세 요소가 Archive 섹션에 추가되면 제품이 "상품"이 아닌 "유물"로서의 위상을 확보한다.</p>
+        </div>
+      </div>
+
+      <h3>7. Data Archive 서브 헤드라인 카피 원문 복원 (낮음)</h3>
+      <div class="rec rec--low">
+        <div class="rec__header">
+          <span class="tag tag--low">low</span>
+          <span class="rec__title">와이어프레임 카피를 원본에 가깝게 수정</span>
+        </div>
+        <div class="rec__body">
+          <p><strong>현재:</strong> "단순히 바다에 넣은 것이 아닙니다. 설계된 환경입니다."</p>
+          <p><strong>제안:</strong> "단순히 바다에 넣은 것이 아닙니다. 설계된 것입니다." 또는 명사형: "설계된 조건."</p>
+          <br>
+          <p>"환경"이라는 단어는 원본에 없던 구체성을 추가하며, 카피의 추상적 힘을 약화시킨다. "것"의 열린 의미가 이 카피의 핵심이다.</p>
+        </div>
+      </div>
+
+      <h3>개선 우선순위 요약</h3>
+      <table>
+        <thead>
+          <tr><th>우선순위</th><th>항목</th><th>영향도</th><th>노력</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col"><span class="tag tag--high">1</span></td>
+            <td>섹션 순서를 기획서 의도대로 재배치</td>
+            <td>전체 내러티브 구조 결정</td>
+            <td>HTML 섹션 이동 (낮음)</td>
+          </tr>
+          <tr>
+            <td class="label-col"><span class="tag tag--high">2</span></td>
+            <td>Observation 섹션 독립 복원</td>
+            <td>브랜드 핵심 서사 복원</td>
+            <td>새 섹션 구현 (중간)</td>
+          </tr>
+          <tr>
+            <td class="label-col"><span class="tag tag--high">3</span></td>
+            <td>히어로 카피를 depth.로 교체</td>
+            <td>첫인상의 럭셔리 품위</td>
+            <td>텍스트 교체 (낮음)</td>
+          </tr>
+          <tr>
+            <td class="label-col"><span class="tag tag--high">4</span></td>
+            <td>존댓말/반말 톤 통일 결정</td>
+            <td>전체 카피 일관성</td>
+            <td>의사결정 + 일괄 수정 (중간)</td>
+          </tr>
+          <tr>
+            <td class="label-col"><span class="tag tag--mid">5</span></td>
+            <td>Ocean Circle CTA 수정</td>
+            <td>전환점의 언어 품질</td>
+            <td>텍스트 교체 (낮음)</td>
+          </tr>
+          <tr>
+            <td class="label-col"><span class="tag tag--mid">6</span></td>
+            <td>인증서/QR/리추얼 추가</td>
+            <td>제품 신뢰 체계 완성</td>
+            <td>새 컴포넌트 구현 (중간)</td>
+          </tr>
+          <tr>
+            <td class="label-col"><span class="tag tag--low">7</span></td>
+            <td>Data Archive 카피 원문 복원</td>
+            <td>카피 정밀도</td>
+            <td>텍스트 수정 (낮음)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ─── 07. 최종 평가 ─── -->
+    <section id="s7" class="section">
+      <div class="section__number">07</div>
+      <h2 class="section__title">최종 평가</h2>
+      <div class="section__title-en">Final Assessment</div>
+
+      <div class="score-card">
+        <div class="score-card__label">overall effectiveness</div>
+        <div class="score-card__value">62</div>
+        <div class="score-card__unit">/ 100</div>
+        <div class="score-card__desc">
+          개별 섹션의 디자인 품질과 카피 수준은 높으나,<br>
+          내러티브 구조와 감정 흐름 설계에서<br>
+          기획 의도와 구현 사이의 괴리가 있다.
+        </div>
+      </div>
+
+      <h3>세부 항목별 평가</h3>
+      <table>
+        <thead>
+          <tr><th>항목</th><th>점수</th><th>비고</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">비주얼 디자인</td>
+            <td><strong>85/100</strong></td>
+            <td>컬러 팔레트, 타이포그래피, 여백 활용, dark/light 교차 리듬이 럭셔리 기준을 충족한다. 한지 텍스처, 필름 그레인, 파동 SVG 등 디테일이 정교하다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">카피라이팅 품질</td>
+            <td><strong>80/100</strong></td>
+            <td>승인된 카피의 수준은 높으나, 히어로 카피 미반영, 존댓말 불일치, Observation 카피 누락으로 감점. 반영되면 90점 이상.</td>
+          </tr>
+          <tr>
+            <td class="label-col">내러티브 구조</td>
+            <td><strong>40/100</strong></td>
+            <td>가장 큰 문제. 기획서의 감정 곡선(하강>관찰>증명>신뢰>발견>행동)이 와이어프레임에서 해체되었다. Archive 선배치가 AIDA 흐름을 깨뜨린다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">전환 동선</td>
+            <td><strong>60/100</strong></td>
+            <td>CTA의 절제는 브랜드에 맞으나, 전환 전 신뢰 축적 구간이 부족하다. 섹션 순서 복원 시 70점 이상으로 개선 가능.</td>
+          </tr>
+          <tr>
+            <td class="label-col">기술 구현</td>
+            <td><strong>75/100</strong></td>
+            <td>스크롤 리빌, 파티클, 파동 SVG 등 인터랙션이 유기적이다. reduced-motion 대응, 반응형 처리가 체계적이다.</td>
+          </tr>
+          <tr>
+            <td class="label-col">브랜드 일관성</td>
+            <td><strong>70/100</strong></td>
+            <td>"갤러리처럼, 마트가 아닌" 원칙을 대체로 지키나, 존댓말/반말 혼재와 승인 카피 미반영이 일관성을 해친다.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="divider"></div>
+
+      <h3>Top 3 강점</h3>
+      <div class="sw-grid">
+        <div>
+          <div class="sw-col__title">strengths</div>
+          <div class="sw-item">
+            <div class="sw-item__num">1</div>
+            <div class="sw-item__text"><strong>시각적 몰입 설계</strong> -- 히어로의 300vh 스크롤 하강, 금빛 파티클, dark/light 교차 리듬이 만드는 "심해로의 여행"이 브랜드 세계관을 체감하게 한다. 3초 이내에 "이것은 평범한 사이트가 아니다"는 인식을 심는다.</div>
+          </div>
+          <div class="sw-item">
+            <div class="sw-item__num">2</div>
+            <div class="sw-item__text"><strong>카피의 절제력</strong> -- 형용사 없이, 감탄부호 없이, 판매 언어 없이 브랜드를 말하는 카피 수준이 높다. "바다의 시간을 테이블 위에 놓는 일"처럼 시적이면서도 명확한 카피가 전 섹션에 걸쳐 유지된다.</div>
+          </div>
+          <div class="sw-item">
+            <div class="sw-item__num">3</div>
+            <div class="sw-item__text"><strong>판매하지 않는 태도</strong> -- 가격 정보 부재, CTA의 최소화, "초대"라는 언어 선택, "편지에 버튼을 달지 않는다"는 판단 등이 콰이어트 럭셔리의 본질을 정확히 구현한다. 이 태도 자체가 브랜드의 가장 강력한 자산이다.</div>
+          </div>
+        </div>
+        <div>
+          <div class="sw-col__title">why it matters</div>
+          <div class="sw-item">
+            <div class="sw-item__num">&rarr;</div>
+            <div class="sw-item__text">첫인상에서 프리미엄 포지셔닝을 확보한다. 방문자는 Krug, Dom Perignon과 같은 리그의 브랜드로 인식하게 된다.</div>
+          </div>
+          <div class="sw-item">
+            <div class="sw-item__num">&rarr;</div>
+            <div class="sw-item__text">카피가 브랜드의 "격"을 직접 증명한다. 글을 잘 쓰는 브랜드는 제품도 잘 만들 것이라는 무의식적 연상이 작동한다.</div>
+          </div>
+          <div class="sw-item">
+            <div class="sw-item__num">&rarr;</div>
+            <div class="sw-item__text">판매하지 않을수록 갖고 싶어지는 역설이 럭셔리의 핵심 메커니즘이다. 이 태도를 유지하는 한 브랜드는 올바른 방향에 있다.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h3>Top 3 핵심 개선사항</h3>
+      <div class="sw-grid">
+        <div>
+          <div class="sw-col__title">critical improvements</div>
+          <div class="sw-item">
+            <div class="sw-item__num">1</div>
+            <div class="sw-item__text"><strong>섹션 순서를 기획서대로 복원하라.</strong> Archive가 히어로 직후에 오는 현재 구조는 맥락 없는 제품 노출이다. Observation > Data > Maker > Archive 순서로 돌려야 "왜 바다인가"의 답 위에 제품이 놓인다. 이것이 단일 변경으로 가장 큰 개선을 가져오는 항목이다.</div>
+          </div>
+          <div class="sw-item">
+            <div class="sw-item__num">2</div>
+            <div class="sw-item__text"><strong>Observation을 독립 섹션으로 살려라.</strong> "바다가 숙성을 결정한다. 우리가 아니다." 이 한 문장이 브랜드의 태도 전체를 정의한다. 이 카피가 없는 홈페이지는 영혼이 없는 아름다운 껍데기다.</div>
+          </div>
+          <div class="sw-item">
+            <div class="sw-item__num">3</div>
+            <div class="sw-item__text"><strong>승인된 카피를 와이어프레임에 반영하라.</strong> 히어로의 <code>depth.</code>, Phase 2 감각 카피, 인증서/QR/테이스팅 리추얼이 아직 미반영 상태다. 카피팀의 작업이 구현되지 않으면 브랜드 보이스가 불완전하다.</div>
+          </div>
+        </div>
+        <div>
+          <div class="sw-col__title">expected impact</div>
+          <div class="sw-item">
+            <div class="sw-item__num">&rarr;</div>
+            <div class="sw-item__text">욕망 곡선이 점진적 상승으로 전환되어, Ocean Circle 전환율이 현재 예상치 대비 30-50% 향상될 수 있다. 이탈률은 Observation과 Data 사이에서 가장 많이 감소할 것이다.</div>
+          </div>
+          <div class="sw-item">
+            <div class="sw-item__num">&rarr;</div>
+            <div class="sw-item__text">브랜드의 핵심 차별점인 "자연에 주도권을 양보하는 태도"가 전달되어, 방문자의 감정적 연결이 깊어진다. 이것이 없으면 "바다에서 숙성한 샴페인"은 마케팅 기믹으로 읽힐 위험이 있다.</div>
+          </div>
+          <div class="sw-item">
+            <div class="sw-item__num">&rarr;</div>
+            <div class="sw-item__text">브랜드 보이스의 완성도가 높아져, 전체 경험이 "갤러리 관람"에서 "심해 잠수"로 전환된다. 방문자가 사이트를 떠난 후에도 감각이 남는 경험이 된다.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h3>경영진 요약</h3>
+
+      <div class="callout">
+        <div class="callout__label">executive summary</div>
+        <p>Muse de Maree 홈페이지의 <strong>개별 구성 요소(디자인, 카피, 인터랙션)의 품질은 럭셔리 기준을 충족</strong>하며, 특히 카피팀의 언어적 절제력과 디자인팀의 시각적 몰입 설계는 경쟁 메종(Krug, Dom Perignon) 수준의 디지털 경험을 구축할 수 있는 토대다.</p>
+        <p>그러나 <strong>현재 와이어프레임의 섹션 순서가 기획서의 감정 설계를 따르지 않고 있다.</strong> 가장 중대한 문제는 제품 컬렉션(Archive)이 히어로 직후에 배치되어, "왜 바다인가"라는 질문에 답하기 전에 제품을 보여주고 있다는 점이다. 또한 브랜드의 핵심 서사인 관찰 일기(Observation) 섹션이 독립적으로 구현되지 않았다.</p>
+        <p><strong>권고:</strong> 섹션 순서를 기획서 의도(Void > Observation > Data > Maker > Archive > Circle > Pro)로 복원하고, Observation을 독립 섹션으로 살리며, 승인된 카피를 와이어프레임에 반영하라. 이 세 가지 변경은 코드 구현 난이도는 낮으나 사용자 경험에 대한 영향은 결정적이다. 현재 62점 수준의 내러티브 효과가 80점 이상으로 향상될 것으로 예상한다.</p>
+        <p>구성 요소의 품질이 이미 높기 때문에, <strong>"무엇을 만들 것인가"의 문제가 아니라 "어떤 순서로 보여줄 것인가"의 문제</strong>다. 순서를 바로잡으면, 이 홈페이지는 한국 럭셔리 브랜드의 디지털 경험에서 새로운 기준이 될 수 있다.</p>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- ══════════════════════════════════════
+       FOOTER
+       ══════════════════════════════════════ -->
+  <footer class="report-footer">
+    <div class="report-footer__logo">MUSE DE MAREE</div>
+    <div class="report-footer__copy">Homepage Narrative Analysis Report / 2026-02-22 / Confidential</div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muse de Maree — Observation 섹션 심층 분석 보고서</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Sans+KR:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void: #0A0908;
+      --void-light: #111010;
+      --void-card: #141211;
+      --void-card-hover: #1a1816;
+      --sand: #E8E5E1;
+      --sand-deep: #DDDAD5;
+      --amber: #CCAD7B;
+      --amber-muted: #b89868;
+      --amber-dim: rgba(204, 173, 123, 0.15);
+      --amber-glow: rgba(204, 173, 123, 0.08);
+      --earth: #312E2A;
+      --earth-light: rgba(232, 229, 225, 0.6);
+      --earth-muted: rgba(232, 229, 225, 0.4);
+      --warm-ivory: #ECEAE6;
+      --font-heading: 'Cormorant Garamond', 'Georgia', serif;
+      --font-body: 'Noto Sans KR', 'Helvetica Neue', sans-serif;
+      --ease-water: cubic-bezier(0.23, 1.0, 0.32, 1.0);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: var(--font-body);
+      font-weight: 300;
+      color: var(--sand);
+      background: var(--void);
+      line-height: 1.8;
+    }
+
+    /* Film Grain */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      background-size: 128px 128px;
+    }
+
+    /* ── Cover ── */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 60%, rgba(204, 173, 123, 0.04) 0%, transparent 70%);
+    }
+    .cover__brand {
+      font-family: var(--font-heading);
+      font-size: clamp(11px, 1.2vw, 13px);
+      font-weight: 300;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--amber);
+      opacity: 0.6;
+      margin-bottom: 48px;
+    }
+    .cover__title {
+      font-family: var(--font-heading);
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+      color: var(--sand);
+      margin-bottom: 20px;
+    }
+    .cover__title em {
+      font-style: italic;
+      color: var(--amber);
+    }
+    .cover__sub {
+      font-size: clamp(12px, 1.3vw, 15px);
+      font-weight: 200;
+      letter-spacing: 0.12em;
+      color: var(--earth-muted);
+      margin-bottom: 8px;
+    }
+    .cover__date {
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-style: italic;
+      color: rgba(204, 173, 123, 0.35);
+      letter-spacing: 0.05em;
+      margin-top: 56px;
+    }
+    .cover__line {
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(to bottom, var(--amber-dim), transparent);
+      margin-top: 40px;
+    }
+
+    /* ── Navigation ── */
+    .toc {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 80px 40px 100px;
+      border-bottom: 0.5px solid rgba(204, 173, 123, 0.08);
+    }
+    .toc__label {
+      font-family: var(--font-heading);
+      font-size: 11px;
+      font-style: italic;
+      letter-spacing: 0.2em;
+      color: var(--amber);
+      opacity: 0.4;
+      margin-bottom: 32px;
+    }
+    .toc__list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .toc__item a {
+      color: var(--earth-light);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      transition: color 0.4s var(--ease-water);
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+    .toc__item a:hover { color: var(--amber); }
+    .toc__num {
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-style: italic;
+      color: rgba(204, 173, 123, 0.3);
+      min-width: 24px;
+    }
+
+    /* ── Section Base ── */
+    .section {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 100px 40px;
+    }
+    .section--wide {
+      max-width: 960px;
+    }
+    .section__label {
+      font-family: var(--font-heading);
+      font-size: 11px;
+      font-style: italic;
+      letter-spacing: 0.2em;
+      color: var(--amber);
+      opacity: 0.4;
+      margin-bottom: 16px;
+    }
+    .section__title {
+      font-family: var(--font-heading);
+      font-size: clamp(24px, 3.5vw, 40px);
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      color: var(--sand);
+      margin-bottom: 56px;
+      line-height: 1.3;
+    }
+    .section__title em {
+      font-style: italic;
+      color: var(--amber);
+    }
+
+    .divider {
+      width: 100%;
+      height: 0.5px;
+      background: rgba(204, 173, 123, 0.08);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .divider--wide {
+      max-width: 960px;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--void-card);
+      border: 0.5px solid rgba(204, 173, 123, 0.06);
+      border-radius: 2px;
+      padding: 40px;
+      margin-bottom: 24px;
+      transition: border-color 0.4s var(--ease-water);
+    }
+    .card:hover {
+      border-color: rgba(204, 173, 123, 0.12);
+    }
+    .card__label {
+      font-family: var(--font-heading);
+      font-size: 11px;
+      font-style: italic;
+      letter-spacing: 0.15em;
+      color: var(--amber);
+      opacity: 0.5;
+      margin-bottom: 20px;
+    }
+    .card__title {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--sand);
+      margin-bottom: 16px;
+      letter-spacing: 0.02em;
+    }
+    .card p, .card li {
+      font-size: 13.5px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--earth-light);
+    }
+    .card ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .card ul li {
+      padding-left: 16px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .card ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(204, 173, 123, 0.3);
+    }
+
+    /* ── Text Styles ── */
+    .text-block {
+      margin-bottom: 32px;
+    }
+    .text-block p {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 2;
+      color: var(--earth-light);
+      margin-bottom: 16px;
+    }
+    .text-block p:last-child { margin-bottom: 0; }
+
+    .highlight {
+      color: var(--amber);
+      font-weight: 400;
+    }
+    .muted {
+      color: var(--earth-muted);
+    }
+
+    /* ── Quote Block ── */
+    .quote-block {
+      border-left: 1px solid rgba(204, 173, 123, 0.2);
+      padding: 24px 0 24px 32px;
+      margin: 40px 0;
+    }
+    .quote-block p {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 200;
+      line-height: 2;
+      color: var(--earth-light);
+      letter-spacing: 0.02em;
+    }
+    .quote-block .source {
+      font-family: var(--font-heading);
+      font-size: 11px;
+      font-style: italic;
+      color: rgba(204, 173, 123, 0.35);
+      margin-top: 16px;
+    }
+
+    /* ── Copy Analysis Cards ── */
+    .copy-card {
+      background: var(--void-card);
+      border: 0.5px solid rgba(204, 173, 123, 0.06);
+      border-radius: 2px;
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+    .copy-card__header {
+      padding: 28px 36px 20px;
+      border-bottom: 0.5px solid rgba(204, 173, 123, 0.04);
+    }
+    .copy-card__date {
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-style: italic;
+      color: rgba(204, 173, 123, 0.4);
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .copy-card__copy {
+      font-size: 13.5px;
+      font-weight: 300;
+      line-height: 2;
+      color: var(--earth-light);
+    }
+    .copy-card__body {
+      padding: 28px 36px 32px;
+    }
+    .copy-card__role {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--amber);
+      opacity: 0.7;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+    .copy-card__analysis {
+      font-size: 13.5px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--earth-light);
+    }
+
+    /* ── Score System ── */
+    .score-section {
+      text-align: center;
+      padding: 80px 40px;
+    }
+    .score-main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 64px;
+    }
+    .score-number {
+      font-family: var(--font-heading);
+      font-size: clamp(64px, 10vw, 96px);
+      font-weight: 300;
+      color: var(--amber);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .score-total {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-style: italic;
+      color: rgba(204, 173, 123, 0.3);
+      letter-spacing: 0.1em;
+    }
+    .score-label {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--earth-muted);
+      letter-spacing: 0.1em;
+      margin-top: 20px;
+    }
+
+    .score-bars {
+      max-width: 560px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .score-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .score-bar__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .score-bar__name {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--earth-light);
+      letter-spacing: 0.06em;
+    }
+    .score-bar__value {
+      font-family: var(--font-heading);
+      font-size: 13px;
+      font-style: italic;
+      color: var(--amber);
+      opacity: 0.7;
+    }
+    .score-bar__track {
+      width: 100%;
+      height: 2px;
+      background: rgba(204, 173, 123, 0.06);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+    .score-bar__fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--amber-muted), var(--amber));
+      border-radius: 1px;
+      transition: width 1.2s var(--ease-water);
+    }
+
+    /* ── Wireframe Sketch ── */
+    .wireframe {
+      background: var(--void-card);
+      border: 0.5px solid rgba(204, 173, 123, 0.08);
+      border-radius: 2px;
+      padding: 48px 40px;
+      margin: 32px 0;
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 11.5px;
+      line-height: 1.7;
+      color: var(--earth-muted);
+      white-space: pre;
+      overflow-x: auto;
+    }
+    .wireframe .wf-label {
+      color: rgba(204, 173, 123, 0.4);
+    }
+    .wireframe .wf-highlight {
+      color: var(--amber);
+      opacity: 0.7;
+    }
+    .wireframe .wf-dim {
+      opacity: 0.4;
+    }
+
+    /* ── Improvement Cards ── */
+    .improve {
+      counter-reset: improve-counter;
+    }
+    .improve__item {
+      counter-increment: improve-counter;
+      margin-bottom: 48px;
+    }
+    .improve__priority {
+      font-family: var(--font-heading);
+      font-size: 11px;
+      font-style: italic;
+      letter-spacing: 0.15em;
+      margin-bottom: 16px;
+    }
+    .improve__priority--high { color: var(--amber); }
+    .improve__priority--mid { color: rgba(204, 173, 123, 0.6); }
+    .improve__priority--low { color: rgba(204, 173, 123, 0.35); }
+
+    .improve__title {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--sand);
+      margin-bottom: 16px;
+      letter-spacing: 0.02em;
+    }
+    .improve__desc {
+      font-size: 13.5px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--earth-light);
+      margin-bottom: 24px;
+    }
+
+    /* ── Benchmark Table ── */
+    .bench-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 32px 0;
+    }
+    .bench-table th {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: var(--amber);
+      opacity: 0.5;
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 0.5px solid rgba(204, 173, 123, 0.1);
+    }
+    .bench-table td {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--earth-light);
+      padding: 16px;
+      border-bottom: 0.5px solid rgba(204, 173, 123, 0.04);
+      vertical-align: top;
+    }
+    .bench-table tr:last-child td {
+      border-bottom: none;
+    }
+    .bench-table .brand-name {
+      color: var(--sand);
+      font-weight: 400;
+    }
+
+    /* ── Emotion Curve ── */
+    .emotion-curve {
+      margin: 48px 0;
+    }
+    .emotion-curve svg {
+      width: 100%;
+      height: auto;
+    }
+
+    /* ── Two Column ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    /* ── Tag ── */
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: var(--amber);
+      opacity: 0.6;
+      border: 0.5px solid rgba(204, 173, 123, 0.15);
+      padding: 4px 12px;
+      border-radius: 1px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    /* ── Footer ── */
+    .report-footer {
+      text-align: center;
+      padding: 80px 40px;
+      border-top: 0.5px solid rgba(204, 173, 123, 0.06);
+    }
+    .report-footer p {
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--earth-muted);
+      letter-spacing: 0.08em;
+    }
+    .report-footer .brand {
+      font-family: var(--font-heading);
+      font-style: italic;
+      color: rgba(204, 173, 123, 0.3);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .section, .toc { padding-left: 24px; padding-right: 24px; }
+      .card { padding: 28px 24px; }
+      .copy-card__header, .copy-card__body { padding-left: 24px; padding-right: 24px; }
+      .two-col { grid-template-columns: 1fr; }
+      .wireframe { padding: 32px 24px; font-size: 10px; }
+      .bench-table { font-size: 12px; }
+      .bench-table th, .bench-table td { padding: 10px 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════
+       COVER
+       ═══════════════════════════════════════ -->
+  <div class="cover">
+    <div class="cover__brand">muse de maree</div>
+    <h1 class="cover__title"><em>Observation</em> Section<br>Deep Analysis Report</h1>
+    <p class="cover__sub">S2 관찰 일기 섹션 심층 분석</p>
+    <p class="cover__sub" style="opacity: 0.5;">마케팅 / 카피라이팅 / UX 디자인 / 종합 제안</p>
+    <div class="cover__date">2026. 02. 22.</div>
+    <div class="cover__line"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       TABLE OF CONTENTS
+       ═══════════════════════════════════════ -->
+  <nav class="toc">
+    <div class="toc__label">contents</div>
+    <ol class="toc__list">
+      <li class="toc__item"><a href="#context"><span class="toc__num">00</span>분석 대상 개요</a></li>
+      <li class="toc__item"><a href="#marketing"><span class="toc__num">01</span>마케팅/비즈니스 분석</a></li>
+      <li class="toc__item"><a href="#copywriting"><span class="toc__num">02</span>카피라이팅 분석</a></li>
+      <li class="toc__item"><a href="#ux"><span class="toc__num">03</span>UX/디자인 분석</a></li>
+      <li class="toc__item"><a href="#score"><span class="toc__num">04</span>종합 점수</a></li>
+      <li class="toc__item"><a href="#proposals"><span class="toc__num">05</span>개선안 3가지</a></li>
+    </ol>
+  </nav>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════
+       00 — CONTEXT
+       ═══════════════════════════════════════ -->
+  <section id="context" class="section">
+    <div class="section__label">00 &mdash; context</div>
+    <h2 class="section__title">분석 대상 개요</h2>
+
+    <div class="text-block">
+      <p>
+        Observation 섹션은 뮤즈드마레 홈페이지의 두 번째 섹션으로, Hero(The Void)에서 심해의 감각적 충격을 경험한 방문자가 처음 만나는 서사 공간이다. AIDA 모델에서 <span class="highlight">Interest(관심)</span> 단계를 담당하며, 브랜드의 핵심 차별점인 "해저 숙성"을 관찰 일기 형식으로 전달한다.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card__label">current structure</div>
+      <div class="card__title">현재 구성 요소</div>
+      <ul>
+        <li>섹션 타이틀: "observation." + 한글 부제 "바다의 기록"</li>
+        <li>서브헤드: "바다는 기록한다."</li>
+        <li>4개의 관찰 일기 (2024.11 ~ 2025.10, 약 1년간의 숙성 기록)</li>
+        <li>독립 인용문: "바다가 숙성을 결정한다. 우리가 아니다."</li>
+        <li>CTA: "기록 전체 보기" (텍스트 링크)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card__label">visual spec</div>
+      <div class="card__title">시각 사양</div>
+      <ul>
+        <li>배경: warm-ivory (#ECEAE6), 한지 텍스처 오버레이 (opacity 0.03)</li>
+        <li>레이아웃: 센터 정렬, max-width 520px</li>
+        <li>타이포: Cormorant Garamond (타이틀/날짜) + Noto Sans KR (본문)</li>
+        <li>텍스트 컬러: earth-muted rgba(49, 46, 42, 0.5) - 극도로 낮은 대비</li>
+        <li>패딩: 상 140px / 하 120px</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════
+       01 — MARKETING ANALYSIS
+       ═══════════════════════════════════════ -->
+  <section id="marketing" class="section">
+    <div class="section__label">01 &mdash; marketing / business</div>
+    <h2 class="section__title">마케팅/비즈니스 <em>분석</em></h2>
+
+    <!-- AIDA Interest -->
+    <div class="card">
+      <div class="card__label">aida model &mdash; interest</div>
+      <div class="card__title">현재 구성이 실제로 "관심"을 만드는가?</div>
+      <p style="margin-bottom: 20px;">
+        <span class="highlight">부분적으로 성공한다.</span> 일기 형식은 일반적인 브랜드 스토리텔링(역사 나열, 창업자 서사)과 차별화되며, "바다가 관찰자"라는 독특한 시점이 호기심을 유발한다. 그러나 다음 문제가 Interest 단계의 완성도를 제한한다.
+      </p>
+      <ul>
+        <li><span class="highlight">정보 밀도 부족:</span> 4개 일기가 모두 텍스트로만 구성되어, Hero의 시각적 충격 이후 급격한 밀도 저하가 발생한다. 감각 채널이 시각에서 텍스트 독해로 전환되며 인지적 단절이 생긴다.</li>
+        <li><span class="highlight">"왜 바다인가"의 답이 암시적:</span> 일기는 숙성 과정의 관찰을 기록하지만, 해저 숙성이 왜 특별한지에 대한 명시적 연결이 없다. 수온 3.2도, 압력, 해류 등 데이터가 나오지만 이것이 샴페인의 맛이나 품질에 어떤 영향을 주는지 유추해야 한다.</li>
+        <li><span class="highlight">감정적 보상 지연:</span> 방문자는 4개 일기를 모두 읽어야 서사적 보상(인양 전날의 감동)에 도달한다. 이 구간이 길다.</li>
+      </ul>
+    </div>
+
+    <!-- Post-Hero Experience -->
+    <div class="card">
+      <div class="card__label">post-hero transition</div>
+      <div class="card__title">Hero 직후, 방문자가 느껴야 하는 것</div>
+      <p style="margin-bottom: 20px;">
+        Hero(The Void)는 심해 영상과 감각 카피로 "이건 평범한 와인 브랜드가 아니다"라는 인상을 심는다. Observation은 그 충격을 <span class="highlight">서사적 깊이</span>로 전환하는 역할을 해야 한다.
+      </p>
+      <ul>
+        <li><span class="highlight">경외감에서 이해로:</span> "이 브랜드는 실제로 바다에서 무언가를 하고 있다"는 구체적 인식</li>
+        <li><span class="highlight">시간의 질감:</span> 47일, 수온 변화, 기포의 변화 등 시간이 물리적으로 작용하고 있다는 실감</li>
+        <li><span class="highlight">신뢰의 시작:</span> 관찰 기록이라는 형식 자체가 투명성과 진정성을 보증</li>
+        <li><span class="highlight">호기심의 심화:</span> "다음 섹션(Data Archive)에서 이 데이터를 더 보고 싶다"는 전이 욕구</li>
+      </ul>
+      <p style="margin-top: 16px;">
+        현재 구성은 세 번째(신뢰)와 네 번째(호기심) 목표를 어느 정도 달성하지만, 첫 번째(구체적 인식)와 두 번째(시간의 질감)가 텍스트만으로는 약하다.
+      </p>
+    </div>
+
+    <!-- Diary Format Benchmark -->
+    <div class="card">
+      <div class="card__label">format benchmark</div>
+      <div class="card__title">일기 형식은 럭셔리 브랜드에서 유효한가?</div>
+
+      <table class="bench-table">
+        <thead>
+          <tr>
+            <th>브랜드</th>
+            <th>스토리텔링 방식</th>
+            <th>시사점</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="brand-name">Aesop</span></td>
+            <td>에세이/문학 발췌. 제품 페이지에 문학 인용문 배치. 텍스트 중심이나 타이포그래피와 여백으로 미학적 완성도 확보.</td>
+            <td>텍스트 중심 접근이 럭셔리에서 작동하는 증거. 단, Aesop은 제품 자체가 텍스트와 공존하는 레이아웃.</td>
+          </tr>
+          <tr>
+            <td><span class="brand-name">Le Labo</span></td>
+            <td>도시별 아카이브. 각 향수에 장소의 기억을 연결. 사진 + 짧은 텍스트의 에디토리얼 형식.</td>
+            <td>텍스트만이 아닌 감각적 이미지와의 병행. 장소성(Terroir)을 시각적으로 전달.</td>
+          </tr>
+          <tr>
+            <td><span class="brand-name">Dom Perignon</span></td>
+            <td>빈티지 아카이브 형식. 각 연도의 기후, 수확, 셀라 마스터의 노트를 갤러리처럼 배치.</td>
+            <td>아카이브/기록 형식이 럭셔리에서 권위를 만든다. 영상+이미지+텍스트 멀티미디어 활용.</td>
+          </tr>
+          <tr>
+            <td><span class="brand-name">Krug</span></td>
+            <td>음악 페어링(Krug x Music). 감각 경험을 크로스미디어로 확장. 데이터와 감성의 결합.</td>
+            <td>단일 감각(텍스트)을 넘어 다감각 경험이 프리미엄 인식을 강화.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="quote-block">
+        <p>
+          일기 형식 자체는 유효하다. Aesop의 문학적 접근, Dom Perignon의 아카이브 형식이 이를 증명한다.<br>
+          그러나 벤치마크 브랜드 중 <span class="highlight">순수 텍스트만으로 한 섹션 전체를 구성하는 경우는 없다.</span><br>
+          이미지, 영상, 데이터 시각화 중 최소 하나의 보조 감각 채널이 필요하다.
+        </p>
+      </div>
+    </div>
+
+    <!-- Why the Sea -->
+    <div class="card">
+      <div class="card__label">core question</div>
+      <div class="card__title">"왜 바다인가"에 대한 답을 충분히 하는가?</div>
+      <p style="margin-bottom: 20px;">
+        <span class="highlight">충분하지 않다.</span> 현재 일기는 "바다에서 무슨 일이 일어나는가"를 보여주지만, "왜 그것이 중요한가"를 말하지 않는다. 방문자는 다음 질문에 답을 얻지 못한 채 다음 섹션으로 넘어간다.
+      </p>
+      <ul>
+        <li>수온 3.2도가 샴페인에 어떤 의미인가?</li>
+        <li>압력이 코르크를 누르면 안의 기포에 무슨 일이 생기는가?</li>
+        <li>해류가 병을 기울이면 효모 반응이 왜 달라지는가?</li>
+      </ul>
+      <p style="margin-top: 16px;">
+        이 질문들을 Observation이 직접 답할 필요는 없다. 오히려 다음 섹션(Data Archive)으로의 강력한 전이 장치로 활용할 수 있다. 단, 현재는 질문조차 명시적으로 제기되지 않는 것이 문제다. <span class="highlight">관찰은 기록하되, 질문은 남겨야 한다.</span>
+      </p>
+    </div>
+
+    <!-- Drop-off Risk -->
+    <div class="card">
+      <div class="card__label">drop-off risk</div>
+      <div class="card__title">이탈 위험 구간</div>
+      <ul>
+        <li><span class="highlight">일기 2~3 사이 (최고 위험):</span> 일기 1의 구체적 이미지(수온, 47일째) 이후 일기 2는 추상화되고, 일기 3은 극도로 짧다. 정보량이 줄며 스크롤 동기가 약해진다. 3개의 일기가 동일한 시각적 패턴으로 반복되어 "더 읽어야 할 이유"가 불분명하다.</li>
+        <li><span class="highlight">일기 4 이후 ~ 인용문 사이:</span> margin-top 100px의 빈 공간. 시각적 보상 없이 빈 화면만 스크롤하게 된다.</li>
+        <li><span class="highlight">섹션 진입 직후:</span> Hero의 다크 배경에서 warm-ivory 라이트 배경으로 급전환. 시각적 충격 후 갑자기 "조용한 종이"를 만나면 에너지 낙차가 크다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════
+       02 — COPYWRITING ANALYSIS
+       ═══════════════════════════════════════ -->
+  <section id="copywriting" class="section">
+    <div class="section__label">02 &mdash; copywriting</div>
+    <h2 class="section__title">카피라이팅 <em>분석</em></h2>
+
+    <!-- Emotion Curve -->
+    <div class="card" style="padding: 48px 40px;">
+      <div class="card__label">narrative arc &mdash; emotion curve</div>
+      <div class="card__title">4개 일기의 감정 곡선</div>
+      <div class="emotion-curve">
+        <svg viewBox="0 0 600 200" preserveAspectRatio="xMidYMid meet" style="max-height: 200px;">
+          <!-- Grid -->
+          <line x1="60" y1="30" x2="60" y2="170" stroke="rgba(204,173,123,0.08)" stroke-width="0.5"/>
+          <line x1="60" y1="170" x2="560" y2="170" stroke="rgba(204,173,123,0.08)" stroke-width="0.5"/>
+          <!-- Y labels -->
+          <text x="50" y="45" fill="rgba(204,173,123,0.25)" font-size="8" text-anchor="end" font-family="Cormorant Garamond" font-style="italic">high</text>
+          <text x="50" y="105" fill="rgba(204,173,123,0.25)" font-size="8" text-anchor="end" font-family="Cormorant Garamond" font-style="italic">mid</text>
+          <text x="50" y="165" fill="rgba(204,173,123,0.25)" font-size="8" text-anchor="end" font-family="Cormorant Garamond" font-style="italic">low</text>
+          <!-- Curve -->
+          <path d="M80,75 C130,60 170,90 210,100 C250,110 290,130 330,125 C370,120 420,55 470,40 C490,35 520,50 540,55"
+                fill="none" stroke="rgba(204,173,123,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Points -->
+          <circle cx="120" cy="75" r="4" fill="#CCAD7B" opacity="0.7"/>
+          <circle cx="240" cy="105" r="4" fill="#CCAD7B" opacity="0.7"/>
+          <circle cx="360" cy="125" r="4" fill="#CCAD7B" opacity="0.5"/>
+          <circle cx="480" cy="42" r="4" fill="#CCAD7B" opacity="0.9"/>
+          <!-- Labels -->
+          <text x="120" y="185" fill="rgba(232,229,225,0.4)" font-size="8" text-anchor="middle" font-family="Noto Sans KR">일기 1</text>
+          <text x="240" y="185" fill="rgba(232,229,225,0.4)" font-size="8" text-anchor="middle" font-family="Noto Sans KR">일기 2</text>
+          <text x="360" y="185" fill="rgba(232,229,225,0.4)" font-size="8" text-anchor="middle" font-family="Noto Sans KR">일기 3</text>
+          <text x="480" y="185" fill="rgba(232,229,225,0.4)" font-size="8" text-anchor="middle" font-family="Noto Sans KR">일기 4</text>
+          <!-- Annotations -->
+          <text x="120" y="66" fill="rgba(204,173,123,0.4)" font-size="7" text-anchor="middle" font-family="Cormorant Garamond" font-style="italic">concrete</text>
+          <text x="240" y="96" fill="rgba(204,173,123,0.4)" font-size="7" text-anchor="middle" font-family="Cormorant Garamond" font-style="italic">abstract</text>
+          <text x="360" y="116" fill="rgba(204,173,123,0.4)" font-size="7" text-anchor="middle" font-family="Cormorant Garamond" font-style="italic">minimal</text>
+          <text x="480" y="33" fill="rgba(204,173,123,0.4)" font-size="7" text-anchor="middle" font-family="Cormorant Garamond" font-style="italic">climax</text>
+        </svg>
+      </div>
+      <p style="font-size: 13px; color: var(--earth-light); line-height: 1.9; margin-top: 16px;">
+        감정 곡선이 <span class="highlight">V자가 아닌 하강-급등 패턴</span>을 그린다. 일기 1에서 3까지 점진적으로 하강한 후 일기 4에서 급등한다. 이 구조의 문제는 일기 2~3 구간에서 이탈 가능성이 높다는 것이다. 중간 지점에 작은 상승(정서적 보상)이 필요하다.
+      </p>
+    </div>
+
+    <!-- Diary 1 -->
+    <div class="copy-card">
+      <div class="copy-card__header">
+        <div class="copy-card__date">일기 1 &mdash; 2024. 11. 03.</div>
+        <div class="copy-card__copy">
+          수온 3.2도. 조류가 멈추었다.<br>
+          병이 바닥에 닿은 지 47일째.<br>
+          표면의 진동이 여기까지 오지 않는다.
+        </div>
+      </div>
+      <div class="copy-card__body">
+        <div class="copy-card__role">서사적 역할: 도입 / 상황 설정</div>
+        <div class="copy-card__analysis">
+          가장 강한 일기. 수온 3.2도, 47일째라는 <span class="highlight">구체적 수치</span>가 관찰자의 기록이라는 형식적 신뢰를 즉시 확립한다. "표면의 진동이 여기까지 오지 않는다"는 심해의 고립감과 정적을 한 문장으로 압축한다. 명사형 종결("멈추었다")과 관찰자 시점이 브랜드 톤을 정확히 구현한다. <span class="highlight">퀄리티: 상.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Diary 2 -->
+    <div class="copy-card">
+      <div class="copy-card__header">
+        <div class="copy-card__date">일기 2 &mdash; 2025. 02. 18.</div>
+        <div class="copy-card__copy">
+          압력이 코르크를 누른다.<br>
+          안쪽에서 기포가 느려진다.<br>
+          시간이 액체에 스며드는 소리가 있다면<br>
+          이런 소리일 것이다.
+        </div>
+      </div>
+      <div class="copy-card__body">
+        <div class="copy-card__role">서사적 역할: 과정 / 변화의 시작</div>
+        <div class="copy-card__analysis">
+          관찰에서 상상으로 넘어가는 전환점. 앞 두 줄은 물리적 관찰이고, 뒤 두 줄은 시적 상상이다. "시간이 액체에 스며드는 소리"라는 공감각적 표현이 텍스트 전용 섹션에서 감각적 보상을 만든다. 다만 <span class="highlight">"~일 것이다"라는 추측형 종결</span>이 관찰자 시점의 객관성을 살짝 흐린다. 일기 1의 간결함 대비 4줄로 늘어나며 밀도가 약간 떨어진다. <span class="highlight">퀄리티: 중상.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Diary 3 -->
+    <div class="copy-card">
+      <div class="copy-card__header">
+        <div class="copy-card__date">일기 3 &mdash; 2025. 06. 01.</div>
+        <div class="copy-card__copy">
+          해류가 병을 0.3도 기울였다.<br>
+          효모가 반응한다.<br>
+          바다가 결정한다.
+        </div>
+      </div>
+      <div class="copy-card__body">
+        <div class="copy-card__role">서사적 역할: 전환 / 주제 선언</div>
+        <div class="copy-card__analysis">
+          가장 짧고 선언적인 일기. "바다가 결정한다"는 브랜드 메시지의 핵심을 3단 논법으로 압축한다. 0.3도라는 정밀한 수치가 관찰의 진정성을 유지한다. 그러나 <span class="highlight">문제는 이 일기가 너무 짧다는 것</span>이다. 일기 1(3줄), 일기 2(4줄)에서 일기 3(3줄)으로 오면서 시각적으로 "줄어드는" 인상을 주고, 이것이 곧바로 정서적 에너지 하락으로 이어진다. 또한 마지막 문장 "바다가 결정한다"는 클로징 인용문의 "바다가 숙성을 결정한다"와 의미적으로 중복된다. <span class="highlight">퀄리티: 중.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Diary 4 -->
+    <div class="copy-card">
+      <div class="copy-card__header">
+        <div class="copy-card__date">일기 4 &mdash; 2025. 10. 27.</div>
+        <div class="copy-card__copy">
+          인양 전날.<br>
+          병에 손을 대면 차갑다.<br>
+          바다의 시간이 손끝에 전해진다.
+        </div>
+      </div>
+      <div class="copy-card__body">
+        <div class="copy-card__role">서사적 역할: 클라이맥스 / 촉각적 전환</div>
+        <div class="copy-card__analysis">
+          서사의 정점. 앞선 일기가 모두 "관찰"이었다면, 여기서 처음으로 <span class="highlight">촉각("손을 대면 차갑다")</span>이 등장한다. 관찰자가 대상에 접촉하는 순간이다. "바다의 시간이 손끝에 전해진다"는 추상(시간)과 구체(손끝)의 결합으로 강한 여운을 남긴다. "인양 전날"이라는 첫 줄이 서사적 긴장감을 만든다. 다만, 일기 3과 동일한 3줄 구성이어서 시각적 변별력이 부족하다. 클라이맥스라면 구조적으로 다른 인상이 필요하다. <span class="highlight">퀄리티: 상.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subhead & Quote Analysis -->
+    <div class="card">
+      <div class="card__label">framing copy</div>
+      <div class="card__title">프레이밍 카피 분석</div>
+
+      <p style="margin-bottom: 24px;">
+        <span class="highlight">"바다는 기록한다."</span> &mdash; 서브헤드
+      </p>
+      <p style="margin-bottom: 28px; font-size: 13.5px; color: var(--earth-light); line-height: 1.9;">
+        5글자. 주어(바다) + 동사(기록한다)의 가장 간결한 완전문. 섹션 전체의 전제를 선언한다. 관찰자는 인간이 아니라 바다라는 역전이 이 한 문장에 압축되어 있다. 극도로 효과적이다. 다만 opacity 0.35로 처리되어 시각적으로 놓치기 쉽다는 것이 문제다.
+      </p>
+
+      <p style="margin-bottom: 24px;">
+        <span class="highlight">"바다가 숙성을 결정한다. 우리가 아니다."</span> &mdash; 독립 인용문
+      </p>
+      <p style="font-size: 13.5px; color: var(--earth-light); line-height: 1.9;">
+        브랜드 철학의 핵심 선언. "우리가 아니다"라는 부정문이 강하다. 럭셔리 브랜드가 자신의 통제력을 부정하는 역설. 이것은 "겸손"이 아니라 "자연에의 항복"이며, 그 항복 자체가 브랜드의 자부심이다. 구조적으로 일기 전체를 하나의 결론으로 수렴시키는 역할을 한다. 그러나 일기 3의 "바다가 결정한다"와 의미적 반복이 발생한다. 일기 3을 수정하거나, 인용문의 표현을 차별화할 필요가 있다.
+      </p>
+    </div>
+
+    <!-- Tone Compliance -->
+    <div class="card">
+      <div class="card__label">tone compliance</div>
+      <div class="card__title">브랜드 톤 준수 여부</div>
+      <table class="bench-table">
+        <thead>
+          <tr>
+            <th>기준</th>
+            <th>평가</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>명사형/선언형 종결</td>
+            <td><span class="highlight">준수</span></td>
+            <td>"멈추었다", "반응한다", "결정한다" 등 일관</td>
+          </tr>
+          <tr>
+            <td>관찰자 시점</td>
+            <td><span class="highlight">대체로 준수</span></td>
+            <td>일기 2의 "~일 것이다"가 약간의 일탈</td>
+          </tr>
+          <tr>
+            <td>형용사 수식 없음</td>
+            <td><span class="highlight">완벽 준수</span></td>
+            <td>형용사가 거의 없음. "차갑다"만 유일한 감각 형용사</td>
+          </tr>
+          <tr>
+            <td>감탄부호 없음</td>
+            <td><span class="highlight">완벽 준수</span></td>
+            <td>마침표만 사용</td>
+          </tr>
+          <tr>
+            <td>여백 충분</td>
+            <td><span class="highlight">준수</span></td>
+            <td>일기 간 48px 간격, 인용문 전 100px</td>
+          </tr>
+          <tr>
+            <td>판매 언어 금지</td>
+            <td><span class="highlight">완벽 준수</span></td>
+            <td>전시 안내문 톤 유지</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Copy Improvements -->
+    <div class="card">
+      <div class="card__label">copy refinement</div>
+      <div class="card__title">카피 개선 가능성</div>
+      <ul>
+        <li><span class="highlight">일기 3 재작업:</span> "바다가 결정한다"를 삭제하고, 해류와 효모 반응의 관찰을 더 구체적으로 기록. 예: "효모의 입자가 해류를 따라 이동한다. / 셀러에서는 일어나지 않는 현상." 인용문과의 의미 중복을 해소하고, 해저 숙성만의 고유한 현상을 부각.</li>
+        <li><span class="highlight">일기 2의 마지막 줄 조정:</span> "~일 것이다" 추측형 대신 관찰자 시점 유지. 예: "시간이 액체에 스며드는 소리." (명사형 종결로 통일)</li>
+        <li><span class="highlight">일기 4의 구조적 차별화:</span> 클라이맥스 일기에 시각적 또는 구조적 변별력 부여. 행간을 더 넓히거나, 폰트 크기를 미세하게 키우거나, 별도의 시각적 처리를 적용.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════
+       03 — UX / DESIGN ANALYSIS
+       ═══════════════════════════════════════ -->
+  <section id="ux" class="section">
+    <div class="section__label">03 &mdash; ux / design</div>
+    <h2 class="section__title">UX/디자인 <em>분석</em></h2>
+
+    <!-- Current Layout -->
+    <div class="card">
+      <div class="card__label">layout assessment</div>
+      <div class="card__title">현재 레이아웃이 럭셔리 경험을 만드는가?</div>
+      <p style="margin-bottom: 20px;">
+        <span class="highlight">부분적으로 성공한다.</span> 센터 정렬 + 좁은 max-width(520px) + 충분한 여백은 "시집 읽기"에 가까운 경험을 만든다. 이것은 Quiet Luxury 톤에 부합한다. 그러나 다음 한계가 있다.
+      </p>
+      <ul>
+        <li><span class="highlight">단조로운 반복:</span> 4개 일기가 동일한 구조(날짜 + 텍스트)로 수직 나열된다. 시각적 리듬이 없다. 럭셔리 브랜드 홈페이지에서 이 수준의 단조로움은 "미니멀"이 아니라 "미완성"으로 읽힐 수 있다.</li>
+        <li><span class="highlight">감각 채널 단일:</span> 텍스트 100%. Hero의 풀스크린 영상에서 갑자기 텍스트만의 공간으로 전환되면 감각적 낙차가 크다.</li>
+        <li><span class="highlight">인터랙션 부재:</span> 스크롤 외에 사용자가 할 수 있는 것이 없다. 패럴랙스, 호버, 프로그레시브 노출 등 인터랙션이 전무하다.</li>
+        <li><span class="highlight">스크롤 길이:</span> 4개 일기 + 인용문 + 여백 = 상당한 스크롤 거리. 내용 대비 공간 비율이 높아, 모바일에서 특히 지루할 수 있다.</li>
+      </ul>
+    </div>
+
+    <!-- Alternative Layouts -->
+    <div class="card">
+      <div class="card__label">alternative layouts</div>
+      <div class="card__title">더 효과적인 레이아웃 대안</div>
+
+      <p style="margin-bottom: 24px; font-size: 13.5px; color: var(--earth-light); line-height: 1.9;">
+        다음 4가지 대안을 검토한다. 각각의 장단점과 뮤즈드마레 톤과의 적합성을 분석한다.
+      </p>
+
+      <div style="margin-bottom: 32px;">
+        <p style="margin-bottom: 8px;"><span class="highlight">A. 스크롤 트리거 순차 노출 (Scroll-Triggered Sequential Reveal)</span></p>
+        <p style="font-size: 13.5px; color: var(--earth-light); line-height: 1.9; margin-bottom: 12px;">
+          각 일기가 스크롤에 따라 하나씩 페이드인. 이전 일기는 살짝 올라가며 흐려진다. 현재 레이아웃의 기본 구조를 유지하면서 시간의 흐름을 물리적 스크롤과 연결한다.
+        </p>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+          <span class="tag">적합도: 높음</span>
+          <span class="tag">개발 난이도: 중</span>
+          <span class="tag">톤 유지: 완벽</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 32px;">
+        <p style="margin-bottom: 8px;"><span class="highlight">B. 2컬럼: 이미지 + 텍스트</span></p>
+        <p style="font-size: 13.5px; color: var(--earth-light); line-height: 1.9; margin-bottom: 12px;">
+          좌측에 심해 이미지/시네마그래프, 우측에 일기 텍스트. Le Labo, Kinfolk 스타일. 감각 채널이 추가되나, 뮤즈드마레의 "시집 같은 여백"이 깨질 수 있다. 이미지가 텍스트의 추상적 힘을 약화시킬 위험.
+        </p>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+          <span class="tag">적합도: 중</span>
+          <span class="tag">개발 난이도: 중</span>
+          <span class="tag">톤 유지: 주의 필요</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 32px;">
+        <p style="margin-bottom: 8px;"><span class="highlight">C. 수직 타임라인 + 데이터 힌트</span></p>
+        <p style="font-size: 13.5px; color: var(--earth-light); line-height: 1.9; margin-bottom: 12px;">
+          좌측에 가느다란 수직선(타임라인), 각 일기 위치에 점. 각 일기 옆에 수온/압력 수치를 극도로 작은 사이즈로 표시. 다음 섹션(Data Archive)으로의 시각적 브릿지 역할. Krug의 데이터+감성 결합 방식.
+        </p>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+          <span class="tag">적합도: 높음</span>
+          <span class="tag">개발 난이도: 중상</span>
+          <span class="tag">톤 유지: 양호</span>
+        </div>
+      </div>
+
+      <div>
+        <p style="margin-bottom: 8px;"><span class="highlight">D. 풀스크린 카드 슬라이드</span></p>
+        <p style="font-size: 13.5px; color: var(--earth-light); line-height: 1.9; margin-bottom: 12px;">
+          각 일기가 뷰포트 전체를 차지하는 카드. 수직 스크롤 또는 수평 스와이프로 전환. 몰입감은 극대화되나, 4개 일기의 분량이 풀스크린을 채우기에 부족하다. 공간 대비 텍스트가 너무 적어 오히려 빈약해 보일 수 있다.
+        </p>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+          <span class="tag">적합도: 낮음</span>
+          <span class="tag">개발 난이도: 상</span>
+          <span class="tag">톤 유지: 위험</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transition Experience -->
+    <div class="card">
+      <div class="card__label">section transitions</div>
+      <div class="card__title">섹션 진입/이탈 시 전환 경험</div>
+      <ul>
+        <li><span class="highlight">진입 (Hero → Observation):</span> 다크(#0A0908) → 라이트(#ECEAE6) 배경 전환. 현재는 하드 컷으로 추정된다. 이 전환은 "심해에서 수면으로 올라오는" 경험으로 디자인할 수 있다. 그라디언트 전환 또는 조도 변화 애니메이션이 필요하다. 현재 CSS에서 전환 처리가 없다.</li>
+        <li><span class="highlight">이탈 (Observation → Data Archive):</span> 라이트(#ECEAE6) → 다크(Data Archive 배경). 일기의 감성적 관찰에서 데이터의 정밀한 기록으로 전환되는 순간이다. "기록 전체 보기 →" CTA가 이 전이를 담당하지만, CTA가 너무 약하다(opacity 0.4, font-size 13px). 다음 섹션으로의 궁금증을 만들어야 한다.</li>
+      </ul>
+    </div>
+
+    <!-- Luxury References -->
+    <div class="card">
+      <div class="card__label">luxury references</div>
+      <div class="card__title">럭셔리 브랜드 유사 섹션 레퍼런스</div>
+      <table class="bench-table">
+        <thead>
+          <tr>
+            <th>브랜드</th>
+            <th>유사 섹션</th>
+            <th>적용 가능 요소</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="brand-name">Krug</span></td>
+            <td>"Krug ID" 섹션. 각 병의 고유 스토리를 데이터+내러티브로 조합. 호버 시 추가 정보 노출.</td>
+            <td>일기에 호버/클릭 인터랙션 추가. 숨겨진 데이터 레이어.</td>
+          </tr>
+          <tr>
+            <td><span class="brand-name">Dom Perignon</span></td>
+            <td>빈티지 페이지. 풀스크린 이미지 + 셀라 마스터 노트가 스크롤에 따라 교차 등장.</td>
+            <td>배경에 은은한 시각 요소(파동, 입자) + 텍스트 오버레이 구조.</td>
+          </tr>
+          <tr>
+            <td><span class="brand-name">Aesop</span></td>
+            <td>제품 상세 페이지. 극도의 타이포그래피 중심 디자인. 제품 이미지와 텍스트의 리듬감 있는 교차.</td>
+            <td>타이포그래피 중심 유지하되, 미세한 시각적 변주(굵기, 크기, 컬러 온도 변화) 적용.</td>
+          </tr>
+          <tr>
+            <td><span class="brand-name">Kinfolk</span></td>
+            <td>에디토리얼 아티클. 풀 블리드 이미지 사이에 텍스트 블록이 삽입되는 매거진 레이아웃.</td>
+            <td>일기 사이에 가느다란 시각적 구분자(수평선, 미세한 파동 SVG) 삽입.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════
+       04 — OVERALL SCORE
+       ═══════════════════════════════════════ -->
+  <section id="score" class="section" style="padding-bottom: 60px;">
+    <div class="section__label">04 &mdash; overall assessment</div>
+    <h2 class="section__title">종합 <em>점수</em></h2>
+
+    <div class="score-section">
+      <div class="score-main">
+        <div class="score-number">68</div>
+        <div class="score-total">/ 100</div>
+        <div class="score-label">OVERALL SCORE</div>
+      </div>
+
+      <div class="score-bars">
+        <div class="score-bar">
+          <div class="score-bar__header">
+            <span class="score-bar__name">카피라이팅 품질</span>
+            <span class="score-bar__value">82</span>
+          </div>
+          <div class="score-bar__track">
+            <div class="score-bar__fill" style="width: 82%;"></div>
+          </div>
+        </div>
+        <div class="score-bar">
+          <div class="score-bar__header">
+            <span class="score-bar__name">브랜드 톤 준수</span>
+            <span class="score-bar__value">90</span>
+          </div>
+          <div class="score-bar__track">
+            <div class="score-bar__fill" style="width: 90%;"></div>
+          </div>
+        </div>
+        <div class="score-bar">
+          <div class="score-bar__header">
+            <span class="score-bar__name">AIDA Interest 달성도</span>
+            <span class="score-bar__value">58</span>
+          </div>
+          <div class="score-bar__track">
+            <div class="score-bar__fill" style="width: 58%;"></div>
+          </div>
+        </div>
+        <div class="score-bar">
+          <div class="score-bar__header">
+            <span class="score-bar__name">시각적 경험 / 레이아웃</span>
+            <span class="score-bar__value">45</span>
+          </div>
+          <div class="score-bar__track">
+            <div class="score-bar__fill" style="width: 45%;"></div>
+          </div>
+        </div>
+        <div class="score-bar">
+          <div class="score-bar__header">
+            <span class="score-bar__name">인터랙션 / 몰입도</span>
+            <span class="score-bar__value">35</span>
+          </div>
+          <div class="score-bar__track">
+            <div class="score-bar__fill" style="width: 35%;"></div>
+          </div>
+        </div>
+        <div class="score-bar">
+          <div class="score-bar__header">
+            <span class="score-bar__name">섹션 간 전이 품질</span>
+            <span class="score-bar__value">50</span>
+          </div>
+          <div class="score-bar__track">
+            <div class="score-bar__fill" style="width: 50%;"></div>
+          </div>
+        </div>
+        <div class="score-bar">
+          <div class="score-bar__header">
+            <span class="score-bar__name">이탈 방지력</span>
+            <span class="score-bar__value">55</span>
+          </div>
+          <div class="score-bar__track">
+            <div class="score-bar__fill" style="width: 55%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <p>
+        카피의 문학적 품질과 브랜드 톤 일관성은 높은 수준이다. 그러나 이 섹션은 "잘 쓴 시집의 한 페이지"에 머물러 있다. 홈페이지의 두 번째 섹션으로서 방문자의 관심을 붙잡고 심화시키는 역할을 하기에는, <span class="highlight">시각적/인터랙티브 경험이 카피의 품질을 따라가지 못한다.</span>
+      </p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════
+       05 — IMPROVEMENT PROPOSALS
+       ═══════════════════════════════════════ -->
+  <section id="proposals" class="section section--wide">
+    <div class="section__label">05 &mdash; proposals</div>
+    <h2 class="section__title">개선안 <em>3가지</em></h2>
+
+    <div class="text-block" style="margin-bottom: 56px;">
+      <p>
+        우선순위 기준: 브랜드 톤 보존 > 이탈률 감소 > 다음 섹션(Data Archive)으로의 전이 강화. 세 개선안 모두 현재 카피를 크게 변경하지 않으며, 레이아웃과 인터랙션 레이어를 추가하는 방향이다.
+      </p>
+    </div>
+
+    <!-- Proposal 1 -->
+    <div class="improve">
+      <div class="improve__item">
+        <div class="improve__priority improve__priority--high">priority 1 &mdash; highest impact</div>
+        <div class="improve__title">스크롤 연동 순차 노출 + 수직 타임라인</div>
+        <div class="improve__desc">
+          현재의 수직 나열 구조를 유지하되, 좌측에 가느다란 수직 타임라인(1px, amber 10% opacity)을 추가한다. 각 일기는 스크롤에 따라 하나씩 페이드인되며, 타임라인 위의 해당 지점이 활성화된다. 타임라인 위에 수온/압력 등 미세한 데이터 힌트를 배치하여 Data Archive 섹션으로의 시각적 브릿지를 만든다. 일기 4(클라이맥스)는 다른 일기보다 약간 큰 폰트와 넓은 행간으로 시각적 변별력을 준다.
+        </div>
+
+        <div class="wireframe"><span class="wf-label">/* Proposal 1 &mdash; Wireframe */</span>
+
+<span class="wf-dim">┌──────────────────────────────────────────────────────────────┐</span>
+<span class="wf-dim">│</span>  <span class="wf-dim">bg: warm-ivory #ECEAE6 + hanji texture</span>                     <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>                                                              <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>                     <span class="wf-highlight">observation.</span>                              <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>                      바다의 기록                               <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>                                                              <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>                    "바다는 기록한다."                            <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>                                                              <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>                                                              <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>                                                        <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  <span class="wf-dim">3.2&deg;C</span>                                               <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">&#x25CF;</span>  2024. 11. 03.                                        <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  수온 3.2도. 조류가 멈추었다.                           <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  병이 바닥에 닿은 지 47일째.                            <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  표면의 진동이 여기까지 오지 않는다.                    <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>                                                        <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  <span class="wf-dim">2.1 atm</span>                                              <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">&#x25CF;</span>  2025. 02. 18.                                        <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  압력이 코르크를 누른다.                               <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  안쪽에서 기포가 느려진다.                              <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  시간이 액체에 스며드는 소리.                           <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>                                                        <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  <span class="wf-dim">0.3&deg; tilt</span>                                            <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">&#x25CF;</span>  2025. 06. 01.                                        <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  해류가 병을 0.3도 기울였다.                            <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  효모의 입자가 해류를 따라 이동한다.                    <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  셀러에서는 일어나지 않는 현상.                         <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>                                                        <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  <span class="wf-dim">day 365</span>                                              <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">&#x25CF;</span>  2025. 10. 27.          <span class="wf-highlight">&larr; slightly larger font</span>      <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  인양 전날.                                             <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  병에 손을 대면 차갑다.                                 <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>     <span class="wf-highlight">│</span>  바다의 시간이 손끝에 전해진다.                         <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>                                                              <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>        ──────────────────────────────────                     <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>                                                              <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>             <span class="wf-highlight">"바다가 숙성을 결정한다.</span>                         <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>              <span class="wf-highlight">우리가 아니다."</span>                                  <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>                                                              <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>                기록 전체 보기 &rarr;                               <span class="wf-dim">│</span>
+<span class="wf-dim">│</span>                                                              <span class="wf-dim">│</span>
+<span class="wf-dim">└──────────────────────────────────────────────────────────────┘</span></div>
+
+        <div class="card" style="margin-top: 24px;">
+          <div class="card__label">implementation</div>
+          <ul>
+            <li>타임라인: position absolute, left offset, 1px 수직선 + 4px 원형 노드</li>
+            <li>데이터 힌트: font-size 10px, opacity 0.2, Cormorant Garamond italic</li>
+            <li>스크롤 트리거: IntersectionObserver 기반, 각 entry에 threshold 0.3</li>
+            <li>일기 4 차별화: font-size 1.0rem(기존 0.875rem), line-height 2.2</li>
+            <li>예상 효과: 이탈률 15-20% 감소, Data Archive 전이율 향상</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Proposal 2 -->
+      <div class="improve__item">
+        <div class="improve__priority improve__priority--mid">priority 2 &mdash; sensory enrichment</div>
+        <div class="improve__title">배경 앰비언트 레이어 + 섹션 전환 연출</div>
+        <div class="improve__desc">
+          warm-ivory 배경 위에 극도로 미세한 앰비언트 레이어를 추가한다. 느린 속도로 이동하는 한지 섬유 입자 또는 수면 반사광 효과. 스크롤 위치에 따라 배경의 밝기가 미세하게 변한다(일기 1: 약간 더 밝음 → 일기 4: 약간 더 어두움). Hero에서 이 섹션으로의 전환에 1.5초 그라디언트 fade를 적용한다.
+        </div>
+
+        <div class="wireframe"><span class="wf-label">/* Proposal 2 &mdash; Ambient Layer Concept */</span>
+
+<span class="wf-dim">Hero Section (dark #0A0908)</span>
+<span class="wf-dim">         │</span>
+<span class="wf-dim">         ▼</span>  <span class="wf-highlight">&larr; gradient fade: 1.5s, dark → warm-ivory</span>
+<span class="wf-dim">         │     particles: gold dust, opacity 0.02-0.04</span>
+<span class="wf-dim">         │     speed: 0.3px/frame (barely perceptible)</span>
+<span class="wf-dim">         ▼</span>
+<span class="wf-dim">┌──────────────────────────────────────────┐</span>
+<span class="wf-dim">│  bg-brightness: 1.02</span>  <span class="wf-highlight">&larr; 일기 1</span>            <span class="wf-dim">│</span>
+<span class="wf-dim">│  bg-brightness: 1.00</span>  <span class="wf-highlight">&larr; 일기 2</span>            <span class="wf-dim">│</span>
+<span class="wf-dim">│  bg-brightness: 0.98</span>  <span class="wf-highlight">&larr; 일기 3</span>            <span class="wf-dim">│</span>
+<span class="wf-dim">│  bg-brightness: 0.95</span>  <span class="wf-highlight">&larr; 일기 4 (deeper)</span>   <span class="wf-dim">│</span>
+<span class="wf-dim">└──────────────────────────────────────────┘</span>
+<span class="wf-dim">         │</span>
+<span class="wf-dim">         ▼</span>  <span class="wf-highlight">&larr; gradient fade: warm-ivory → dark</span>
+<span class="wf-dim">         │</span>
+<span class="wf-dim">Data Archive Section (dark)</span></div>
+
+        <div class="card" style="margin-top: 24px;">
+          <div class="card__label">implementation</div>
+          <ul>
+            <li>입자: Canvas 또는 CSS animation, 20-30개 입자, will-change: transform</li>
+            <li>밝기 변화: CSS filter brightness() + ScrollTrigger 연동</li>
+            <li>섹션 전환: linear-gradient 오버레이, position sticky 활용</li>
+            <li>성능: requestAnimationFrame throttle, IntersectionObserver로 뷰포트 밖 비활성화</li>
+            <li>예상 효과: 감각적 몰입도 30% 향상, Hero→Observation 전환 자연스러움</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Proposal 3 -->
+      <div class="improve__item">
+        <div class="improve__priority improve__priority--low">priority 3 &mdash; copy refinement</div>
+        <div class="improve__title">카피 미세 조정 + 5번째 일기 추가</div>
+        <div class="improve__desc">
+          일기 3의 "바다가 결정한다"를 수정하여 인용문과의 중복을 해소한다. 일기 2의 마지막 줄을 명사형 종결로 통일한다. 일기 2와 3 사이에 5번째 일기(숙성 중반, 4-5월 시점)를 추가하여 감정 곡선의 중간 하강을 완화한다. 이 일기는 계절 변화(겨울→봄)에 따른 수온 상승과 효모 활성화를 관찰하는 내용으로, V자 커브의 저점에 작은 상승을 만든다.
+        </div>
+
+        <div class="wireframe"><span class="wf-label">/* Proposal 3 &mdash; Copy Adjustment */</span>
+
+<span class="wf-highlight">일기 2 (수정)</span>
+압력이 코르크를 누른다.
+안쪽에서 기포가 느려진다.
+시간이 액체에 스며드는 소리.    <span class="wf-highlight">&larr; "~일 것이다" → 명사형 종결</span>
+
+<span class="wf-highlight">일기 2.5 (신규, 2025. 04. 12.)</span>
+수온이 올랐다. 0.7도.
+효모가 다시 움직이기 시작한다.   <span class="wf-highlight">&larr; 감정 곡선 중간 상승</span>
+겨울을 견딘 것들은 봄을 안다.   <span class="wf-highlight">&larr; 시적 보상</span>
+
+<span class="wf-highlight">일기 3 (수정)</span>
+해류가 병을 0.3도 기울였다.
+효모의 입자가 해류를 따라 이동한다. <span class="wf-highlight">&larr; 기존 "효모가 반응한다" 구체화</span>
+셀러에서는 일어나지 않는 현상.     <span class="wf-highlight">&larr; "바다가 결정한다" → 차별화된 관찰</span></div>
+
+        <div class="card" style="margin-top: 24px;">
+          <div class="card__label">rationale</div>
+          <ul>
+            <li>5개 일기로 확장 시 타임라인이 약 1년(11월→10월)을 더 고르게 커버</li>
+            <li>"겨울을 견딘 것들은 봄을 안다"는 시적 문장이 감정 곡선 저점에서 작은 보상 제공</li>
+            <li>일기 3의 수정으로 인용문("바다가 숙성을 결정한다")의 독점적 무게가 강화</li>
+            <li>"셀러에서는 일어나지 않는 현상"이 해저 숙성의 차별점을 명시적으로 선언</li>
+            <li>예상 효과: 서사적 완성도 향상, 이탈 위험 구간(일기 2~3) 완화</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider divider--wide"></div>
+
+  <!-- ═══════════════════════════════════════
+       SUMMARY
+       ═══════════════════════════════════════ -->
+  <section class="section" style="padding-bottom: 40px;">
+    <div class="section__label">closing</div>
+    <h2 class="section__title">요약</h2>
+
+    <div class="text-block">
+      <p>
+        Observation 섹션은 뮤즈드마레의 브랜드 톤을 가장 순수하게 구현한 섹션이다. 관찰 일기라는 형식, 명사형 종결의 카피, "바다가 숙성을 결정한다"라는 역설적 선언은 모두 Quiet Luxury의 정수에 부합한다.
+      </p>
+      <p>
+        그러나 "잘 쓴 카피"와 "효과적인 섹션"은 다른 문제다. 현재 구성은 카피의 품질에 비해 레이아웃과 인터랙션이 카피를 충분히 받쳐주지 못한다. 좋은 시는 좋은 책에 담겨야 한다.
+      </p>
+      <p>
+        세 가지 개선안은 현재 카피의 본질을 훼손하지 않으면서, <span class="highlight">시각적 리듬, 감각적 층위, 서사적 완성도</span>를 보강하는 방향이다. 이 세 가지를 모두 적용하면 종합 점수는 68점에서 약 <span class="highlight">82-85점</span> 수준으로 향상될 것으로 예측한다.
+      </p>
+    </div>
+
+    <div class="quote-block">
+      <p>
+        "바다는 기록한다."<br>
+        이 섹션도 그래야 한다. 기록하되, 기록 자체가 경험이 되도록.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════ -->
+  <footer class="report-footer">
+    <p><span class="brand">muse de maree</span></p>
+    <p style="margin-top: 12px;">Observation Section Deep Analysis Report &mdash; 2026. 02. 22.</p>
+    <p style="margin-top: 8px; opacity: 0.5;">Internal Use Only</p>
+  </footer>
+
+</body>
+</html>

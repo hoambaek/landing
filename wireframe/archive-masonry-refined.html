@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Five — Refined Masonry</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: #E8E5E1;
+    color: #312E2A;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Section ── */
+  .section {
+    padding: 120px 80px 160px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 100px;
+  }
+  .section-title {
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    color: #312E2A;
+    margin-bottom: 14px;
+  }
+  .section-sub {
+    font-size: 0.8125rem;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: rgba(49, 46, 42, 0.3);
+  }
+
+  /* ── Masonry Grid ── */
+  .masonry {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: 20px;
+    gap: 0 32px;
+  }
+
+  .m-card {
+    position: relative;
+  }
+
+  .m-card__img {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg,
+      rgba(49, 46, 42, 0.05) 0%,
+      rgba(49, 46, 42, 0.02) 100%);
+    border: 0.5px solid rgba(49, 46, 42, 0.05);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .m-card:hover .m-card__img {
+    transform: scale(0.98);
+  }
+  .m-card__img::after {
+    content: attr(data-label);
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    font-size: 0.625rem;
+    font-style: italic;
+    letter-spacing: 0.15em;
+    color: rgba(49, 46, 42, 0.12);
+  }
+
+  .m-card__info {
+    padding: 16px 0 0;
+  }
+  .m-card__label {
+    font-size: 0.5625rem;
+    font-style: italic;
+    letter-spacing: 0.2em;
+    color: rgba(49, 46, 42, 0.2);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .m-card__name {
+    font-size: clamp(15px, 1.4vw, 20px);
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(49, 46, 42, 0.55);
+    transition: color 0.4s ease;
+  }
+  .m-card:hover .m-card__name {
+    color: rgba(49, 46, 42, 0.8);
+  }
+  .m-card__desc {
+    font-size: 0.6875rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba(49, 46, 42, 0.25);
+    margin-top: 6px;
+  }
+
+  /* ── Card Placement ──
+     12-column grid, intentional whitespace
+
+     Row 1-2: 01(large left) + whitespace + 02(top right)
+     Row 2-3: 01 continues + 03(mid right, offset)
+     Row 3:   whitespace   + 04(bottom left) + 05(bottom right, tall)
+  */
+
+  /* 01 — 주력. 좌측 대형 */
+  .m-card--01 {
+    grid-column: 1 / 6;
+    grid-row: 1 / span 22;
+  }
+  .m-card--01 .m-card__img { height: calc(100% - 72px); }
+
+  /* 02 — 우상단, 여백 두고 배치 */
+  .m-card--02 {
+    grid-column: 7 / 10;
+    grid-row: 2 / span 13;
+  }
+  .m-card--02 .m-card__img { height: calc(100% - 64px); }
+
+  /* 03 — 우측 하단, 02 아래 오프셋 */
+  .m-card--03 {
+    grid-column: 10 / 13;
+    grid-row: 6 / span 16;
+  }
+  .m-card--03 .m-card__img { height: calc(100% - 64px); }
+
+  /* ── 하단 행: 의도적 여백 후 04, 05 ── */
+
+  /* 04 — 하단 좌측, 작은 카드 */
+  .m-card--04 {
+    grid-column: 2 / 5;
+    grid-row: 26 / span 14;
+  }
+  .m-card--04 .m-card__img { height: calc(100% - 64px); }
+
+  /* 05 — 하단 우측, 세로로 긴 클라이막스 */
+  .m-card--05 {
+    grid-column: 7 / 11;
+    grid-row: 24 / span 18;
+  }
+  .m-card--05 .m-card__img { height: calc(100% - 72px); }
+  .m-card--05 .m-card__name {
+    color: rgba(49, 46, 42, 0.7);
+  }
+  .m-card--05 .m-card__limited {
+    display: inline-block;
+    font-size: 0.5625rem;
+    letter-spacing: 0.15em;
+    color: rgba(204, 173, 123, 0.6);
+    border: 0.5px solid rgba(204, 173, 123, 0.2);
+    padding: 3px 8px;
+    margin-top: 8px;
+  }
+
+  /* ── Accent text — 여백에 떠 있는 장식 텍스트 ── */
+  .accent-text {
+    position: absolute;
+    font-size: 0.5625rem;
+    font-style: italic;
+    letter-spacing: 0.2em;
+    color: rgba(49, 46, 42, 0.08);
+    writing-mode: vertical-rl;
+  }
+
+  .masonry {
+    position: relative;
+  }
+
+  .accent--left {
+    grid-column: 6;
+    grid-row: 8 / span 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.5625rem;
+    font-style: italic;
+    letter-spacing: 0.2em;
+    color: rgba(49, 46, 42, 0.06);
+    writing-mode: vertical-rl;
+  }
+
+  .accent--bottom {
+    grid-column: 5 / 7;
+    grid-row: 30 / span 4;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    font-size: 0.5625rem;
+    font-style: italic;
+    letter-spacing: 0.2em;
+    color: rgba(49, 46, 42, 0.06);
+    text-align: center;
+    line-height: 2;
+  }
+
+  .accent--right {
+    grid-column: 11 / 13;
+    grid-row: 26 / span 8;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding-top: 20px;
+    font-size: 0.5625rem;
+    font-style: italic;
+    letter-spacing: 0.2em;
+    color: rgba(49, 46, 42, 0.06);
+    writing-mode: vertical-rl;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1023px) {
+    .section { padding: 80px 40px 120px; }
+    .masonry { gap: 0 24px; }
+  }
+
+  @media (max-width: 767px) {
+    .section { padding: 80px 24px 100px; }
+    .section-header { margin-bottom: 64px; }
+
+    .masonry {
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: 16px;
+      gap: 0 16px;
+    }
+
+    .m-card--01 {
+      grid-column: 1 / -1;
+      grid-row: 1 / span 18;
+    }
+    .m-card--02 {
+      grid-column: 1;
+      grid-row: 21 / span 14;
+    }
+    .m-card--03 {
+      grid-column: 2;
+      grid-row: 21 / span 14;
+    }
+    .m-card--04 {
+      grid-column: 1;
+      grid-row: 37 / span 14;
+    }
+    .m-card--05 {
+      grid-column: 2;
+      grid-row: 37 / span 16;
+    }
+
+    .accent--left,
+    .accent--bottom,
+    .accent--right { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">the five.</div>
+    <div class="section-sub">다섯 개의 큐베. 하나의 바다.</div>
+  </div>
+
+  <div class="masonry">
+    <!-- 01 — Core, Large -->
+    <div class="m-card m-card--01">
+      <div class="m-card__img" data-label="photography"></div>
+      <div class="m-card__info">
+        <div class="m-card__label">cuvée 01 · core</div>
+        <div class="m-card__name">En Lieu Sûr.</div>
+        <div class="m-card__desc">Brut. 떼루아 시리즈의 기둥.</div>
+      </div>
+    </div>
+
+    <!-- 02 — Limited -->
+    <div class="m-card m-card--02">
+      <div class="m-card__img" data-label="photography"></div>
+      <div class="m-card__info">
+        <div class="m-card__label">cuvée 02 · limited</div>
+        <div class="m-card__name">En Lieu Sûr Magnum.</div>
+        <div class="m-card__desc">1500ml. 더 느린 시간.</div>
+      </div>
+    </div>
+
+    <!-- 03 — Limited -->
+    <div class="m-card m-card--03">
+      <div class="m-card__img" data-label="photography"></div>
+      <div class="m-card__info">
+        <div class="m-card__label">cuvée 03 · limited</div>
+        <div class="m-card__name">Élément de Surprise.</div>
+        <div class="m-card__desc">Blanc de Blancs.</div>
+      </div>
+    </div>
+
+    <!-- Accent text in whitespace -->
+    <div class="accent--left">five cuvées, one ocean</div>
+
+    <!-- 04 — Collector's -->
+    <div class="m-card m-card--04">
+      <div class="m-card__img" data-label="photography"></div>
+      <div class="m-card__info">
+        <div class="m-card__label">cuvée 04 · collector's</div>
+        <div class="m-card__name">Atomes Crochus 1yr.</div>
+        <div class="m-card__desc">해저 12개월.</div>
+      </div>
+    </div>
+
+    <!-- Accent text in bottom whitespace -->
+    <div class="accent--bottom">
+      깊이가 다르면<br>시간도 다르다.
+    </div>
+
+    <!-- 05 — Collector's Climax -->
+    <div class="m-card m-card--05">
+      <div class="m-card__img" data-label="photography"></div>
+      <div class="m-card__info">
+        <div class="m-card__label">cuvée 05 · collector's</div>
+        <div class="m-card__name">Atomes Crochus 3yr.</div>
+        <div class="m-card__desc">해저 36개월. 가장 긴 시간. 가장 깊은 기록.</div>
+        <div class="m-card__limited">40병 한정</div>
+      </div>
+    </div>
+
+    <!-- Accent text in right whitespace -->
+    <div class="accent--right">depth record · ocean cellar</div>
+  </div>
+</div>
+
+</body>
+</html>

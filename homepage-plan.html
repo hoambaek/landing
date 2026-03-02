@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muse de Marée — 홈페이지 기획문서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--sand:#EFDFBB;--deep-teal:#3D5A56;--bottle-teal:#A7C7C0;--sea-mist:#F8F9F9;--warm-accent:#C4956A;
+--navy:#1A365D;--pearl:#F7FAFC;--rose-gold:#B7916E;
+--text-primary:#2C2C2C;--text-secondary:#5A5A5A;
+--font-heading:'Cormorant Garamond',Georgia,serif;--font-body:'Noto Sans KR',sans-serif;
+--section-spacing:96px;--content-max:1200px;--sidebar-width:240px;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--sand);color:var(--text-primary);font-family:var(--font-body);font-weight:400;line-height:1.8;-webkit-font-smoothing:antialiased}
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-width);height:100vh;background:rgba(239,223,187,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-right:1px solid rgba(61,90,86,0.12);z-index:1000;display:flex;flex-direction:column;padding:40px 24px 32px;overflow-y:auto}
+.sidebar-brand{font-family:var(--font-heading);font-size:1.15rem;font-weight:600;color:var(--deep-teal);letter-spacing:0.02em;margin-bottom:8px;line-height:1.3}
+.sidebar-subtitle{font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:36px;padding-bottom:20px;border-bottom:1px solid rgba(61,90,86,0.15)}
+.sidebar nav{display:flex;flex-direction:column;gap:2px;flex:1}
+.sidebar nav a{display:block;padding:8px 12px;font-size:0.78rem;color:var(--text-secondary);text-decoration:none;border-radius:6px;transition:all 0.25s ease;letter-spacing:0.01em;line-height:1.5}
+.sidebar nav a:hover{color:var(--deep-teal);background:rgba(61,90,86,0.06)}
+.sidebar nav a.active{color:var(--deep-teal);background:rgba(61,90,86,0.1);font-weight:500}
+.sidebar nav a .nav-num{font-family:var(--font-heading);font-size:0.7rem;color:var(--bottle-teal);margin-right:6px}
+.mobile-toggle{display:none;position:fixed;top:16px;left:16px;z-index:1100;width:44px;height:44px;background:rgba(239,223,187,0.9);backdrop-filter:blur(12px);border:1px solid rgba(61,90,86,0.15);border-radius:8px;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px}
+.mobile-toggle span{display:block;width:20px;height:1.5px;background:var(--deep-teal);transition:all 0.3s ease}
+.main{margin-left:var(--sidebar-width);padding:0 48px}
+.content-wrap{max-width:var(--content-max);margin:0 auto}
+.doc-header{padding:80px 0 60px;border-bottom:1px solid rgba(61,90,86,0.12);margin-bottom:var(--section-spacing)}
+.doc-header h1{font-family:var(--font-heading);font-size:2.8rem;font-weight:300;color:var(--deep-teal);letter-spacing:-0.01em;line-height:1.2;margin-bottom:16px}
+.doc-header h1 em{font-style:italic;font-weight:400}
+.doc-header-meta{display:flex;gap:32px;font-size:0.8rem;color:var(--text-secondary);letter-spacing:0.04em;flex-wrap:wrap}
+.doc-header-meta span{display:flex;align-items:center;gap:8px}
+.doc-header-meta span::before{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--bottle-teal)}
+.section{padding:var(--section-spacing) 0;border-bottom:1px solid rgba(61,90,86,0.08)}
+.section:last-child{border-bottom:none}
+.section-label{font-size:0.7rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--bottle-teal);margin-bottom:20px}
+.section h2{font-family:var(--font-heading);font-size:2.2rem;font-weight:400;color:var(--deep-teal);margin-bottom:40px;line-height:1.25}
+.section h2 em{font-style:italic}
+.section h3{font-family:var(--font-heading);font-size:1.5rem;font-weight:500;color:var(--deep-teal);margin-top:48px;margin-bottom:20px;line-height:1.3}
+.section h4{font-family:var(--font-heading);font-size:1.15rem;font-weight:600;color:var(--text-primary);margin-top:32px;margin-bottom:12px}
+.section p{margin-bottom:16px;max-width:720px}
+.section ul,.section ol{margin-bottom:16px;padding-left:24px;max-width:720px}
+.section li{margin-bottom:8px}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+/* CARDS */
+.glass-card{backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);background:rgba(248,249,249,0.45);border:1px solid rgba(167,199,192,0.3);border-radius:12px;box-shadow:0 4px 24px rgba(61,90,86,0.08);padding:32px;transition:all 0.4s cubic-bezier(0.4,0,0.2,1)}
+.glass-card:hover{background:rgba(248,249,249,0.6);border-color:rgba(167,199,192,0.45);box-shadow:0 8px 32px rgba(61,90,86,0.12);transform:translateY(-4px)}
+.card-grid{display:grid;gap:24px;margin:32px 0}
+.card-grid-2{grid-template-columns:repeat(2,1fr)}
+.card-grid-3{grid-template-columns:repeat(3,1fr)}
+.card-grid-5{grid-template-columns:repeat(5,1fr)}
+.card-label{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--warm-accent);margin-bottom:8px}
+.card-title{font-family:var(--font-heading);font-size:1.4rem;font-weight:400;color:var(--deep-teal);margin-bottom:8px}
+.card-subtitle{font-family:var(--font-heading);font-size:1rem;font-weight:300;color:var(--deep-teal);font-style:italic;margin-bottom:12px}
+.card-body{font-size:0.85rem;line-height:1.7;color:var(--text-secondary);font-weight:300}
+.card-divider{width:40px;height:1px;background:rgba(61,90,86,0.25);margin:16px 0}
+.card-stat{font-family:var(--font-heading);font-size:2rem;font-weight:300;color:var(--deep-teal)}
+.card-stat-label{font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.1em}
+/* TABLES */
+.data-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:0.85rem}
+.data-table th{text-align:left;padding:12px 16px;font-weight:500;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--deep-teal);border-bottom:2px solid rgba(61,90,86,0.2);background:rgba(61,90,86,0.04)}
+.data-table td{padding:12px 16px;border-bottom:1px solid rgba(61,90,86,0.08);vertical-align:top}
+.data-table tr:hover td{background:rgba(61,90,86,0.03)}
+/* BLOCKQUOTE */
+.brand-quote{font-family:var(--font-heading);font-size:1.6rem;font-weight:300;font-style:italic;color:var(--deep-teal);line-height:1.5;padding:32px 0 32px 32px;border-left:3px solid var(--warm-accent);margin:32px 0;max-width:720px}
+.brand-quote cite{display:block;font-size:0.85rem;font-style:normal;color:var(--text-secondary);margin-top:12px;font-family:var(--font-body)}
+/* PILLS */
+.pill{display:inline-block;padding:4px 14px;font-size:0.72rem;letter-spacing:0.08em;border-radius:20px;background:rgba(61,90,86,0.08);color:var(--deep-teal);margin:4px 4px 4px 0}
+.pill--accent{background:rgba(196,149,106,0.15);color:var(--warm-accent)}
+/* SWATCH */
+.color-swatch{width:100%;height:80px;border-radius:8px;margin-bottom:12px}
+/* WIREFRAME */
+.wireframe{background:rgba(61,90,86,0.04);border:1px solid rgba(61,90,86,0.12);border-radius:12px;padding:24px;margin:24px 0;position:relative}
+.wireframe-label{position:absolute;top:-10px;left:16px;background:var(--sand);padding:0 8px;font-size:0.7rem;letter-spacing:0.1em;color:var(--bottle-teal);text-transform:uppercase}
+.wf-block{background:rgba(61,90,86,0.06);border:1px dashed rgba(61,90,86,0.15);border-radius:6px;padding:16px;margin:8px 0;text-align:center;font-size:0.75rem;color:var(--text-secondary)}
+.wf-hero{height:120px;display:flex;align-items:center;justify-content:center;background:rgba(61,90,86,0.1)}
+/* TIMELINE */
+.timeline{position:relative;padding-left:32px;margin:32px 0}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--bottle-teal),var(--warm-accent))}
+.timeline-item{position:relative;margin-bottom:32px;padding-left:24px}
+.timeline-item::before{content:'';position:absolute;left:-28px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--sand);border:2px solid var(--bottle-teal)}
+.timeline-item.active::before{background:var(--warm-accent);border-color:var(--warm-accent)}
+.timeline-date{font-size:0.75rem;letter-spacing:0.1em;color:var(--warm-accent);text-transform:uppercase;margin-bottom:4px}
+.timeline-title{font-family:var(--font-heading);font-size:1.15rem;font-weight:500;color:var(--deep-teal);margin-bottom:4px}
+.timeline-desc{font-size:0.85rem;color:var(--text-secondary)}
+/* SIDEBAR OVERLAY */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:999}
+/* RESPONSIVE */
+@media(max-width:900px){
+.sidebar{transform:translateX(-100%);transition:transform 0.3s ease}
+.sidebar.open{transform:translateX(0)}
+.sidebar-overlay.open{display:block}
+.mobile-toggle{display:flex}
+.main{margin-left:0;padding:0 20px}
+.doc-header h1{font-size:2rem}
+.section h2{font-size:1.7rem}
+.card-grid-2,.card-grid-3,.card-grid-5{grid-template-columns:1fr}
+.doc-header-meta{flex-direction:column;gap:8px}
+}
+@media(max-width:600px){
+.card-grid-2{grid-template-columns:1fr}
+}
+/* FUNNEL */
+.funnel{display:flex;flex-direction:column;gap:2px;margin:32px 0;max-width:600px}
+.funnel-step{padding:16px 24px;text-align:center;color:white;font-size:0.85rem;font-weight:400;position:relative;clip-path:polygon(0 0,100% 0,95% 100%,5% 100%)}
+.funnel-step:first-child{clip-path:polygon(0 0,100% 0,95% 100%,5% 100%)}
+.funnel-step:last-child{clip-path:polygon(5% 0,95% 0,100% 100%,0 100%)}
+/* COMPARISON */
+.comparison{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:32px 0;border:1px solid rgba(61,90,86,0.15);border-radius:12px;overflow:hidden}
+.comparison-col{padding:32px}
+.comparison-col:first-child{background:rgba(61,90,86,0.04);border-right:1px solid rgba(61,90,86,0.1)}
+.comparison-col h4{font-family:var(--font-heading);color:var(--deep-teal);margin-bottom:16px;font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<!-- MOBILE TOGGLE -->
+<button class="mobile-toggle" id="mobileToggle" aria-label="메뉴 열기">
+<span></span><span></span><span></span>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-brand">Muse de Mar&eacute;e</div>
+<div class="sidebar-subtitle">Homepage Planning Document</div>
+<nav>
+<a href="#overview"><span class="nav-num">01</span> 프로젝트 개요</a>
+<a href="#partner-maison"><span class="nav-num">02</span> 파트너 메종</a>
+<a href="#brand-core"><span class="nav-num">03</span> 브랜드 코어</a>
+<a href="#collection"><span class="nav-num">04</span> 컬렉션 라인업</a>
+<a href="#visual-identity"><span class="nav-num">05</span> 비주얼 아이덴티티</a>
+<a href="#target-persona"><span class="nav-num">06</span> 타겟 & 페르소나</a>
+<a href="#marketing"><span class="nav-num">07</span> 마케팅 전략</a>
+<a href="#site-architecture"><span class="nav-num">08</span> 사이트 구조</a>
+<a href="#content-tone"><span class="nav-num">09</span> 콘텐츠 & 톤</a>
+<a href="#roadmap"><span class="nav-num">10</span> 구현 로드맵</a>
+</nav>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+<div class="content-wrap">
+
+<!-- HEADER -->
+<header class="doc-header">
+<h1>Muse de Mar&eacute;e &mdash; <em>홈페이지 기획문서</em></h1>
+<div class="doc-header-meta">
+<span>Version 2.0</span>
+<span>2026년 2월</span>
+<span>Partner: Champagne Mignon-Boulard</span>
+<span>Sea Aging: 남해 청정해역</span>
+</div>
+</header>
+
+<!-- SECTION 01: PROJECT OVERVIEW -->
+<section class="section fade-in" id="overview">
+<div class="section-label">01 &mdash; Project Overview</div>
+<h2>바다의 시간을 기록하는 <em>디지털 아카이브</em></h2>
+
+<div class="brand-quote">
+"프랑스의 대지가 낳고, 한국의 파도가 기른 시간의 결정체"
+</div>
+
+<p><strong>뮤즈드마레(Muse de Mar&eacute;e)</strong>는 프랑스 샹파뉴 지역 Venteuil의 Champagne Mignon-Boulard가 빚은 샴페인을 한국 남해 청정해역 수심 20&ndash;40m에서 숙성시키는 세계 유일의 해저숙성 샴페인 브랜드입니다.</p>
+
+<p>이 문서는 뮤즈드마레의 브랜드 홈페이지를 기획하기 위한 종합 기획서입니다. 브랜드 철학, 실제 제품 라인업, 마케팅 전략, 사이트 구조, UI 시스템, 콘텐츠 방향을 포함합니다.</p>
+
+<div class="card-grid card-grid-3" style="margin-top:40px">
+<div class="glass-card">
+<div class="card-label">Brand Name</div>
+<div class="card-title">Muse de Mar&eacute;e</div>
+<div class="card-divider"></div>
+<div class="card-body">"조수의 뮤즈" &mdash; 바다의 영감을 담은 예술품. 주류가 아닌 <em>마실 수 있는 시간의 예술(Liquid Art)</em></div>
+</div>
+<div class="glass-card">
+<div class="card-label">Partner Maison</div>
+<div class="card-title">Mignon-Boulard</div>
+<div class="card-divider"></div>
+<div class="card-body">Venteuil, Vall&eacute;e de la Marne. 6.42ha, 49 micro-parcels. Winemaker: Cyril Mignon. HVE Level 3 인증</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Sea Aging</div>
+<div class="card-title">남해 청정해역</div>
+<div class="card-divider"></div>
+<div class="card-body">수심 20&ndash;40m, 수온 6&ndash;12&deg;C. 양식장 하부 공간 활용. 1년 / 2년 숙성 라인업. 런칭 2026년 7&ndash;8월</div>
+</div>
+</div>
+
+<h3>사이트 컨셉: 디지털 아카이브</h3>
+<p>뮤즈드마레의 홈페이지는 주류 브랜드의 웹사이트가 아닙니다. 바다의 시간을 보존하고 공유하는 <strong>디지털 기록 보존소</strong>입니다. 사이트 어디에도 구매 버튼이 없으며, 방문자는 "소비자"가 아닌 <strong>"관찰자(Observer)"</strong>로 초대됩니다.</p>
+
+<table class="data-table">
+<thead><tr><th>일반 커머스 언어</th><th>뮤즈드마레 언어</th><th>맥락</th></tr></thead>
+<tbody>
+<tr><td>구매하기 (Buy)</td><td><strong>발견하기 (Discover)</strong></td><td>CTA</td></tr>
+<tr><td>제품 (Product)</td><td><strong>기록 (Record)</strong></td><td>카테고리</td></tr>
+<tr><td>고객 (Customer)</td><td><strong>관찰자 (Observer)</strong></td><td>사용자 지칭</td></tr>
+<tr><td>리뷰 (Review)</td><td><strong>관찰 (Observation)</strong></td><td>사용자 콘텐츠</td></tr>
+<tr><td>회원가입 (Sign Up)</td><td><strong>기록을 시작하다 (Begin Your Log)</strong></td><td>가입</td></tr>
+<tr><td>베스트셀러</td><td><strong>가장 많이 관찰된 (Most Observed)</strong></td><td>인기 지표</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- SECTION 02: PARTNER MAISON -->
+<section class="section fade-in" id="partner-maison">
+<div class="section-label">02 &mdash; Partner Maison</div>
+<h2>Champagne <em>Mignon-Boulard</em></h2>
+
+<div class="brand-quote">
+"At our place, wine is at the table, it is its only reason for being."
+<cite>&mdash; Cyril Mignon, Vigneron</cite>
+</div>
+
+<h3>메종 프로필</h3>
+<p>Champagne Mignon-Boulard는 프랑스 샹파뉴 지역 마른 강 우안(Rive Droite)의 Venteuil에 위치한 가족 경영 샴페인 하우스입니다. 와인메이커 Cyril Mignon은 자신을 "연구실의 연구자"에 비유하며, 수백 가지의 향과 풍미를 탐구합니다.</p>
+
+<div class="card-grid card-grid-2" style="margin-top:32px">
+<div class="glass-card">
+<div class="card-label">Terroir</div>
+<div class="card-title">6.42 hectares</div>
+<div class="card-subtitle">49 micro-parcels across 4 villages</div>
+<div class="card-divider"></div>
+<div class="card-body">
+<strong>Venteuil</strong> 3.06ha &middot; <strong>Reuil</strong> 1.68ha &middot; <strong>Dormans</strong> 1.53ha &middot; <strong>Damery</strong> 0.15ha<br><br>
+토양: 석회질 점토(Argilo-calcareous) &mdash; 1m 표토 아래 백악과 점토층. 남향, 해발 약 160m. 상부는 모래질, Dormans 방향으로 점토가 우세.
+</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Enc&eacute;pagement</div>
+<div class="card-title">포도 품종 구성</div>
+<div class="card-subtitle">Vigne moyenne: 35 ans</div>
+<div class="card-divider"></div>
+<div class="card-body">
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px">
+<div><div class="card-stat">52%</div><div class="card-stat-label">Meunier</div></div>
+<div><div class="card-stat">26%</div><div class="card-stat-label">Pinot Noir</div></div>
+<div><div class="card-stat">21%</div><div class="card-stat-label">Chardonnay</div></div>
+<div><div class="card-stat">1%</div><div class="card-stat-label">Petit Meslier</div></div>
+</div>
+</div>
+</div>
+</div>
+
+<h3>양조 철학</h3>
+<p>Mignon-Boulard는 <strong>"bon sens paysan"(농부의 상식)</strong>에 기반한 지속가능한 비티컬처를 실천합니다. 제초제 대신 토양 경작, 살충제 대신 성 혼동 페로몬 랙, 합성 비료 대신 유기 가을 시비, 해초 기반 자연 치료제를 사용합니다.</p>
+
+<table class="data-table">
+<thead><tr><th>양조 과정</th><th>방법</th></tr></thead>
+<tbody>
+<tr><td>압착</td><td>전통 2,000kg 목재 프레스. 품종별, 구획별 개별 처리</td></tr>
+<tr><td>발효</td><td>7&ndash;15일 알코올 발효 (온도 무조절). 자연 말로락틱 발효</td></tr>
+<tr><td>숙성 용기</td><td>스테인리스 스틸, 에나멜 탱크, 콘크리트 큐브, 오크 배럴(Meursault/Puligny-Montrachet 전 배럴), 석기 항아리</td></tr>
+<tr><td>리저브</td><td>"Perp&eacute;tuelle" (영구) 리저브 시스템, 일부 목재 숙성</td></tr>
+<tr><td>처리</td><td>무여과(Unfiltered), 콜드 스태빌라이제이션 없음</td></tr>
+<tr><td>인증</td><td>HVE Level 3 (Haute Valeur Environnementale)</td></tr>
+</tbody>
+</table>
+
+<h3>큐베 카테고리</h3>
+<p>Mignon-Boulard는 와인을 식탁과의 관계로 분류합니다:</p>
+<div class="card-grid card-grid-3">
+<div class="glass-card">
+<div class="card-label">Casual</div>
+<div class="card-title">Pour Manger avec les Mains</div>
+<div class="card-divider"></div>
+<div class="card-body">Sur le Bout des Doigts, Sur le Bout des Doigts Ros&eacute;, 1911 Sous Les Pav&eacute;s Le Terroir</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Terroir</div>
+<div class="card-title">Quand on Parle Terroir</div>
+<div class="card-divider"></div>
+<div class="card-body">En Lieu S&ucirc;r, Mati&egrave;re Noire (Ros&eacute; de Saign&eacute;e)</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Fine Dining</div>
+<div class="card-title">Grandes Tables</div>
+<div class="card-divider"></div>
+<div class="card-body">&Eacute;l&eacute;ment de Surprise, Atomes Crochus, Les Beaux Ceps</div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 03: BRAND CORE -->
+<section class="section fade-in" id="brand-core">
+<div class="section-label">03 &mdash; Brand Core</div>
+<h2>바다가 빚고, 우리는 <em>기록할 뿐</em></h2>
+
+<div class="brand-quote">
+"속도의 시대, 우리는 '기다림'을 팝니다."
+</div>
+
+<h3>3대 핵심 가치</h3>
+
+<div class="card-grid card-grid-3">
+<div class="glass-card">
+<div class="card-label">Value 01</div>
+<div class="card-title">손길</div>
+<div class="card-subtitle">The Touch</div>
+<div class="card-divider"></div>
+<div class="card-body">샴페인 장인의 손을 떠난 병은 바다라는 거대한 장인의 손길로 옮겨집니다. 인위적인 통제를 멈추고, 자연이 직접 병을 어루만지며 완성하도록 기다립니다.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Value 02</div>
+<div class="card-title">이중의 떼루아</div>
+<div class="card-subtitle">Two Souls</div>
+<div class="card-divider"></div>
+<div class="card-body">샹파뉴의 석회질 토양에서 얻은 견고한 뼈대 위에, 한국 남해의 검푸른 심연이 깊은 살집을 입힙니다. 서로 다른 두 세계가 만나 빚어낸 기적적인 혼혈입니다.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Value 03</div>
+<div class="card-title">물성</div>
+<div class="card-subtitle">Materiality</div>
+<div class="card-divider"></div>
+<div class="card-body">병 표면에 눌러앉은 조개껍데기, 바다의 포말이 남긴 하얀 얼룩은 그 자체로 이 샴페인이 견뎌온 시간의 이력서이자, 세상에 단 하나뿐인 지문입니다.</div>
+</div>
+</div>
+
+<h3>브랜드 포지셔닝</h3>
+
+<div class="comparison">
+<div class="comparison-col">
+<h4>일반 샴페인</h4>
+<ul>
+<li>셀러 숙성</li>
+<li>단일 떼루아</li>
+<li>공산품</li>
+<li>맛의 우위 경쟁</li>
+<li>소비 기록 (Consumption)</li>
+</ul>
+</div>
+<div class="comparison-col">
+<h4>뮤즈드마레</h4>
+<ul>
+<li>심해 숙성 (수심 20&ndash;40m, 남해)</li>
+<li>이중 떼루아 (프랑스 토양 + 한국 바다)</li>
+<li>수공예품 / 컬렉터블</li>
+<li>경험과 시간의 가치</li>
+<li>발견 일지 (Discovery Journal)</li>
+</ul>
+</div>
+</div>
+
+<h3>브랜드 인사이트</h3>
+<p><strong>시대의 갈증</strong> &mdash; 모든 것이 빠르게 소비되는 디지털 시대, 사람들은 '변하지 않는 가치'와 '진득한 깊이'를 갈망합니다.</p>
+<p><strong>진정한 소유</strong> &mdash; 남들에게 보여주기 위한 과시가 아닌, 나의 내면을 채우는 밀도 있는 경험입니다.</p>
+<p><strong>자연의 섭리</strong> &mdash; 기계가 흉내 낼 수 없는 불규칙한 파동이 샴페인의 기포를 더욱 조밀하고 섬세하게 다듬습니다.</p>
+
+<h3>신뢰 구축 전략 (Trust Architecture)</h3>
+
+<div class="card-grid card-grid-2">
+<div class="glass-card">
+<div class="card-label">Pillar 01</div>
+<div class="card-title">자연의 기록</div>
+<div class="card-subtitle">The Nature's Log</div>
+<div class="card-divider"></div>
+<div class="card-body">수온, 압력, 해류의 흐름을 '바다의 맥박'이라 칭하며 기록합니다. 샴페인이 견뎌낸 차가움과 어두움을 숫자로 증명합니다.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Pillar 02</div>
+<div class="card-title">품질의 탐구</div>
+<div class="card-subtitle">The Quest for Taste</div>
+<div class="card-divider"></div>
+<div class="card-body">소믈리에의 미각과 연구실의 분석을 통해 심해 숙성이 만들어낸 미네랄의 변화를 추적합니다.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Pillar 03</div>
+<div class="card-title">여정의 흔적</div>
+<div class="card-subtitle">Trace of Voyage</div>
+<div class="card-divider"></div>
+<div class="card-body">언제 바다에 들어가 언제 나왔는지, '체인 오브 커스터디(관리 기록)' 보증서로 남깁니다.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Pillar 04</div>
+<div class="card-title">공존의 예의</div>
+<div class="card-subtitle">Respect for the Sea</div>
+<div class="card-divider"></div>
+<div class="card-body">양식장 하부 공간 활용, 탄소 발자국 최소화, 어촌 마을과 수익 공유. 매년 '공존의 기록'을 발행합니다.</div>
+</div>
+</div>
+
+<h3>감정적 영토 (Emotional Territory)</h3>
+<table class="data-table">
+<thead><tr><th>감정</th><th>설명</th><th>발현 지점</th></tr></thead>
+<tbody>
+<tr><td><strong>경이 (Wonder)</strong></td><td>바다 깊은 곳에서 일어나는 일에 대한 경탄</td><td>Hero 영상, 깊이별 관찰 기록</td></tr>
+<tr><td><strong>발견 (Discovery)</strong></td><td>아직 알지 못하는 것을 처음 마주하는 설렘</td><td>Archive 섹션, 새로운 Depth 공개</td></tr>
+<tr><td><strong>인내 (Patience)</strong></td><td>바다의 시간처럼 기다림의 가치를 이해하는 성숙함</td><td>숙성 기간 시각화, 대기 구조</td></tr>
+<tr><td><strong>자연의 시간</strong></td><td>인간의 시간과 다른 리듬에 대한 인식과 존중</td><td>전체 사이트 톤, 관찰 일지 형식</td></tr>
+<tr><td><strong>소속 (Belonging)</strong></td><td>같은 것을 바라보는 사람들과의 조용한 연대</td><td>Journal 블로그, Experience 이벤트 안내</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- SECTION 04: COLLECTION LINEUP -->
+<section class="section fade-in" id="collection">
+<div class="section-label">04 &mdash; Collection Lineup</div>
+<h2>다섯 개의 큐베, <em>하나의 바다</em></h2>
+
+<p>뮤즈드마레의 첫 번째 빈티지는 Champagne Mignon-Boulard의 5종 큐베를 남해 청정해역에서 숙성시킵니다. 각 큐베는 Mignon-Boulard의 식탁 중심 철학에 따라 선정되었으며, 해저 숙성을 통해 새로운 차원의 시간을 입게 됩니다.</p>
+
+<h3>첫 번째 빈티지 라인업</h3>
+
+<div class="card-grid card-grid-3">
+<div class="glass-card">
+<div class="card-label">Cuv&eacute;e 01 &middot; Core</div>
+<div class="card-title">En Lieu S&ucirc;r</div>
+<div class="card-subtitle">앙 리유 쉬르 &mdash; Brut</div>
+<div class="card-divider"></div>
+<div class="card-body">
+뮤즈드마레의 입문 큐베. Mignon-Boulard의 떼루아 시리즈 대표작으로, 다수의 포도원에서 블렌딩된 균형 잡힌 브뤼입니다.<br><br>
+<span class="pill">200병</span>
+<span class="pill">&euro;15.8/병</span>
+<span class="pill">750ml</span>
+</div>
+</div>
+
+<div class="glass-card">
+<div class="card-label">Cuv&eacute;e 02 &middot; Limited</div>
+<div class="card-title">En Lieu S&ucirc;r</div>
+<div class="card-subtitle">앙 리유 쉬르 &mdash; Magnum</div>
+<div class="card-divider"></div>
+<div class="card-body">
+동일한 En Lieu S&ucirc;r 큐베의 매그넘 포맷. 1.5L 대용량 병은 해저 숙성의 효과를 더욱 깊고 안정적으로 경험하게 합니다.<br><br>
+<span class="pill pill--accent">24병 한정</span>
+<span class="pill">&euro;32.6/병</span>
+<span class="pill">1500ml</span>
+</div>
+</div>
+
+<div class="glass-card">
+<div class="card-label">Cuv&eacute;e 03 &middot; Limited</div>
+<div class="card-title">&Eacute;l&eacute;ment de Surprise</div>
+<div class="card-subtitle">엘레멘 드 쉬르프리즈 &mdash; BDB</div>
+<div class="card-divider"></div>
+<div class="card-body">
+Blanc de Blancs. Chardonnay 100%의 순수한 표현으로, 해저 숙성이 미네랄에 어떤 변화를 만드는지 가장 선명하게 드러내는 큐베입니다.<br><br>
+<span class="pill">110병</span>
+<span class="pill">&euro;20.6/병</span>
+<span class="pill">750ml</span>
+</div>
+</div>
+</div>
+
+<div class="card-grid card-grid-2" style="margin-top:0">
+<div class="glass-card">
+<div class="card-label">Cuv&eacute;e 04 &middot; Collector's</div>
+<div class="card-title">Atomes Crochus</div>
+<div class="card-subtitle">아톰 크로슈 &mdash; 1년 숙성</div>
+<div class="card-divider"></div>
+<div class="card-body">
+"화학적 친화력"이라는 이름처럼 포도와 바다의 교감을 탐구하는 프리미엄 큐베. 남해에서 12개월 해저 숙성을 거칩니다.<br><br>
+<span class="pill">100병</span>
+<span class="pill">&euro;22.5/병</span>
+<span class="pill">해저 12개월</span>
+</div>
+</div>
+
+<div class="glass-card">
+<div class="card-label">Cuv&eacute;e 05 &middot; Collector's</div>
+<div class="card-title">Atomes Crochus</div>
+<div class="card-subtitle">아톰 크로슈 &mdash; 2년 숙성</div>
+<div class="card-divider"></div>
+<div class="card-body">
+동일한 Atomes Crochus를 24개월 해저 숙성한 컬렉터 에디션. 더 긴 시간이 만든 차이를 1년 숙성본과 비교하여 관찰할 수 있습니다.<br><br>
+<span class="pill pill--accent">40병 한정</span>
+<span class="pill">&euro;22.5/병</span>
+<span class="pill">해저 24개월</span>
+</div>
+</div>
+</div>
+
+<h3>라인업 요약</h3>
+<table class="data-table">
+<thead><tr><th>큐베</th><th>유형</th><th>수량</th><th>숙성</th><th>등급</th></tr></thead>
+<tbody>
+<tr><td>En Lieu S&ucirc;r Brut</td><td>Brut</td><td>200병</td><td>표준</td><td>Core</td></tr>
+<tr><td>En Lieu S&ucirc;r Magnum</td><td>Brut (1.5L)</td><td>24병</td><td>표준</td><td>Limited</td></tr>
+<tr><td>&Eacute;l&eacute;ment de Surprise BDB</td><td>Blanc de Blancs</td><td>110병</td><td>표준</td><td>Limited</td></tr>
+<tr><td>Atomes Crochus 1yr</td><td>Cuv&eacute;e Prestige</td><td>100병</td><td>해저 12개월</td><td>Collector's</td></tr>
+<tr><td>Atomes Crochus 2yr</td><td>Cuv&eacute;e Prestige</td><td>40병</td><td>해저 24개월</td><td>Collector's</td></tr>
+</tbody>
+</table>
+<p style="font-size:0.8rem;color:var(--text-secondary);margin-top:8px"><em>총 474병.</em></p>
+
+<h3>사이트 표현 방식</h3>
+<p>사이트에서 제품은 "컬렉션"이 아닌 <strong>"관찰 기록(Archive)"</strong>으로 표현됩니다. 가격은 표기하지 않으며, 각 큐베는 숙성 과정의 관찰 일지 형식으로 소개됩니다. 구매 버튼 대신 <strong>"이 깊이를 관찰하다"</strong> CTA를 배치합니다.</p>
+</section>
+
+<!-- SECTION 05: VISUAL IDENTITY -->
+<section class="section fade-in" id="visual-identity">
+<div class="section-label">05 &mdash; Visual Identity</div>
+<h2>심연을 닮은 <em>고요함</em></h2>
+
+<h3>컬러 시스템</h3>
+<p>뮤즈드마레는 두 개의 컬러 팔레트를 운용합니다. <strong>브랜드 아이덴티티 컬러</strong>(패키지, 인쇄물)와 <strong>웹 전용 컬러</strong>(디지털 경험)가 분리되어, 매체에 따른 최적의 표현을 보장합니다.</p>
+
+<h4>웹 전용 컬러 (Digital Experience)</h4>
+<div class="card-grid card-grid-5">
+<div class="glass-card" style="padding:20px;text-align:center">
+<div class="color-swatch" style="background:#EFDFBB"></div>
+<div style="font-family:var(--font-heading);font-size:1.1rem;color:var(--deep-teal)">Sand</div>
+<div style="font-size:0.72rem;color:var(--text-secondary)">#EFDFBB</div>
+<div style="font-size:0.7rem;color:var(--text-secondary);margin-top:4px">메인 배경</div>
+</div>
+<div class="glass-card" style="padding:20px;text-align:center">
+<div class="color-swatch" style="background:#3D5A56"></div>
+<div style="font-family:var(--font-heading);font-size:1.1rem;color:var(--deep-teal)">Deep Teal</div>
+<div style="font-size:0.72rem;color:var(--text-secondary)">#3D5A56</div>
+<div style="font-size:0.7rem;color:var(--text-secondary);margin-top:4px">주 액센트 &middot; 텍스트</div>
+</div>
+<div class="glass-card" style="padding:20px;text-align:center">
+<div class="color-swatch" style="background:#A7C7C0"></div>
+<div style="font-family:var(--font-heading);font-size:1.1rem;color:var(--deep-teal)">Bottle Teal</div>
+<div style="font-size:0.72rem;color:var(--text-secondary)">#A7C7C0</div>
+<div style="font-size:0.7rem;color:var(--text-secondary);margin-top:4px">보조 액센트</div>
+</div>
+<div class="glass-card" style="padding:20px;text-align:center">
+<div class="color-swatch" style="background:#C4956A"></div>
+<div style="font-family:var(--font-heading);font-size:1.1rem;color:var(--deep-teal)">Warm Accent</div>
+<div style="font-size:0.72rem;color:var(--text-secondary)">#C4956A</div>
+<div style="font-size:0.7rem;color:var(--text-secondary);margin-top:4px">따뜻한 포인트</div>
+</div>
+<div class="glass-card" style="padding:20px;text-align:center">
+<div class="color-swatch" style="background:#F8F9F9"></div>
+<div style="font-family:var(--font-heading);font-size:1.1rem;color:var(--deep-teal)">Sea Mist</div>
+<div style="font-size:0.72rem;color:var(--text-secondary)">#F8F9F9</div>
+<div style="font-size:0.7rem;color:var(--text-secondary);margin-top:4px">카드 &middot; 밝은 영역</div>
+</div>
+</div>
+
+<h4>브랜드 아이덴티티 컬러 (Print &amp; Package)</h4>
+<div class="card-grid card-grid-3">
+<div class="glass-card" style="padding:20px;text-align:center">
+<div class="color-swatch" style="background:#1A365D"></div>
+<div style="font-family:var(--font-heading);font-size:1.1rem;color:var(--deep-teal)">Deep Navy</div>
+<div style="font-size:0.72rem;color:var(--text-secondary)">#1A365D &middot; 심해 네이비</div>
+<div style="font-size:0.7rem;color:var(--text-secondary);margin-top:4px">패키지 주요 컬러</div>
+</div>
+<div class="glass-card" style="padding:20px;text-align:center">
+<div class="color-swatch" style="background:#F7FAFC"></div>
+<div style="font-family:var(--font-heading);font-size:1.1rem;color:var(--deep-teal)">Pearl White</div>
+<div style="font-size:0.72rem;color:var(--text-secondary)">#F7FAFC &middot; 펄 화이트</div>
+<div style="font-size:0.7rem;color:var(--text-secondary);margin-top:4px">여백 &middot; 배경</div>
+</div>
+<div class="glass-card" style="padding:20px;text-align:center">
+<div class="color-swatch" style="background:#B7916E"></div>
+<div style="font-family:var(--font-heading);font-size:1.1rem;color:var(--deep-teal)">Rose Gold</div>
+<div style="font-size:0.72rem;color:var(--text-secondary)">#B7916E &middot; 로즈 골드</div>
+<div style="font-size:0.7rem;color:var(--text-secondary);margin-top:4px">프리미엄 포인트</div>
+</div>
+</div>
+
+<h3>타이포그래피</h3>
+<div class="card-grid card-grid-2">
+<div class="glass-card">
+<div class="card-label">Heading</div>
+<div style="font-family:var(--font-heading);font-size:2rem;font-weight:300;color:var(--deep-teal);line-height:1.3;margin-bottom:16px">Cormorant Garamond</div>
+<div class="card-divider"></div>
+<div class="card-body">
+<p style="font-family:var(--font-heading);font-size:1.4rem;font-weight:300;font-style:italic;color:var(--deep-teal)">바다의 시간을 건네다</p>
+<p style="font-family:var(--font-heading);font-size:1.1rem;font-weight:400;color:var(--deep-teal);margin-top:8px">Passing you the ocean's time</p>
+<div style="margin-top:12px;font-size:0.78rem;color:var(--text-secondary)">Weight: 300 Light / 400 Regular / 500 Medium<br>용도: 제목, 부제, 네비게이션, 수치<br>특성: 세리프 &middot; 우아 &middot; 서정적</div>
+</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Body</div>
+<div style="font-family:var(--font-body);font-size:1.5rem;font-weight:300;color:var(--deep-teal);line-height:1.3;margin-bottom:16px">Noto Sans KR</div>
+<div class="card-divider"></div>
+<div class="card-body">
+<p style="font-family:var(--font-body);font-size:0.95rem;font-weight:300;color:var(--text-primary);line-height:1.8">깊이가 시간이 된 곳. 바다는 기다렸고, 우리는 열었습니다.</p>
+<p style="font-family:var(--font-body);font-size:0.85rem;font-weight:400;color:var(--text-secondary);margin-top:8px">인위적인 통제를 멈추고, 자연이 직접 병을 어루만지며 완성하도록 기다립니다.</p>
+<div style="margin-top:12px;font-size:0.78rem;color:var(--text-secondary)">Weight: 300 Light / 400 Regular / 500 Medium<br>용도: 본문, CTA, UI 요소, 캡션<br>특성: 산세리프 &middot; 깔끔 &middot; 가독성</div>
+</div>
+</div>
+</div>
+
+<h3>Glassmorphism UI</h3>
+<p>뮤즈드마레의 디지털 경험은 <strong>반투명 유리(Glass)</strong> 미학을 기반으로 합니다. 따뜻한 모래색 배경 위에 반투명 카드를 배치하여, 수중의 빛 굴절을 표현합니다. Krug의 "불투명한 물질감(opaque materiality)"과 대비되는 <strong>"빛이 통과하는 투명한 물질감(translucent materiality)"</strong>입니다.</p>
+
+<div class="card-grid card-grid-3">
+<div class="glass-card">
+<div class="card-label">Glass &mdash; Basic</div>
+<div class="card-title" style="font-size:1.1rem">기본 카드</div>
+<div class="card-divider"></div>
+<div class="card-body" style="font-size:0.75rem;font-family:monospace;line-height:1.6">
+backdrop-filter: blur(16px) saturate(1.2);<br>
+background: rgba(248,249,249, 0.45);<br>
+border: 1px solid rgba(167,199,192, 0.3);<br>
+box-shadow: 0 4px 24px rgba(61,90,86, 0.08);
+</div>
+</div>
+<div class="glass-card" style="background:rgba(248,249,249,0.6);border-color:rgba(167,199,192,0.45);box-shadow:0 8px 32px rgba(61,90,86,0.12),inset 0 1px 0 rgba(255,255,255,0.4)">
+<div class="card-label">Glass &mdash; Emphasis</div>
+<div class="card-title" style="font-size:1.1rem">강조 카드</div>
+<div class="card-divider"></div>
+<div class="card-body" style="font-size:0.75rem;font-family:monospace;line-height:1.6">
+backdrop-filter: blur(24px) saturate(1.4);<br>
+background: rgba(248,249,249, 0.6);<br>
+border: 1px solid rgba(167,199,192, 0.45);<br>
+box-shadow: 0 8px 32px rgba(61,90,86, 0.12);
+</div>
+</div>
+<div class="glass-card" style="background:rgba(248,249,249,0.25);border-color:rgba(167,199,192,0.15);backdrop-filter:blur(8px)">
+<div class="card-label">Glass &mdash; Subtle</div>
+<div class="card-title" style="font-size:1.1rem">서브틀 카드</div>
+<div class="card-divider"></div>
+<div class="card-body" style="font-size:0.75rem;font-family:monospace;line-height:1.6">
+backdrop-filter: blur(8px);<br>
+background: rgba(248,249,249, 0.25);<br>
+border: 1px solid rgba(167,199,192, 0.15);<br>
+box-shadow: none;
+</div>
+</div>
+</div>
+
+<h3>버튼 시스템</h3>
+<p>모든 CTA는 소문자(lowercase) 처리하며, "발견"의 동사 가족만 사용합니다.</p>
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:24px 0;align-items:center">
+<button style="display:inline-flex;align-items:center;gap:8px;padding:14px 40px;font-family:var(--font-body);font-size:13px;font-weight:400;letter-spacing:0.1em;text-transform:lowercase;color:var(--deep-teal);background:rgba(248,249,249,0.4);backdrop-filter:blur(12px);border:1px solid rgba(61,90,86,0.2);border-radius:8px;cursor:pointer">discover &rarr;</button>
+<button style="padding:14px 40px;font-family:var(--font-body);font-size:13px;font-weight:400;letter-spacing:0.1em;text-transform:lowercase;color:var(--deep-teal);background:transparent;border:1px solid rgba(61,90,86,0.25);border-radius:8px;cursor:pointer">기록하기</button>
+<button style="padding:14px 40px;font-family:var(--font-body);font-size:13px;font-weight:400;letter-spacing:0.1em;text-transform:lowercase;color:#F8F9F9;background:#C4956A;border:none;border-radius:8px;cursor:pointer">구독하기</button>
+</div>
+<table class="data-table">
+<thead><tr><th>스타일</th><th>용도</th><th>CSS 핵심</th></tr></thead>
+<tbody>
+<tr><td>Glass (Primary)</td><td>주요 CTA &mdash; 발견하기, 관찰하기</td><td>반투명 배경 + backdrop-blur + border</td></tr>
+<tr><td>Outline (Secondary)</td><td>보조 CTA &mdash; 기록하기, 공유하기</td><td>투명 배경 + border only</td></tr>
+<tr><td>Warm (Accent)</td><td>핵심 전환 &mdash; 뉴스레터 구독</td><td>Warm Accent 단색 배경</td></tr>
+</tbody>
+</table>
+
+<h3>비주얼 디렉션</h3>
+<ul>
+<li>선명하고 쨍한 디지털 화질보다 <strong>필름 사진의 질감(Grain)</strong></li>
+<li>심해의 일렁임, 병에 묻은 모래, 세월의 더께가 앉은 코르크</li>
+<li><strong>'촉각이 느껴지는 이미지'</strong>로 아날로그적 향수 자극</li>
+<li>컬러 톤: 탈채도(Desaturated), 차가운 틸&ndash;웜 샌드 교차</li>
+</ul>
+</section>
+
+<!-- SECTION 06: TARGET & PERSONA -->
+<section class="section fade-in" id="target-persona">
+<div class="section-label">06 &mdash; Target &amp; Persona</div>
+<h2>"아직 모르는 것"을 찾는 <em>관찰자들</em></h2>
+
+<p>Krug의 핵심 고객은 45&ndash;65세, 고소득 전문직, 와인 지식이 풍부한 전통적 럭셔리 소비자입니다. 그들은 "이미 아는 것"을 확인하기 위해 브랜드를 방문합니다. 뮤즈드마레의 타겟은 다릅니다. 그들은 <strong>"아직 모르는 것"을 찾기 위해 옵니다.</strong></p>
+
+<h3>오디언스 세그먼트</h3>
+<div class="card-grid card-grid-3">
+<div class="glass-card">
+<div class="card-label">Primary</div>
+<div class="card-title">컬렉터형</div>
+<div class="card-subtitle">40&ndash;50대</div>
+<div class="card-divider"></div>
+<div class="card-body">
+위스키&middot;와인 수집가. 경험재에 투자하는 자산가. 희소한 것의 가치를 아는 사람.
+</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Secondary</div>
+<div class="card-title">문화향유형</div>
+<div class="card-subtitle">35&ndash;50대</div>
+<div class="card-divider"></div>
+<div class="card-body">
+현대미술 컬렉터. 파인다이닝 애호가. 경험을 내면에 저장하는 사람.
+</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Tertiary</div>
+<div class="card-title">얼리어답터형</div>
+<div class="card-subtitle">30&ndash;40대</div>
+<div class="card-divider"></div>
+<div class="card-body">
+새로운 카테고리 발굴에 가치를 두는 전문직. 문화적 첫 발견자.
+</div>
+</div>
+</div>
+
+<h3>디지털 페르소나</h3>
+
+<!-- PERSONA 1 -->
+<div class="glass-card" style="margin:32px 0">
+<div style="display:grid;grid-template-columns:200px 1fr;gap:32px">
+<div>
+<div class="card-label">Persona 01</div>
+<div class="card-title">서연</div>
+<div class="card-subtitle">The Quiet Curator</div>
+<div class="card-divider"></div>
+<div class="card-body">
+<strong>34세</strong> &middot; 건축 사무소 디자인 디렉터<br>
+서울 한남동 &middot; 연소득 1.2억<br><br>
+<span class="pill">Kinfolk 구독</span>
+<span class="pill">갤러리 탐방</span>
+<span class="pill">Pinterest 보드 12개</span>
+</div>
+</div>
+<div>
+<h4 style="margin-top:0">라이프스타일 &amp; 동기</h4>
+<p style="font-size:0.85rem">공간과 시간에 민감한 사람. 주말이면 소규모 갤러리를 돌아다니고, 술을 많이 마시지 않지만 마실 때는 그 한 잔의 맥락을 중요하게 여깁니다. 대량 생산되지 않은 것에 끌리며, 브랜드의 "태도"를 봅니다.</p>
+<h4>사이트 이용 시나리오</h4>
+<p style="font-size:0.85rem">매거진 기사에서 발견 &rarr; Hero 영상 끝까지 시청 &rarr; 관찰 일지 3분 체류 &rarr; 뉴스레터 구독 &rarr; 일주일 뒤 Journal 신규 포스트 알림으로 재방문. <strong>한 번도 "구매"하러 온 적이 없습니다.</strong></p>
+<p style="font-size:0.78rem;color:var(--warm-accent)"><strong>브랜드와의 관계:</strong> 수집가 &mdash; 기록을 모으고, 조용히 공유한다</p>
+</div>
+</div>
+</div>
+
+<!-- PERSONA 2 -->
+<div class="glass-card" style="margin:32px 0">
+<div style="display:grid;grid-template-columns:200px 1fr;gap:32px">
+<div>
+<div class="card-label">Persona 02</div>
+<div class="card-title">재민</div>
+<div class="card-subtitle">The Depth Seeker</div>
+<div class="card-divider"></div>
+<div class="card-body">
+<strong>41세</strong> &middot; 스타트업 CEO (SaaS)<br>
+서울 성수동 &middot; 연소득 3억+<br><br>
+<span class="pill">프리다이빙</span>
+<span class="pill">와인 셀러</span>
+<span class="pill">Substack 7개 구독</span>
+</div>
+</div>
+<div>
+<h4 style="margin-top:0">라이프스타일 &amp; 동기</h4>
+<p style="font-size:0.85rem">빠르게 움직이는 세계에서 살지만, 느린 것에 대한 갈망이 있습니다. Krug Grande Cuv&eacute;e를 이미 알고 있지만 "다음 단계"를 찾고 있습니다. 자연과 기술의 교차점에 매력을 느끼며, 투자가 아닌 "참여"로서의 럭셔리를 원합니다.</p>
+<h4>사이트 이용 시나리오</h4>
+<p style="font-size:0.85rem">영문 와인 포럼에서 검색 &rarr; Archive 섹션에서 30분 분석 &rarr; 수압 데이터&middot;온도 변화 기록 몰입 &rarr; Journal 심층 기사 정독 &rarr; 뉴스레터 구독 &rarr; 프라이빗 채널 초대.</p>
+<p style="font-size:0.78rem;color:var(--warm-accent)"><strong>브랜드와의 관계:</strong> 탐험가 &mdash; 깊이를 파고들고, 다른 관찰자들과 지식을 나눈다</p>
+</div>
+</div>
+</div>
+
+<!-- PERSONA 3 -->
+<div class="glass-card" style="margin:32px 0">
+<div style="display:grid;grid-template-columns:200px 1fr;gap:32px">
+<div>
+<div class="card-label">Persona 03</div>
+<div class="card-title">유진</div>
+<div class="card-subtitle">The Silent Witness</div>
+<div class="card-divider"></div>
+<div class="card-body">
+<strong>28세</strong> &middot; 해양생물학 석사 + 포토그래퍼<br>
+제주시 &middot; 연소득 4,000만<br><br>
+<span class="pill">수중 사진</span>
+<span class="pill">iNaturalist</span>
+<span class="pill">Instagram 8.2K</span>
+</div>
+</div>
+<div>
+<h4 style="margin-top:0">라이프스타일 &amp; 동기</h4>
+<p style="font-size:0.85rem">Krug의 타겟 고객이 아닙니다. 럭셔리 샴페인을 살 여유가 없습니다. 하지만 바다에서 가장 많은 시간을 보내는 사람입니다. 자신이 관찰하는 바다를 다른 관점에서 해석하는 것에 매력을 느끼며, 브랜드의 "기록" 행위에 동질감을 느낍니다.</p>
+<h4>사이트 이용 시나리오</h4>
+<p style="font-size:0.85rem">Instagram 수중 이미지 발견 &rarr; Observation 섹션의 해저 환경 기록 &rarr; 자신의 관찰과 비교 &rarr; Journal 관찰 기록에 공감 &rarr; 뉴스레터 구독 &rarr; SNS에서 자발적 공유. <strong>한 병도 구매하지 않지만, 가장 진정성 있는 대변자.</strong></p>
+<p style="font-size:0.78rem;color:var(--warm-accent)"><strong>브랜드와의 관계:</strong> 증인 &mdash; 바다의 시간을 직접 목격하고, 그 기록을 공유한다</p>
+</div>
+</div>
+</div>
+
+<h3>페르소나 비교</h3>
+<table class="data-table">
+<thead><tr><th>구분</th><th>서연 (Curator)</th><th>재민 (Seeker)</th><th>유진 (Witness)</th></tr></thead>
+<tbody>
+<tr><td><strong>유입 경로</strong></td><td>매거진 / 에디토리얼</td><td>전문 포럼 / 검색</td><td>SNS / 비주얼</td></tr>
+<tr><td><strong>체류 패턴</strong></td><td>짧지만 반복 방문</td><td>긴 단일 세션</td><td>콘텐츠 기여형</td></tr>
+<tr><td><strong>핵심 섹션</strong></td><td>Observation + Hero</td><td>Archive + Journal</td><td>Observation + Journal</td></tr>
+<tr><td><strong>구매 가능성</strong></td><td>높음 (간접 경로)</td><td>매우 높음 (프라이빗)</td><td>낮음 (불필요)</td></tr>
+<tr><td><strong>브랜드 기여</strong></td><td>문화적 전파</td><td>깊이 있는 참여</td><td>진정성 있는 콘텐츠</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- SECTION 07: MARKETING STRATEGY -->
+<section class="section fade-in" id="marketing">
+<div class="section-label">07 &mdash; Marketing Strategy</div>
+<h2>보이지 않는 것이 가장 강한 <em>욕망을 만든다</em></h2>
+
+<h3>"판매 배제" 전략 (No-Sell Strategy)</h3>
+<p>뮤즈드마레의 홈페이지에는 "구매하기", "장바구니", "가격", "주문" 같은 단어가 존재하지 않습니다. 이것은 실수가 아니라 설계입니다.</p>
+
+<div class="card-grid card-grid-2">
+<div class="glass-card">
+<div class="card-label">원리</div>
+<div class="card-title">탈-상업의 역설</div>
+<div class="card-divider"></div>
+<div class="card-body">럭셔리의 본질은 쉽게 가질 수 없는 것에 대한 갈망. Herm&egrave;s가 대기 명단을 만들고, Patek Philippe가 "다음 세대를 위해 맡아두는 것"이라 말하는 원리를 디지털 경험에 적용합니다. <strong>사이트 어디에도 구매 버튼이 없습니다.</strong></div>
+</div>
+<div class="glass-card">
+<div class="card-label">효과</div>
+<div class="card-title">부재가 만드는 탐색</div>
+<div class="card-divider"></div>
+<div class="card-body">"100병 한정"(희소성)이 아니라, "여기서는 살 수 없습니다"(부재)가 작동합니다. 희소성은 경쟁을 만들지만, 부재는 탐색을 만듭니다. 구매 대신 "참여"라는 새로운 접근 경로를 발견하게 됩니다.</div>
+</div>
+</div>
+
+<h3>욕망의 5단계 메커니즘</h3>
+<div class="timeline">
+<div class="timeline-item active">
+<div class="timeline-date">Stage 1</div>
+<div class="timeline-title">부재의 인식</div>
+<div class="timeline-desc">방문자가 사이트를 탐색하며 "구매 버튼이 없다"는 사실을 인식. 일반적인 사이트 경험과의 단절.</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-date">Stage 2</div>
+<div class="timeline-title">질문의 발생</div>
+<div class="timeline-desc">"살 수 없다면, 이것은 무엇인가?" &mdash; 부재가 만든 공백을 방문자 스스로 채우려는 심리 작동.</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-date">Stage 3</div>
+<div class="timeline-title">가치의 재설정</div>
+<div class="timeline-desc">"판매하지 않는다 = 돈으로 살 수 없다 = 더 가치 있다" &mdash; 체감 가치 상승.</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-date">Stage 4</div>
+<div class="timeline-title">관계의 전환</div>
+<div class="timeline-desc">구매 대신 "관찰"을 발견. 뉴스레터 구독, Journal 정기 방문, 관찰 기록 열람.</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-date">Stage 5</div>
+<div class="timeline-title">자연 발생적 거래</div>
+<div class="timeline-desc">충분한 관계 형성 후, 프라이빗 채널을 통해 "초대"의 형태로 구매 기회 제공.</div>
+</div>
+</div>
+
+<h3>전환 퍼널 (Conversion Funnel)</h3>
+
+<div class="funnel">
+<div class="funnel-step" style="background:rgba(61,90,86,0.25)">호기심 (Curiosity) &mdash; Hero 영상, SNS 유입</div>
+<div class="funnel-step" style="background:rgba(61,90,86,0.4)">발견 (Discovery) &mdash; Observation, Archive 탐색</div>
+<div class="funnel-step" style="background:rgba(61,90,86,0.55)">몰입 (Engagement) &mdash; 상세 관찰 기록 열람</div>
+<div class="funnel-step" style="background:rgba(61,90,86,0.7)">연결 (Connection) &mdash; 뉴스레터 구독</div>
+<div class="funnel-step" style="background:rgba(61,90,86,0.85)">전파 (Advocacy) &mdash; 프라이빗 채널 초대</div>
+</div>
+
+<p style="margin-top:24px">홈페이지는 "구매 전환"이 아닌 <strong>"관계 전환"</strong>을 목표로 합니다. 사이트 내에서 유일하게 허용되는 전환은 뉴스레터 구독입니다.</p>
+
+<h3>뮤즈드마레 vs Krug iD: 디지털 전략 비교</h3>
+<div class="comparison">
+<div class="comparison-col">
+<h4>Krug iD</h4>
+<ul>
+<li>제품 코드 스캔 (병 &rarr; 정보)</li>
+<li>중심축: 제품 (이 병의 이야기)</li>
+<li>콘텐츠 생성: 브랜드만</li>
+<li>시간 방향: 과거</li>
+<li>사용자: 정보 수신자</li>
+<li>사회적 기능: 없음</li>
+<li>구매가 시작점</li>
+</ul>
+</div>
+<div class="comparison-col">
+<h4>Muse de Mar&eacute;e</h4>
+<ul>
+<li>아카이브 탐색 (사이트 &rarr; 관찰)</li>
+<li>중심축: 발견 (바다의 이야기)</li>
+<li>콘텐츠 생성: 브랜드 에디토리얼</li>
+<li>시간 방향: 과거 + 진행형 (관찰 기록)</li>
+<li>사용자: 관찰자 / 독자</li>
+<li>사회적 기능: Journal 공유, 뉴스레터</li>
+<li>호기심이 시작점</li>
+</ul>
+</div>
+</div>
+
+<h3>CTA 언어 체계</h3>
+<table class="data-table">
+<thead><tr><th>CTA</th><th>한국어</th><th>사용 맥락</th><th>버튼 스타일</th></tr></thead>
+<tbody>
+<tr><td><strong>Discover</strong></td><td>발견하기</td><td>새로운 콘텐츠 진입, 깊이 탐색</td><td>Glass (투명)</td></tr>
+<tr><td><strong>Subscribe</strong></td><td>구독하기</td><td>뉴스레터 구독, 관찰 기록 수신</td><td>Teal 배경</td></tr>
+<tr><td><strong>Share</strong></td><td>공유하기</td><td>관찰 기록 공유, 커뮤니티 전파</td><td>Outline</td></tr>
+</tbody>
+</table>
+
+<h4>절대 사용하지 않는 표현</h4>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
+<span class="pill" style="background:rgba(200,60,60,0.1);color:#c43c3c">구매하기</span>
+<span class="pill" style="background:rgba(200,60,60,0.1);color:#c43c3c">장바구니</span>
+<span class="pill" style="background:rgba(200,60,60,0.1);color:#c43c3c">지금 주문</span>
+<span class="pill" style="background:rgba(200,60,60,0.1);color:#c43c3c">한정 수량!</span>
+<span class="pill" style="background:rgba(200,60,60,0.1);color:#c43c3c">할인</span>
+<span class="pill" style="background:rgba(200,60,60,0.1);color:#c43c3c">무료 체험</span>
+<span class="pill" style="background:rgba(200,60,60,0.1);color:#c43c3c">놓치지 마세요</span>
+</div>
+
+<h3>마케팅 페이즈 (2026)</h3>
+<table class="data-table">
+<thead><tr><th>Phase</th><th>기간</th><th>목표</th><th>핵심 메시지</th></tr></thead>
+<tbody>
+<tr><td><strong>Phase 1</strong></td><td>1&ndash;3월</td><td>브랜드 인지도 기반</td><td>"바다가 빚는 시간"</td></tr>
+<tr><td><strong>Phase 2</strong></td><td>4&ndash;5월</td><td>관심층 확보</td><td>"지금 심해에서 익어가는 중"</td></tr>
+<tr><td><strong>Phase 3</strong></td><td>6월</td><td>바이럴 유도</td><td>"드디어 바다에서 돌아왔다"</td></tr>
+<tr><td><strong>Phase 4</strong></td><td>7&ndash;8월</td><td>구매 전환</td><td>"첫 번째 빈티지, 한정 수량"</td></tr>
+</tbody>
+</table>
+</section>
+
+
+<!-- SECTION 08: SITE ARCHITECTURE -->
+<section class="section fade-in" id="site-architecture">
+<div class="section-label">08 &mdash; Site Architecture</div>
+<h2>5개의 공간, <em>하나의 여정</em></h2>
+
+<p>마스터 플랜의 핵심 원칙: <strong>Entrance &rarr; Observation &rarr; Archive &rarr; Editorial &rarr; Encounter</strong>로 이어지는 직관적이고 담백한 5단계 사용자 경험. 방문자가 자연스럽게 "발견"의 여정을 밟도록 설계합니다. 사용자 가입이나 입력 없이, 순수한 관찰과 열람 중심.</p>
+
+<h3>Information Architecture</h3>
+<div class="glass-card" style="margin:24px 0;padding:32px;font-family:monospace;font-size:0.85rem;line-height:2;color:var(--deep-teal)">
+<strong>Home</strong> (Entrance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&horbar;&horbar; <strong>Story</strong> (Observation)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxv;&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&horbar;&horbar; Discovery Timeline<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxv;&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&horbar;&horbar; Depth Explorer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxv;&nbsp;&nbsp;&nbsp;&nbsp;&boxur;&horbar;&horbar; Research Notes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&horbar;&horbar; <strong>Collection</strong> (Archive)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxv;&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&horbar;&horbar; 심해의 숨결 (En Lieu S&ucirc;r Brut)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxv;&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&horbar;&horbar; 조류의 기억 (En Lieu S&ucirc;r Magnum)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxv;&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&horbar;&horbar; 빛의 굴절 (&Eacute;l&eacute;ment de Surprise BDB)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxv;&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&horbar;&horbar; 모래의 시간 (Atomes Crochus 1yr)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxv;&nbsp;&nbsp;&nbsp;&nbsp;&boxur;&horbar;&horbar; 파동의 여운 (Atomes Crochus 2yr)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&horbar;&horbar; <strong>Journal</strong> (Editorial)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxv;&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&horbar;&horbar; Discovery Notes (발견 기록)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxv;&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&horbar;&horbar; Research Journal (연구 일지)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxv;&nbsp;&nbsp;&nbsp;&nbsp;&boxur;&horbar;&horbar; Field Report (현장 리포트)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&boxur;&horbar;&horbar; <strong>Experience</strong> (Encounter)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&horbar;&horbar; Upcoming Events (예정 이벤트)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&horbar;&horbar; Past Exhibitions (지난 전시)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&boxur;&horbar;&horbar; Contact (문의)
+</div>
+
+<h3>사이트맵</h3>
+<table class="data-table">
+<thead><tr><th>페이지</th><th>한국어</th><th>기능</th><th>전통적 대응</th></tr></thead>
+<tbody>
+<tr><td><strong>Home (Entrance)</strong></td><td>입구</td><td>심해의 공허에서 시작. 3초 내 몰입 유도</td><td>Home</td></tr>
+<tr><td><strong>Story (Observation)</strong></td><td>관찰</td><td>Discovery Timeline, Depth Explorer, Research Notes</td><td>About / Story</td></tr>
+<tr><td><strong>Collection (Archive)</strong></td><td>보관소</td><td>5개 큐베의 관찰 기록. Field Note 형식</td><td>Products</td></tr>
+<tr><td><strong>Journal (Editorial)</strong></td><td>관찰 일기</td><td>블로그. 발견 기록, 연구 일지, 현장 리포트</td><td>Blog</td></tr>
+<tr><td><strong>Experience (Encounter)</strong></td><td>만남의 장</td><td>팝업, 전시, 와인 디너, 파트너 공간 안내</td><td>Events / Contact</td></tr>
+</tbody>
+</table>
+
+<h3>인터랙션 디자인 원칙</h3>
+<div class="card-grid card-grid-2">
+<div class="glass-card">
+<div class="card-label">Principle 01</div>
+<div class="card-title">Float Animation</div>
+<div class="card-divider"></div>
+<div class="card-body">컨텐츠가 물에 떠오르듯 자연스럽게 등장합니다. 급격한 전환 대신 부력을 가진 움직임.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Principle 02</div>
+<div class="card-title">Ripple Effect</div>
+<div class="card-divider"></div>
+<div class="card-body">터치포인트에서 파동이 확산됩니다. 마우스 커서와 터치 지점을 중심으로 동심원 물결.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Principle 03</div>
+<div class="card-title">Depth Scrolling</div>
+<div class="card-divider"></div>
+<div class="card-body">스크롤이 잠수를 연상시킵니다. 아래로 내릴수록 배경이 점진적으로 어두워지며 깊이 변화 시각화.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Principle 04</div>
+<div class="card-title">Ambient Motion</div>
+<div class="card-divider"></div>
+<div class="card-body">미세한 배경 움직임이 항상 존재합니다. 정지된 화면이 아닌, 살아 있는 바다의 감각.</div>
+</div>
+</div>
+
+<h3>데이터 레이어 아키텍처</h3>
+<p>시니어 아키텍트의 "Data as Field Note" 원칙에 따라, 데이터는 4단계 깊이로 점진적 노출됩니다.</p>
+<div class="card-grid card-grid-2">
+<div class="glass-card">
+<div class="card-label">Level 0 &mdash; Surface</div>
+<div class="card-title">감성적 비주얼</div>
+<div class="card-divider"></div>
+<div class="card-body">최소 텍스트와 시네마그래프. 첫 인상은 오직 감각으로. 데이터는 보이지 않습니다.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Level 1 &mdash; Hover</div>
+<div class="card-title">간단한 수치 부상</div>
+<div class="card-divider"></div>
+<div class="card-body">마우스 호버 시 "깊이 30m | 수압 4기압 | 수온 15&deg;C"와 같은 Field Note가 부상합니다.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Level 2 &mdash; Click</div>
+<div class="card-title">상세 Field Note 펼침</div>
+<div class="card-divider"></div>
+<div class="card-body">클릭 시 관찰 일지가 펼쳐집니다. 성분 농도는 물결 그래프의 진폭으로, 시간은 조류 시계로 표현.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Level 3 &mdash; Deep Dive</div>
+<div class="card-title">전체 Research Data</div>
+<div class="card-divider"></div>
+<div class="card-body">원산지 해류도 좌표, 성분 분석 데이터, 숙성 환경 전체 기록에 접근 가능.</div>
+</div>
+</div>
+
+<h3>내비게이션 전략</h3>
+<div class="wireframe" style="margin:32px 0">
+<div class="wireframe-label">Header</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0">
+<div style="font-family:var(--font-heading);font-size:1rem;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;color:var(--deep-teal)">MUSE DE MAR&Eacute;E</div>
+<div style="display:flex;flex-direction:column;gap:5px;width:28px"><span style="display:block;width:100%;height:1.5px;background:var(--deep-teal)"></span><span style="display:block;width:100%;height:1.5px;background:var(--deep-teal)"></span><span style="display:block;width:100%;height:1.5px;background:var(--deep-teal)"></span></div>
+</div>
+<div style="font-size:0.72rem;color:var(--text-secondary);margin-top:4px">Minimal Fixed Navigation (투명 상단바). Contextual Navigation (스크롤 기반 변화). Mobile-First Bottom Navigation.</div>
+</div>
+
+<div class="wireframe" style="margin:32px 0">
+<div class="wireframe-label">Fullscreen Menu Overlay</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:24px 0">
+<div>
+<div style="font-family:var(--font-heading);font-size:1.8rem;font-weight:300;font-style:italic;color:var(--deep-teal);line-height:1.8;text-transform:lowercase">
+home<br>story<br>collection<br>journal<br>experience
+</div>
+</div>
+<div style="display:flex;flex-direction:column;justify-content:center">
+<div style="font-family:var(--font-body);font-size:0.85rem;font-weight:300;color:rgba(61,90,86,0.5);line-height:2.2">
+심해의 숨결<br>
+조류의 기억<br>
+빛의 굴절<br>
+모래의 시간<br>
+파동의 여운
+</div>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;padding-top:16px;border-top:1px solid rgba(61,90,86,0.1);font-size:0.72rem;color:rgba(61,90,86,0.4)">
+<div>Instagram &nbsp;&middot;&nbsp; YouTube &nbsp;&middot;&nbsp; KakaoTalk</div>
+<div>KR &nbsp;/&nbsp; EN &nbsp;/&nbsp; FR</div>
+</div>
+</div>
+
+<h3>페이지별 와이어프레임</h3>
+
+<h4>Home (Entrance)</h4>
+<div class="wireframe">
+<div class="wireframe-label">Home Wireframe</div>
+<div class="wf-block wf-hero">Fullscreen Video Hero &mdash; 60초 심해 기포 루프<br><small>텍스트 없이 오직 영상만. 4K HDR. 스크롤 유도 화살표.</small></div>
+<div class="wf-block">Brand Statement &mdash; 이중 떼루아 한 줄 소개 (Float Animation)<br><small>"프랑스 샹파뉴의 정수를, 한국 남해의 시간에 맡기다."</small></div>
+<div class="wf-block">Story Teaser &mdash; Discovery Timeline 프리뷰 (Depth Scrolling 인터랙션 힌트)<br><small>&rarr; Story 페이지로 유도</small></div>
+<div class="wf-block">Collection Teaser &mdash; 5개 큐베 시네마그래프 카드 가로 스크롤<br><small>각 카드: 시적 이름 + 시네마그래프 썸네일. &rarr; Collection 페이지로 유도</small></div>
+<div class="wf-block">Ocean Pulse &mdash; 실시간 남해 수온&middot;파고&middot;해류 데이터 (Field Note 형식)<br><small>"지금 이 순간, 바다에서 일어나는 일." 관찰 일지체 수치 표시.</small></div>
+<div class="wf-block">Journal Excerpt &mdash; 최신 Journal 포스트 2&ndash;3개 카드 그리드<br><small>썸네일 + 제목 + 첫 문장. &rarr; Journal 페이지로 유도</small></div>
+<div class="wf-block">Experience Teaser &mdash; 다가오는 이벤트 1건 대형 카드<br><small>팝업/전시/와인 디너 안내. 일시 + 장소. &rarr; Experience 페이지로 유도</small></div>
+<div class="wf-block">Newsletter CTA &mdash; "관찰을 이어가다"<br><small>이메일 입력만. 미니멀 폼. 사이트 유일한 전환 포인트.</small></div>
+</div>
+
+<h4>Story (Observation)</h4>
+<div class="wireframe">
+<div class="wireframe-label">Story Wireframe</div>
+<div class="wf-block wf-hero" style="height:80px">Discovery Timeline &mdash; 에디토리얼 스크롤 (Depth Scrolling)</div>
+<div class="wf-block">이중의 떼루아 (Two Souls) &mdash; 프랑스 토양 + 한국 바다</div>
+<div class="wf-block">Depth Explorer &mdash; 수심별 환경 변화 인터랙티브 시각화</div>
+<div class="wf-block">Research Notes &mdash; 소믈리에 테이스팅, 성분 분석 기록</div>
+<div class="wf-block">Mignon-Boulard 소개 &mdash; 파트너 메종</div>
+<div class="wf-block">남해 청정해역 &mdash; 숙성지 해류도, 좌표 마킹</div>
+</div>
+
+<h4>Collection (Archive)</h4>
+<div class="wireframe">
+<div class="wireframe-label">Collection Wireframe</div>
+<div class="wf-block">"다섯 개의 큐베, 하나의 바다."</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+<div class="wf-block">심해의 숨결<br><small>En Lieu S&ucirc;r Brut</small><br><small style="opacity:0.5">시네마그래프: 미세 기포 순환</small></div>
+<div class="wf-block">조류의 기억<br><small>En Lieu S&ucirc;r Magnum</small><br><small style="opacity:0.5">시네마그래프: 해류 흐름</small></div>
+<div class="wf-block">빛의 굴절<br><small>&Eacute;l&eacute;ment de Surprise BDB</small><br><small style="opacity:0.5">시네마그래프: 빛의 춤</small></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px">
+<div class="wf-block">모래의 시간<br><small>Atomes Crochus 1yr</small><br><small style="opacity:0.5">시네마그래프: 모래 입자 부유</small></div>
+<div class="wf-block">파동의 여운<br><small>Atomes Crochus 2yr</small><br><small style="opacity:0.5">시네마그래프: 파동 잔향</small></div>
+</div>
+<div class="wf-block">Field Note 관찰 일지 &mdash; Level 0~3 데이터 레이어</div>
+</div>
+
+<h4>Journal (Editorial)</h4>
+<div class="wireframe">
+<div class="wireframe-label">Journal Wireframe</div>
+<div class="wf-block wf-hero" style="height:60px">"바다의 관찰 일기" &mdash; 에디토리얼 헤더</div>
+<div class="wf-block">Featured Post &mdash; 최신 또는 에디터 픽 포스트 대형 카드</div>
+<div class="wf-block">카테고리 필터 &mdash; Discovery Notes / Research Journal / Field Report</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+<div class="wf-block">포스트 카드<br><small>썸네일 + 제목 + 발췌</small></div>
+<div class="wf-block">포스트 카드<br><small>썸네일 + 제목 + 발췌</small></div>
+<div class="wf-block">포스트 카드<br><small>썸네일 + 제목 + 발췌</small></div>
+</div>
+<div class="wf-block">Newsletter 구독 &mdash; "관찰을 이어가다" (이메일만 입력)</div>
+</div>
+
+<h4>Experience (Encounter)</h4>
+<div class="wireframe">
+<div class="wireframe-label">Experience Wireframe</div>
+<div class="wf-block wf-hero" style="height:60px">"만남의 장" &mdash; 이벤트 히어로 이미지</div>
+<div class="wf-block">Upcoming Events &mdash; 예정된 팝업, 와인 디너, 전시 일정 타임라인</div>
+<div class="wf-block">Past Exhibitions &mdash; 지난 이벤트 갤러리 (사진 + 간략 기록)</div>
+<div class="wf-block">Partner Spaces &mdash; 파트너 레스토랑 / 바 / 호텔 목록</div>
+<div class="wf-block">Press &mdash; 프레스 피처 &amp; 미디어 언급</div>
+<div class="wf-block">Contact &mdash; 프라이빗 문의 (이메일 전송 폼)</div>
+</div>
+
+<h3>모바일 전략</h3>
+<table class="data-table">
+<thead><tr><th>요소</th><th>Mobile</th><th>Tablet</th><th>Desktop</th></tr></thead>
+<tbody>
+<tr><td>내비게이션</td><td>하단 탭 바 (Home/Story/Collection/Journal/Experience)</td><td>하단 탭 바</td><td>상단 햄버거 + 투명 고정바</td></tr>
+<tr><td>그리드</td><td>1&ndash;2열</td><td>2&ndash;3열</td><td>12-column</td></tr>
+<tr><td>비디오</td><td>720x1280 세로</td><td>1280x720</td><td>2560x1440 (4K HDR)</td></tr>
+<tr><td>인터랙션</td><td>Gesture-Based + 햅틱</td><td>Ripple + Gesture</td><td>마우스 추적 Ripple 상시</td></tr>
+<tr><td>데이터 레이어</td><td>탭으로 Level 전환</td><td>호버 + 탭</td><td>Hover &rarr; Click &rarr; Deep Dive</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- SECTION 09: CONTENT & TONE -->
+<section class="section fade-in" id="content-tone">
+<div class="section-label">09 &mdash; Content &amp; Tone Direction</div>
+<h2>바다 관찰 일기, <em>담백한 진실</em></h2>
+
+<div class="brand-quote">
+"우리는 바다를 담지 않습니다. 바다를 통해 봅니다."
+</div>
+
+<h3>브랜드 보이스: 4가지 원칙</h3>
+<div class="card-grid card-grid-2">
+<div class="glass-card">
+<div class="card-label">Voice 01</div>
+<div class="card-title">관찰자의 시선</div>
+<div class="card-divider"></div>
+<div class="card-body">1인칭 복수("우리는")를 사용합니다. 만든 사람이 아닌, 목격하고 기록하는 사람으로 말합니다.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Voice 02</div>
+<div class="card-title">발견의 언어</div>
+<div class="card-divider"></div>
+<div class="card-body">과거형 서술을 기본으로 합니다. "우리는 발견했습니다", "바다는 보여주었습니다". 현재 진행이 아닌 기록.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Voice 03</div>
+<div class="card-title">담백한 감동</div>
+<div class="card-divider"></div>
+<div class="card-body">형용사를 최소화합니다. "놀라운", "환상적인", "독보적인" 대신 사실만 전달하면 감동은 스스로 생깁니다.</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Voice 04</div>
+<div class="card-title">과학적 시어</div>
+<div class="card-divider"></div>
+<div class="card-body">정확한 은유를 사용합니다. "수압 4기압", "수심 30미터" 같은 데이터가 곧 시(詩)가 됩니다.</div>
+</div>
+</div>
+
+<h3>5개 큐베 내러티브</h3>
+<p>각 큐베는 시적 한국어 이름과 Mignon-Boulard 원래 큐베명을 병기하며, 관찰 일기체로 서술합니다.</p>
+
+<div class="card-grid card-grid-3" style="margin:24px 0">
+<div class="glass-card">
+<div class="card-label">심해의 숨결</div>
+<div class="card-subtitle">En Lieu S&ucirc;r Brut</div>
+<div class="card-divider"></div>
+<div class="card-body" style="font-style:italic">"수심 30미터, 빛이 마지막으로 닿는 곳에서 우리는 숨 쉬는 기포를 만났습니다."</div>
+</div>
+<div class="glass-card">
+<div class="card-label">조류의 기억</div>
+<div class="card-subtitle">En Lieu S&ucirc;r Magnum</div>
+<div class="card-divider"></div>
+<div class="card-body" style="font-style:italic">"달이 당기는 힘을 따라 움직이는 바다는 12시간마다 다른 선물을 남깁니다."</div>
+</div>
+<div class="glass-card">
+<div class="card-label">빛의 굴절</div>
+<div class="card-subtitle">&Eacute;l&eacute;ment de Surprise BDB</div>
+<div class="card-divider"></div>
+<div class="card-body" style="font-style:italic">"투명한 물 속을 통과한 빛은 일곱 가지 색으로 나뉘어 병에 닿았습니다."</div>
+</div>
+</div>
+<div class="card-grid card-grid-2" style="margin-top:0">
+<div class="glass-card">
+<div class="card-label">모래의 시간</div>
+<div class="card-subtitle">Atomes Crochus 1yr</div>
+<div class="card-divider"></div>
+<div class="card-body" style="font-style:italic">"천 년의 파도가 만든 모래 알갱이 하나에서 바다의 역사를 읽었습니다."</div>
+</div>
+<div class="glass-card">
+<div class="card-label">파동의 여운</div>
+<div class="card-subtitle">Atomes Crochus 2yr</div>
+<div class="card-divider"></div>
+<div class="card-body" style="font-style:italic">"파도가 지나간 자리, 그곳에 남은 미세한 진동을 기록했습니다."</div>
+</div>
+</div>
+
+<h3>마이크로 카피 시스템</h3>
+<table class="data-table">
+<thead><tr><th>용도</th><th>카피</th></tr></thead>
+<tbody>
+<tr><td><strong>CTA</strong></td><td>"발견하기" / "관찰 노트에 담기" / "경험 시작하기"</td></tr>
+<tr><td><strong>Navigation</strong></td><td>"입구" / "관찰" / "보관소" / "관찰 일기" / "만남의 장"</td></tr>
+<tr><td><strong>Feedback</strong></td><td>"기록되었습니다" / "발견을 공유했습니다"</td></tr>
+<tr><td><strong>Error</strong></td><td>"아직 발견되지 않은 영역입니다"</td></tr>
+<tr><td><strong>Empty State</strong></td><td>"아직 관찰이 시작되지 않았습니다. 첫 번째 깊이부터 시작해보세요."</td></tr>
+<tr><td><strong>Loading</strong></td><td>"바다의 기록을 불러오는 중입니다&hellip;"</td></tr>
+</tbody>
+</table>
+
+<h3>세일즈 언어 혁명</h3>
+<table class="data-table">
+<thead><tr><th>일반 커머스</th><th>뮤즈드마레</th></tr></thead>
+<tbody>
+<tr><td>구매하기</td><td><strong>발견하기</strong></td></tr>
+<tr><td>장바구니</td><td><strong>관찰 노트</strong></td></tr>
+<tr><td>결제하기</td><td><strong>경험 시작하기</strong></td></tr>
+<tr><td>배송 조회</td><td><strong>여정 추적하기</strong></td></tr>
+<tr><td>한정판</td><td><strong>특별 관찰 기록</strong></td></tr>
+<tr><td>신제품 출시</td><td><strong>새로운 발견 공개</strong></td></tr>
+<tr><td>시즌 캠페인</td><td><strong>계절의 해류 변화</strong></td></tr>
+</tbody>
+</table>
+
+<h3>콘텐츠 카테고리</h3>
+<div class="card-grid card-grid-2">
+<div class="glass-card" style="padding:20px">
+<div class="card-label">Discovery Notes</div>
+<div class="card-body">제품 발견 스토리. 각 큐베가 바다에서 어떤 변화를 겪었는지 관찰 일기체 서술.</div>
+</div>
+<div class="glass-card" style="padding:20px">
+<div class="card-label">Research Journal</div>
+<div class="card-body">성분 연구 기록. 소믈리에 분석, 미네랄 변화 추적, 과학적 데이터의 시적 변환.</div>
+</div>
+<div class="glass-card" style="padding:20px">
+<div class="card-label">Field Report</div>
+<div class="card-body">현장 리포트. 남해 숙성지 해황, 인양 과정, 시즌별 바다의 변화 기록.</div>
+</div>
+<div class="glass-card" style="padding:20px">
+<div class="card-label">Experience Letters</div>
+<div class="card-body">경험 수기. 와인 디너, 전시, 팝업에서의 만남을 기록한 에디토리얼 콘텐츠.</div>
+</div>
+</div>
+
+<h3>데이터의 시적 변환 (Poetic Transformation)</h3>
+<p>시니어 아키텍트의 "Data as Field Note" 원칙: 숫자는 맥락 안에서만 등장하며, Field Note 형식을 따릅니다.</p>
+<div class="glass-card" style="margin:24px 0;padding:32px;font-family:monospace;font-size:0.85rem;line-height:2;color:var(--text-secondary)">
+<div style="color:var(--warm-accent);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;font-family:var(--font-body)">Field Note Sample</div>
+관찰 일자: 2026년 춘분<br>
+관찰 지점: 북위 34.7&deg;, 동경 128.0&deg; (남해 청정해역)<br>
+수심: 표층수 아래 30미터<br>
+수온: 8.2&deg;C &middot; 수압: 4기압<br>
+특이사항: 플랑크톤 밀도 최고점. 해류 방향 전환기.<br>
+<br>
+<span style="font-style:italic;color:var(--deep-teal)">"빛이 닿지 않는 곳에서, 기포는 더 천천히 올라왔습니다."</span>
+</div>
+
+<table class="data-table">
+<thead><tr><th>기존 데이터 표현</th><th>Field Note 변환</th></tr></thead>
+<tbody>
+<tr><td>수분 함량 87%, pH 5.5</td><td>깊이 30m | 수압 4기압 | 수온 15&deg;C에서 관찰</td></tr>
+<tr><td>성분 농도 그래프</td><td>물결 그래프의 진폭으로 시각화</td></tr>
+<tr><td>숙성 기간 표시</td><td>조류 시계(Tidal Clock)로 표시</td></tr>
+<tr><td>원산지 정보</td><td>해류도 위 좌표점으로 마킹</td></tr>
+<tr><td>품질 인증</td><td>"관찰자의 서명" 형식의 인증 마크</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- SECTION 10: IMPLEMENTATION ROADMAP -->
+<section class="section fade-in" id="roadmap">
+<div class="section-label">10 &mdash; Implementation Roadmap</div>
+<h2>24주, <em>투명한 심연의 완성</em></h2>
+
+<h3>7팀 협업 구조</h3>
+<p>Master Orchestrator 직속 7개 전문 팀이 유기적으로 협업합니다.</p>
+<div class="card-grid card-grid-3" style="margin:24px 0">
+<div class="glass-card" style="padding:20px">
+<div class="card-label">Team 01</div>
+<div class="card-title" style="font-size:1.1rem">디자인 팀</div>
+<div class="card-body">Visual Language Development. Color System, Typography, Visual Elements Library.</div>
+</div>
+<div class="glass-card" style="padding:20px">
+<div class="card-label">Team 02</div>
+<div class="card-title" style="font-size:1.1rem">Marketing 팀</div>
+<div class="card-body">Archive Positioning Strategy. Customer Journey, Sales Language Revolution.</div>
+</div>
+<div class="glass-card" style="padding:20px">
+<div class="card-label">Team 03</div>
+<div class="card-title" style="font-size:1.1rem">프론트엔드 팀</div>
+<div class="card-body">Technical Implementation. Glassmorphism, WebGL, Haptic, Performance.</div>
+</div>
+<div class="glass-card" style="padding:20px">
+<div class="card-label">Team 04</div>
+<div class="card-title" style="font-size:1.1rem">UX 디자인 팀</div>
+<div class="card-body">Flow Architecture. 4단계 구조 설계, Interaction Patterns, User Flow.</div>
+</div>
+<div class="glass-card" style="padding:20px">
+<div class="card-label">Team 05</div>
+<div class="card-title" style="font-size:1.1rem">Creative 영상 팀</div>
+<div class="card-body">Motion Narrative. Hero Video, 5개 Product Cinemagraphs, Ambient Loops.</div>
+</div>
+<div class="glass-card" style="padding:20px">
+<div class="card-label">Team 06</div>
+<div class="card-title" style="font-size:1.1rem">Creative 사진 팀</div>
+<div class="card-body">Visual Documentation. Macro Photography, Field Documentation, Raw Beauty.</div>
+</div>
+</div>
+<div class="glass-card" style="margin:0 0 32px;padding:20px;max-width:400px">
+<div class="card-label">Team 07</div>
+<div class="card-title" style="font-size:1.1rem">카피라이터 팀</div>
+<div class="card-body">Textual Narrative. 바다 관찰 일기, 5개 Product Narratives, Micro-Copy.</div>
+</div>
+
+<h3>주간 동기화 세션</h3>
+<table class="data-table">
+<thead><tr><th>요일</th><th>참여 팀</th><th>주제</th></tr></thead>
+<tbody>
+<tr><td><strong>월요일</strong></td><td>Design + Frontend + UX</td><td>Technical Sync</td></tr>
+<tr><td><strong>화요일</strong></td><td>Marketing + Copy</td><td>Message Alignment</td></tr>
+<tr><td><strong>수요일</strong></td><td>Video + Photo + Design</td><td>Visual Consistency</td></tr>
+<tr><td><strong>목요일</strong></td><td>All Teams</td><td>Master Review</td></tr>
+<tr><td><strong>금요일</strong></td><td>Frontend + UX</td><td>Implementation Review</td></tr>
+</tbody>
+</table>
+
+<h3>4-Phase 타임라인 (24주)</h3>
+<div class="timeline">
+<div class="timeline-item active">
+<div class="timeline-date">Phase 1 &mdash; Foundation (Week 1&ndash;4)</div>
+<div class="timeline-title">팀 구성 &amp; 컨셉 개발</div>
+<div class="timeline-desc">
+Week 1: Team Formation &amp; Briefing<br>
+Week 2: Research &amp; Benchmarking<br>
+Week 3: Concept Development<br>
+Week 4: Initial Proposals
+</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-date">Phase 2 &mdash; Development (Week 5&ndash;12)</div>
+<div class="timeline-title">디자인 시스템 &amp; 콘텐츠 제작</div>
+<div class="timeline-desc">
+Week 5&ndash;6: Design System Creation (Color, Typography, Visual Elements)<br>
+Week 7&ndash;8: UX Architecture &amp; Wireframes<br>
+Week 9&ndash;10: Content Production (Photo/Video/Copy)<br>
+Week 11&ndash;12: Frontend Development Start
+</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-date">Phase 3 &mdash; Integration (Week 13&ndash;20)</div>
+<div class="timeline-title">개발 통합 &amp; 테스트</div>
+<div class="timeline-desc">
+Week 13&ndash;14: Component Development (Glassmorphism, WebGL, Haptic)<br>
+Week 15&ndash;16: Content Integration (영상/사진/카피 삽입)<br>
+Week 17&ndash;18: Testing &amp; Optimization (CWV, Cross-browser)<br>
+Week 19&ndash;20: Final Adjustments
+</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-date">Phase 4 &mdash; Launch Preparation (Week 21&ndash;24)</div>
+<div class="timeline-title">런칭 준비 &amp; 공개</div>
+<div class="timeline-desc">
+Week 21: Soft Launch (Internal)<br>
+Week 22: Beta Testing<br>
+Week 23: Final Optimization<br>
+Week 24: Public Launch &mdash; 2026년 7&ndash;8월
+</div>
+</div>
+</div>
+
+<h3>기술 스택</h3>
+<table class="data-table">
+<thead><tr><th>기술</th><th>용도</th></tr></thead>
+<tbody>
+<tr><td><strong>Next.js (App Router)</strong></td><td>프레임워크. PPR, ISR, Server Components</td></tr>
+<tr><td><strong>Framer Motion + Three.js</strong></td><td>Float Animation, Ripple Effect, WebGL Ocean Dynamics</td></tr>
+<tr><td><strong>Tailwind + Custom Properties</strong></td><td>Glassmorphism, Transparency Layer 시스템</td></tr>
+<tr><td><strong>Zustand</strong></td><td>State Management (Data Layer 전환, 사용자 상태)</td></tr>
+<tr><td><strong>Vercel Edge</strong></td><td>글로벌 저지연 배포, CDN, Image Optimization</td></tr>
+<tr><td><strong>PostHog</strong></td><td>행동 분석, Feature Flags, Session Replay</td></tr>
+</tbody>
+</table>
+
+<h3>Success Metrics</h3>
+<div class="card-grid card-grid-2">
+<div class="glass-card">
+<div class="card-label">Qualitative</div>
+<div class="card-title" style="font-size:1.1rem">정성적 지표</div>
+<div class="card-divider"></div>
+<div class="card-body">
+&bull; "아카이브" 연상 증가율<br>
+&bull; "발견" 키워드 언급 빈도<br>
+&bull; 감성적 연결도 지수<br>
+&bull; 평균 체류 시간: <strong>8분 이상</strong><br>
+&bull; 깊이 있는 탐색률 (3단계 이상)<br>
+&bull; International Design Awards 출품
+</div>
+</div>
+<div class="glass-card">
+<div class="card-label">Quantitative</div>
+<div class="card-title" style="font-size:1.1rem">정량적 지표</div>
+<div class="card-divider"></div>
+<div class="card-body">
+&bull; Page Load Speed: <strong>&lt; 2초</strong><br>
+&bull; Lighthouse Score: <strong>&gt; 95</strong><br>
+&bull; Mobile Performance: <strong>&gt; 90</strong><br>
+&bull; Bounce Rate: <strong>&lt; 30%</strong><br>
+&bull; Return Visitor Rate: <strong>&gt; 40%</strong><br>
+&bull; Newsletter Subscription: <strong>&gt; 15%</strong>
+</div>
+</div>
+</div>
+
+<h3>리스크 관리</h3>
+<table class="data-table">
+<thead><tr><th>리스크</th><th>설명</th><th>대응</th></tr></thead>
+<tbody>
+<tr><td><strong>Technical Complexity</strong></td><td>WebGL/Glassmorphism 퍼포먼스</td><td>Progressive Enhancement &mdash; 단계적 기능 향상</td></tr>
+<tr><td><strong>Content Production</strong></td><td>고품질 사진/영상/카피 제작 기간</td><td>Phased Content Release &mdash; 단계별 콘텐츠 공개</td></tr>
+<tr><td><strong>Market Reception</strong></td><td>럭셔리 시장에서 너무 미묘한 접근</td><td>A/B Testing &mdash; 대조군 비교 테스트</td></tr>
+<tr><td><strong>Cross-browser</strong></td><td>고급 기능의 브라우저 호환</td><td>Graceful Degradation &mdash; 우아한 기능 저하</td></tr>
+</tbody>
+</table>
+
+<h3>팀간 통합 매트릭스</h3>
+<table class="data-table" style="font-size:0.75rem">
+<thead><tr><th></th><th>Design</th><th>Marketing</th><th>Frontend</th><th>UX</th><th>Video</th><th>Photo</th><th>Copy</th></tr></thead>
+<tbody>
+<tr><td><strong>Design</strong></td><td>&mdash;</td><td>Brand Guide</td><td>Design System</td><td>Visual Hierarchy</td><td>Color Grading</td><td>Color Ref</td><td>Visual-Text</td></tr>
+<tr><td><strong>Marketing</strong></td><td>Brand Guide</td><td>&mdash;</td><td>Campaign Tech</td><td>Journey Map</td><td>Campaign Vid</td><td>Campaign Img</td><td>Brand Voice</td></tr>
+<tr><td><strong>Frontend</strong></td><td>Design System</td><td>Campaign Tech</td><td>&mdash;</td><td>Tech Specs</td><td>Video Opt</td><td>Image Proc</td><td>CMS</td></tr>
+<tr><td><strong>UX</strong></td><td>Visual Hier.</td><td>Journey Map</td><td>Tech Specs</td><td>&mdash;</td><td>Interaction</td><td>Nav Images</td><td>Micro-Copy</td></tr>
+<tr><td><strong>Video</strong></td><td>Color Grading</td><td>Campaign Vid</td><td>Video Opt</td><td>Interaction</td><td>&mdash;</td><td>Visual Cons.</td><td>Silent Narr.</td></tr>
+<tr><td><strong>Photo</strong></td><td>Color Ref</td><td>Campaign Img</td><td>Image Proc</td><td>Nav Images</td><td>Visual Cons.</td><td>&mdash;</td><td>Captions</td></tr>
+<tr><td><strong>Copy</strong></td><td>Visual-Text</td><td>Brand Voice</td><td>CMS</td><td>Micro-Copy</td><td>Silent Narr.</td><td>Captions</td><td>&mdash;</td></tr>
+</tbody>
+</table>
+</section>
+
+</div><!-- /content-wrap -->
+</div><!-- /main -->
+
+<!-- JAVASCRIPT -->
+<script>
+// Sidebar active state & scroll spy
+const sections = document.querySelectorAll('.section');
+const navLinks = document.querySelectorAll('.sidebar nav a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => link.classList.remove('active'));
+      const id = entry.target.getAttribute('id');
+      const activeLink = document.querySelector(`.sidebar nav a[href="#${id}"]`);
+      if (activeLink) activeLink.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(section => observer.observe(section));
+
+// Fade-in animation
+const fadeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+// Mobile sidebar toggle
+const toggle = document.getElementById('mobileToggle');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+
+function openSidebar() {
+  sidebar.classList.add('open');
+  overlay.classList.add('open');
+}
+function closeSidebar() {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('open');
+}
+
+toggle.addEventListener('click', () => {
+  sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+});
+overlay.addEventListener('click', closeSidebar);
+
+// Close sidebar on nav click (mobile)
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) closeSidebar();
+  });
+});
+</script>
+</body>
+</html>
