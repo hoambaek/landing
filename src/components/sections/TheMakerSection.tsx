@@ -1,4 +1,6 @@
 /** TheMakerSection — Server Component */
+import CTALink from "@/components/ui/CTALink";
+
 export default function TheMakerSection() {
   return (
     <section id="the-maker" className="s-maker hanji-texture">
@@ -16,43 +18,41 @@ export default function TheMakerSection() {
 
         {/* 2컬럼 카드 */}
         <div className="s-maker__cards">
-          {/* 카드 1 — Champagne Mignon Boulard */}
+          {/* 카드 1 — Muse de Maree */}
           <div className="s-maker__card reveal">
-            <div className="s-maker__card-image" />
-            <div className="s-maker__card-label">partner maison</div>
-            <div className="s-maker__card-name">
-              Champagne Mignon Boulard
+            <div className="s-maker__card-image">
+              <img src="/images/m2.webp" alt="Muse de Marée" />
             </div>
-            <p className="s-maker__card-desc">
-              Venteuil, Vall&eacute;e de la Marne.
-              <br />
-              6.42헥타르, 49개 마이크로 파셀.
-              <br />
-              제초제 없이 직접 경작하는 토양.
-              <br />
-              온도 조절 없는 자연 발효.
-              <br />
-              여과하지 않는 와인.
-            </p>
-          </div>
-
-          {/* 카드 2 — Muse de Maree */}
-          <div className="s-maker__card reveal reveal-delay-1">
-            <div className="s-maker__card-image" />
             <div className="s-maker__card-label">aging team</div>
             <div className="s-maker__card-name">
               Muse de Mar&eacute;e
             </div>
             <p className="s-maker__card-desc">
-              대한민국 남해안, 수심 20&ndash;40m.
+              대한민국 남해안, 수심 30–60m.
               <br />
-              474병의 첫 빈티지를 바다에 맡긴 팀.
-              <br />
-              설계하고, 기록하고,
-              <br />
-              바다가 완성할 때까지 기다리는 일.
+              설계하고, 기록하고, 바다가 완성할 때까지 기다리는 팀.
             </p>
           </div>
+
+          {/* 카드 2 — Champagne Mignon Boulard */}
+          <div className="s-maker__card reveal reveal-delay-1">
+            <div className="s-maker__card-image">
+              <img src="/images/m1.webp" alt="Champagne Mignon Boulard" />
+            </div>
+            <div className="s-maker__card-label">partner maison</div>
+            <div className="s-maker__card-name">
+              Champagne Mignon Boulard
+            </div>
+            <p className="s-maker__card-desc">
+              Venteuil, Vallée de la Marne.
+              <br />
+              49개의 다른 토양, 준비되었을 때만 출시하는 메종.
+            </p>
+          </div>
+        </div>
+
+        <div className="s-maker__cta reveal">
+          <CTALink href="/maker" variant="light">메이커 스토리 보기</CTALink>
         </div>
       </div>
     </section>

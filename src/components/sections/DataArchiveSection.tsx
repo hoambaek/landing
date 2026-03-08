@@ -34,7 +34,7 @@ function getLatestValue(data: OceanDataDaily[], key: string, depth: number): num
   if (key === "water_pressure") {
     return calculateWaterPressure(depth, latest.surface_pressure_avg ?? undefined);
   }
-  return (latest as Record<string, number | null>)[key] ?? null;
+  return (latest as unknown as Record<string, number | null>)[key] ?? null;
 }
 
 function normalizeValues(data: OceanDataDaily[], key: string, depth: number): number[] {
@@ -42,17 +42,57 @@ function normalizeValues(data: OceanDataDaily[], key: string, depth: number): nu
     if (key === "water_pressure") {
       return calculateWaterPressure(depth, d.surface_pressure_avg ?? undefined);
     }
-    return (d as Record<string, number | null>)[key] ?? null;
+    return (d as unknown as Record<string, number | null>)[key] ?? null;
   });
 
   const valid = values.filter((v): v is number => v !== null);
   if (valid.length === 0) return values.map(() => 0.5);
 
+  // 해류 방향(0~360°)은 순환 데이터 — 누적 델타로 변환하여 점프 제거
+  if (key === "current_direction_dominant") {
+    const unwrapped: number[] = [];
+    let prev: number | null = null;
+    for (const v of values) {
+      if (v === null) { unwrapped.push(0); continue; }
+      if (prev === null) { unwrapped.push(v); prev = v; continue; }
+      let delta = v - prev;
+      if (delta > 180) delta -= 360;
+      if (delta < -180) delta += 360;
+      const last = unwrapped[unwrapped.length - 1];
+      unwrapped.push(last + delta);
+      prev = v;
+    }
+    const uMin = Math.min(...unwrapped);
+    const uMax = Math.max(...unwrapped);
+    const uRange = uMax - uMin || 1;
+    const norm = unwrapped.map((v) => (v - uMin) / uRange);
+    // 심리스 루프 보간 — 끝→시작을 부드럽게 연결
+    const BLEND = 6;
+    const lst = norm[norm.length - 1];
+    const fst = norm[0];
+    for (let i = 1; i <= BLEND; i++) {
+      const t = i / BLEND; // t: 1/6, 2/6, ... 6/6=1.0 (정확히 첫 값에 도달)
+      norm.push(lst + (fst - lst) * t);
+    }
+    return norm;
+  }
+
   const min = Math.min(...valid);
   const max = Math.max(...valid);
   const range = max - min || 1;
 
-  return values.map((v) => (v !== null ? (v - min) / range : 0.5));
+  const norm = values.map((v) => (v !== null ? (v - min) / range : 0.5));
+
+  // 심리스 루프 보간 — 끝→시작을 부드럽게 연결
+  const BLEND = 6;
+  const last = norm[norm.length - 1];
+  const first = norm[0];
+  for (let i = 1; i <= BLEND; i++) {
+    const t = i / BLEND; // t: 1/6, 2/6, ... 6/6=1.0 (정확히 첫 값에 도달)
+    norm.push(last + (first - last) * t);
+  }
+
+  return norm;
 }
 
 function buildSvgPath(normalized: number[], width: number, height: number, padding: number): string {
@@ -115,7 +155,8 @@ const ECHOES_PER_LINE = 8; // 6 metrics × 8 echoes = 48 lines total
 function ScrollingChart({ data, depth, lastUpdate }: { data: OceanDataDaily[]; depth: number; lastUpdate: string | null }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
-  const W = 1200;
+  const HALF_W = 1200;
+  const W = HALF_W * 2; // 두 벌로 심리스 루프
   const H = 120;
   const PAD = 8;
 
@@ -133,7 +174,7 @@ function ScrollingChart({ data, depth, lastUpdate }: { data: OceanDataDaily[]; d
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          {/* Dense wave lines */}
+          {/* Dense wave lines — 두 벌 (0~HALF_W, HALF_W~W) */}
           {CHART_LINES.map((line, li) => {
             const norm = normalizeValues(data, line.key, depth);
             if (norm.length < 2) return null;
@@ -144,18 +185,15 @@ function ScrollingChart({ data, depth, lastUpdate }: { data: OceanDataDaily[]; d
               const xPhase = seededRandom(seed + 50) * 8 - 4;
               const opacity = 0.12 + seededRandom(seed + 99) * 0.25;
               const strokeW = 0.3 + seededRandom(seed + 77) * 0.5;
-              const path = buildOffsetPath(norm, W, H, PAD, yOff, xPhase);
-              if (!path) return null;
+              const path1 = buildOffsetPath(norm, HALF_W, H, PAD, yOff, xPhase);
+              const path2 = buildOffsetPath(norm, HALF_W, H, PAD, yOff, xPhase + HALF_W);
+              if (!path1 || !path2) return null;
 
               return (
-                <path
-                  key={`${line.key}-${ei}`}
-                  d={path}
-                  fill="none"
-                  stroke={line.color}
-                  strokeWidth={strokeW}
-                  opacity={opacity}
-                />
+                <g key={`${line.key}-${ei}`}>
+                  <path d={path1} fill="none" stroke={line.color} strokeWidth={strokeW} opacity={opacity} />
+                  <path d={path2} fill="none" stroke={line.color} strokeWidth={strokeW} opacity={opacity} />
+                </g>
               );
             });
           })}

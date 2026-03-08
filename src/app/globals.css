@@ -1121,7 +1121,7 @@ body::after {
 .s-maker {
   background: var(--color-warm-ivory);
   color: var(--color-earth-muted);
-  padding: 160px 0 140px;
+  padding: 160px 0 160px;
   position: relative;
 }
 
@@ -1183,6 +1183,13 @@ body::after {
   margin-bottom: 32px;
 }
 
+.s-maker__card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
 .s-maker__card-image::after {
   content: '';
   position: absolute;
@@ -1216,6 +1223,12 @@ body::after {
   line-height: 2;
   color: rgba(49, 46, 42, 0.45);
   text-align: center;
+}
+
+.s-maker__cta {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(64px, 8vh, 100px);
 }
 
 /* ══════════════════════════════════════════
@@ -2238,7 +2251,7 @@ body::after {
 
   /* S4 */
   .s-maker {
-    padding: 100px 0 100px;
+    padding: 100px 0;
   }
 
   .s-maker__cards {
