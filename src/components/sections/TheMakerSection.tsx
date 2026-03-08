@@ -9,38 +9,20 @@ export default function TheMakerSection() {
         {/* 헤더 */}
         <div className="s-maker__header reveal">
           <h2 className="s-maker__title">the maker<span className="dot">.</span></h2>
-          <div className="s-maker__title-kr">이중의 떼루아</div>
           <p className="s-maker__sub">
-            7천만 년 전 바다였던 땅에서 태어나,
+            바다가 선택할 수 있는 가장 좋은 샴페인.
             <br />
-            지금의 바다에서 완성되는 것.
+            그 기준으로 메종을 찾습니다.
           </p>
         </div>
 
-        {/* 2컬럼 카드 */}
-        <div className="s-maker__cards">
-          {/* 카드 1 — Muse de Maree */}
+        {/* 파트너 메종 카드 */}
+        <div className="s-maker__cards s-maker__cards--single">
           <div className="s-maker__card reveal">
-            <div className="s-maker__card-image">
-              <Image src="/images/m2.webp" alt="Muse de Marée" fill sizes="(max-width: 768px) 100vw, 50vw" />
-            </div>
-            <div className="s-maker__card-label">aging team</div>
-            <div className="s-maker__card-name">
-              Muse de Mar&eacute;e
-            </div>
-            <p className="s-maker__card-desc">
-              대한민국 남해안, 수심 30–60m.
-              <br />
-              설계하고, 기록하고, 바다가 완성할 때까지 기다리는 팀.
-            </p>
-          </div>
-
-          {/* 카드 2 — Champagne Mignon Boulard */}
-          <div className="s-maker__card reveal reveal-delay-1">
             <div className="s-maker__card-image">
               <Image src="/images/m1.webp" alt="Champagne Mignon Boulard" fill sizes="(max-width: 768px) 100vw, 50vw" />
             </div>
-            <div className="s-maker__card-label">partner maison</div>
+            <div className="s-maker__card-label" style={{ alignSelf: 'center', background: 'rgba(49,46,42,0.08)', border: '0.5px solid rgba(49,46,42,0.15)', padding: '3px 10px', borderRadius: '2px' }}>1st partner maison</div>
             <div className="s-maker__card-name">
               Champagne Mignon Boulard
             </div>
