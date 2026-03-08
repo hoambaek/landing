@@ -1,4 +1,5 @@
 /** ArchiveSection — Server Component (Masonry Grid) */
+import Image from "next/image";
 
 const CUVEES = [
   {
@@ -38,10 +39,12 @@ export default function ArchiveSection() {
   return (
     <section id="archive" className="s-archive hanji-texture">
       <div className="s-archive__hero reveal">
-        <img
+        <Image
           src="/images/f2.webp"
           alt="다섯 개의 큐베"
+          fill
           className="s-archive__hero-img"
+          sizes="100vw"
         />
         <div className="s-archive__hero-fade-top" aria-hidden="true" />
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useIndicatorScroll } from "@/hooks/useScrollSection";
 
 const SECTIONS = [
   { id: "void" },
@@ -12,7 +12,7 @@ const SECTIONS = [
   { id: "professionals" },
 ] as const;
 
-/** 각 섹션별 미니멀 심볼 (12×12 SVG) */
+/** 각 섹션별 미니멀 심볼 (12x12 SVG) */
 const SYMBOLS: Record<string, React.ReactNode> = {
   void: (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -57,56 +57,10 @@ const SYMBOLS: Record<string, React.ReactNode> = {
   ),
 };
 
-/** 밝은 배경 섹션 — 헤더와 동일 */
-const LIGHT_SECTIONS = new Set(["observation", "the-maker", "archive"]);
-
 const GAP_AFTER = 4;
 
-function getActiveSection(): string {
-  if (typeof window === "undefined") return "void";
-  const center = window.scrollY + window.innerHeight * 0.4;
-  let current = "void";
-  document.querySelectorAll<HTMLElement>("section[id]").forEach((section) => {
-    if (section.offsetTop <= center) current = section.id;
-  });
-  return current;
-}
-
-function getIndicatorSection(): string {
-  if (typeof window === "undefined") return "void";
-  const indicatorY = window.scrollY + window.innerHeight * 0.5;
-  let current = "void";
-  document.querySelectorAll<HTMLElement>("section[id]").forEach((section) => {
-    if (section.offsetTop <= indicatorY) current = section.id;
-  });
-  return current;
-}
-
 export default function SectionIndicator() {
-  const [activeId, setActiveId] = useState("void");
-  const [isLight, setIsLight] = useState(false);
-  const ticking = useRef(false);
-
-  useEffect(() => {
-    function handleUpdate() {
-      setActiveId(getActiveSection());
-      const sectionAtIndicator = getIndicatorSection();
-      setIsLight(LIGHT_SECTIONS.has(sectionAtIndicator));
-      ticking.current = false;
-    }
-
-    function onScroll() {
-      if (!ticking.current) {
-        requestAnimationFrame(handleUpdate);
-        ticking.current = true;
-      }
-    }
-
-    requestAnimationFrame(handleUpdate);
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const { activeId, isLight } = useIndicatorScroll();
 
   return (
     <div className={`indicator${isLight ? " indicator--light" : ""}`}>

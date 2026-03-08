@@ -1,4 +1,5 @@
 /** OceanCircleSection — Ocean Cellar Privé */
+import Image from "next/image";
 import CTALink from "@/components/ui/CTALink";
 
 export default function OceanCircleSection() {
@@ -34,10 +35,12 @@ export default function OceanCircleSection() {
 
       {/* 우측 이미지 */}
       <div className="s-premiere__image" aria-hidden="true">
-        <img
+        <Image
           src="/images/n-400.webp"
           alt=""
+          fill
           className="s-premiere__image-inner"
+          sizes="45vw"
         />
         <div className="s-premiere__image-fade" />
       </div>

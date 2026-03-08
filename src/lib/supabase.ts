@@ -1,9 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+/** Build 시점에 env 없으면 null — graceful fallback */
+export const supabase =
+  supabaseUrl && supabaseAnonKey
+    ? createClient(supabaseUrl, supabaseAnonKey)
+    : null;
 
 export interface OceanDataDaily {
   date: string;
@@ -17,6 +21,7 @@ export interface OceanDataDaily {
 }
 
 export async function fetchOceanData30Days(): Promise<OceanDataDaily[]> {
+  if (!supabase) return [];
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
   const startDate = thirtyDaysAgo.toISOString().split('T')[0];

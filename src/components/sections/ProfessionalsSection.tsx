@@ -1,4 +1,5 @@
 /** ProfessionalsSection — amber with background image */
+import Image from "next/image";
 import CTALink from "@/components/ui/CTALink";
 
 export default function ProfessionalsSection() {
@@ -10,10 +11,12 @@ export default function ProfessionalsSection() {
     >
       {/* 배경 이미지 */}
       <div className="s-pro__bg" aria-hidden="true">
-        <img
+        <Image
           src="/images/p1.webp"
           alt=""
+          fill
           className="s-pro__bg-img"
+          sizes="100vw"
         />
         <div className="s-pro__bg-overlay" />
       </div>

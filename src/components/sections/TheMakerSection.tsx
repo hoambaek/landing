@@ -1,4 +1,5 @@
 /** TheMakerSection — Server Component */
+import Image from "next/image";
 import CTALink from "@/components/ui/CTALink";
 
 export default function TheMakerSection() {
@@ -21,7 +22,7 @@ export default function TheMakerSection() {
           {/* 카드 1 — Muse de Maree */}
           <div className="s-maker__card reveal">
             <div className="s-maker__card-image">
-              <img src="/images/m2.webp" alt="Muse de Marée" />
+              <Image src="/images/m2.webp" alt="Muse de Marée" fill sizes="(max-width: 768px) 100vw, 50vw" />
             </div>
             <div className="s-maker__card-label">aging team</div>
             <div className="s-maker__card-name">
@@ -37,7 +38,7 @@ export default function TheMakerSection() {
           {/* 카드 2 — Champagne Mignon Boulard */}
           <div className="s-maker__card reveal reveal-delay-1">
             <div className="s-maker__card-image">
-              <img src="/images/m1.webp" alt="Champagne Mignon Boulard" />
+              <Image src="/images/m1.webp" alt="Champagne Mignon Boulard" fill sizes="(max-width: 768px) 100vw, 50vw" />
             </div>
             <div className="s-maker__card-label">partner maison</div>
             <div className="s-maker__card-name">

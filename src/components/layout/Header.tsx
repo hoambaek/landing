@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
+import { useHeaderScroll } from "@/hooks/useScrollSection";
 
 /** 메인 섹션 링크 (우측 큰 타이포) */
 const MAIN_LINKS = [
@@ -32,51 +33,11 @@ const FOCUSABLE =
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isDark, setIsDark] = useState(true);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const { isDark, isScrolled } = useHeaderScroll();
 
   const menuBtnRef = useRef<HTMLButtonElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
-
-  /* 헤더 색상 전환 — 현재 섹션 배경 밝기에 따라 자동 전환 */
-  useEffect(() => {
-    /** 라이트 배경 섹션 id 목록 (다크 텍스트 필요) */
-    const LIGHT_SECTIONS = new Set(["observation", "the-maker", "archive"]);
-
-    function checkHeaderColor() {
-      // 히어로 섹션을 벗어나면 스크롤 상태 활성화
-      const hero = document.getElementById("void");
-      if (hero) {
-        setIsScrolled(window.scrollY > hero.offsetHeight * 0.5);
-      } else {
-        setIsScrolled(window.scrollY > 0);
-      }
-      const headerY = window.scrollY + 60; // 헤더 중앙 근처
-      const sections = document.querySelectorAll<HTMLElement>("section[id]");
-      let currentId = "void";
-      sections.forEach((section) => {
-        if (section.offsetTop <= headerY) currentId = section.id;
-      });
-
-      // observation 이미지 영역(어두운 배경)에서는 밝은 헤더 유지
-      const obsImage = document.querySelector<HTMLElement>(".s-obs__image");
-      if (obsImage) {
-        const imgTop = obsImage.offsetTop;
-        const imgBottom = imgTop + obsImage.offsetHeight;
-        if (headerY >= imgTop && headerY <= imgBottom) {
-          setIsDark(true);
-          return;
-        }
-      }
-
-      setIsDark(!LIGHT_SECTIONS.has(currentId));
-    }
-
-    requestAnimationFrame(checkHeaderColor);
-    window.addEventListener("scroll", checkHeaderColor, { passive: true });
-    return () => window.removeEventListener("scroll", checkHeaderColor);
-  }, []);
 
   /* ESC 후 포커스 복원 */
   const close = useCallback(() => {
@@ -133,7 +94,7 @@ export default function Header() {
     };
   }, [isOpen]);
 
-  const headerColorClass = !isScrolled ? "" : (isDark ? "" : " header--light");
+  const headerColorClass = !isScrolled ? "" : isDark ? "" : " header--light";
   const heroInitClass = !isScrolled ? " header--hero-init" : "";
 
   const headerStyle: React.CSSProperties = {

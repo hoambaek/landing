@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Noto_Sans_KR, Noto_Serif_KR, Diphylleia, DM_Mono, Gowun_Batang } from "next/font/google";
+import {
+  Cormorant_Garamond,
+  Noto_Sans_KR,
+  Noto_Serif_KR,
+  Diphylleia,
+  DM_Mono,
+  Gowun_Batang,
+} from "next/font/google";
 import localFont from "next/font/local";
+import Script from "next/script";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -70,18 +78,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <head>
-        <link
-          rel="stylesheet"
-          as="style"
-          crossOrigin="anonymous"
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
-        />
-      </head>
       <body
         className={`${cormorant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${jjFont.variable} antialiased`}
       >
         {children}
+        <Script
+          id="pretendard-css"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              var l = document.createElement('link');
+              l.rel = 'stylesheet';
+              l.href = 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css';
+              l.crossOrigin = 'anonymous';
+              document.head.appendChild(l);
+            `,
+          }}
+        />
       </body>
     </html>
   );

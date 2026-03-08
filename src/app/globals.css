@@ -784,15 +784,24 @@ body::after {
   font-size: 1rem;
   font-weight: 300;
   line-height: 2;
-  opacity: 0.65;
 }
 
 .s-obs__intro p {
   margin-bottom: clamp(20px, 2.5vh, 32px);
+  opacity: 0.65;
 }
 
 .s-obs__intro p:last-child {
   margin-bottom: 0;
+}
+
+.s-obs__emphasis {
+  font-family: var(--font-jj);
+  font-weight: 400;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  margin-top: clamp(32px, 4vh, 48px);
+  opacity: 1;
 }
 
 .s-obs__brand {
@@ -1035,6 +1044,8 @@ body::after {
 /* 30-Day Chart */
 .s-data__chart-wrap {
   margin-bottom: clamp(48px, 6vh, 80px);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 120px;
 }
 
 .s-data__cta {
@@ -1646,8 +1657,9 @@ body::after {
   position: absolute;
   right: -60px;
   top: -12px;
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
   font-style: italic;
   font-weight: 400;
   letter-spacing: 0.08em;

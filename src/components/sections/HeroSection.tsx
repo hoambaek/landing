@@ -158,7 +158,7 @@ export default function HeroSection() {
           src="/mov/landing.mp4"
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
         />
 
         {/* 영상 종료 후 디졸브 이미지 */}

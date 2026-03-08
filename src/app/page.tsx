@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import SectionIndicator from "@/components/layout/SectionIndicator";
@@ -19,7 +20,13 @@ export default function Home() {
       <main>
         <HeroSection />
         <ObservationSection />
-        <DataArchiveSection />
+        <Suspense
+          fallback={
+            <section id="data-archive" className="s-data" style={{ minHeight: "100vh" }} />
+          }
+        >
+          <DataArchiveSection />
+        </Suspense>
         <ArchiveSection />
         <TheMakerSection />
         <OceanCircleSection />
