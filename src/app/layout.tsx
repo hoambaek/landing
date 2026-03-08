@@ -6,6 +6,7 @@ import {
   Diphylleia,
   DM_Mono,
   Gowun_Batang,
+  EB_Garamond,
 } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";
@@ -53,6 +54,13 @@ const gowunBatang = Gowun_Batang({
   display: "swap",
 });
 
+const ebGaramond = EB_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-eb-garamond",
+  display: "swap",
+});
+
 const jjFont = localFont({
   src: "../../public/jj.ttf",
   variable: "--font-jj",
@@ -79,7 +87,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`${cormorant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${jjFont.variable} antialiased`}
+        className={`${cormorant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${jjFont.variable} antialiased`}
       >
         {children}
         <Script

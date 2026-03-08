@@ -7,6 +7,7 @@ import {
 } from "@/lib/supabase";
 import CTALink from "@/components/ui/CTALink";
 import DataArchiveClient from "./DataArchiveClient";
+import DataMetricsClient from "./DataMetricsClient";
 
 const METRICS = [
   { key: "sea_temperature_avg", label: "수온", unit: "°C", color: "#E8E5E1", decimals: 1 },
@@ -69,24 +70,16 @@ export default async function DataArchiveSection() {
         <p className="s-data__section-note reveal reveal-delay-2">
           현재 바다의 실측값
         </p>
-        <div className="s-data__grid reveal reveal-delay-2">
-          {METRICS.map((m, i) => {
-            const val = getLatestValue(data, m.key, depth);
-            return (
-              <div
-                key={m.key}
-                className="s-data__point"
-                style={{ transitionDelay: `${i * 80}ms` }}
-              >
-                <p className="s-data__number" style={{ color: m.color }}>
-                  {val !== null ? val.toFixed(m.decimals) : "—"}
-                  <span className="s-data__unit">{m.unit}</span>
-                </p>
-                <p className="s-data__metric-label">{m.label}</p>
-              </div>
-            );
-          })}
-        </div>
+        <DataMetricsClient
+          metrics={METRICS.map((m) => ({
+            key: m.key,
+            label: m.label,
+            unit: m.unit,
+            color: m.color,
+            decimals: m.decimals,
+            value: getLatestValue(data, m.key, depth),
+          }))}
+        />
 
         {data.length > 1 && (
           <DataArchiveClient

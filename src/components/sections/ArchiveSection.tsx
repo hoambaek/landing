@@ -1,37 +1,43 @@
 /** ArchiveSection — Server Component (Masonry Grid) */
 import Image from "next/image";
+import CardSlider from "@/components/ui/CardSlider";
 
 const CUVEES = [
   {
     num: "01",
-    depth: "cuv\u00e9e 01 \u00b7 core",
-    name: "En Lieu S\u00fbr.",
-    desc: "Brut. \uB690\uB974\uC544 \uC2DC\uB9AC\uC988\uC758 \uAE30\uB465.",
+    depth: "cuvée 01 · core",
+    name: "En Lieu Sûr.",
+    desc: "Brut. 뮤르아 시리즈의 기둥.",
+    img2: "/images/01-1.png",
   },
   {
     num: "02",
-    depth: "cuv\u00e9e 02 \u00b7 limited",
-    name: "En Lieu S\u00fbr Magnum.",
-    desc: "1500ml. \uB354 \uB290\uB9B0 \uC2DC\uAC04.",
+    depth: "cuvée 02 · limited",
+    name: "En Lieu Sûr Magnum.",
+    desc: "1500ml. 더 느린 시간.",
+    img2: "/images/02-2.png",
   },
   {
     num: "03",
-    depth: "cuv\u00e9e 03 \u00b7 limited",
-    name: "\u00c9l\u00e9ment de Surprise.",
+    depth: "cuvée 03 · limited",
+    name: "Élément de Surprise.",
     desc: "Blanc de Blancs.",
+    img2: "/images/03-1.png",
   },
   {
     num: "04",
-    depth: "cuv\u00e9e 04 \u00b7 collector\u2019s",
+    depth: "cuvée 04 · collector\u2019s",
     name: "Atomes Crochus 1yr.",
-    desc: "\uD574\uC800 12\uAC1C\uC6D4.",
+    desc: "해저 12개월.",
+    img2: "/images/04-1.png",
   },
   {
     num: "05",
-    depth: "cuv\u00e9e 05 \u00b7 collector\u2019s",
+    depth: "cuvée 05 · collector\u2019s",
     name: "Atomes Crochus 3yr.",
-    desc: "\uD574\uC800 36\uAC1C\uC6D4. \uAC00\uC7A5 \uAE34 \uC2DC\uAC04. \uAC00\uC7A5 \uAE4A\uC740 \uAE30\uB85D.",
-    limited: "40\uBCD1 \uD55C\uC815",
+    desc: "해저 36개월. 가장 긴 시간. 가장 깊은 기록.",
+    limited: "40병 한정",
+    img2: "/images/05-1.png",
   },
 ] as const;
 
@@ -61,7 +67,13 @@ export default function ArchiveSection() {
               key={cuvee.name}
               className={`m-card m-card--${cuvee.num}`}
             >
-              <div className="m-card__img" />
+              <div className="m-card__img">
+                <CardSlider
+                  images={[`/images/${cuvee.num}.webp`, cuvee.img2]}
+                  alt={cuvee.name}
+                  className="m-card__img-inner"
+                />
+              </div>
               <div className="m-card__info">
                 <div className="m-card__label">{cuvee.depth}</div>
                 <div className="m-card__name">{cuvee.name}</div>
