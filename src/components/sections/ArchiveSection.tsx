@@ -8,28 +8,28 @@ const CUVEES = [
     depth: "cuvée 01 · core",
     name: "En Lieu Sûr.",
     desc: "Brut. 뮤르아 시리즈의 기둥.",
-    img2: "/images/01-1.png",
+    img2: "/images/01-1.webp",
   },
   {
     num: "02",
     depth: "cuvée 02 · limited",
     name: "En Lieu Sûr Magnum.",
     desc: "1500ml. 더 느린 시간.",
-    img2: "/images/02-2.png",
+    img2: "/images/02-1.webp",
   },
   {
     num: "03",
     depth: "cuvée 03 · limited",
     name: "Élément de Surprise.",
     desc: "Blanc de Blancs.",
-    img2: "/images/03-1.png",
+    img2: "/images/03-1.webp",
   },
   {
     num: "04",
     depth: "cuvée 04 · collector\u2019s",
     name: "Atomes Crochus 1yr.",
     desc: "해저 12개월.",
-    img2: "/images/04-1.png",
+    img2: "/images/04-1.webp",
   },
   {
     num: "05",
@@ -37,7 +37,7 @@ const CUVEES = [
     name: "Atomes Crochus 3yr.",
     desc: "해저 36개월. 가장 긴 시간. 가장 깊은 기록.",
     limited: "40병 한정",
-    img2: "/images/05-1.png",
+    img2: "/images/05-1.webp",
   },
 ] as const;
 
