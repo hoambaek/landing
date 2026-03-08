@@ -1,30 +1,45 @@
-/** OceanCircleSection — Server Component */
+/** OceanCircleSection — Ocean Cellar Privé */
+import CTALink from "@/components/ui/CTALink";
+
 export default function OceanCircleSection() {
   return (
-    <section id="ocean-circle" className="s-circle">
-      {/* 비네팅 오버레이 */}
-      <div className="s-circle__vignette" />
+    <section
+      id="ocean-circle"
+      className="s-premiere"
+      aria-labelledby="premiere-title"
+    >
+      <div className="s-premiere__inner">
+        <span className="s-premiere__label reveal">membership<span className="dot">.</span></span>
 
-      <div className="container">
-        <div className="s-circle__inner">
-          {/* 호흡 링 */}
-          <div className="s-circle__visual reveal">
-            <div className="s-circle__ring" />
-          </div>
+        <div className="s-premiere__rule reveal reveal-delay-1" aria-hidden="true" />
 
-          {/* 카피 */}
-          <div className="s-circle__content reveal reveal-delay-1">
-            <h2 className="s-circle__title">ocean circle.</h2>
-            <p className="s-circle__headline">
-              가입이 아니다.
-              <br />
-              초대.
-            </p>
-            <a href="/ocean-circle" className="s-circle__cta">
-              원에 들어오다 &rarr;
-            </a>
-          </div>
+        <h2
+          className="s-premiere__title reveal reveal-delay-1"
+          id="premiere-title"
+        >
+          <span className="s-premiere__title-main">Ocean Cellar</span>
+          <span className="s-premiere__title-tag">Privé</span>
+        </h2>
+
+        <p className="s-premiere__copy reveal reveal-delay-3">
+          새로운 컬렉션의 선구매 기회.
+          <br />
+          자리가 한정되어 있습니다.
+        </p>
+
+        <div className="s-premiere__cta reveal reveal-delay-4">
+          <CTALink href="/prive" variant="dark">자세히 보기</CTALink>
         </div>
+      </div>
+
+      {/* 우측 이미지 */}
+      <div className="s-premiere__image" aria-hidden="true">
+        <img
+          src="/images/n-400.webp"
+          alt=""
+          className="s-premiere__image-inner"
+        />
+        <div className="s-premiere__image-fade" />
       </div>
     </section>
   );

@@ -4,7 +4,6 @@ import SectionIndicator from "@/components/layout/SectionIndicator";
 import ScrollReveal from "@/components/ScrollReveal";
 import HeroSection from "@/components/sections/HeroSection";
 import ObservationSection from "@/components/sections/ObservationSection";
-import ObservationImageSection from "@/components/sections/ObservationImageSection";
 import DataArchiveSection from "@/components/sections/DataArchiveSection";
 import TheMakerSection from "@/components/sections/TheMakerSection";
 import ArchiveSection from "@/components/sections/ArchiveSection";
@@ -20,10 +19,9 @@ export default function Home() {
       <main>
         <HeroSection />
         <ObservationSection />
-        <ObservationImageSection />
         <DataArchiveSection />
-        <TheMakerSection />
         <ArchiveSection />
+        <TheMakerSection />
         <OceanCircleSection />
         <ProfessionalsSection />
       </main>

@@ -7,8 +7,8 @@ import Link from "next/link";
 const MAIN_LINKS = [
   { href: "#void", label: "Home" },
   { href: "#data-archive", label: "Data Archive" },
-  { href: "#the-maker", label: "The Maker" },
   { href: "#archive", label: "Collection" },
+  { href: "#the-maker", label: "The Maker" },
   { href: "#ocean-circle", label: "Ocean Circle" },
   { href: "#professionals", label: "For Professionals" },
 ] as const;
@@ -42,7 +42,7 @@ export default function Header() {
   /* 헤더 색상 전환 — 현재 섹션 배경 밝기에 따라 자동 전환 */
   useEffect(() => {
     /** 라이트 배경 섹션 id 목록 (다크 텍스트 필요) */
-    const LIGHT_SECTIONS = new Set(["observation", "the-maker", "archive", "professionals"]);
+    const LIGHT_SECTIONS = new Set(["observation", "the-maker", "archive"]);
 
     function checkHeaderColor() {
       // 히어로 섹션을 벗어나면 스크롤 상태 활성화
@@ -58,6 +58,18 @@ export default function Header() {
       sections.forEach((section) => {
         if (section.offsetTop <= headerY) currentId = section.id;
       });
+
+      // observation 이미지 영역(어두운 배경)에서는 밝은 헤더 유지
+      const obsImage = document.querySelector<HTMLElement>(".s-obs__image");
+      if (obsImage) {
+        const imgTop = obsImage.offsetTop;
+        const imgBottom = imgTop + obsImage.offsetHeight;
+        if (headerY >= imgTop && headerY <= imgBottom) {
+          setIsDark(true);
+          return;
+        }
+      }
+
       setIsDark(!LIGHT_SECTIONS.has(currentId));
     }
 

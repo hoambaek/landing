@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muse de Marée — Section 2: Observation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+KR:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sand: #E8E5E1;
+      --earth: #312E2A;
+      --amber: #CCAD7B;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'Noto Sans KR', 'Helvetica Neue', sans-serif;
+      --margin: clamp(24px, 5.5vw, 80px);
+      --max: 1440px;
+      --ease: cubic-bezier(0.25, 0.1, 0.25, 1.0);
+      --ease-out: cubic-bezier(0.23, 1.0, 0.32, 1.0);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      font-family: var(--sans);
+      font-weight: 300;
+      background: var(--sand);
+      color: var(--earth);
+      overflow-x: hidden;
+    }
+
+    /* ── Film grain ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.02;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      background-size: 128px 128px;
+    }
+
+
+    /* ══════════════════════════════════════════════════════════════
+
+       SECTION 2 — OBSERVATION
+       Part 1: Brand proposition (centered)
+       Part 2: Wide cinematic image
+       Part 3: Living Archive — observation diary (centered)
+
+       ══════════════════════════════════════════════════════════════ */
+    .s-obs {
+      text-align: center;
+    }
+
+    .container {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 var(--margin);
+    }
+
+
+    /* ──────────────────────────────────────────
+       PART 1: BRAND PROPOSITION
+       What this brand does.
+       ────────────────────────────────────────── */
+    .s-obs__proposition {
+      padding: clamp(120px, 15vh, 240px) 0 clamp(64px, 8vh, 120px);
+    }
+
+    .s-obs__label {
+      font-family: var(--serif);
+      font-size: 0.75rem;
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.25em;
+      color: var(--amber);
+      opacity: 0.5;
+      margin-bottom: clamp(64px, 8vh, 120px);
+    }
+
+    .s-obs__headline {
+      font-family: var(--serif);
+      font-size: clamp(2.25rem, 5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+      margin-bottom: clamp(40px, 5vh, 64px);
+    }
+
+    .s-obs__intro {
+      max-width: 460px;
+      margin: 0 auto;
+      font-size: clamp(0.8125rem, 1.2vw, 0.9375rem);
+      font-weight: 200;
+      line-height: 2.3;
+      opacity: 0.6;
+    }
+
+    .s-obs__intro p {
+      margin-bottom: clamp(20px, 2.5vh, 32px);
+    }
+
+    .s-obs__intro p:last-child {
+      margin-bottom: 0;
+    }
+
+    .s-obs__intro .brand {
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      opacity: 1;
+    }
+
+
+    /* ──────────────────────────────────────────
+       CINEMATIC IMAGE — 21:9
+       ────────────────────────────────────────── */
+    .s-obs__image {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 21 / 9;
+      overflow: hidden;
+    }
+
+    .s-obs__image-inner {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(
+          ellipse at 50% 0%,
+          rgba(140, 170, 200, 0.07) 0%,
+          transparent 50%
+        ),
+        radial-gradient(
+          ellipse at 50% 55%,
+          rgba(204, 173, 123, 0.04) 0%,
+          transparent 40%
+        ),
+        linear-gradient(
+          180deg,
+          #1a2838 0%,
+          #101a24 30%,
+          #0a1018 60%,
+          #060c10 100%
+        );
+    }
+
+    .s-obs__image-label {
+      position: absolute;
+      bottom: clamp(16px, 2vh, 28px);
+      right: clamp(20px, 2vw, 36px);
+      font-size: 0.5625rem;
+      font-weight: 200;
+      letter-spacing: 0.15em;
+      color: rgba(232, 228, 223, 0.2);
+      text-transform: uppercase;
+    }
+
+    .s-obs__image-depth {
+      position: absolute;
+      bottom: clamp(16px, 2vh, 28px);
+      left: clamp(20px, 2vw, 36px);
+      font-family: var(--serif);
+      font-size: 0.625rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      color: rgba(204, 173, 123, 0.18);
+    }
+
+
+    /* ──────────────────────────────────────────
+       BELOW IMAGE — Terroir + Conditions
+       ────────────────────────────────────────── */
+    .s-obs__terroir-area {
+      padding: clamp(64px, 8vh, 120px) 0;
+    }
+
+    .s-obs__conditions {
+      font-family: var(--serif);
+      font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.12em;
+      opacity: 0.4;
+      margin-bottom: clamp(40px, 5vh, 64px);
+    }
+
+    .s-obs__terroir-body {
+      max-width: 460px;
+      margin: 0 auto;
+      font-size: clamp(0.8125rem, 1.2vw, 0.9375rem);
+      font-weight: 200;
+      line-height: 2.3;
+      opacity: 0.6;
+      margin-bottom: clamp(40px, 5vh, 64px);
+    }
+
+    /* Amber dot */
+    .s-obs__dot {
+      display: block;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--amber);
+      opacity: 0.35;
+      margin: 0 auto clamp(40px, 5vh, 64px);
+    }
+
+    .s-obs__terroir-lines {
+      max-width: 480px;
+      margin: 0 auto;
+      margin-bottom: clamp(40px, 5vh, 64px);
+    }
+
+    .s-obs__terroir-lines p {
+      font-size: clamp(0.8125rem, 1.2vw, 0.9375rem);
+      font-weight: 200;
+      line-height: 2.3;
+      opacity: 0.6;
+      margin-bottom: 4px;
+    }
+
+    .s-obs__closing {
+      font-family: var(--serif);
+      font-size: clamp(1.125rem, 2vw, 1.5rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.8;
+      opacity: 0.5;
+      letter-spacing: 0.02em;
+    }
+
+
+    /* ──────────────────────────────────────────
+       PART 3: LIVING ARCHIVE — OBSERVATION DIARY
+       "만들어지고 있는 것의 고요한 기록"
+       ────────────────────────────────────────── */
+    .s-obs__archive {
+      padding: clamp(80px, 10vh, 160px) 0 clamp(120px, 15vh, 240px);
+      background: #DDD9D4;
+    }
+
+    .s-obs__archive-header {
+      margin-bottom: clamp(40px, 5vh, 64px);
+    }
+
+    .s-obs__archive-label {
+      font-family: var(--serif);
+      font-size: 0.9375rem;
+      font-weight: 400;
+      font-style: italic;
+      letter-spacing: 0.15em;
+      color: var(--earth);
+      opacity: 0.6;
+    }
+
+    .s-obs__archive-timestamp {
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--earth);
+      opacity: 0.45;
+      margin-top: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Diary entries — horizontal on desktop, stacked on mobile */
+    .s-obs__entries {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(32px, 4vw, 64px);
+      max-width: 960px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .s-obs__entry {
+      padding-top: clamp(28px, 3.5vh, 44px);
+      border-top: 0.5px solid rgba(49, 46, 42, 0.15);
+    }
+
+    .s-obs__day {
+      font-family: var(--serif);
+      font-size: 0.875rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: var(--earth);
+      opacity: 0.55;
+      margin-bottom: 18px;
+    }
+
+    .s-obs__text {
+      font-size: 0.875rem;
+      font-weight: 300;
+      line-height: 2.1;
+      opacity: 0.7;
+      color: var(--earth);
+    }
+
+
+    /* ══════════════════════════════════════════
+       SCROLL REVEAL
+       ══════════════════════════════════════════ */
+    .rv {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s var(--ease), transform 1s var(--ease);
+    }
+    .rv.vis {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .rv-d1 { transition-delay: 0.1s; }
+    .rv-d2 { transition-delay: 0.2s; }
+    .rv-d3 { transition-delay: 0.3s; }
+    .rv-d4 { transition-delay: 0.4s; }
+    .rv-d5 { transition-delay: 0.5s; }
+    .rv-d6 { transition-delay: 0.6s; }
+    .rv-d7 { transition-delay: 0.7s; }
+
+    .rv-image {
+      opacity: 0;
+      transform: scale(1.02);
+      transition: opacity 1.4s var(--ease), transform 2s var(--ease-out);
+    }
+    .rv-image.vis {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rv, .rv-image {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+       ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .s-obs__headline {
+        font-size: clamp(1.75rem, 6vw, 2.5rem);
+      }
+
+      .s-obs__entries {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .s-obs__image {
+        aspect-ratio: 16 / 9;
+      }
+
+      .s-obs__conditions {
+        letter-spacing: 0.06em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="s-obs" aria-label="Observation — 브랜드 소개와 관찰 기록">
+
+
+    <!-- ════════════════════════════════════════
+         PART 1: BRAND PROPOSITION
+         What this brand does.
+         ════════════════════════════════════════ -->
+    <div class="s-obs__proposition">
+      <div class="container">
+
+        <p class="s-obs__label rv">observation.</p>
+
+        <h2 class="s-obs__headline rv rv-d1">
+          바다는<br>
+          가장 오래된<br>
+          저장고입니다.
+        </h2>
+
+        <div class="s-obs__intro rv rv-d2">
+          <p>수천 년간 바다는 온도와 빛으로부터<br>
+          모든 것을 고요히 품어왔습니다.</p>
+
+          <p><span class="brand">뮤즈드마레</span>는 그 깊은 심해에<br>
+          프랑스 샹파뉴의 샴페인을 맡깁니다.</p>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         CINEMATIC IMAGE — 21:9 full-width
+         ════════════════════════════════════════ -->
+    <div class="s-obs__image rv-image rv-d3" role="img" aria-label="동해 수심 60미터 해저 숙성 환경">
+      <div class="s-obs__image-inner"></div>
+      <span class="s-obs__image-depth">60m</span>
+      <span class="s-obs__image-label">East Sea, Korea</span>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         TERROIR + CONDITIONS
+         ════════════════════════════════════════ -->
+    <div class="s-obs__terroir-area">
+      <div class="container">
+
+        <p class="s-obs__conditions rv rv-d3">압력, 어둠, 그리고 파동.</p>
+
+        <p class="s-obs__terroir-body rv rv-d4">
+          자연이 직접 병을 어루만지며<br>
+          완성하는 시간입니다.
+        </p>
+
+        <div class="s-obs__dot rv rv-d4" aria-hidden="true"></div>
+
+        <div class="s-obs__terroir-lines rv rv-d5">
+          <p>샹파뉴의 토양이 빚은 첫 번째 떼루아.</p>
+          <p>한국 바다의 심연이 더하는 두 번째 떼루아.</p>
+        </div>
+
+        <p class="s-obs__closing rv rv-d5">두 개의 땅이 하나의 샴페인 병 안에서 만납니다.</p>
+
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         PART 3: LIVING ARCHIVE
+         진행중인 관찰 기록. 월 1회 업데이트.
+         PRD v2 "Living Archive" + KR3 재방문 동기.
+         ════════════════════════════════════════ -->
+    <div class="s-obs__archive">
+      <div class="container">
+
+        <div class="s-obs__archive-header rv rv-d5">
+          <p class="s-obs__archive-label">living archive.</p>
+          <p class="s-obs__archive-timestamp">마지막 기록 2026.03.07</p>
+        </div>
+
+        <div class="s-obs__entries">
+
+          <article class="s-obs__entry rv rv-d5">
+            <p class="s-obs__day">Day 47</p>
+            <p class="s-obs__text">코르크 주변부 압착 시작. 기포 생성 간격 12초에서 19초로. 육안으로는 변한 것이 없다.</p>
+          </article>
+
+          <article class="s-obs__entry rv rv-d6">
+            <p class="s-obs__day">Day 154</p>
+            <p class="s-obs__text">라벨 표면에 미세 생물막. 해류가 병을 천천히 돌리고 있다. 기울기 3.2도.</p>
+          </article>
+
+          <article class="s-obs__entry rv rv-d7">
+            <p class="s-obs__day">Day 257</p>
+            <p class="s-obs__text">수온 1.8°C. 내부 변화를 확인할 수 없다. 열어볼 수 없다. 아직.</p>
+          </article>
+
+        </div>
+
+      </div>
+    </div>
+
+
+  </section>
+
+
+  <script>
+    (function () {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('.rv, .rv-image').forEach(function (el) {
+          el.classList.add('vis');
+        });
+        return;
+      }
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('vis');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -30px 0px'
+      });
+
+      document.querySelectorAll('.rv, .rv-image').forEach(function (el) {
+        observer.observe(el);
+      });
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,190 +1,234 @@
-/** DataArchiveSection — Server Component */
+"use client";
+
+import { useEffect, useState, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import CTALink from "@/components/ui/CTALink";
+import {
+  fetchOceanData30Days,
+  calculateWaterPressure,
+  type OceanDataDaily,
+} from "@/lib/supabase";
 
 const METRICS = [
-  { value: "20–40", unit: "m", label: "수심", sub: "depth" },
-  { value: "6–12", unit: "°C", label: "수온", sub: "temp." },
-  { value: "1.96–4.91", unit: "atm", label: "수압", sub: "pressure" },
-  { value: "365+", unit: "일", label: "최소 숙성", sub: "aging" },
-  { value: "0.00", unit: "Hz", label: "진동", sub: "vibr." },
-  { value: "24/7", unit: "", label: "모니터링", sub: "IoT mon." },
+  { key: "sea_temperature_avg", label: "수온", sub: "temp.", unit: "°C", color: "#E8E5E1", decimals: 1 },
+  { key: "current_velocity_avg", label: "해류 속도", sub: "current", unit: "m/s", color: "#DDDAD5", decimals: 2 },
+  { key: "current_direction_dominant", label: "해류 방향", sub: "dir.", unit: "°", color: "#C8C4BE", decimals: 0 },
+  { key: "wave_height_avg", label: "파고", sub: "wave", unit: "m", color: "#F0EDE8", decimals: 1 },
+  { key: "wave_period_avg", label: "파주기", sub: "period", unit: "s", color: "#D2CFC9", decimals: 1 },
+  { key: "water_pressure", label: "수압", sub: "pressure", unit: "atm", color: "#B8B4AE", decimals: 2 },
 ] as const;
 
-/** 수심 — Area chart: 채워진 영역으로 깊이 범위 표현 */
-function SparkDepth() {
-  return (
-    <svg className="s-data__spark" viewBox="0 0 140 44" fill="none" preserveAspectRatio="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="g-depth" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="currentColor" stopOpacity="0.25" />
-          <stop offset="100%" stopColor="currentColor" stopOpacity="0.03" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M0,22 C16,18 28,12 42,14 C56,16 68,26 82,28 C96,26 108,16 122,14 C132,16 138,20 140,22 L140,44 L0,44 Z"
-        fill="url(#g-depth)"
-      />
-      <path
-        d="M0,22 C16,18 28,12 42,14 C56,16 68,26 82,28 C96,26 108,16 122,14 C132,16 138,20 140,22"
-        stroke="currentColor" strokeWidth="1.2"
-      />
-    </svg>
-  );
+// Chart lines config
+const CHART_LINES = [
+  { key: "sea_temperature_avg", label: "수온", color: "#FFFFFF" },
+  { key: "current_velocity_avg", label: "해류", color: "#CCAD7B" },
+  { key: "wave_height_avg", label: "파고", color: "#6B4C2A" },
+  { key: "wave_period_avg", label: "파주기", color: "#7A9BAE" },
+  { key: "water_pressure", label: "수압", color: "#3D3028" },
+  { key: "current_direction_dominant", label: "방향", color: "#A08060" },
+] as const;
+
+function getLatestValue(data: OceanDataDaily[], key: string, depth: number): number | null {
+  if (data.length === 0) return null;
+  const latest = data[data.length - 1];
+  if (key === "water_pressure") {
+    return calculateWaterPressure(depth, latest.surface_pressure_avg ?? undefined);
+  }
+  return (latest as Record<string, number | null>)[key] ?? null;
 }
 
-/** 수온 — Line + dots: 곡선 위 관측 포인트 표시 */
-function SparkTemp() {
-  const curve = "M0,32 C12,30 24,18 38,10 C52,4 64,4 76,12 C88,20 100,32 116,38 C128,36 136,32 140,30";
-  const dots = [
-    [0, 32], [20, 24], [38, 10], [58, 5], [76, 12], [96, 28], [116, 38], [134, 32], [140, 30],
-  ];
-  return (
-    <svg className="s-data__spark" viewBox="0 0 140 44" fill="none" preserveAspectRatio="none" aria-hidden="true">
-      <path d={curve} stroke="currentColor" strokeWidth="1.2" />
-      {dots.map(([cx, cy], i) => (
-        <circle key={i} cx={cx} cy={cy} r="2" fill="currentColor" opacity="0.6" />
-      ))}
-    </svg>
-  );
+function normalizeValues(data: OceanDataDaily[], key: string, depth: number): number[] {
+  const values = data.map((d) => {
+    if (key === "water_pressure") {
+      return calculateWaterPressure(depth, d.surface_pressure_avg ?? undefined);
+    }
+    return (d as Record<string, number | null>)[key] ?? null;
+  });
+
+  const valid = values.filter((v): v is number => v !== null);
+  if (valid.length === 0) return values.map(() => 0.5);
+
+  const min = Math.min(...valid);
+  const max = Math.max(...valid);
+  const range = max - min || 1;
+
+  return values.map((v) => (v !== null ? (v - min) / range : 0.5));
 }
 
-/** 수압 — Horizontal bands: 안정적인 수압을 수평 레이어로 표현 */
-function SparkPressure() {
-  return (
-    <svg className="s-data__spark" viewBox="0 0 140 44" fill="none" preserveAspectRatio="none" aria-hidden="true">
-      {[10, 18, 26, 34].map((y, i) => (
-        <line key={i} x1="0" y1={y} x2="140" y2={y} stroke="currentColor" strokeWidth="1" opacity={0.15 + i * 0.1} />
-      ))}
-      <rect x="0" y="16" width="140" height="12" fill="currentColor" opacity="0.08" rx="1" />
-      <line x1="0" y1="22" x2="140" y2="22" stroke="currentColor" strokeWidth="1.2" opacity="0.5" />
-    </svg>
-  );
-}
+function buildSvgPath(normalized: number[], width: number, height: number, padding: number): string {
+  const usableH = height - padding * 2;
+  const step = width / Math.max(normalized.length - 1, 1);
 
-/** 최소 숙성 — Staircase: 단계적 시간 누적 */
-function SparkAging() {
-  return (
-    <svg className="s-data__spark" viewBox="0 0 140 44" fill="none" preserveAspectRatio="none" aria-hidden="true">
-      <path
-        d="M0,40 L12,40 L12,36 L28,36 L28,31 L44,31 L44,26 L60,26 L60,22 L76,22 L76,17 L92,17 L92,13 L108,13 L108,9 L124,9 L124,5 L140,5"
-        stroke="currentColor" strokeWidth="1.2"
-      />
-      {[
-        [12, 36], [28, 31], [44, 26], [60, 22], [76, 17], [92, 13], [108, 9], [124, 5],
-      ].map(([x, y], i) => (
-        <rect key={i} x={Number(x) - 1.5} y={Number(y) - 1.5} width="3" height="3" fill="currentColor" opacity="0.4" />
-      ))}
-    </svg>
-  );
-}
-
-/** 진동 — Scatter dots: 바닥 근처 미세 점들 (무진동) */
-function SparkVibration() {
-  const dots = [
-    [6, 38], [14, 36], [22, 39], [30, 37], [40, 38], [48, 40], [56, 37],
-    [66, 39], [74, 38], [82, 36], [90, 39], [100, 38], [108, 40], [118, 37], [126, 39], [134, 38],
-  ];
-  return (
-    <svg className="s-data__spark" viewBox="0 0 140 44" fill="none" preserveAspectRatio="none" aria-hidden="true">
-      <line x1="0" y1="40" x2="140" y2="40" stroke="currentColor" strokeWidth="0.5" opacity="0.15" strokeDasharray="2 4" />
-      {dots.map(([cx, cy], i) => (
-        <circle key={i} cx={cx} cy={cy} r="1.5" fill="currentColor" opacity={0.2 + (i % 3) * 0.1} />
-      ))}
-    </svg>
-  );
-}
-
-/** 모니터링 — Vertical bars: 균일한 막대로 24/7 상시 가동 표현 */
-function SparkMonitoring() {
-  const bars = Array.from({ length: 18 }, (_, i) => ({
-    x: 4 + i * 7.6,
-    h: 18 + (i % 3 === 0 ? 8 : i % 2 === 0 ? 4 : 0),
+  const points = normalized.map((v, i) => ({
+    x: i * step,
+    y: padding + (1 - v) * usableH,
   }));
-  return (
-    <svg className="s-data__spark" viewBox="0 0 140 44" fill="none" preserveAspectRatio="none" aria-hidden="true">
-      {bars.map((b, i) => (
-        <rect
-          key={i}
-          x={b.x}
-          y={44 - b.h}
-          width="3"
-          height={b.h}
-          fill="currentColor"
-          opacity={0.25 + (b.h > 22 ? 0.15 : 0)}
-          rx="0.5"
-        />
-      ))}
-    </svg>
-  );
+
+  if (points.length < 2) return "";
+
+  let d = `M${points[0].x},${points[0].y}`;
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const curr = points[i];
+    const cpx = (prev.x + curr.x) / 2;
+    d += ` C${cpx},${prev.y} ${cpx},${curr.y} ${curr.x},${curr.y}`;
+  }
+  return d;
 }
 
-const SPARK_COMPONENTS = [
-  SparkDepth, SparkTemp, SparkPressure, SparkAging, SparkVibration, SparkMonitoring,
-];
+// Seeded pseudo-random for deterministic wave offsets
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed * 9301 + 49297) * 49297;
+  return x - Math.floor(x);
+}
+
+function buildOffsetPath(
+  normalized: number[],
+  width: number,
+  height: number,
+  padding: number,
+  yOffset: number,
+  xPhase: number,
+): string {
+  const usableH = height - padding * 2;
+  const step = width / Math.max(normalized.length - 1, 1);
+
+  const points = normalized.map((v, i) => ({
+    x: i * step + xPhase,
+    y: padding + (1 - v) * usableH + yOffset,
+  }));
+
+  if (points.length < 2) return "";
+
+  let d = `M${points[0].x},${points[0].y}`;
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const curr = points[i];
+    const cpx = (prev.x + curr.x) / 2;
+    d += ` C${cpx},${prev.y} ${cpx},${curr.y} ${curr.x},${curr.y}`;
+  }
+  return d;
+}
+
+const ECHOES_PER_LINE = 8; // 6 metrics × 8 echoes = 48 lines total
+
+function ScrollingChart({ data, depth, lastUpdate }: { data: OceanDataDaily[]; depth: number; lastUpdate: string | null }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-10%" });
+  const W = 1200;
+  const H = 120;
+  const PAD = 8;
+
+  return (
+    <div ref={ref} className="s-data__chart-wrap">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : {}}
+        transition={{ duration: 1.2, delay: 0.6 }}
+        className="s-data__chart-scroll"
+      >
+        <svg
+          className="s-data__chart-svg"
+          viewBox={`0 0 ${W} ${H}`}
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          {/* Dense wave lines */}
+          {CHART_LINES.map((line, li) => {
+            const norm = normalizeValues(data, line.key, depth);
+            if (norm.length < 2) return null;
+
+            return Array.from({ length: ECHOES_PER_LINE }, (_, ei) => {
+              const seed = li * 100 + ei;
+              const yOff = (ei - ECHOES_PER_LINE / 2) * 2.2 + seededRandom(seed) * 3;
+              const xPhase = seededRandom(seed + 50) * 8 - 4;
+              const opacity = 0.12 + seededRandom(seed + 99) * 0.25;
+              const strokeW = 0.3 + seededRandom(seed + 77) * 0.5;
+              const path = buildOffsetPath(norm, W, H, PAD, yOff, xPhase);
+              if (!path) return null;
+
+              return (
+                <path
+                  key={`${line.key}-${ei}`}
+                  d={path}
+                  fill="none"
+                  stroke={line.color}
+                  strokeWidth={strokeW}
+                  opacity={opacity}
+                />
+              );
+            });
+          })}
+        </svg>
+      </motion.div>
+      <div className="s-data__chart-footer">
+        <span className="s-data__chart-update">
+          최근 30일간 측정 데이터{lastUpdate ? ` · ${lastUpdate.replace(/-/g, ".")} KST` : ""}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export default function DataArchiveSection() {
+  const [data, setData] = useState<OceanDataDaily[]>([]);
+  const [loading, setLoading] = useState(true);
+  const depth = 30; // default aging depth
+
+  useEffect(() => {
+    fetchOceanData30Days().then((d) => {
+      setData(d);
+      setLoading(false);
+    });
+  }, []);
+
+  const lastUpdate = data.length > 0 ? data[data.length - 1].date : null;
+
   return (
-    <section id="data-archive" className="s-data">
-      <div className="container s-data__inner">
-        {/* Header row: title left ↔ statement right */}
-        <div className="s-data__header reveal">
-          <div className="s-data__header-left">
-            <div className="s-data__label">
-              OCEAN CELLAR<sup className="s-data__tm">TM</sup>
-            </div>
-            <h2 className="s-data__title">data archive.</h2>
-          </div>
-          <div className="s-data__statements">
-            <p className="s-data__statement-block">
-              단순히 바다에 넣은 것이 아니다.
-              <br />
-              <mark className="s-data__highlight">설계된 것이다.</mark>
-            </p>
-            <p className="s-data__statement-block">
-              지상의 셀러가 만들 수 없는 조건을
-              <br />
-              바다가 만든다.
-            </p>
-          </div>
+    <section id="data-archive" className="s-data" aria-labelledby="data-label">
+      <div className="container">
+        <h2 className="s-data__title reveal reveal-delay-1" id="data-label">
+          living data<span className="dot">.</span>
+        </h2>
+        <div className="s-data__statements reveal reveal-delay-1">
+          <p className="s-data__statement-block">
+            단순히 바다에 넣은 것이 아니다.
+            <br />
+            <mark className="s-data__highlight">설계된 것이다.</mark>
+          </p>
+          <p className="s-data__statement-block">
+            지상의 셀러가 만들 수 없는 조건을
+            <br />
+            바다가 만든다.
+          </p>
         </div>
 
-        {/* Divider */}
-        <hr className="s-data__rule reveal" style={{ transitionDelay: "120ms" }} />
-
-        {/* Data Panel — 3×2, each with unique graph style */}
-        <div className="s-data__panel">
+        {/* 6 Data Points */}
+        <p className="s-data__section-note reveal reveal-delay-2">현재 바다의 실측값</p>
+        <div className="s-data__grid reveal reveal-delay-2">
           {METRICS.map((m, i) => {
-            const Spark = SPARK_COMPONENTS[i];
+            const val = getLatestValue(data, m.key, depth);
             return (
               <div
-                key={m.sub}
-                className="s-data__metric reveal"
-                style={{ transitionDelay: `${180 + i * 70}ms` }}
+                key={m.key}
+                className="s-data__point"
+                style={{ transitionDelay: `${i * 80}ms` }}
               >
-                <div className="s-data__metric-head">
-                  <div className="s-data__metric-labels">
-                    <span className="s-data__metric-label">{m.label}</span>
-                    <span className="s-data__metric-sub">{m.sub}</span>
-                  </div>
-                  <div className="s-data__metric-val">
-                    <span className="s-data__metric-num">{m.value}</span>
-                    {m.unit && <span className="s-data__metric-unit">{m.unit}</span>}
-                  </div>
-                </div>
-                <Spark />
+                <p className="s-data__number" style={{ color: m.color }}>
+                  {loading ? "—" : val !== null ? val.toFixed(m.decimals) : "—"}
+                  <span className="s-data__unit">{m.unit}</span>
+                </p>
+                <p className="s-data__metric-label">{m.label}</p>
               </div>
             );
           })}
         </div>
 
-        {/* Footer */}
-        <hr className="s-data__rule reveal" style={{ transitionDelay: "650ms" }} />
-        <p className="s-data__footer reveal" style={{ transitionDelay: "700ms" }}>
-          데이터 기록 주기 6시간 · IoT 센서 상시 가동 · 검증 기관 인증
-        </p>
-        <div className="s-data__cta-wrap reveal" style={{ transitionDelay: "760ms" }}>
-          <a href="/data-archive" className="s-data__cta">
-            아카이브 전체 보기 &rarr;
-          </a>
+        {/* 30-Day Chart */}
+        {data.length > 1 && <ScrollingChart data={data} depth={depth} lastUpdate={lastUpdate} />}
+
+        <div className="s-data__cta reveal">
+          <CTALink href="/data" variant="dark">바다의 기록 보기</CTALink>
         </div>
       </div>
     </section>

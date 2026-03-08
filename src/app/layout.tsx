@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Noto_Sans_KR, Noto_Serif_KR, Diphylleia, DM_Mono } from "next/font/google";
+import { Cormorant_Garamond, Noto_Sans_KR, Noto_Serif_KR, Diphylleia, DM_Mono, Gowun_Batang } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -38,6 +38,13 @@ const dmMono = DM_Mono({
   display: "swap",
 });
 
+const gowunBatang = Gowun_Batang({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-batang",
+  display: "swap",
+});
+
 const jjFont = localFont({
   src: "../../public/jj.ttf",
   variable: "--font-jj",
@@ -63,8 +70,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        />
+      </head>
       <body
-        className={`${cormorant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${jjFont.variable} antialiased`}
+        className={`${cormorant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${jjFont.variable} antialiased`}
       >
         {children}
       </body>

@@ -5,7 +5,7 @@ export default function TheMakerSection() {
       <div className="container">
         {/* 헤더 */}
         <div className="s-maker__header reveal">
-          <h2 className="s-maker__title">the maker.</h2>
+          <h2 className="s-maker__title">the maker<span className="dot">.</span></h2>
           <div className="s-maker__title-kr">이중의 떼루아</div>
           <p className="s-maker__sub">
             7천만 년 전 바다였던 땅에서 태어나,

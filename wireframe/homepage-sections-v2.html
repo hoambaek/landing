@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muse de Marée — Sections 2–7</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+KR:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    /* ══════════════════════════════════════════
+       DESIGN TOKENS
+       ══════════════════════════════════════════ */
+    :root {
+      --void: #0A0908;
+      --void-soft: #111010;
+      --sand: #E8E5E1;
+      --sand-warm: #E3E0DB;
+      --ivory: #ECEAE6;
+      --earth: #312E2A;
+      --amber: #CCAD7B;
+      --amber-dim: rgba(204, 173, 123, 0.4);
+
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'Noto Sans KR', 'Helvetica Neue', sans-serif;
+
+      --margin: clamp(24px, 5.5vw, 80px);
+      --max: 1440px;
+      --narrow: 560px;
+      --ease: cubic-bezier(0.25, 0.1, 0.25, 1.0);
+      --ease-out: cubic-bezier(0.23, 1.0, 0.32, 1.0);
+    }
+
+    /* ══════════════════════════════════════════
+       RESET
+       ══════════════════════════════════════════ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      font-family: var(--sans);
+      font-weight: 300;
+      overflow-x: hidden;
+      background: var(--void);
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ══════════════════════════════════════════
+       FILM GRAIN
+       ══════════════════════════════════════════ */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.022;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      background-size: 128px 128px;
+    }
+
+    /* ══════════════════════════════════════════
+       SHARED
+       ══════════════════════════════════════════ */
+    .container {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 var(--margin);
+    }
+
+    .section-label {
+      font-family: var(--serif);
+      font-size: 0.8125rem;
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.2em;
+      color: var(--amber);
+      margin-bottom: 80px;
+    }
+
+    .section-label--light {
+      color: var(--amber-dim);
+    }
+
+    .rv {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 1s var(--ease), transform 1s var(--ease);
+    }
+    .rv.vis { opacity: 1; transform: translateY(0); }
+    .rv-d1 { transition-delay: 0.12s; }
+    .rv-d2 { transition-delay: 0.24s; }
+    .rv-d3 { transition-delay: 0.36s; }
+    .rv-d4 { transition-delay: 0.48s; }
+    .rv-d5 { transition-delay: 0.6s; }
+    .rv-d6 { transition-delay: 0.72s; }
+    .rv-d7 { transition-delay: 0.84s; }
+
+    .rv-image {
+      opacity: 0;
+      transform: scale(1.02);
+      transition: opacity 1.4s var(--ease), transform 2s var(--ease-out);
+    }
+    .rv-image.vis { opacity: 1; transform: scale(1); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rv, .rv-image { opacity: 1; transform: none; transition: none; }
+    }
+
+    .quiet-link {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      position: relative;
+      padding-bottom: 2px;
+    }
+    .quiet-link::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 100%;
+      height: 0.5px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s var(--ease-out);
+    }
+    .quiet-link:hover::after,
+    .quiet-link:focus-visible::after { transform: scaleX(1); }
+    .quiet-link:focus-visible { outline: 1px solid var(--amber); outline-offset: 6px; }
+
+
+    /* ══════════════════════════════════════════════════════════════
+
+       SECTION 2 — OBSERVATION (v4)
+       Brand proposition + 21:9 image + Terroir.
+       Centered editorial layout.
+
+       ══════════════════════════════════════════════════════════════ */
+    .s-obs {
+      background: var(--sand);
+      color: var(--earth);
+      text-align: center;
+    }
+
+    .s-obs__proposition {
+      padding: clamp(120px, 15vh, 240px) 0 clamp(64px, 8vh, 120px);
+    }
+
+    .s-obs__label {
+      font-family: var(--serif);
+      font-size: 0.75rem;
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.25em;
+      color: var(--amber-dim);
+      margin-bottom: clamp(64px, 8vh, 120px);
+    }
+
+    .s-obs__headline {
+      font-family: var(--serif);
+      font-size: clamp(2.25rem, 5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+      margin-bottom: clamp(40px, 5vh, 64px);
+    }
+
+    .s-obs__intro {
+      max-width: 460px;
+      margin: 0 auto;
+      font-size: clamp(0.8125rem, 1.2vw, 0.9375rem);
+      font-weight: 200;
+      line-height: 2.3;
+      opacity: 0.6;
+    }
+    .s-obs__intro p { margin-bottom: clamp(20px, 2.5vh, 32px); }
+    .s-obs__intro p:last-child { margin-bottom: 0; }
+    .s-obs__intro .brand { font-weight: 300; letter-spacing: 0.02em; opacity: 1; }
+
+    /* 21:9 image */
+    .s-obs__image {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 21 / 9;
+      overflow: hidden;
+    }
+    .s-obs__image-inner {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(140, 170, 200, 0.07) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 55%, rgba(204, 173, 123, 0.04) 0%, transparent 40%),
+        linear-gradient(180deg, #1a2838 0%, #101a24 30%, #0a1018 60%, #060c10 100%);
+    }
+    .s-obs__image-label {
+      position: absolute;
+      bottom: clamp(16px, 2vh, 28px);
+      right: clamp(20px, 2vw, 36px);
+      font-size: 0.5625rem;
+      font-weight: 200;
+      letter-spacing: 0.15em;
+      color: rgba(232, 228, 223, 0.2);
+      text-transform: uppercase;
+    }
+    .s-obs__image-depth {
+      position: absolute;
+      bottom: clamp(16px, 2vh, 28px);
+      left: clamp(20px, 2vw, 36px);
+      font-family: var(--serif);
+      font-size: 0.625rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      color: rgba(204, 173, 123, 0.18);
+    }
+
+
+
+
+    /* ══════════════════════════════════════════════════════════════
+
+       SECTION 3 — LIVING DATA
+       Real-time ocean data on dark background.
+
+       ══════════════════════════════════════════════════════════════ */
+    .s-data {
+      background: var(--void);
+      color: var(--sand);
+      padding: clamp(140px, 18vh, 280px) 0 clamp(140px, 18vh, 280px);
+      position: relative;
+    }
+
+    .s-data__sub {
+      font-size: 0.8125rem;
+      font-weight: 200;
+      line-height: 2;
+      opacity: 0.4;
+      max-width: 320px;
+      margin-bottom: clamp(80px, 10vh, 140px);
+    }
+
+    .s-data__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(60px, 8vh, 120px) clamp(40px, 5vw, 100px);
+      max-width: 800px;
+    }
+
+    .s-data__number {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--sand);
+      opacity: 0.85;
+      margin-bottom: 12px;
+    }
+    .s-data__unit {
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      opacity: 0.5;
+    }
+    .s-data__metric {
+      font-size: 0.6875rem;
+      font-weight: 200;
+      letter-spacing: 0.06em;
+      opacity: 0.3;
+    }
+
+    .s-data__wave {
+      margin-top: clamp(80px, 10vh, 140px);
+      width: 100%;
+      height: 60px;
+      opacity: 0.15;
+    }
+    .s-data__wave path {
+      fill: none;
+      stroke: var(--amber);
+      stroke-width: 0.5;
+      animation: wave-drift 20s linear infinite;
+    }
+    @keyframes wave-drift {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .s-data__wave path { animation: none; }
+    }
+
+    .s-data__bottom {
+      margin-top: clamp(48px, 6vh, 80px);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .s-data__statement {
+      font-size: 0.8125rem;
+      font-weight: 200;
+      line-height: 2;
+      opacity: 0.35;
+    }
+    .s-data__update {
+      font-size: 0.625rem;
+      font-weight: 200;
+      letter-spacing: 0.04em;
+      opacity: 0.2;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* (Living Archive moved to Section 2 codex card) */
+
+
+    /* ══════════════════════════════════════════════════════════════
+
+       SECTION 4 — THE MAKER (Anti-Heritage Manifesto)
+
+       ══════════════════════════════════════════════════════════════ */
+    .s-maker {
+      background: var(--ivory);
+      color: var(--earth);
+      padding: clamp(160px, 20vh, 320px) 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .s-maker__layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 6vw, 120px);
+      align-items: start;
+    }
+    .s-maker__left {
+      position: sticky;
+      top: 30vh;
+    }
+    .s-maker__declaration {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+      font-weight: 300;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      opacity: 0.85;
+    }
+    .s-maker__right {
+      padding-top: clamp(20px, 3vh, 40px);
+    }
+    .s-maker__stanza {
+      margin-bottom: clamp(40px, 5vh, 64px);
+      padding-left: clamp(16px, 2vw, 28px);
+      border-left: 0.5px solid rgba(49, 46, 42, 0.12);
+    }
+    .s-maker__stanza:last-child { margin-bottom: 0; }
+    .s-maker__stanza p {
+      font-size: clamp(0.875rem, 1.1vw, 1rem);
+      font-weight: 200;
+      line-height: 2.4;
+      opacity: 0.55;
+    }
+    .s-maker__stanza em {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 1.1em;
+      opacity: 1;
+      color: var(--earth);
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid rgba(204, 173, 123, 0.35);
+      padding-bottom: 1px;
+    }
+    .s-maker__coda {
+      margin-top: clamp(56px, 7vh, 96px);
+      padding-top: clamp(32px, 4vh, 48px);
+      border-top: 0.5px solid rgba(49, 46, 42, 0.08);
+    }
+    .s-maker__coda p {
+      font-family: var(--serif);
+      font-size: clamp(1.125rem, 2vw, 1.5rem);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.02em;
+      opacity: 0.45;
+    }
+    .s-maker .section-label { text-align: left; }
+
+    @media (max-width: 768px) {
+      .s-maker__layout {
+        grid-template-columns: 1fr;
+        gap: clamp(48px, 6vh, 72px);
+      }
+      .s-maker__left {
+        position: static;
+      }
+    }
+
+
+
+
+    /* ══════════════════════════════════════════════════════════════
+
+       SECTION 6 — PREMIÈRE MARÉE
+
+       ══════════════════════════════════════════════════════════════ */
+    .s-premiere {
+      background: var(--void);
+      color: var(--sand);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .s-premiere__inner {
+      text-align: center;
+      max-width: 480px;
+      padding: 80px var(--margin);
+    }
+    .s-premiere__title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.06em;
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+    .s-premiere__sub {
+      font-size: 0.75rem;
+      font-weight: 200;
+      letter-spacing: 0.08em;
+      opacity: 0.3;
+      margin-bottom: clamp(56px, 7vh, 96px);
+    }
+    .s-premiere__copy {
+      font-size: 0.8125rem;
+      font-weight: 200;
+      line-height: 2.2;
+      opacity: 0.5;
+      margin-bottom: clamp(48px, 6vh, 80px);
+      white-space: pre-line;
+    }
+    .s-premiere .quiet-link {
+      color: var(--amber);
+      opacity: 0.6;
+      transition: opacity 0.4s var(--ease);
+    }
+    .s-premiere .quiet-link:hover { opacity: 1; }
+    .s-premiere__ring {
+      position: absolute;
+      width: clamp(300px, 40vw, 560px);
+      height: clamp(300px, 40vw, 560px);
+      border-radius: 50%;
+      border: 0.5px solid var(--amber);
+      opacity: 0.06;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+
+    /* ══════════════════════════════════════════════════════════════
+
+       SECTION 7 — FOR PROFESSIONALS
+
+       ══════════════════════════════════════════════════════════════ */
+    .s-pro {
+      background: var(--void-soft);
+      color: var(--sand);
+      padding: clamp(100px, 12vh, 200px) 0 clamp(120px, 15vh, 240px);
+    }
+    .s-pro__inner { max-width: 560px; }
+    .s-pro__headline {
+      font-family: var(--serif);
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.6;
+      opacity: 0.7;
+      margin-bottom: 16px;
+    }
+    .s-pro__desc {
+      font-size: 0.75rem;
+      font-weight: 200;
+      opacity: 0.3;
+      letter-spacing: 0.02em;
+      margin-bottom: clamp(48px, 6vh, 72px);
+    }
+    .s-pro__links {
+      display: flex;
+      gap: clamp(32px, 4vw, 56px);
+    }
+    .s-pro .quiet-link {
+      color: var(--sand);
+      opacity: 0.4;
+      transition: opacity 0.4s var(--ease);
+    }
+    .s-pro .quiet-link:hover { opacity: 0.8; }
+
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+       ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .s-obs__headline { font-size: clamp(1.75rem, 6vw, 2.5rem); }
+
+      .s-data__grid {
+        grid-template-columns: 1fr;
+        gap: clamp(40px, 6vh, 64px);
+      }
+      .s-data__bottom { flex-direction: column; align-items: flex-start; }
+
+      .s-archive__item { grid-template-columns: 48px auto; }
+      .s-pro__links { flex-direction: column; gap: 24px; }
+      .s-premiere__ring { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .s-obs__image { aspect-ratio: 16 / 9; }
+    }
+  </style>
+</head>
+<body>
+
+
+  <!-- ════════════════════════════════════════════════════════════
+       SECTION 2 — OBSERVATION (v4)
+       Brand proposition + cinematic image + dual terroir.
+       ════════════════════════════════════════════════════════════ -->
+  <section class="s-obs" aria-label="Observation — 브랜드 소개">
+
+    <div class="s-obs__proposition">
+      <div class="container">
+        <p class="s-obs__label rv">observation.</p>
+        <h2 class="s-obs__headline rv rv-d1">
+          바다는<br>
+          가장 오래된<br>
+          저장고입니다.
+        </h2>
+        <div class="s-obs__intro rv rv-d2">
+          <p>수천 년간 바다는 온도와 빛으로부터<br>
+          모든 것을 고요히 품어왔습니다.</p>
+          <p><span class="brand">뮤즈드마레</span>는 그 깊은 심해에<br>
+          프랑스 샹파뉴의 샴페인을 맡깁니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-obs__image rv-image rv-d3" role="img" aria-label="남해 청정해역 수심 60미터 해저 숙성 환경">
+      <div class="s-obs__image-inner"></div>
+      <span class="s-obs__image-depth">60m</span>
+      <span class="s-obs__image-label">South Sea, Korea</span>
+    </div>
+
+
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════════
+       SECTION 3 — LIVING DATA
+       Data numbers → observation diary.
+       "데이터와 기록이 하나의 어둠 안에서 만난다."
+       ════════════════════════════════════════════════════════════ -->
+  <section class="s-data" aria-labelledby="data-label">
+    <div class="container">
+
+      <p class="section-label rv" id="data-label">living data.</p>
+      <p class="s-data__sub rv rv-d1">남해 청정해역 수심 60m, 샴페인이 잠든 자리.<br>센서가 매일 기록하는 숙성 환경의 실측값입니다.</p>
+
+      <div class="s-data__grid">
+        <div class="s-data__point rv rv-d2">
+          <p class="s-data__number">2.1<span class="s-data__unit">°C</span></p>
+          <p class="s-data__metric">수온</p>
+        </div>
+        <div class="s-data__point rv rv-d3">
+          <p class="s-data__number">7.1<span class="s-data__unit"> atm</span></p>
+          <p class="s-data__metric">압력</p>
+        </div>
+        <div class="s-data__point rv rv-d4">
+          <p class="s-data__number">0.02<span class="s-data__unit"> m/s</span></p>
+          <p class="s-data__metric">해류</p>
+        </div>
+        <div class="s-data__point rv rv-d5">
+          <p class="s-data__number">257<span class="s-data__unit">일째</span></p>
+          <p class="s-data__metric">경과</p>
+        </div>
+      </div>
+
+      <svg class="s-data__wave rv rv-d5" viewBox="0 0 2400 60" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,30 C200,10 400,50 600,30 C800,10 1000,50 1200,30 C1400,10 1600,50 1800,30 C2000,10 2200,50 2400,30" />
+      </svg>
+
+      <div class="s-data__bottom rv rv-d6">
+        <p class="s-data__statement">설계된 환경. 통제된 변수. 바다의 시간.</p>
+        <p class="s-data__update">마지막 업데이트 2026.03.07 06:00 KST</p>
+      </div>
+
+
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════════
+       SECTION 4 — THE MAKER
+       ════════════════════════════════════════════════════════════ -->
+  <section class="s-maker" aria-labelledby="maker-declaration">
+    <div class="container">
+      <p class="section-label section-label--light rv" id="maker-label">the maker.</p>
+      <div class="s-maker__layout">
+
+        <div class="s-maker__left">
+          <h2 class="s-maker__declaration rv rv-d1" id="maker-declaration">
+            대신,<br>바다가<br>있습니다.
+          </h2>
+        </div>
+
+        <div class="s-maker__right">
+          <div class="s-maker__stanza rv rv-d2">
+            <p>셀라 대신 <em>해저</em>.<br>
+            석회암 대신 <em>수압</em>.<br>
+            전설 대신 <em>데이터</em>.</p>
+          </div>
+          <div class="s-maker__stanza rv rv-d3">
+            <p>60미터.<br>
+            빛도 계절도 없는 곳에<br>
+            샴페인을 내려보냈습니다.</p>
+          </div>
+          <div class="s-maker__stanza rv rv-d4">
+            <p>돌아올 때 무엇이 달라져 있을지는<br>
+            <em>매일의 기록</em>만이 알고 있습니다.</p>
+          </div>
+          <div class="s-maker__coda rv rv-d5">
+            <p>기록은 계속됩니다.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════════
+       SECTION 5 — PREMIÈRE MARÉE
+       ════════════════════════════════════════════════════════════ -->
+  <section class="s-premiere" aria-labelledby="premiere-title">
+    <div class="s-premiere__ring" aria-hidden="true"></div>
+    <div class="s-premiere__inner">
+      <p class="section-label rv" style="text-align:center;">membership program.</p>
+      <h2 class="s-premiere__title rv rv-d1">Ocean Cellar Privé</h2>
+      <p class="s-premiere__sub rv rv-d2">멤버에게만 열리는 우선 구매 기회</p>
+      <p class="s-premiere__copy rv rv-d3">새로운 컬렉션의 선구매 기회.
+자리가 한정되어 있습니다.</p>
+      <a href="/prive" class="quiet-link rv rv-d4" aria-label="Ocean Cellar Privé 참여하기">자세히 보기 →</a>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════════
+       SECTION 7 — FOR PROFESSIONALS
+       ════════════════════════════════════════════════════════════ -->
+  <section class="s-pro" aria-labelledby="pro-headline">
+    <div class="container">
+      <div class="s-pro__inner">
+        <p class="section-label rv">for professionals.</p>
+        <p class="s-pro__headline rv rv-d1" id="pro-headline">테이블 위의 이야기가<br>달라집니다.</p>
+        <p class="s-pro__desc rv rv-d2">파인다이닝 · 호텔 바 · 프라이빗 셀러</p>
+        <div class="s-pro__links rv rv-d3">
+          <a href="/contact" class="quiet-link">문의하기 →</a>
+          <a href="/saleskit" class="quiet-link">세일즈 키트 →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <script>
+    (function () {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('.rv, .rv-image').forEach(function (el) {
+          el.classList.add('vis');
+        });
+        return;
+      }
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('vis');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.rv, .rv-image').forEach(function (el) {
+        observer.observe(el);
+      });
+    })();
+
+  </script>
+
+</body>
+</html>

@@ -37,9 +37,17 @@ const CUVEES = [
 export default function ArchiveSection() {
   return (
     <section id="archive" className="s-archive hanji-texture">
+      <div className="s-archive__hero reveal">
+        <img
+          src="/images/f2.webp"
+          alt="다섯 개의 큐베"
+          className="s-archive__hero-img"
+        />
+        <div className="s-archive__hero-fade-top" aria-hidden="true" />
+      </div>
       <div className="container">
         <div className="s-archive__header reveal">
-          <h2 className="s-archive__title">collection.</h2>
+          <h2 className="s-archive__title">collection<span className="dot">.</span></h2>
           <p className="s-archive__sub">다섯 개의 큐베. 하나의 바다.</p>
         </div>
 
@@ -71,30 +79,26 @@ export default function ArchiveSection() {
           </div>
         </div>
 
-        {/* NFC/블록체인 프로비넌스 */}
+        {/* NFC/블록체인 프로비넌스 — Editorial Horizontal */}
         <div className="s-archive__provenance reveal">
-          <div className="s-archive__provenance-icon">
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 28 28"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="0.5"
-            >
-              <circle cx="14" cy="14" r="12" />
-              <path d="M14 6v8l5 3" />
-              <path d="M8 20l-2 4M20 20l2 4" strokeDasharray="2 2" />
-            </svg>
+          {/* 좌측: 타이포그래피 심볼 */}
+          <div className="s-archive__prov-mark">
+            <span className="s-archive__prov-mark-text">Provenance</span>
+            <span className="s-archive__prov-mark-sub">NFC · Blockchain</span>
           </div>
-          <div className="s-archive__provenance-text">
-            모든 병에는 NFC 칩이 부착되어 있다.
-            <br />
-            프랑스 메종에서 한국의 바다까지,
-            <br />
-            숙성의 전 과정이 블록체인으로 기록된다.
-            <br />
-            변조할 수 없는 깊이의 증명.
+
+          {/* 우측: 본문 */}
+          <div className="s-archive__prov-content">
+            <p className="s-archive__prov-lead">
+              모든 병에는 NFC 칩이 부착되어 있다.
+            </p>
+            <p className="s-archive__prov-text">
+              프랑스 메종에서 한국의 바다까지,
+              숙성의 전 과정이 블록체인으로 기록된다.
+            </p>
+            <p className="s-archive__prov-closing">
+              <em>변조할 수 없는 깊이의 증명.</em>
+            </p>
           </div>
         </div>
       </div>
