@@ -100,6 +100,13 @@ export function useIndicatorScroll() {
       const scrollY = window.scrollY;
       const vh = window.innerHeight;
 
+      // 스크롤이 최상단이면 항상 void (히어로)
+      if (scrollY < 10) {
+        setActiveId("void");
+        setIsLight(false);
+        return;
+      }
+
       setActiveId(findSectionAt(sects, scrollY + vh * 0.4));
       setIsLight(!isDarkAtY(sects, scrollY + vh * 0.5));
     }

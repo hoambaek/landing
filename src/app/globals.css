@@ -772,7 +772,7 @@ body::after {
 
 .s-obs__headline {
   font-family: var(--font-jj);
-  font-size: 40px;
+  font-size: 50px;
   font-weight: 400;
   line-height: 1.45;
   letter-spacing: 0.02em;
