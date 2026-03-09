@@ -5,40 +5,40 @@ const CUVEES = [
   {
     num: "01",
     label: "archive nº 002",
-    name: "En Lieu Sûr.",
-    desc: "Brut. 모든 큐베의 기준.",
+    name: "En Lieu Sûr",
+    desc: "Brut, 모든 큐베의 기준",
   },
   {
     num: "02",
     label: "archive nº 003",
-    name: "En Lieu Sûr Magnum.",
-    desc: "Magnum 1500ml.",
+    name: "En Lieu Sûr Magnum",
+    desc: "Magnum 1500ml",
     limited: "24병 한정",
   },
   {
     num: "03",
     label: "archive nº 004",
-    name: "Élément de Surprise.",
-    desc: "Blanc de Blancs. 샤르도네 100%.",
+    name: "Élément de Surprise",
+    desc: "Blanc de Blancs, 샤르도네 100%",
   },
   {
     num: "04",
     label: "archive nº 005",
-    name: "Atomes Crochus 1 Year Aged.",
-    desc: "해저숙성 12개월.",
+    name: "Atomes Crochus 1 Year Aged",
+    desc: "해저숙성 12개월",
   },
   {
     num: "05",
     label: "archive nº 006",
-    name: "Atomes Crochus 3 Years Aged.",
-    desc: "해저숙성 36개월. 가장 깊은 기록.",
+    name: "Atomes Crochus 3 Years Aged",
+    desc: "해저숙성 36개월, 가장 깊은 기록",
     limited: "40병 한정",
   },
   {
     num: "06",
     label: "archive nº 001",
-    name: "Édition Zéro.",
-    desc: "2025. 50병 한정.",
+    name: "Édition Zéro",
+    desc: "2025, 50병 한정",
     soldOut: true,
   },
 ] as const;
@@ -77,7 +77,10 @@ export default function ArchiveSection() {
                 />
               </div>
               <div className="m-card__info">
-                <div className="m-card__label">{cuvee.label}</div>
+                <div className="m-card__label" style={{ background: 'rgba(206, 199, 187, 0.3)', border: '0.5px solid rgba(160, 140, 110, 0.35)' }}>
+                  <span style={{ opacity: 0.5 }}>archive nº </span>
+                  <span style={{ fontWeight: 600, fontSize: '0.75rem' }}>{cuvee.label.replace('archive nº ', '')}</span>
+                </div>
                 <div className="m-card__name">{cuvee.name}</div>
                 <div className="m-card__desc">{cuvee.desc}</div>
                 {"limited" in cuvee && (
