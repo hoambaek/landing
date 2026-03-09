@@ -35,9 +35,9 @@ export default function ProfessionalsSection() {
           </h2>
 
           <p className="s-pro__subtitle reveal reveal-delay-2">
-            도입을 검토 중이신 파트너에게,
+            함께할 파트너를 찾습니다.
             <br />
-            맞춤 제안을 드립니다.
+            맞춤 제안을 준비합니다.
           </p>
 
           <div className="s-pro__tags reveal reveal-delay-3">
@@ -47,7 +47,7 @@ export default function ProfessionalsSection() {
           </div>
 
           <div className="s-pro__links reveal reveal-delay-4">
-            <CTALink href="/contact" variant="dark">도입 상담 신청</CTALink>
+            <CTALink href="/contact" variant="dark">파트너 문의</CTALink>
             <CTALink href="/saleskit" variant="dark">브랜드 소개서 받기</CTALink>
           </div>
         </div>

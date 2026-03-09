@@ -12,7 +12,9 @@ export default function ScrollReveal() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
+            requestAnimationFrame(() => {
+              entry.target.classList.add("is-visible");
+            });
           }
         });
       },

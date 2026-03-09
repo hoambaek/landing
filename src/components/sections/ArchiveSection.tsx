@@ -2,6 +2,7 @@
 import Image from "next/image";
 
 const CUVEES = [
+  // Row 1: 01(featured) → 02 → 03
   {
     num: "01",
     label: "archive nº 002",
@@ -12,34 +13,33 @@ const CUVEES = [
     num: "02",
     label: "archive nº 003",
     name: "En Lieu Sûr Magnum",
-    desc: "Magnum 1500ml",
-    limited: "24병 한정",
+    desc: "Magnum 1500ml · 24병 한정",
   },
   {
     num: "03",
     label: "archive nº 004",
     name: "Élément de Surprise",
-    desc: "Blanc de Blancs, 샤르도네 100%",
+    desc: "Blanc de Blancs · Non-dosé",
+  },
+  // Row 2: 06 → 04 → 05(featured)
+  {
+    num: "06",
+    label: "archive nº 001",
+    name: "Édition Zéro",
+    desc: "2025 · 50병 한정",
+    soldOut: true,
   },
   {
     num: "04",
     label: "archive nº 005",
     name: "Atomes Crochus 1 Year Aged",
-    desc: "해저숙성 12개월",
+    desc: "Ultra-Brut · 희귀 품종 Petit Meslier 블렌드",
   },
   {
     num: "05",
     label: "archive nº 006",
     name: "Atomes Crochus 3 Years Aged",
-    desc: "해저숙성 36개월, 가장 깊은 기록",
-    limited: "40병 한정",
-  },
-  {
-    num: "06",
-    label: "archive nº 001",
-    name: "Édition Zéro",
-    desc: "2025, 50병 한정",
-    soldOut: true,
+    desc: "Ultra-Brut · 희귀 품종 Petit Meslier 블렌드 · 40병 한정",
   },
 ] as const;
 
@@ -54,7 +54,7 @@ export default function ArchiveSection() {
           className="s-archive__hero-img"
           sizes="100vw"
         />
-        <div className="s-archive__hero-fade-top" aria-hidden="true" />
+
       </div>
       <div className="container">
         <div className="s-archive__header reveal">
@@ -83,9 +83,6 @@ export default function ArchiveSection() {
                 </div>
                 <div className="m-card__name">{cuvee.name}</div>
                 <div className="m-card__desc">{cuvee.desc}</div>
-                {"limited" in cuvee && (
-                  <div className="m-card__limited">{cuvee.limited}</div>
-                )}
                 {"soldOut" in cuvee && (
                   <div className="m-card__sold-out">sold out</div>
                 )}

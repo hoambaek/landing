@@ -15,24 +15,30 @@ export default function ObservationSection() {
               저장고입니다.
             </h2>
           </div>
+
+          <div className="s-obs__rule reveal reveal-delay-1" aria-hidden="true" />
+
           <div className="reveal reveal-delay-2">
             <div className="s-obs__intro">
               <p>
-                수천 년간 바다는 온도와 빛으로부터
+                온도와 빛으로부터
                 <br />
-                모든 것을 고요히 품어왔습니다.
+                모든 것을 고요히 품어온 곳.
               </p>
               <p>
                 샹파뉴의 백악 토양이 만든 샴페인을
                 <br />
-                한국 남해 청정해역의 바다가 숙성합니다.
-              </p>
-              <p className="s-obs__emphasis">
-                두 개의 떼루아가
-                <br />
-                하나의 샴페인 안에서 만납니다.
+                한국 남해의 바다가 숙성합니다.
               </p>
             </div>
+          </div>
+
+          <div className="reveal reveal-delay-3">
+            <p className="s-obs__emphasis">
+              두 개의 떼루아가
+              <br />
+              하나의 샴페인 안에서 만납니다.
+            </p>
           </div>
         </div>
       </div>

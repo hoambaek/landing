@@ -184,7 +184,7 @@ export default function HeroSection() {
         {/* 콘텐츠 */}
         <div className="s-void__content" ref={contentRef}>
           <h1 className="s-void__headline" ref={headlineRef}>두 개의 떼루아</h1>
-          <p className="s-void__sub" ref={subRef}>한국의 심해에서 숙성된 샴페인</p>
+          <p className="s-void__sub" ref={subRef}>한국 바다가 숙성한 샴페인</p>
         </div>
 
         {/* 하단 블러 */}
@@ -192,7 +192,7 @@ export default function HeroSection() {
 
         {/* 스크롤 인디케이터 */}
         <div className="s-void__scroll" ref={scrollRef}>
-          <span className="s-void__scroll-text">스크롤.</span>
+          <span className="s-void__scroll-text">scroll.</span>
           <div className="s-void__scroll-line" />
         </div>
       </div>

@@ -56,19 +56,17 @@ export default async function DataArchiveSection() {
         </h2>
         <div className="s-data__statements reveal reveal-delay-1">
           <p className="s-data__statement-block">
-            단순히 바다에 넣은 것이 아니다.
-            <br />
-            <mark className="s-data__highlight">설계된 것이다.</mark>
+            <mark className="s-data__highlight">바다의 조건을 설계하다.</mark>
           </p>
           <p className="s-data__statement-block">
-            지상의 셀러가 만들 수 없는 조건을
+            지상의 저장고가 만들 수 없는 조건을
             <br />
             바다가 만든다.
           </p>
         </div>
 
         <p className="s-data__section-note reveal reveal-delay-2">
-          현재 바다의 실측값
+          지금, 바다의 기록
         </p>
         <DataMetricsClient
           metrics={METRICS.map((m) => ({

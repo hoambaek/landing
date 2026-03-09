@@ -23,13 +23,13 @@ export default function OceanCircleSection() {
         </h2>
 
         <p className="s-premiere__copy reveal reveal-delay-3">
-          새로운 컬렉션의 선구매 기회.
+          새로운 컬렉션을 가장 먼저 만나는 곳.
           <br />
-          자리가 한정되어 있습니다.
+          초대는 제한됩니다.
         </p>
 
         <div className="s-premiere__cta reveal reveal-delay-4">
-          <CTALink href="/prive" variant="dark">자세히 보기</CTALink>
+          <CTALink href="/prive" variant="dark">초대 안내</CTALink>
         </div>
       </div>
 
