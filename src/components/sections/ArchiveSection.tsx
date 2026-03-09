@@ -1,43 +1,45 @@
 /** ArchiveSection — Server Component (Masonry Grid) */
 import Image from "next/image";
-import CardSlider from "@/components/ui/CardSlider";
 
 const CUVEES = [
   {
     num: "01",
-    depth: "cuvée 01",
+    label: "archive nº 002",
     name: "En Lieu Sûr.",
     desc: "Brut. 모든 큐베의 기준.",
-    img2: "/images/01-1.webp",
   },
   {
     num: "02",
-    depth: "cuvée 02",
+    label: "archive nº 003",
     name: "En Lieu Sûr Magnum.",
     desc: "Magnum 1500ml.",
-    img2: "/images/02-1.webp",
+    limited: "24병 한정",
   },
   {
     num: "03",
-    depth: "cuvée 03",
+    label: "archive nº 004",
     name: "Élément de Surprise.",
     desc: "Blanc de Blancs. 샤르도네 100%.",
-    img2: "/images/03-1.webp",
   },
   {
     num: "04",
-    depth: "cuvée 04",
-    name: "Atomes Crochus 2 Years Aged.",
-    desc: "해저숙성 24개월.",
-    img2: "/images/04-1.webp",
+    label: "archive nº 005",
+    name: "Atomes Crochus 1 Year Aged.",
+    desc: "해저숙성 12개월.",
   },
   {
     num: "05",
-    depth: "cuvée 05",
+    label: "archive nº 006",
     name: "Atomes Crochus 3 Years Aged.",
     desc: "해저숙성 36개월. 가장 깊은 기록.",
     limited: "40병 한정",
-    img2: "/images/05-1.webp",
+  },
+  {
+    num: "06",
+    label: "archive nº 001",
+    name: "Édition Zéro.",
+    desc: "2025. 50병 한정.",
+    soldOut: true,
   },
 ] as const;
 
@@ -57,7 +59,7 @@ export default function ArchiveSection() {
       <div className="container">
         <div className="s-archive__header reveal">
           <h2 className="s-archive__title">collection<span className="dot">.</span></h2>
-          <p className="s-archive__sub">다섯 개의 큐베. 하나의 바다.</p>
+          <p className="s-archive__sub">여섯 개의 큐베. 하나의 바다.</p>
         </div>
 
         {/* Masonry Grid */}
@@ -68,25 +70,28 @@ export default function ArchiveSection() {
               className={`m-card m-card--${cuvee.num}`}
             >
               <div className="m-card__img">
-                <CardSlider
-                  images={[`/images/${cuvee.num}.webp`, cuvee.img2]}
+                <img
+                  src={`/images/${cuvee.num}.webp`}
                   alt={cuvee.name}
                   className="m-card__img-inner"
                 />
               </div>
               <div className="m-card__info">
-                <div className="m-card__label">{cuvee.depth}</div>
+                <div className="m-card__label">{cuvee.label}</div>
                 <div className="m-card__name">{cuvee.name}</div>
                 <div className="m-card__desc">{cuvee.desc}</div>
                 {"limited" in cuvee && (
                   <div className="m-card__limited">{cuvee.limited}</div>
+                )}
+                {"soldOut" in cuvee && (
+                  <div className="m-card__sold-out">sold out</div>
                 )}
               </div>
             </div>
           ))}
 
           {/* 여백 장식 텍스트 */}
-          <div className="m-accent m-accent--left">five cuvées, one ocean</div>
+          <div className="m-accent m-accent--left">six cuvées, one ocean</div>
           <div className="m-accent m-accent--bottom">
             깊이가 다르면
             <br />
