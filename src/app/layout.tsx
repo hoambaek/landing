@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import {
   Cormorant_Garamond,
+  Cormorant_Infant,
   Noto_Sans_KR,
   Noto_Serif_KR,
   Diphylleia,
@@ -54,6 +55,13 @@ const gowunBatang = Gowun_Batang({
   display: "swap",
 });
 
+const cormorantInfant = Cormorant_Infant({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-cormorant-infant",
+  display: "swap",
+});
+
 const ebGaramond = EB_Garamond({
   subsets: ["latin"],
   weight: ["400", "500"],
@@ -87,7 +95,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`${cormorant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${jjFont.variable} antialiased`}
+        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${jjFont.variable} antialiased`}
       >
         {children}
         <Script

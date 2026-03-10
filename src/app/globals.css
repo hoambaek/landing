@@ -1220,21 +1220,85 @@ body::after {
   max-width: 500px;
 }
 
+/* Peek Carousel */
+.s-maker__peek {
+  overflow: hidden;
+  user-select: none;
+}
+
+.s-maker__peek-track {
+  display: flex;
+  gap: 40px;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  padding-left: calc(50% - min(250px, 34vw));
+}
+
+.s-maker__peek-slide {
+  position: relative;
+  min-width: min(500px, 68vw);
+  flex-shrink: 0;
+}
+
+.s-maker__peek-fade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.s-maker__dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 40px;
+}
+
+.s-maker__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 0.5px solid rgba(49, 46, 42, 0.2);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.s-maker__dot--active {
+  background: rgba(49, 46, 42, 0.4);
+  border-color: rgba(49, 46, 42, 0.4);
+}
+
+/* ═══════════════════════════════════════════
+   Maker Card — Editorial Portrait
+   Kinfolk feature-level typography hierarchy
+   ═══════════════════════════════════════════ */
+
 .s-maker__card {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.s-maker__card--inactive {
+  opacity: 0.3;
+}
+
+/* — Hero Image — */
 .s-maker__card-image {
   width: 100%;
+  align-self: stretch;
   aspect-ratio: 3 / 2;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(145deg,
-      rgba(49, 46, 42, 0.05) 0%,
-      rgba(49, 46, 42, 0.02) 50%,
-      rgba(204, 173, 123, 0.02) 100%);
   margin-bottom: 32px;
+}
+
+.s-maker__card--inactive .s-maker__card-image {
+  opacity: 1;
 }
 
 .s-maker__card-image img {
@@ -1249,69 +1313,73 @@ body::after {
   position: absolute;
   inset: 0;
   border: 0.5px solid rgba(49, 46, 42, 0.06);
+  pointer-events: none;
 }
 
-.s-maker__card-label {
-  font-family: var(--font-heading);
-  font-size: 0.6875rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: rgba(49, 46, 42, 0.25);
-  margin-bottom: 12px;
-  text-align: center;
-}
-
-.s-maker__nameplate {
-  display: inline-flex;
+/* — Editorial Caption Block — */
+.s-maker__card-caption {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  align-self: center;
-  gap: 12px;
-  font-family: var(--font-heading);
-  font-size: 0.6875rem;
-  font-weight: 300;
-  font-style: italic;
-  letter-spacing: 0.15em;
-  color: #312E2A;
-  background:
-    radial-gradient(ellipse at 30% 20%, rgba(204, 173, 123, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse at 70% 80%, rgba(180, 160, 120, 0.04) 0%, transparent 50%),
-    linear-gradient(175deg, #d6cfc4 0%, #cec7bb 30%, #c8c0b4 60%, #d0c9be 100%);
-  border: 0.5px solid rgba(160, 140, 110, 0.25);
-  box-shadow: inset 0 0 20px rgba(160, 140, 100, 0.08);
-  padding: 6px 16px;
-  margin-bottom: 12px;
   text-align: center;
+  padding: 0 16px;
 }
 
-.s-maker__nail {
+/* Label: "maison nº 1" — archive nº 패턴과 동일 */
+.s-maker__card-label {
   display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, rgba(180, 165, 140, 0.6), rgba(120, 105, 80, 0.4));
-  border: 0.5px solid rgba(120, 105, 80, 0.3);
-  box-shadow:
-    inset 0 0.5px 0 rgba(255, 255, 255, 0.15),
-    0 0.5px 1px rgba(0, 0, 0, 0.1);
-  flex-shrink: 0;
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(49, 46, 42, 0.75);
+  padding: 6px 16px;
+  margin-bottom: 20px;
+}
+.s-maker__card-label-num {
+  font-family: var(--font-cormorant-infant), 'Cormorant Infant', Georgia, serif;
+  font-weight: 400;
+  font-size: 0.9375rem;
+  letter-spacing: 0.05em;
 }
 
+/* Amber accent line — 브랜드 시그니처 */
+.s-maker__card-accent {
+  width: 32px;
+  height: 0.5px;
+  background: #CCAD7B;
+  margin-bottom: 20px;
+}
+
+/* Maison name — editorial headline */
 .s-maker__card-name {
   font-family: var(--font-heading);
-  font-size: clamp(20px, 2.5vw, 28px);
+  font-size: clamp(22px, 2.8vw, 32px);
   font-weight: 300;
   font-style: italic;
-  color: rgba(49, 46, 42, 0.7);
-  margin-bottom: 16px;
-  text-align: center;
+  color: rgba(49, 46, 42, 0.85);
+  line-height: 1.3;
+  margin: 0 0 14px;
 }
 
+/* Location — quiet geographic anchor */
+.s-maker__card-location {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: rgba(49, 46, 42, 0.45);
+  margin-bottom: 8px;
+}
+
+/* Description — restrained body */
 .s-maker__card-desc {
   font-size: 0.8125rem;
   font-weight: 300;
-  line-height: 2;
-  color: rgba(49, 46, 42, 0.45);
-  text-align: center;
+  line-height: 1.8;
+  color: rgba(49, 46, 42, 0.4);
+  max-width: 360px;
 }
 
 .s-maker__cta {
