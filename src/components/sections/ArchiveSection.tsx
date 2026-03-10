@@ -2,7 +2,7 @@
 import Image from "next/image";
 
 const CUVEES = [
-  // Row 1: 01(featured) → 02 → 03
+  // Upper: 01(large left) → 02(top right) → 03(right offset)
   {
     num: "01",
     label: "archive nº 002",
@@ -21,7 +21,7 @@ const CUVEES = [
     name: "Élément de Surprise",
     desc: "Blanc de Blancs · Non-dosé",
   },
-  // Row 2: 06 → 04 → 05(featured)
+  // Lower: 06(left) → 04(center offset) → 05(right climax)
   {
     num: "06",
     label: "archive nº 001",
@@ -59,7 +59,7 @@ export default function ArchiveSection() {
       <div className="container">
         <div className="s-archive__header reveal">
           <h2 className="s-archive__title">collection<span className="dot">.</span></h2>
-          <p className="s-archive__sub">여섯 개의 큐베. 하나의 바다.</p>
+          <p className="s-archive__sub">바다가 기록한 여섯 개의 시간.</p>
         </div>
 
         {/* Masonry Grid */}
