@@ -56,12 +56,17 @@ export default async function DataArchiveSection() {
         </h2>
         <div className="s-data__statements reveal reveal-delay-1">
           <p className="s-data__statement-block">
-            <mark className="s-data__highlight">바다의 조건을 설계하다.</mark>
+            <mark className="s-data__highlight">바다를 읽고, 시간을 설계합니다.</mark>
           </p>
           <p className="s-data__statement-block">
-            지상의 저장고가 만들 수 없는 조건을
+            수온, 해류, 수압을 실시간으로 측정합니다.
             <br />
-            바다가 만든다.
+            이 데이터를 AI가 분석하여
+          </p>
+          <p className="s-data__statement-block">
+            언제 바다에 잠기고, 언제 꺼내야 하는지를 예측합니다.
+            <br />
+            숙성의 시작과 끝을 바다의 데이터가 결정합니다.
           </p>
         </div>
 
