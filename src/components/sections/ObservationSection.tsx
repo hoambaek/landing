@@ -8,11 +8,9 @@ export default function ObservationSection() {
         <div className="container">
           <div className="reveal">
             <h2 className="s-obs__headline">
-              바다는
+              바다가 숙성한
               <br />
-              가장 오래된
-              <br />
-              저장고입니다.
+              샴페인
             </h2>
           </div>
 
@@ -21,23 +19,23 @@ export default function ObservationSection() {
           <div className="reveal reveal-delay-2">
             <div className="s-obs__intro">
               <p>
-                온도와 빛으로부터
+                샹파뉴의 포도밭에서 태어난 한 병이
                 <br />
-                모든 것을 고요히 품어온 곳.
+                한국 남해, 수심 50미터로 내려갑니다.
               </p>
               <p>
-                샹파뉴의 백악 토양이 만든 샴페인을
+                빛 대신 수압이,
                 <br />
-                한국 남해의 바다가 숙성합니다.
+                공기 대신 해류가,
+                <br />
+                시간 대신 파도가 병을 감쌉니다.
               </p>
             </div>
           </div>
 
           <div className="reveal reveal-delay-3">
             <p className="s-obs__emphasis">
-              두 개의 떼루아가
-              <br />
-              하나의 샴페인 안에서 만납니다.
+              지상의 셀러는 닿을 수 없는 시간.
             </p>
           </div>
         </div>

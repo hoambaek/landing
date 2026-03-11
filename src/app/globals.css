@@ -698,40 +698,25 @@ body::after {
   bottom: 48px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  z-index: 10;
   opacity: 0;
   animation: title-in 1s 2.5s var(--ease-gentle) forwards;
 }
 
 .s-void__scroll-text {
-  font-family: var(--font-body);
+  display: block;
+  font-family: var(--font-pretendard);
   font-size: 0.6875rem;
   font-weight: 300;
   letter-spacing: 0.15em;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.8);
+  writing-mode: vertical-lr;
+  animation: scroll-breathe 2s ease-in-out infinite;
 }
 
-.s-void__scroll-line {
-  width: 1px;
-  height: 56px;
-  background: rgba(255, 255, 255, 0.15);
-  position: relative;
-  overflow: hidden;
-}
-
-.s-void__scroll-line::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50%;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), transparent);
-  animation: scroll-pulse 1.8s ease-in-out infinite;
+@keyframes scroll-breathe {
+  0%, 100% { opacity: 0.5; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(6px); }
 }
 
 /* ══════════════════════════════════════════
@@ -795,7 +780,7 @@ body::after {
   max-width: 400px;
   margin: 0 auto;
   font-family: var(--font-pretendard);
-  font-size: 0.9375rem;
+  font-size: 1.0625rem;
   font-weight: 400;
   line-height: 2.2;
   letter-spacing: 0.025em;
@@ -804,7 +789,7 @@ body::after {
 
 .s-obs__intro p {
   margin-bottom: clamp(24px, 3vh, 40px);
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .s-obs__intro p:last-child {
@@ -834,7 +819,7 @@ body::after {
 .s-obs__image {
   position: relative;
   width: 100%;
-  aspect-ratio: 21 / 9;
+  aspect-ratio: 1920 / 1072;
   overflow: hidden;
   margin-bottom: -2px;
   background: var(--color-void-bg);
@@ -886,7 +871,7 @@ body::after {
 
 @media (max-width: 480px) {
   .s-obs__image {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 1920 / 1072;
   }
 }
 
@@ -1366,20 +1351,21 @@ body::after {
 /* Location — quiet geographic anchor */
 .s-maker__card-location {
   font-family: var(--font-heading);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 400;
   letter-spacing: 0.1em;
-  color: rgba(49, 46, 42, 0.45);
+  color: rgba(49, 46, 42, 0.65);
   margin-bottom: 8px;
 }
 
 /* Description — restrained body */
 .s-maker__card-desc {
-  font-size: 0.8125rem;
-  font-weight: 300;
+  font-size: 0.9375rem;
+  font-weight: 400;
   line-height: 1.8;
-  color: rgba(49, 46, 42, 0.4);
+  color: rgba(49, 46, 42, 0.75);
   max-width: 360px;
+  white-space: pre-line;
 }
 
 .s-maker__cta {

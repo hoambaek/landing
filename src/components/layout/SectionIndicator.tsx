@@ -4,7 +4,6 @@ import { useIndicatorScroll } from "@/hooks/useScrollSection";
 
 const SECTIONS = [
   { id: "void" },
-  { id: "observation" },
   { id: "data-archive" },
   { id: "archive" },
   { id: "the-maker" },

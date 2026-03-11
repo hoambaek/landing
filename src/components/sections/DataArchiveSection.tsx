@@ -59,14 +59,14 @@ export default async function DataArchiveSection() {
             <mark className="s-data__highlight">바다를 읽고, 시간을 설계합니다.</mark>
           </p>
           <p className="s-data__statement-block">
-            수온, 해류, 수압을 실시간으로 측정합니다.
+            온도, 해류, 파도, 수압.
             <br />
-            이 데이터를 AI가 분석하여
+            바다가 보내는 모든 신호를 기록합니다.
           </p>
           <p className="s-data__statement-block">
-            언제 바다에 잠기고, 언제 꺼내야 하는지를 예측합니다.
+            그 기록 위에서
             <br />
-            숙성의 시작과 끝을 바다의 데이터가 결정합니다.
+            숙성의 시간을 예측합니다.
           </p>
         </div>
 

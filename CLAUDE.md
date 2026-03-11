@@ -175,15 +175,15 @@ docs/
 
 ## 페이지 구조
 
-| 메뉴명 | 섹션 ID | 역할 |
-|--------|---------|------|
-| Home | The Void | 히어로 (라이트 배경) |
-| *(메뉴 미노출)* | Observation | Story — Pressure Descent + Before/After |
-| Data Archive | Data Archive | 해저 숙성 데이터 시각화 |
-| The Maker | The Maker | 생산자 철학 + 이중의 떼루아 |
-| Collection | Archive | 5개 큐베 라인업 |
-| Ocean Circle | Ocean Circle | 초대제 멤버십 |
-| For Professionals | Professionals | B2B 문의 |
+| 메뉴명 | 섹션 ID | 타이틀 | 역할 |
+|--------|---------|--------|------|
+| Home | void | 두 개의 떼루아 | 히어로 (라이트 배경) |
+| *(메뉴 미노출)* | observation | — | 브랜드 스토리 · 해저 숙성 철학 |
+| Living Data | data-archive | living data. | 해양 데이터 실시간 측정 · AI 입수/인양 예측 |
+| Collection | archive | collection. | 6개 큐베 라인업 |
+| The Maker | the-maker | the maker. | 생산자 철학 · 피크 캐러셀 |
+| Ocean Cellar Privé | ocean-circle | Ocean Cellar Privé | 초대제 멤버십 |
+| Partnership | professionals | Partnership. | B2B 파트너 문의 |
 
 ---
 

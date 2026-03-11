@@ -15,14 +15,13 @@ export default function Footer() {
           </div>
           <div className="footer__col">
             <div className="footer__col-title">Brand</div>
-            <a href="#observation" className="footer__link">Observation</a>
-            <a href="#data-archive" className="footer__link">Data Archive</a>
+            <a href="#data-archive" className="footer__link">Living Data</a>
             <a href="#the-maker" className="footer__link">The Maker</a>
-            <a href="#ocean-circle" className="footer__link">Ocean Circle</a>
+            <a href="#ocean-circle" className="footer__link">Ocean Cellar Privé</a>
           </div>
           <div className="footer__col">
             <div className="footer__col-title">Support</div>
-            <a href="#professionals" className="footer__link">For Professionals</a>
+            <a href="#professionals" className="footer__link">Partnership</a>
             <a href="#" className="footer__link">Contact</a>
             <a href="#" className="footer__link">FAQ</a>
           </div>

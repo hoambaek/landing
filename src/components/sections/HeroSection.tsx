@@ -76,6 +76,12 @@ export default function HeroSection() {
         clearAnimations();
       }
 
+      // 스크롤 인디케이터 페이드아웃
+      if (scrollInd) {
+        scrollInd.style.opacity = scrollY > 10 ? "0" : "";
+        scrollInd.style.transition = "opacity 0.6s ease";
+      }
+
       const heroH = section.offsetHeight * 0.5;
       const progress = Math.min(scrollY / heroH, 1);
       const opacity = 1 - progress;
@@ -192,8 +198,7 @@ export default function HeroSection() {
 
         {/* 스크롤 인디케이터 */}
         <div className="s-void__scroll" ref={scrollRef}>
-          <span className="s-void__scroll-text">scroll.</span>
-          <div className="s-void__scroll-line" />
+          <span className="s-void__scroll-text">스크롤하기</span>
         </div>
       </div>
     </section>

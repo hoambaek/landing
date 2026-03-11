@@ -35,9 +35,7 @@ export default function ProfessionalsSection() {
           </h2>
 
           <p className="s-pro__subtitle reveal reveal-delay-2">
-            함께할 파트너를 찾습니다.
-            <br />
-            맞춤 제안을 준비합니다.
+            바다의 시간을 함께 나눌 공간을 찾습니다.
           </p>
 
           <div className="s-pro__tags reveal reveal-delay-3">

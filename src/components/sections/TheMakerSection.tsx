@@ -119,7 +119,11 @@ export default function TheMakerSection() {
                       <div className="s-maker__card-accent" />
                       <h3 className="s-maker__card-name">{maker.name}</h3>
                       <p className="s-maker__card-location">{maker.location}</p>
-                      <p className="s-maker__card-desc">{maker.desc}</p>
+                      <p className="s-maker__card-desc">
+                        {maker.desc.includes('6세대.') ? (
+                          <>1888년부터 6세대.<br />샴페인의 요람에서 가장 오래된 프레스로 빚는 메종.</>
+                        ) : maker.desc}
+                      </p>
                     </div>
                   </div>
                 </div>

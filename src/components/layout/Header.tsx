@@ -7,11 +7,11 @@ import { useHeaderScroll } from "@/hooks/useScrollSection";
 /** 메인 섹션 링크 (우측 큰 타이포) */
 const MAIN_LINKS = [
   { href: "#void", label: "Home" },
-  { href: "#data-archive", label: "Data Archive" },
+  { href: "#data-archive", label: "Living Data" },
   { href: "#archive", label: "Collection" },
   { href: "#the-maker", label: "The Maker" },
-  { href: "#ocean-circle", label: "Ocean Circle" },
-  { href: "#professionals", label: "For Professionals" },
+  { href: "#ocean-circle", label: "Ocean Cellar Privé" },
+  { href: "#professionals", label: "Partnership" },
 ] as const;
 
 /** 보조 링크 (좌측 작은 텍스트) */
