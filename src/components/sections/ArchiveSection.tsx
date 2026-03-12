@@ -99,27 +99,57 @@ export default function ArchiveSection() {
           </div>
         </div>
 
-        {/* NFC/블록체인 프로비넌스 — Editorial Horizontal */}
-        <div className="s-archive__provenance reveal">
-          {/* 좌측: 타이포그래피 심볼 */}
-          <div className="s-archive__prov-mark">
-            <span className="s-archive__prov-mark-text">Provenance</span>
-            <span className="s-archive__prov-mark-sub">NFC · Blockchain</span>
+        {/* Muse Log */}
+        <div className="s-archive__muselog reveal">
+          <div className="s-archive__muselog-header">
+            <div className="s-archive__muselog-rule" aria-hidden="true" />
+            <span className="s-archive__muselog-title">Muse Log</span>
+            <div className="s-archive__muselog-rule" aria-hidden="true" />
           </div>
 
-          {/* 우측: 본문 */}
-          <div className="s-archive__prov-content">
-            <p className="s-archive__prov-lead">
-              모든 병에는 NFC 칩이 부착되어 있다.
-            </p>
-            <p className="s-archive__prov-text">
-              프랑스 메종에서 한국의 바다까지,
-              숙성의 전 과정이 블록체인으로 기록된다.
-            </p>
-            <p className="s-archive__prov-closing">
-              <em>변조할 수 없는 깊이의 증명.</em>
-            </p>
+          <span className="s-archive__muselog-sub">NFC · Blockchain</span>
+
+          <p className="s-archive__muselog-lead">
+            병에 손을 가져가면, 이 병의 여정이 열린다.
+          </p>
+
+          {/* Timeline */}
+          <div className="s-archive__timeline">
+            <div className="s-archive__timeline-line" aria-hidden="true" />
+            <div className="s-archive__timeline-item">
+              <div className="s-archive__timeline-dot" aria-hidden="true" />
+              <span className="s-archive__timeline-label">수확</span>
+              <span className="s-archive__timeline-desc">포도밭 · 수확일</span>
+            </div>
+            <div className="s-archive__timeline-item">
+              <div className="s-archive__timeline-dot" aria-hidden="true" />
+              <span className="s-archive__timeline-label">메종</span>
+              <span className="s-archive__timeline-desc">양조 · 블렌딩</span>
+            </div>
+            <div className="s-archive__timeline-item">
+              <div className="s-archive__timeline-dot" aria-hidden="true" />
+              <span className="s-archive__timeline-label">입수</span>
+              <span className="s-archive__timeline-desc">남해 · 수심 50m</span>
+            </div>
+            <div className="s-archive__timeline-item s-archive__timeline-item--wide">
+              <div className="s-archive__timeline-dot" aria-hidden="true" />
+              <span className="s-archive__timeline-label">숙성</span>
+              <span className="s-archive__timeline-desc">수온 · 해류 · 수압</span>
+            </div>
+            <div className="s-archive__timeline-item">
+              <div className="s-archive__timeline-dot" aria-hidden="true" />
+              <span className="s-archive__timeline-label">인양</span>
+              <span className="s-archive__timeline-desc">인양일 · 검수</span>
+            </div>
           </div>
+
+          <p className="s-archive__muselog-footer">
+            블록체인에 기록되어, 변조되지 않는다.
+          </p>
+
+          <p className="s-archive__muselog-closing">
+            <em>위조할 수 없는 깊이의 기록.</em>
+          </p>
         </div>
       </div>
     </section>

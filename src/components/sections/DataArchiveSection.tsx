@@ -10,12 +10,12 @@ import DataArchiveClient from "./DataArchiveClient";
 import DataMetricsClient from "./DataMetricsClient";
 
 const METRICS = [
-  { key: "sea_temperature_avg", label: "수온", unit: "°C", color: "#E8E5E1", decimals: 1 },
-  { key: "current_velocity_avg", label: "해류 속도", unit: "m/s", color: "#DDDAD5", decimals: 2 },
-  { key: "current_direction_dominant", label: "해류 방향", unit: "°", color: "#C8C4BE", decimals: 0 },
-  { key: "wave_height_avg", label: "파고", unit: "m", color: "#F0EDE8", decimals: 1 },
-  { key: "wave_period_avg", label: "파주기", unit: "s", color: "#D2CFC9", decimals: 1 },
-  { key: "water_pressure", label: "수압", unit: "atm", color: "#B8B4AE", decimals: 2 },
+  { key: "sea_temperature_avg", label: "수온", unit: "°C", color: "#E8C8A0", decimals: 1 },
+  { key: "current_velocity_avg", label: "해류 속도", unit: "m/s", color: "#A8C4B8", decimals: 2 },
+  { key: "current_direction_dominant", label: "해류 방향", unit: "°", color: "#B8A8C4", decimals: 0 },
+  { key: "wave_height_avg", label: "파고", unit: "m", color: "#8CB8D0", decimals: 1 },
+  { key: "wave_period_avg", label: "파주기", unit: "s", color: "#C4B8A0", decimals: 1 },
+  { key: "water_pressure", label: "수압", unit: "atm", color: "#D0A8A8", decimals: 2 },
 ] as const;
 
 function getLatestValue(

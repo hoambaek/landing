@@ -35,7 +35,7 @@ export default function ObservationSection() {
 
           <div className="reveal reveal-delay-3">
             <p className="s-obs__emphasis">
-              지상의 셀러는 닿을 수 없는 시간.
+              지상의 숙성이 도달할 수 없는 깊이.
             </p>
           </div>
         </div>

@@ -36,11 +36,11 @@ export default function OceanCircleSection() {
       {/* 우측 이미지 */}
       <div className="s-premiere__image" aria-hidden="true">
         <Image
-          src="/images/n-400.webp"
+          src="/images/c1.webp"
           alt=""
           fill
           className="s-premiere__image-inner"
-          sizes="45vw"
+          sizes="(max-width: 768px) 100vw, 50vw"
         />
         <div className="s-premiere__image-fade" />
       </div>

@@ -92,7 +92,7 @@ export default function DataMetricsClient({
               </>
             )}
           </p>
-          <p className="s-data__metric-label">{m.label}</p>
+          <p className="s-data__metric-label" style={{ color: m.color, borderColor: `${m.color}40` }}>{m.label}</p>
         </div>
       ))}
     </div>

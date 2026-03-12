@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useHeaderScroll } from "@/hooks/useScrollSection";
 
-/** 메인 섹션 링크 (우측 큰 타이포) */
+/** 메인 섹션 링크 */
 const MAIN_LINKS = [
   { href: "#void", label: "Home" },
   { href: "#data-archive", label: "Living Data" },
@@ -14,17 +15,13 @@ const MAIN_LINKS = [
   { href: "#professionals", label: "Partnership" },
 ] as const;
 
-/** 보조 링크 (좌측 작은 텍스트) */
-const SUB_LINKS = [
-  { href: "#ocean-circle", label: "Membership" },
-] as const;
-
+/** 큐베 리스트 + 이미지 */
 const CUVEES = [
-  "En Lieu Sûr.",
-  "En Lieu Sûr Magnum.",
-  "Élément de Surprise.",
-  "Atomes Crochus 1yr.",
-  "Atomes Crochus 3yr.",
+  { name: "En Lieu Sûr.", image: "/images/01.webp" },
+  { name: "En Lieu Sûr Magnum.", image: "/images/02.webp" },
+  { name: "Élément de Surprise.", image: "/images/03.webp" },
+  { name: "Atomes Crochus 1yr.", image: "/images/04.webp" },
+  { name: "Atomes Crochus 3yr.", image: "/images/05.webp" },
 ] as const;
 
 /** 포커스 가능한 요소 셀렉터 */
@@ -33,6 +30,7 @@ const FOCUSABLE =
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [hoveredCuvee, setHoveredCuvee] = useState(0);
   const { isDark, isScrolled } = useHeaderScroll();
 
   const menuBtnRef = useRef<HTMLButtonElement>(null);
@@ -150,51 +148,77 @@ export default function Header() {
         </div>
 
         <div className="menu-overlay__inner">
-          {/* 좌측 — 보조 링크 + 큐베 */}
+          {/* 좌측 — 섹션 네비게이션 */}
           <div className="menu-overlay__left">
-            <nav className="menu-overlay__sub-nav">
-              {SUB_LINKS.map((link) => (
+            <nav className="menu-overlay__main-nav">
+              {MAIN_LINKS.map((link, i) => (
                 <a
                   key={link.href}
                   href={link.href}
-                  className="menu-overlay__sub-link"
+                  className="menu-overlay__main-link"
                   onClick={close}
+                  style={{ transitionDelay: `${0.05 + i * 0.04}s` }}
                 >
                   {link.label}
                 </a>
               ))}
             </nav>
 
-            <div className="menu-overlay__cuvees">
-              <div className="menu-overlay__cuvees-label">Collection</div>
-              {CUVEES.map((name) => (
-                <a key={name} href="#archive" className="menu-overlay__cuvee" onClick={close}>
-                  {name}
-                </a>
-              ))}
-            </div>
-
-            <div className="menu-overlay__lang">
-              <a href="#" className="menu-overlay__lang-active">KR</a>
-              <a href="#">EN</a>
-              <a href="#">FR</a>
+            <div className="menu-overlay__bottom-row">
+              <a href="#ocean-circle" className="menu-overlay__sub-link" onClick={close}>
+                Membership
+              </a>
+              <div className="menu-overlay__lang">
+                <a href="#" className="menu-overlay__lang-active">KR</a>
+                <a href="#">EN</a>
+                <a href="#">FR</a>
+              </div>
             </div>
           </div>
 
-          {/* 우측 — 메인 네비게이션 (큰 세리프) */}
-          <nav className="menu-overlay__main-nav">
-            {MAIN_LINKS.map((link, i) => (
+          {/* 중앙 — Cover Flow 제품 이미지 */}
+          <div className="menu-overlay__hero-image">
+            <div className="menu-overlay__coverflow">
+              {CUVEES.map((cuvee, i) => {
+                const offset = i - hoveredCuvee;
+                return (
+                  <div
+                    key={cuvee.name}
+                    className="menu-overlay__coverflow-item"
+                    style={{
+                      transform: `translateX(${offset * 220}px) scale(${offset === 0 ? 1 : 0.85})`,
+                      opacity: Math.abs(offset) > 1 ? 0 : offset === 0 ? 1 : 0.25,
+                      zIndex: 10 - Math.abs(offset),
+                    }}
+                  >
+                    <Image
+                      src={cuvee.image}
+                      alt={cuvee.name}
+                      fill
+                      sizes="30vw"
+                      style={{ objectFit: "contain" }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 우측 — 큐베 리스트 */}
+          <div className="menu-overlay__cuvees">
+            <div className="menu-overlay__cuvees-label">Collection</div>
+            {CUVEES.map((cuvee, i) => (
               <a
-                key={link.href}
-                href={link.href}
-                className="menu-overlay__main-link"
+                key={cuvee.name}
+                href="#archive"
+                className={`menu-overlay__cuvee${i === hoveredCuvee ? " is-active" : ""}`}
                 onClick={close}
-                style={{ transitionDelay: `${0.05 + i * 0.04}s` }}
+                onMouseEnter={() => setHoveredCuvee(i)}
               >
-                {link.label}
+                {cuvee.name}
               </a>
             ))}
-          </nav>
+          </div>
         </div>
       </div>
     </>
