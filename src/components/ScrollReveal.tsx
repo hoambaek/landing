@@ -19,13 +19,15 @@ export default function ScrollReveal() {
         });
       },
       {
-        threshold: 0.35,
+        threshold: 0.2,
         rootMargin: "0px 0px -8% 0px",
       }
     );
 
-    // 초기 요소 관찰
-    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    // hydration 완료 후 초기 요소 관찰 (Suspense 불일치 방지)
+    requestAnimationFrame(() => {
+      document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    });
 
     // Suspense 등으로 나중에 추가되는 .reveal 요소 감지
     const mutation = new MutationObserver((mutations) => {

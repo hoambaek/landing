@@ -13,143 +13,166 @@ const PARTICLES = [
   { left: "65%", duration: "21s", delay: "8s", size: 2 },
 ] as const;
 
+/**
+ * 히어로 상태 머신:
+ * IDLE → (첫 스크롤) → VIDEO_PLAYING → (영상 종료) → DONE → (두 번째 스크롤) → 다음 섹션
+ */
+type HeroPhase = "IDLE" | "VIDEO_PLAYING" | "DONE";
+
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const headlineRef = useRef<HTMLHeadingElement>(null);
-  const subRef = useRef<HTMLParagraphElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomBlurRef = useRef<HTMLDivElement>(null);
-
   const videoRef = useRef<HTMLVideoElement>(null);
   const h2Ref = useRef<HTMLDivElement>(null);
-  const videoStarted = useRef(false);
-  const videoEnded = useRef(false);
-  const animCleared = useRef(false);
 
-  /**
-   * CSS animation을 중단하고 현재 computed 값을 인라인 스타일로 고정.
-   * 스크롤 시 opacity/transform을 JS로 제어하기 위해 필요.
-   */
-  const clearAnimations = useCallback(() => {
-    if (animCleared.current) return;
+  const phaseRef = useRef<HeroPhase>("IDLE");
+  const wheelLocked = useRef(false);
+  const lastPhaseChange = useRef(0);
 
-    const targets = [
-      contentRef.current,
-      scrollRef.current,
-      ...(contentRef.current
-        ? Array.from(contentRef.current.querySelectorAll("*"))
-        : []),
-    ].filter(Boolean) as HTMLElement[];
+  /** 다음 섹션으로 부드럽게 스크롤 */
+  const scrollToNext = useCallback(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const nextSection = section.nextElementSibling as HTMLElement | null;
+    if (nextSection) {
+      nextSection.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
 
-    // 현재 computed 값 스냅샷
-    const snapshots = targets.map((el) => {
-      const cs = getComputedStyle(el);
-      return { el, opacity: cs.opacity, transform: cs.transform };
-    });
+  /** 영상 재생 시작 */
+  const startVideo = useCallback(() => {
+    if (phaseRef.current !== "IDLE") return;
+    phaseRef.current = "VIDEO_PLAYING";
 
-    // animation 제거
-    targets.forEach((el) => {
-      el.style.animation = "none";
-    });
+    // 스크롤 인디케이터 숨기기
+    if (scrollRef.current) {
+      // 현재 위치 스냅샷
+      const rect = scrollRef.current.getBoundingClientRect();
+      // 모든 애니메이션 제거
+      scrollRef.current.style.animation = "none";
+      const textEl = scrollRef.current.querySelector(".s-void__scroll-text") as HTMLElement | null;
+      if (textEl) textEl.style.animation = "none";
+      // 위치 고정 (움직임 방지)
+      scrollRef.current.style.position = "fixed";
+      scrollRef.current.style.left = `${rect.left}px`;
+      scrollRef.current.style.top = `${rect.top}px`;
+      scrollRef.current.style.transform = "none";
+      scrollRef.current.style.opacity = "1";
+      void scrollRef.current.offsetHeight;
+      scrollRef.current.style.transition = "opacity 0.6s ease";
+      scrollRef.current.style.opacity = "0";
+      scrollRef.current.style.pointerEvents = "none";
+    }
 
-    // 스냅샷 복원 (깜빡임 방지)
-    snapshots.forEach(({ el, opacity, transform }) => {
-      el.style.opacity = opacity;
-      el.style.transform = transform === "none" ? "" : transform;
-    });
+    // 텍스트 페이드아웃
+    if (contentRef.current) {
+      contentRef.current.style.transition = "opacity 0.8s ease";
+      contentRef.current.style.opacity = "0";
+    }
 
-    animCleared.current = true;
+    // 영상 페이드인 + 재생
+    if (videoRef.current) {
+      videoRef.current.style.transition = "opacity 0.8s ease";
+      videoRef.current.style.opacity = "1";
+      videoRef.current.play();
+    }
+  }, []);
+
+  /** 영상 종료 → h2 이미지 디졸브 */
+  const onVideoEnded = useCallback(() => {
+    phaseRef.current = "DONE";
+
+    if (videoRef.current) {
+      videoRef.current.style.transition = "opacity 1.5s ease";
+      videoRef.current.style.opacity = "0";
+    }
+    if (h2Ref.current) {
+      h2Ref.current.style.transition = "opacity 1.5s ease";
+      h2Ref.current.style.opacity = "1";
+    }
+    if (bottomBlurRef.current) {
+      bottomBlurRef.current.style.transition = "opacity 1.5s ease";
+      bottomBlurRef.current.style.opacity = "1";
+    }
+    // 텍스트 복원
+    if (contentRef.current) {
+      contentRef.current.style.transition = "opacity 1.5s ease";
+      contentRef.current.style.opacity = "1";
+    }
   }, []);
 
   useEffect(() => {
-    function onScroll() {
-      const scrollY = window.scrollY;
-      const section = sectionRef.current;
-      const content = contentRef.current;
-      const scrollInd = scrollRef.current;
-
-      if (!section) return;
-
-      // 첫 스크롤 시 animation 제거
-      if (!animCleared.current && scrollY > 0) {
-        clearAnimations();
-      }
-
-      // 스크롤 인디케이터 페이드아웃
-      if (scrollInd) {
-        scrollInd.style.opacity = scrollY > 10 ? "0" : "";
-        scrollInd.style.transition = "opacity 0.6s ease";
-      }
-
-      const heroH = section.offsetHeight * 0.5;
-      const progress = Math.min(scrollY / heroH, 1);
-      const opacity = 1 - progress;
-
-      // 영상: 스크롤 시작과 함께 페이드인 + 재생
-      if (videoRef.current) {
-        if (scrollY > 0 && !videoStarted.current) {
-          videoStarted.current = true;
-          videoEnded.current = false;
-          videoRef.current.style.opacity = "1";
-          videoRef.current.play();
-        }
-        if (scrollY === 0) {
-          videoStarted.current = false;
-          videoEnded.current = false;
-          videoRef.current.style.transition = "none";
-          videoRef.current.style.opacity = "0";
-          videoRef.current.pause();
-          videoRef.current.currentTime = 0;
-          if (h2Ref.current) {
-            h2Ref.current.style.transition = "none";
-            h2Ref.current.style.opacity = "0";
-          }
-          if (contentRef.current) {
-            contentRef.current.style.transition = "none";
-          }
-          if (scrollRef.current) {
-            scrollRef.current.style.display = "";
-          }
-          if (bottomBlurRef.current) {
-            bottomBlurRef.current.style.transition = "none";
-            bottomBlurRef.current.style.opacity = "0";
-          }
-        }
-      }
-    }
-
-    // 영상 종료 시 h2.webp로 디졸브
     const video = videoRef.current;
-    function onVideoEnded() {
-      videoEnded.current = true;
-      if (videoRef.current) {
-        videoRef.current.style.transition = "opacity 1.5s ease";
-        videoRef.current.style.opacity = "0";
-      }
-      if (h2Ref.current) {
-        h2Ref.current.style.transition = "opacity 1.5s ease";
-        h2Ref.current.style.opacity = "1";
-      }
-      // 하단 블러 함께 표시
-      if (bottomBlurRef.current) {
-        bottomBlurRef.current.style.transition = "opacity 1.5s ease";
-        bottomBlurRef.current.style.opacity = "1";
-      }
-      // 텍스트 복원
-      if (contentRef.current) {
-        contentRef.current.style.transition = "opacity 1.5s ease";
-        contentRef.current.style.opacity = "1";
-      }
-    }
     video?.addEventListener("ended", onVideoEnded);
 
-    window.addEventListener("scroll", onScroll, { passive: true });
+    /** wheel 이벤트로 단계 전환 */
+    function onWheel(e: WheelEvent) {
+      // 아래로 스크롤만 처리
+      if (e.deltaY <= 0) return;
+
+      // 히어로 영역에서만 동작
+      const section = sectionRef.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      if (rect.bottom <= 0) return; // 이미 지나감
+
+      const phase = phaseRef.current;
+
+      const now = Date.now();
+
+      if (phase === "IDLE") {
+        // 첫 스크롤 → 영상 재생
+        e.preventDefault();
+        lastPhaseChange.current = now;
+        startVideo();
+        return;
+      }
+
+      // 첫 스크롤 후 800ms 쿨다운 — 연속 wheel 이벤트 무시
+      if (now - lastPhaseChange.current < 800) {
+        e.preventDefault();
+        return;
+      }
+
+      if (phase === "VIDEO_PLAYING" || phase === "DONE") {
+        // 자연스러운 스크롤 허용
+        return;
+      }
+    }
+
+    /** 터치 지원 */
+    let touchStartY = 0;
+    function onTouchStart(e: TouchEvent) {
+      touchStartY = e.touches[0].clientY;
+    }
+    function onTouchEnd(e: TouchEvent) {
+      const deltaY = touchStartY - e.changedTouches[0].clientY;
+      if (deltaY < 30) return; // 최소 swipe 거리
+
+      const section = sectionRef.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      if (rect.bottom <= 0) return;
+
+      const phase = phaseRef.current;
+      if (phase === "IDLE") {
+        startVideo();
+      }
+    }
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+
     return () => {
-      window.removeEventListener("scroll", onScroll);
       video?.removeEventListener("ended", onVideoEnded);
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchend", onTouchEnd);
     };
-  }, [clearAnimations]);
+  }, [startVideo, onVideoEnded, scrollToNext]);
 
   return (
     <section id="void" className="s-void" ref={sectionRef}>
@@ -189,8 +212,8 @@ export default function HeroSection() {
 
         {/* 콘텐츠 */}
         <div className="s-void__content" ref={contentRef}>
-          <h1 className="s-void__headline" ref={headlineRef}>두 개의 떼루아</h1>
-          <p className="s-void__sub" ref={subRef}>한국 바다가 숙성한 샴페인</p>
+          <h1 className="s-void__headline">두 개의 떼루아</h1>
+          <p className="s-void__sub">한국 바다가 숙성한 샴페인</p>
         </div>
 
         {/* 하단 블러 */}

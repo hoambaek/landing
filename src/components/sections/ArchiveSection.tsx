@@ -99,11 +99,11 @@ export default function ArchiveSection() {
           </div>
         </div>
 
-        {/* Muse Log */}
+        {/* Marée Signature — 이름 미정으로 주석 처리
         <div className="s-archive__muselog reveal">
           <div className="s-archive__muselog-header">
             <div className="s-archive__muselog-rule" aria-hidden="true" />
-            <span className="s-archive__muselog-title">Muse Log</span>
+            <span className="s-archive__muselog-title">Marée Signature</span>
             <div className="s-archive__muselog-rule" aria-hidden="true" />
           </div>
 
@@ -113,7 +113,6 @@ export default function ArchiveSection() {
             병에 손을 가져가면, 이 병의 여정이 열린다.
           </p>
 
-          {/* Timeline */}
           <div className="s-archive__timeline">
             <div className="s-archive__timeline-line" aria-hidden="true" />
             <div className="s-archive__timeline-item">
@@ -151,6 +150,7 @@ export default function ArchiveSection() {
             <em>위조할 수 없는 깊이의 기록.</em>
           </p>
         </div>
+        */}
       </div>
     </section>
   );

@@ -23,9 +23,7 @@ export default function ProfessionalsSection() {
 
       <div className="container">
         <div className="s-pro__inner">
-          <span className="s-pro__label reveal">Become a Partner</span>
-
-          <div className="s-pro__rule reveal reveal-delay-1" aria-hidden="true" />
+          <div className="s-pro__rule reveal" aria-hidden="true" />
 
           <h2
             className="s-pro__title reveal reveal-delay-1"

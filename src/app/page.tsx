@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import SectionIndicator from "@/components/layout/SectionIndicator";
+// import SectionIndicator from "@/components/layout/SectionIndicator";
 import ScrollReveal from "@/components/ScrollReveal";
 import HeroSection from "@/components/sections/HeroSection";
 import ObservationSection from "@/components/sections/ObservationSection";
@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <SectionIndicator />
+      {/* <SectionIndicator /> */}
       <ScrollReveal />
       <main>
         <HeroSection />
@@ -29,10 +29,10 @@ export default function Home() {
         </Suspense>
         <ArchiveSection />
         <TheMakerSection />
-        <OceanCircleSection />
         <ProfessionalsSection />
+        <OceanCircleSection />
       </main>
-      <Footer />
+      <Footer hideSubscribe />
     </>
   );
 }
