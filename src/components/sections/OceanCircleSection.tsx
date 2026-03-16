@@ -34,8 +34,8 @@ export default function OceanCircleSection() {
           className="s-premiere__title reveal reveal-delay-1"
           id="premiere-title"
         >
-          <span className="s-premiere__title-main">Ocean Cellar</span>
-          <span className="s-premiere__title-tag">Membership</span>
+          ocean cellar<span className="dot">.</span>
+          <span className="s-premiere__title-tag">membership</span>
         </h2>
 
         <p className="s-premiere__copy reveal reveal-delay-2">
@@ -69,9 +69,6 @@ export default function OceanCircleSection() {
               </svg>
             </button>
           </div>
-          <p className="s-premiere__form-note">
-            초대는 순차적으로 발송됩니다.
-          </p>
         </form>
       </div>
 

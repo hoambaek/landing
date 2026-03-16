@@ -27,6 +27,19 @@
 
 ## 디자인 관련
 
+### 섹션 타이틀 마침표는 dot 클래스 사용
+- **실패**: Ocean Cellar 타이틀에 마침표를 plain text로 넣음 → 다른 섹션들은 모두 `<span className="dot">.</span>`으로 Pretendard font-weight 200 적용
+- **방지**: 새 섹션 타이틀 추가 시 반드시 기존 패턴 확인. `living data.`, `collection.`, `the maker.`, `Partnership.` 모두 dot 클래스 사용
+
+### 타이틀 폰트는 반드시 --font-jj
+- **실패**: Ocean Cellar 타이틀을 `--font-heading`(Cormorant Infant)으로 변경 → 전혀 다른 폰트가 적용됨
+- **신호**: 모든 섹션 타이틀은 `--font-jj` (weight 400). `--font-heading`은 본문/서브 텍스트용
+- **방지**: 타이틀 폰트 수정 시 다른 섹션 CSS 먼저 확인
+
+### Ocean Cellar 높이는 Partnership과 동일
+- **실패**: `min-height: 100vh`로 설정 → 사용자가 여러 번 교정
+- **방지**: Ocean Cellar padding은 `clamp(64px, 8vh, 120px) 0 clamp(80px, 10vh, 140px)` 고정. Partnership과 반드시 동일
+
 ### 스크롤 전환 구간 텍스트 가독성
 - **실패**: 배경색 light→dark 전환 중간에서 텍스트 대비 부족
 - **방지**: 색상 전환 섹션에서는 각 텍스트 요소에 해당 시점 배경 밝기 기반 대비색 자동 지정

@@ -384,6 +384,7 @@ body::after {
   inset: 0;
   z-index: 200;
   background: var(--color-void-bg, #0D0B09);
+  background-image: radial-gradient(ellipse 120% 70% at 0% 100%, rgba(184, 148, 63, 0.06) 0%, transparent 70%);
   display: flex;
   flex-direction: column;
   opacity: 0;
@@ -1782,7 +1783,7 @@ body::after {
 .s-premiere {
   background: var(--color-void-bg);
   color: var(--color-sand);
-  padding: clamp(48px, 6vh, 80px) 0 clamp(32px, 4vh, 48px);
+  padding: clamp(64px, 8vh, 120px) 0 clamp(80px, 10vh, 140px);
   display: flex;
   align-items: center;
   position: relative;
@@ -1792,10 +1793,11 @@ body::after {
 .s-premiere__inner {
   position: relative;
   z-index: 2;
-  max-width: 560px;
+  max-width: 640px;
   padding: 0 clamp(24px, 5vw, 80px);
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 /* 우측 이미지 — 섹션 높이 전체 */
@@ -1855,40 +1857,39 @@ body::after {
   width: 40px;
   height: 0.5px;
   background: var(--color-amber);
-  opacity: 0.2;
+  opacity: 0.35;
   margin-bottom: clamp(16px, 2vh, 24px);
 }
 
-/* Title — Ocean Cellar + Membership tag */
+/* Title — ocean cellar. */
 .s-premiere__title {
-  position: relative;
-  display: inline-block;
-  margin-bottom: clamp(16px, 2vh, 24px);
-}
-
-.s-premiere__title-main {
   font-family: var(--font-jj);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 400;
   letter-spacing: 0.02em;
   line-height: 1;
   color: var(--color-sand);
   white-space: nowrap;
+  margin-bottom: clamp(20px, 3vh, 32px);
+  display: inline-flex;
+  align-items: flex-start;
 }
 
 .s-premiere__title-tag {
-  position: absolute;
-  right: -110px;
-  top: -12px;
-  font-family: var(--font-heading);
-  font-size: 0.5625rem;
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
   font-weight: 400;
   font-style: normal;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #C9A84C;
-  border: 1px solid rgba(184, 148, 63, 0.5);
-  padding: 4px 12px;
+  opacity: 0.75;
+  border: 0.5px solid rgba(201, 168, 76, 0.5);
+  padding: 4px 10px;
+  position: relative;
+  top: -2px;
+  margin-left: 6px;
   white-space: nowrap;
 }
 
@@ -1905,12 +1906,12 @@ body::after {
 /* Body copy */
 .s-premiere__copy {
   font-family: var(--font-pretendard);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 300;
   line-height: 1.8;
   color: var(--color-sand);
-  opacity: 0.55;
-  margin-bottom: clamp(20px, 2.5vh, 28px);
+  opacity: 0.7;
+  margin-bottom: clamp(48px, 6vh, 72px);
 }
 
 /* Rewards */
@@ -1919,28 +1920,23 @@ body::after {
   padding: 0;
   margin: 0;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  gap: 32px;
+  margin-bottom: clamp(40px, 5vh, 64px);
 }
 
 .s-premiere__reward {
   display: flex;
   align-items: baseline;
-  gap: 14px;
-  padding: 11px 16px;
-  background: rgba(184, 148, 63, 0.04);
-  border-radius: 2px;
+  gap: 8px;
 }
 
 .s-premiere__reward-num {
-  font-family: var(--font-heading);
-  font-size: 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
   font-weight: 400;
-  letter-spacing: 0.12em;
-  color: #B8943F;
-  opacity: 0.5;
-  min-width: 20px;
-  flex-shrink: 0;
+  letter-spacing: 0.08em;
+  color: #C9A84C;
+  opacity: 0.6;
 }
 
 .s-premiere__reward-text {
@@ -1948,9 +1944,9 @@ body::after {
   font-size: 0.8125rem;
   font-weight: 300;
   color: var(--color-sand);
-  opacity: 0.6;
+  opacity: 0.65;
   letter-spacing: 0.02em;
-  line-height: 1.5;
+  white-space: nowrap;
 }
 
 /* Benefits — 멤버십 혜택 */
@@ -2012,7 +2008,7 @@ body::after {
 .s-premiere__form-group {
   display: flex;
   gap: 0;
-  border: 0.5px solid rgba(204, 173, 123, 0.25);
+  border: 0.5px solid rgba(204, 173, 123, 0.35);
   border-radius: 0;
 }
 

@@ -26,6 +26,12 @@
 
 ## 완료
 
+- [x] Ocean Cellar 섹션 디자인 통일 (타이틀 font-jj + dot 패턴 + membership 태그 위치/가시성)
+- [x] Ocean Cellar 섹션 텍스트 가시성 개선 (copy/rewards/rule/form opacity 상향, 컬러 밝게)
+- [x] 메뉴 오버레이 리디자인 (다크 배경, 센터 정렬, 골드 그라데이션)
+- [x] 메뉴 호버 딜레이 수정 (inline transitionDelay → CSS nth-child)
+- [x] 멤버십 "초대는 순차적으로 발송됩니다" 텍스트 삭제
+- [x] 멤버십 rewards 01~03 수평 인라인 레이아웃 변경
 - [x] 홈페이지 구현 1차 총괄 검토 (`teams/00-luxury-branding-team/final-homepage-implementation-review.md`)
 - [x] 와이어프레임 Observation 섹션 최종 검토 (Part A + Part B)
 - [x] 히어로 라이트 배경 전환
