@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.musedemaree.com/sitemap.xml
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Googlebot
+Allow: /

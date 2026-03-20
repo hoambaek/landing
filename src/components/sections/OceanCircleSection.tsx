@@ -14,7 +14,7 @@ export default function OceanCircleSection() {
       <div className="s-premiere__image" aria-hidden="true">
         <Image
           src="/images/c1.webp"
-          alt=""
+          alt="Ocean Cellar 멤버십"
           fill
           className="s-premiere__image-inner"
           sizes="(max-width: 768px) 100vw, 50vw"
@@ -45,7 +45,7 @@ export default function OceanCircleSection() {
           </div>
 
           <div className="s-premiere__links reveal reveal-delay-4">
-            <CTALink href="/membership" variant="dark">초대 신청</CTALink>
+            <CTALink href="#ocean-circle" variant="dark">초대 신청</CTALink>
           </div>
         </div>
       </div>

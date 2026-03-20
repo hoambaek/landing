@@ -13,7 +13,7 @@ export default function ProfessionalsSection() {
       <div className="s-pro__bg" aria-hidden="true">
         <Image
           src="/images/p1.webp"
-          alt=""
+          alt="파트너십 — 파인다이닝 테이블"
           fill
           className="s-pro__bg-img"
           sizes="100vw"
@@ -43,8 +43,8 @@ export default function ProfessionalsSection() {
           </div>
 
           <div className="s-pro__links reveal reveal-delay-4">
-            <CTALink href="/contact" variant="dark">파트너 문의</CTALink>
-            <CTALink href="/saleskit" variant="dark">브랜드 소개서 받기</CTALink>
+            <CTALink href="#professionals" variant="dark">파트너 문의</CTALink>
+            <CTALink href="#professionals" variant="dark">브랜드 소개서 받기</CTALink>
           </div>
         </div>
       </div>

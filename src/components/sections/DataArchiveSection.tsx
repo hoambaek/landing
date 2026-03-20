@@ -93,7 +93,7 @@ export default async function DataArchiveSection() {
         )}
 
         <div className="s-data__cta reveal">
-          <CTALink href="/data" variant="dark">
+          <CTALink href="#data-archive" variant="dark">
             바다의 기록 보기
           </CTALink>
         </div>

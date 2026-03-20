@@ -182,7 +182,7 @@ export default function HeroSection() {
         <div className="s-void__bg">
           <Image
             src="/images/h1.webp"
-            alt=""
+            alt="바다 위 샴페인 — Muse de Marée"
             fill
             priority
             sizes="100vw"

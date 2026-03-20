@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import JsonLd from "@/components/JsonLd";
 import {
   Cormorant_Garamond,
   Cormorant_Infant,
@@ -75,14 +76,28 @@ const jjFont = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.musedemaree.com"),
   title: "Muse de Marée — 바다의 시간을 담은 샴페인",
   description:
-    "한국 심해에서 숙성한 샴페인. 바다의 시간을 기록하는 디지털 아카이브.",
+    "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다. 바다의 온도, 해류, 수압이 만드는 시간의 기록. 2026년 런칭.",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "Muse de Marée",
-    description: "바다의 시간을 담은 샴페인",
+    title: "Muse de Marée — 바다의 시간을 담은 샴페인",
+    description: "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다.",
     locale: "ko_KR",
     type: "website",
+    siteName: "Muse de Marée",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Muse de Marée — 바다의 시간을 담은 샴페인",
+    description: "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다.",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -104,6 +119,7 @@ export default function RootLayout({
         className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${jjFont.variable} antialiased`}
       >
         <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
+        <JsonLd />
         {children}
       </body>
     </html>
