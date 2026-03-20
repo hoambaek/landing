@@ -82,18 +82,44 @@ export const metadata: Metadata = {
     "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다. 바다의 온도, 해류, 수압이 만드는 시간의 기록. 2026년 런칭.",
   alternates: {
     canonical: "/",
+    types: {
+      "application/rss+xml": "https://blog.musedemaree.com/feed.xml",
+    },
   },
+  keywords: [
+    "해저 숙성 샴페인",
+    "underwater aged champagne",
+    "럭셔리 샴페인",
+    "Muse de Marée",
+    "뮤즈드마레",
+    "한국 심해 숙성",
+    "프리미엄 샴페인",
+    "ocean aged champagne",
+    "해저 와인 숙성",
+    "Champagne Mignon Boulard",
+  ],
   openGraph: {
     title: "Muse de Marée — 바다의 시간을 담은 샴페인",
-    description: "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다.",
+    description:
+      "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다. 바다의 온도, 해류, 수압이 만드는 시간의 기록.",
     locale: "ko_KR",
     type: "website",
     siteName: "Muse de Marée",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Muse de Marée — 바다의 시간을 담은 샴페인",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Muse de Marée — 바다의 시간을 담은 샴페인",
-    description: "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다.",
+    description:
+      "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다. 바다의 온도, 해류, 수압이 만드는 시간의 기록.",
+    images: ["/opengraph-image"],
   },
   robots: {
     index: true,

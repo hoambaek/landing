@@ -3,22 +3,67 @@
 > 한국 심해에서 숙성한 샴페인 브랜드. 바다의 시간을 기록하는 디지털 아카이브.
 
 ## About
-Muse de Marée는 프랑스 샹파뉴에서 생산된 샴페인을 한국 남해 수심 50미터에서 해저 숙성하는 럭셔리 샴페인 브랜드입니다. 2026년 7-8월 런칭 예정.
+Muse de Marée는 프랑스 샹파뉴에서 생산된 샴페인을 한국 남해 수심 50미터에서 해저 숙성하는 럭셔리 샴페인 브랜드입니다.
+수심 50미터에서 약 6기압의 수압이 병 내부 탄산 압력과 평형을 이루며, 연중 12-15°C의 일정한 수온, 완전한 차광, 해류의 미세 진동이 지상 셀러에서 불가능한 독보적 숙성 환경을 만듭니다.
+James Suckling의 연구(2024)에 따르면, 해저 숙성 와인은 더 섬세한 미네랄리티와 정제된 질감을 보입니다.
+2026년 7-8월 런칭 예정.
+
+## Ocean Aging Science
+- 수심: 50미터 (약 6기압 — 샴페인 병 내부 압력과 평형)
+- 수온: 연중 12-15°C (일정 온도 유지)
+- 조건: 완전 차광, 해류 미세 진동, 자연 수압
+- 효과: 오토리시스(autolysis) 집중, 미네랄리티 강화, 정제된 질감
+- 선행 사례: Veuve Clicquot (발트해 침몰선 발견, 170년 숙성), Leclerc Briant "Abyss" (수심 60m), Drappier "Immersion" (대서양)
 
 ## Collections
-- En Lieu Sûr (엉리우쉬르) — Brut, 모든 큐베의 기준
+- En Lieu Sûr (엉리우쉬르) — Brut, 모든 큐베의 기준. 남해 해저 숙성
 - En Lieu Sûr Magnum (엉리우쉬르 매그넘) — Magnum 1500ml, 24병 한정
-- Élément de Surprise (엘레멍드쉬르프리즈) — Blanc de Blancs, Non-dosé
-- Édition Zéro (에디션 제로) — 2025, 50병 한정 (sold out)
-- Atomes Crochus 1 Year Aged (아톰크로슈 1년 숙성) — Ultra-Brut, Petit Meslier 블렌드
+- Élément de Surprise (엘레멍드쉬르프리즈) — Blanc de Blancs, Non-dosé. 샤르도네 100%
+- Édition Zéro (에디션 제로) — 2025 첫 빈티지, 50병 한정 (sold out)
+- Atomes Crochus 1 Year Aged (아톰크로슈 1년 숙성) — Ultra-Brut, 희귀 품종 Petit Meslier 블렌드
 - Atomes Crochus 3 Years Aged (아톰크로슈 3년 숙성) — Ultra-Brut, Petit Meslier 블렌드, 40병 한정
 
 ## Makers
-- Champagne Mignon Boulard — Venteuil, Vallée de la Marne. 1911년부터 4세대.
+- Champagne Mignon Boulard — Venteuil, Vallée de la Marne. 1911년부터 4세대. 49개 토양에서 재배.
+
+## Ocean Cellar Privé (Membership)
+초대제 멤버십 프로그램. 한정 예약권, 월간 숙성 노트, 프라이빗 테이스팅 제공.
+
+## FAQ
+Q: 해저 숙성 샴페인이란?
+A: 프랑스 샹파뉴에서 생산된 샴페인을 바다 수심 50미터에 침수시켜 숙성하는 기법입니다. 수압, 일정한 수온, 차광, 해류 진동이 독특한 숙성 환경을 만듭니다.
+
+Q: 어디에서 숙성하나요?
+A: 한국 남해 수심 50미터. 프랑스 샹파뉴 Vallée de la Marne의 Champagne Mignon Boulard에서 생산된 와인을 사용합니다.
+
+Q: 언제 런칭하나요?
+A: 2026년 7-8월 공식 런칭 예정. 첫 빈티지 Édition Zéro(50병 한정)는 이미 완판되었습니다.
+
+## Media Coverage
+- 남도일보 (2025.07.10) — "국내 최초 해저 숙성…와인 혁신 이루겠다" https://www.namdonews.com/news/articleView.html?idxno=826119
+  - 오크니 정설화 대표, 남해 청정 해역에서 8개월 해저 숙성
+  - 미세거품·질감 섬세, 산화 차단 효과 확인
+  - AI 도입으로 최적 숙성 조건 적용, 품질 편차 최소화
 
 ## Contact
 - Website: https://www.musedemaree.com
-- Partnership inquiries: https://www.musedemaree.com/contact
+- Partnership inquiries: https://www.musedemaree.com/#professionals
+
+## Blog (Le Journal de Marée)
+- URL: https://blog.musedemaree.com
+- RSS: https://blog.musedemaree.com/feed.xml
+- Categories: 바다의 일지(Sea Log), 메종 이야기(Maison), 문화와 예술(Culture), 테이블 위에서(Table), 뉴스 & 이벤트(News)
+- Recent posts:
+  - "지하에서 해저로, 두 개의 어둠이 만나다" — https://blog.musedemaree.com/post/post-20260112-vm7g34
+  - "두 개의 떼루아" — https://blog.musedemaree.com/post/post-20251214-ua0kiv
+  - "왜 바다인가" — https://blog.musedemaree.com/post/why-the-sea
 
 ## Links
 - Homepage: https://www.musedemaree.com
+- Blog: https://blog.musedemaree.com
+- Collection: https://www.musedemaree.com/#archive
+- The Maker: https://www.musedemaree.com/#the-maker
+- Ocean Cellar Membership: https://www.musedemaree.com/#ocean-circle
+
+---
+Last updated: 2026-03-20
