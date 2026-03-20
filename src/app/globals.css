@@ -3408,7 +3408,7 @@ input:focus-visible,
   /* S3 */
   /* S3 — Sea Log 모바일 리디자인 */
   .s-data {
-    padding: 100px 0 100px;
+    padding: 100px 0 0;
   }
 
   .s-data__title {
@@ -3487,6 +3487,7 @@ input:focus-visible,
   .s-data__cta {
     text-align: center;
     margin-top: 48px;
+    padding-bottom: 64px;
   }
 
   .s-data__header {
@@ -3527,14 +3528,15 @@ input:focus-visible,
     height: 32px;
   }
 
-  /* S4 */
+  /* S4 — The Maker 모바일 */
   .s-maker {
     padding: 48px 0;
   }
 
   .s-maker__hcard {
     flex-direction: column;
-    gap: 16px;
+    gap: 0;
+    overflow: visible;
   }
 
   .s-maker__hcard-img {
@@ -3543,12 +3545,47 @@ input:focus-visible,
     aspect-ratio: 16 / 10;
   }
 
-  .s-maker__peek-slide {
-    min-width: 85vw;
+  .s-maker__hcard-body {
+    padding: 20px 20px 24px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .s-maker__hcard-desc {
+    max-width: 100%;
+    font-size: 0.8125rem;
+  }
+
+  .s-maker__hcard-name {
+    font-size: clamp(16px, 4.5vw, 22px);
+  }
+
+  .s-maker__hcard-loc {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .s-maker__hcard-bottom {
+    align-items: center;
+  }
+
+  .s-maker__hcard-top {
+    align-items: center;
+  }
+
+  .s-maker__peek {
+    overflow: visible;
   }
 
   .s-maker__peek-track {
-    padding-left: 7.5vw;
+    padding-left: 24px;
+    padding-right: 24px;
+    gap: 0;
+  }
+
+  .s-maker__peek-slide {
+    min-width: 100%;
+    width: 100%;
   }
 
   .s-maker__cards {
@@ -3558,21 +3595,53 @@ input:focus-visible,
 
   /* S5 — Archive */
   .s-archive {
-    padding: 120px 0 80px;
+    padding: 0 0 80px;
+  }
+
+  .s-archive__hero {
+    height: 75vh;
+    margin-bottom: 48px;
+  }
+
+  .s-archive__hero-img {
+    object-fit: cover;
+    object-position: center center;
   }
 
   .s-archive__masonry {
+    display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-auto-rows: 16px;
-    gap: 0 16px;
+    grid-auto-rows: auto;
+    gap: 32px 16px;
   }
 
-  .m-card--01 { grid-column: 1 / -1; grid-row: 1 / span 18; }
-  .m-card--02 { grid-column: 1; grid-row: 21 / span 14; }
-  .m-card--03 { grid-column: 2; grid-row: 21 / span 14; }
-  .m-card--06 { grid-column: 1; grid-row: 37 / span 14; }
-  .m-card--04 { grid-column: 2; grid-row: 37 / span 14; }
-  .m-card--05 { grid-column: 1 / -1; grid-row: 53 / span 18; }
+  .m-card--01,
+  .m-card--02,
+  .m-card--03,
+  .m-card--04,
+  .m-card--05,
+  .m-card--06 {
+    grid-column: auto;
+    grid-row: auto;
+    transform: none;
+  }
+
+  .m-card--01,
+  .m-card--05 {
+    grid-column: 1 / -1;
+  }
+
+  .m-card__img {
+    height: auto;
+    aspect-ratio: 3 / 4;
+  }
+
+  .m-card--01 .m-card__img,
+  .m-card--05 .m-card__img {
+    height: auto;
+    aspect-ratio: 3 / 4;
+    max-height: 60vh;
+  }
 
   .m-accent {
     display: none;

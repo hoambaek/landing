@@ -55,7 +55,7 @@ export default function TheMakerSection() {
     const velocity = Math.abs(dx) / elapsed;
     dragStart.current = null;
 
-    if (velocity > 0.3 || Math.abs(dx) > 50) {
+    if (velocity > 0.3 || Math.abs(dx) > 30) {
       if (dx < 0 && current < MAKERS.length - 1) goTo(current + 1);
       else if (dx > 0 && current > 0) goTo(current - 1);
     }
@@ -85,7 +85,7 @@ export default function TheMakerSection() {
             ref={trackRef}
             className="s-maker__peek-track"
             style={{
-              transform: `translateX(calc(-${current} * (min(640px, 80vw) + 16px)))`,
+              transform: `translateX(calc(-${current} * (min(640px, 85vw) + 16px)))`,
             }}
           >
             {MAKERS.map((maker, i) => {
@@ -102,7 +102,7 @@ export default function TheMakerSection() {
                     {/* 이미지 */}
                     <div className={`s-maker__hcard-img${isSoon ? " s-maker__hcard-img--placeholder" : ""}`}>
                       {maker.image ? (
-                        <Image src={maker.image} alt={maker.name} fill sizes="220px" />
+                        <Image src={maker.image} alt={maker.name} fill sizes="(max-width: 767px) 85vw, 220px" />
                       ) : (
                         <span className="s-maker__hcard-soon">coming soon</span>
                       )}

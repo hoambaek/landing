@@ -83,7 +83,7 @@ export default function ArchiveSection() {
                   src={`/images/${cuvee.num}.webp`}
                   alt={cuvee.name}
                   fill
-                  sizes="(max-width: 768px) 50vw, 300px"
+                  sizes="(max-width: 480px) 90vw, (max-width: 768px) 45vw, 300px"
                   className="m-card__img-inner"
                 />
               </div>
