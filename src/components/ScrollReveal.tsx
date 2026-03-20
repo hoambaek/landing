@@ -25,8 +25,11 @@ export default function ScrollReveal() {
     );
 
     // hydration 완료 후 초기 요소 관찰 (Suspense 불일치 방지)
+    // 이중 rAF로 hydration 완전 완료 후 observe 시작
     requestAnimationFrame(() => {
-      document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+      requestAnimationFrame(() => {
+        document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+      });
     });
 
     // Suspense 등으로 나중에 추가되는 .reveal 요소 감지

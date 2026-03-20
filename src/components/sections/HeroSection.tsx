@@ -233,7 +233,9 @@ export default function HeroSection() {
 
         {/* 스크롤 인디케이터 */}
         <div className="s-void__scroll" ref={scrollRef}>
-          <span className="s-void__scroll-text">스크롤하기</span>
+          <svg className="s-void__scroll-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 3L10 17M10 17L4 11M10 17L16 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </div>
       </div>
     </section>

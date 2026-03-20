@@ -75,6 +75,10 @@
     text-decoration: none;
   }
 
+  a, button {
+    touch-action: manipulation;
+  }
+
   button {
     cursor: pointer;
     font-family: inherit;
@@ -374,7 +378,7 @@ input:focus-visible,
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 14px 8px;
+  padding: 16px 10px;
   box-sizing: content-box;
   cursor: pointer;
 }
@@ -483,7 +487,7 @@ input:focus-visible,
   right: 80px;
   background: none;
   border: none;
-  padding: 4px;
+  padding: 14px;
   cursor: pointer;
   color: rgba(245, 241, 232, 0.55);
   opacity: 0;
@@ -765,6 +769,11 @@ input:focus-visible,
   animation: scroll-breathe 2.4s ease-in-out infinite;
 }
 
+.s-void__scroll-arrow {
+  color: rgba(255, 255, 255, 0.8);
+  animation: scroll-breathe 2.4s ease-in-out infinite;
+}
+
 @keyframes scroll-breathe {
   0%, 100% { opacity: 0.4; }
   50% { opacity: 1; color: rgba(255, 255, 255, 1); }
@@ -907,22 +916,99 @@ input:focus-visible,
 }
 
 @media (max-width: 768px) {
+  /* Observation — 모바일: 이미지 풀블리드 + 텍스트 오버레이 */
+  .s-obs {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    padding-bottom: 0;
+    padding-top: 80px;
+    background: var(--color-warm-ivory);
+  }
+
+  .s-obs::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    z-index: 1;
+    background: linear-gradient(
+      to bottom,
+      var(--color-warm-ivory) 0%,
+      rgba(244, 241, 235, 0.6) 40%,
+      rgba(244, 241, 235, 0.2) 70%,
+      transparent 100%
+    );
+    pointer-events: none;
+    display: block;
+  }
+
+  .s-obs__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    z-index: 0;
+  }
+
+  .s-obs__image-inner {
+    object-position: center 30%;
+  }
+
+  .s-obs__proposition {
+    position: relative;
+    z-index: 2;
+    padding: 0 28px 100px;
+    text-align: left;
+    background: linear-gradient(
+      to top,
+      rgba(10, 8, 6, 0.92) 0%,
+      rgba(10, 8, 6, 0.78) 40%,
+      rgba(10, 8, 6, 0.4) 70%,
+      transparent 100%
+    );
+    padding-top: 40vh;
+  }
+
   .s-obs__headline {
-    font-size: clamp(1.75rem, 7vw, 2.5rem);
-    line-height: 1.6;
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    line-height: 1.5;
+    color: rgba(232, 228, 223, 0.95);
+    margin-bottom: 0;
   }
+
+  .s-obs__rule {
+    margin: 28px 0;
+    background: rgba(204, 173, 123, 0.35);
+    width: 32px;
+  }
+
   .s-obs__intro {
-    font-size: 0.875rem;
-    max-width: 320px;
+    font-size: 1.0625rem;
+    max-width: 100%;
+    text-align: left;
+    margin: 0;
+    color: rgba(232, 228, 223, 0.6);
+    line-height: 2;
   }
+
+  .s-obs__intro p {
+    opacity: 1;
+  }
+
   .s-obs__emphasis {
     font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .s-obs__image {
-    aspect-ratio: 1920 / 1072;
+    color: rgba(204, 173, 123, 0.85);
+    text-align: left;
+    margin: 32px 0 0;
+    max-width: 100%;
+    white-space: nowrap;
   }
 }
 
@@ -975,7 +1061,7 @@ input:focus-visible,
 
 .s-data__title {
   font-family: var(--font-jj);
-  font-size: 50px;
+  font-size: clamp(28px, 6vw, 50px);
   font-weight: 400;
   color: inherit;
   margin-bottom: 12px;
@@ -1151,6 +1237,12 @@ input:focus-visible,
   animation: chart-scroll 60s linear infinite;
 }
 
+@media (max-width: 767px) {
+  .s-data__chart-svg {
+    animation: chart-scroll 40s linear infinite;
+  }
+}
+
 @keyframes chart-scroll {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -1225,7 +1317,7 @@ input:focus-visible,
 
 .s-maker__title {
   font-family: var(--font-jj);
-  font-size: 50px;
+  font-size: clamp(28px, 6vw, 50px);
   font-weight: 400;
   letter-spacing: 0.02em;
   margin-bottom: 12px;
@@ -1534,7 +1626,7 @@ input:focus-visible,
 
 .s-maker__peek-slide {
   position: relative;
-  min-width: min(640px, 80vw);
+  min-width: min(640px, 85vw);
   flex-shrink: 0;
   display: flex;
 }
@@ -1774,7 +1866,7 @@ input:focus-visible,
 
 .s-archive__title {
   font-family: var(--font-jj);
-  font-size: 50px;
+  font-size: clamp(28px, 6vw, 50px);
   font-weight: 400;
   letter-spacing: 0.02em;
   margin-bottom: 20px;
@@ -2387,15 +2479,15 @@ input:focus-visible,
 /* Title — ocean cellar. */
 .s-premiere__title {
   font-family: var(--font-jj);
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-size: clamp(1.75rem, 5vw, 3.5rem);
   font-weight: 400;
   letter-spacing: 0.02em;
   line-height: 1;
   color: var(--color-sand);
-  white-space: nowrap;
   margin-bottom: 12px;
   display: inline-flex;
   align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 .s-premiere__title-tag {
@@ -3009,7 +3101,7 @@ input:focus-visible,
   color: var(--color-sand);
   opacity: 0.3;
   text-decoration: none;
-  padding: 4px 0;
+  padding: 6px 0;
   transition: opacity 0.3s ease;
 }
 
@@ -3030,6 +3122,10 @@ input:focus-visible,
 
 .footer__social-link {
   display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
   color: var(--color-sand);
   opacity: 0.25;
   text-decoration: none;
@@ -3061,6 +3157,7 @@ input:focus-visible,
   color: var(--color-sand);
   opacity: 0.18;
   text-decoration: none;
+  padding: 8px 0;
   transition: opacity 0.3s ease;
 }
 
@@ -3270,7 +3367,7 @@ input:focus-visible,
 
   .menu-overlay__link {
     font-size: 1.5rem;
-    padding: 8px 0;
+    padding: 14px 0;
     gap: 12px;
   }
 
@@ -3280,13 +3377,17 @@ input:focus-visible,
 
   /* S1 */
   .s-void__headline {
-    font-size: clamp(16px, 4vw, 22px);
-    letter-spacing: 0.08em;
+    font-size: clamp(30px, 9vw, 42px);
+    letter-spacing: 0.06em;
   }
 
   .s-void__sub {
-    font-size: 0.625rem;
-    margin-top: 24px;
+    font-size: 1.125rem;
+    margin-top: 80px;
+  }
+
+  .s-void__bottom-blur {
+    opacity: 1 !important;
   }
 
   /* S2 — Observation */
@@ -3305,23 +3406,93 @@ input:focus-visible,
   }
 
   /* S3 */
+  /* S3 — Sea Log 모바일 리디자인 */
   .s-data {
-    padding: 100px 0 80px;
+    padding: 100px 0 100px;
+  }
+
+  .s-data__title {
+    font-size: clamp(36px, 10vw, 52px);
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .s-data__statements {
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 48px;
+  }
+
+  .s-data__statement-block {
+    font-size: 1.0625rem;
+    line-height: 1.9;
+    text-align: center !important;
+    color: rgba(232, 229, 225, 0.5);
+  }
+
+  .s-data__statement-block:first-child {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .s-data__highlight {
+    font-size: 0.875rem;
+    background-color: rgba(204, 173, 123, 0.12);
+    padding: 4px 10px;
+  }
+
+  .s-data__section-note {
+    text-align: center;
+    font-size: 0.625rem;
+    margin-bottom: 20px;
+    color: rgba(204, 173, 123, 0.5);
+  }
+
+  .s-data__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 0.5px solid rgba(204, 173, 123, 0.15);
+    border-bottom: 0.5px solid rgba(204, 173, 123, 0.15);
+    margin-bottom: 48px;
+  }
+
+  .s-data__point {
+    padding: 20px 8px;
+    border-right: 0.5px solid rgba(204, 173, 123, 0.08);
+    align-items: center;
+  }
+
+  .s-data__point:nth-child(3n) {
+    border-right: none;
+  }
+
+  .s-data__point:nth-child(n+4) {
+    border-top: 0.5px solid rgba(204, 173, 123, 0.08);
+  }
+
+  .s-data__number {
+    font-size: clamp(1.25rem, 5vw, 1.75rem);
+    margin-bottom: 8px;
+  }
+
+  .s-data__metric-label {
+    font-size: 0.5625rem;
+    padding: 2px 8px;
+  }
+
+  .s-data__chart-wrap {
+    margin-bottom: 40px;
+  }
+
+  .s-data__cta {
+    text-align: center;
+    margin-top: 48px;
   }
 
   .s-data__header {
     flex-direction: column;
     align-items: flex-start;
     gap: 40px;
-  }
-
-  .s-data__title {
-    font-size: 50px;
-  }
-
-  .s-data__statements {
-    flex-direction: column;
-    gap: 24px;
   }
 
   .s-data__rule {
@@ -3438,6 +3609,14 @@ input:focus-visible,
     padding-bottom: 40px;
   }
 
+  .footer__link {
+    padding: 10px 0;
+  }
+
+  .footer__legal-link {
+    padding: 10px 0;
+  }
+
   .footer__middle {
     flex-direction: column;
     gap: 20px;
@@ -3458,30 +3637,7 @@ input:focus-visible,
 }
 
 /* ══════════════════════════════════════════
-   REDUCED MOTION
-   ══════════════════════════════════════════ */
-@media (prefers-reduced-motion: reduce) {
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.15s !important;
-  }
-
-  .reveal {
-    opacity: 1;
-    transform: none;
-  }
-
-  .particle {
-    display: none;
-  }
-}
-
-/* ══════════════════════════════════════════
-   Reduced Motion — 접근성
+   REDUCED MOTION — 접근성
    ══════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -3501,4 +3657,35 @@ input:focus-visible,
   .particle {
     display: none;
   }
+
+  .s-data__chart-svg {
+    animation: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════
+   MOBILE INTERACTION — Phase 3
+   ══════════════════════════════════════════ */
+
+/* 3-1: 터치 피드백 — 탭 시 시각적 반응 */
+@media (hover: none) and (pointer: coarse) {
+  .cta-link:active,
+  .text-cta:active,
+  .m-card:active,
+  .footer__link:active,
+  .footer__social-link:active,
+  .menu-overlay__link:active {
+    opacity: 0.6;
+    transition-duration: 0.05s;
+  }
+
+  .s-maker__peek-slide:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* 3-3: overscroll 방지 — 실수로 새로고침 방지 */
+html {
+  overscroll-behavior: contain;
 }
