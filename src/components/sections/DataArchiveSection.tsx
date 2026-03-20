@@ -52,7 +52,7 @@ export default async function DataArchiveSection() {
           className="s-data__title reveal reveal-delay-1"
           id="data-label"
         >
-          living data<span className="dot">.</span>
+          sea log<span className="dot">.</span>
         </h2>
         <div className="s-data__statements reveal reveal-delay-1">
           <p className="s-data__statement-block">
@@ -61,12 +61,12 @@ export default async function DataArchiveSection() {
           <p className="s-data__statement-block">
             온도, 해류, 파도, 수압.
             <br />
-            바다가 보내는 모든 신호를 기록합니다.
+            바다가 보내는 신호가 데이터가 됩니다.
           </p>
           <p className="s-data__statement-block">
-            그 기록 위에서
+            그 데이터 위에서
             <br />
-            숙성의 시간을 예측합니다.
+            각 컬렉션의 숙성을 예측합니다.
           </p>
         </div>
 

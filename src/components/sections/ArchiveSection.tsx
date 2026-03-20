@@ -7,18 +7,22 @@ const CUVEES = [
     num: "01",
     label: "archive nº 002",
     name: "En Lieu Sûr",
+    nameKr: "엉리우쉬르",
     desc: "Brut, 모든 큐베의 기준",
   },
   {
     num: "02",
     label: "archive nº 003",
     name: "En Lieu Sûr Magnum",
-    desc: "Magnum 1500ml · 24병 한정",
+    nameKr: "엉리우쉬르 매그넘",
+    desc: "Magnum 1500ml",
+    edition: "24병 한정",
   },
   {
     num: "03",
     label: "archive nº 004",
     name: "Élément de Surprise",
+    nameKr: "엘레멍드쉬르프리즈",
     desc: "Blanc de Blancs · Non-dosé",
   },
   // Lower: 06(left) → 04(center offset) → 05(right climax)
@@ -26,20 +30,25 @@ const CUVEES = [
     num: "06",
     label: "archive nº 001",
     name: "Édition Zéro",
-    desc: "2025 · 50병 한정",
+    nameKr: "에디션 제로",
+    desc: "2025",
+    edition: "50병 한정",
     soldOut: true,
   },
   {
     num: "04",
     label: "archive nº 005",
     name: "Atomes Crochus 1 Year Aged",
+    nameKr: "아톰크로슈 1년 숙성",
     desc: "Ultra-Brut · 희귀 품종 Petit Meslier 블렌드",
   },
   {
     num: "05",
     label: "archive nº 006",
     name: "Atomes Crochus 3 Years Aged",
-    desc: "Ultra-Brut · 희귀 품종 Petit Meslier 블렌드 · 40병 한정",
+    nameKr: "아톰크로슈 3년 숙성",
+    desc: "Ultra-Brut · 희귀 품종 Petit Meslier 블렌드",
+    edition: "40병 한정",
   },
 ] as const;
 
@@ -70,9 +79,11 @@ export default function ArchiveSection() {
               className={`m-card m-card--${cuvee.num}`}
             >
               <div className="m-card__img">
-                <img
+                <Image
                   src={`/images/${cuvee.num}.webp`}
                   alt={cuvee.name}
+                  fill
+                  sizes="(max-width: 768px) 50vw, 300px"
                   className="m-card__img-inner"
                 />
               </div>
@@ -82,7 +93,11 @@ export default function ArchiveSection() {
                   <span style={{ fontWeight: 600, fontSize: '0.75rem' }}>{cuvee.label.replace('archive nº ', '')}</span>
                 </div>
                 <div className="m-card__name">{cuvee.name}</div>
+                <div className="m-card__name-kr">{cuvee.nameKr}</div>
                 <div className="m-card__desc">{cuvee.desc}</div>
+                {"edition" in cuvee && (
+                  <span className="m-card__edition">{cuvee.edition}</span>
+                )}
                 {"soldOut" in cuvee && (
                   <div className="m-card__sold-out">sold out</div>
                 )}

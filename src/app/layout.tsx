@@ -10,7 +10,6 @@ import {
   EB_Garamond,
 } from "next/font/google";
 import localFont from "next/font/local";
-import Script from "next/script";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -94,23 +93,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body
         className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${jjFont.variable} antialiased`}
       >
+        <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
         {children}
-        <Script
-          id="pretendard-css"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              var l = document.createElement('link');
-              l.rel = 'stylesheet';
-              l.href = 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css';
-              l.crossOrigin = 'anonymous';
-              document.head.appendChild(l);
-            `,
-          }}
-        />
       </body>
     </html>
   );

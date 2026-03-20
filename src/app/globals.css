@@ -34,6 +34,15 @@
   --ease-gentle: cubic-bezier(0.25, 0.1, 0.25, 1.0);
   --ease-water: cubic-bezier(0.23, 1.0, 0.32, 1.0);
   --ease-slow: cubic-bezier(0.4, 0.0, 0.2, 1.0);
+
+  /* z-index 스케일 */
+  --z-bg: 0;
+  --z-content: 1;
+  --z-overlay: 10;
+  --z-header: 50;
+  --z-menu: 100;
+  --z-modal: 200;
+  --z-skip: 9999;
 }
 
 /* ══════════════════════════════════════════
@@ -79,11 +88,62 @@ body::after {
   content: '';
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: var(--z-skip);
   pointer-events: none;
   opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   background-size: 128px 128px;
+}
+
+/* ══════════════════════════════════════════
+   GLOBAL INTERACTIVE — cursor-pointer
+   ══════════════════════════════════════════ */
+a,
+button,
+[role="button"],
+[onclick],
+.cta-link,
+.text-cta,
+.m-card,
+.s-maker__dot,
+.s-maker__peek-slide,
+.menu-overlay__link {
+  cursor: pointer;
+}
+
+/* ══════════════════════════════════════════
+   SKIP LINK — 키보드 접근성
+   ══════════════════════════════════════════ */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: var(--z-skip);
+  padding: 8px 16px;
+  background: var(--color-void-bg, #0A0908);
+  color: var(--color-sand, #E8E5E1);
+  font-family: var(--font-pretendard);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+/* ══════════════════════════════════════════
+   GLOBAL FOCUS — 접근성
+   ══════════════════════════════════════════ */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[role="button"]:focus-visible,
+.cta-link:focus-visible,
+.s-maker__dot:focus-visible {
+  outline: 1.5px solid rgba(184, 148, 63, 0.6);
+  outline-offset: 3px;
 }
 
 /* ══════════════════════════════════════════
@@ -285,7 +345,7 @@ body::after {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: var(--z-menu);
   padding: 12px 80px 20px;
   display: flex;
   justify-content: center;
@@ -306,7 +366,7 @@ body::after {
 
 .header__menu {
   position: absolute;
-  right: 80px;
+  right: 72px;
   background: none;
   border: none;
   width: 28px;
@@ -314,7 +374,8 @@ body::after {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0;
+  padding: 14px 8px;
+  box-sizing: content-box;
   cursor: pointer;
 }
 
@@ -382,7 +443,7 @@ body::after {
 .menu-overlay {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: var(--z-modal);
   background: #1A1714;
   background-image: radial-gradient(ellipse 120% 70% at 0% 100%, rgba(184, 148, 63, 0.08) 0%, transparent 70%),
     radial-gradient(ellipse 80% 50% at 100% 0%, rgba(245, 241, 232, 0.03) 0%, transparent 60%);
@@ -490,6 +551,10 @@ body::after {
   transition-delay: 0s !important;
 }
 
+.menu-overlay__link:active {
+  opacity: 0.7;
+}
+
 .menu-overlay__link-num {
   font-family: var(--font-mono);
   font-size: 0.5625rem;
@@ -499,6 +564,7 @@ body::after {
   color: rgba(184, 148, 63, 0.6);
   position: relative;
   top: -0.4em;
+  margin-left: 8px;
   transition: color 0.15s ease;
 }
 
@@ -580,8 +646,10 @@ body::after {
 .s-void__bg {
   position: absolute;
   inset: 0;
-  background:
-    url('/images/h1.webp') center center / cover no-repeat;
+}
+
+.s-void__bg-img {
+  object-fit: cover;
 }
 
 .s-void__video {
@@ -642,18 +710,18 @@ body::after {
   gap: 8px;
   padding: 0 24px;
   margin-top: -5vh;
-  margin-left: 30px;
 }
 
 .s-void__headline {
   font-family: var(--font-jj);
-  font-size: clamp(24px, 3vw, 38px);
+  font-size: clamp(26px, 3.3vw, 42px);
   font-weight: 400;
   letter-spacing: 0.2em;
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.95);
   writing-mode: vertical-rl;
   margin-bottom: 24px;
+  margin-left: 15px;
   opacity: 0;
   animation: title-in 2s 0.5s var(--ease-gentle) forwards;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
@@ -661,16 +729,16 @@ body::after {
 }
 
 .s-void__sub {
-  font-family: var(--font-pretendard);
-  font-size: clamp(12px, 1.2vw, 16px);
-  font-weight: 300;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.85);
+  font-family: var(--font-jj);
+  font-size: clamp(14px, 1.4vw, 19px);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: rgba(30, 25, 20, 0.8);
   writing-mode: vertical-rl;
   align-self: flex-start;
   margin-top: 15vh;
   opacity: 0;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  text-shadow: none;
   animation: title-in 1.5s 1.2s var(--ease-gentle) forwards;
   will-change: transform;
 }
@@ -684,6 +752,7 @@ body::after {
   opacity: 0;
   animation: title-in 1s 2.5s var(--ease-gentle) forwards;
 }
+
 
 .s-void__scroll-text {
   display: block;
@@ -863,7 +932,7 @@ body::after {
 .s-data {
   background: var(--color-void-bg);
   color: var(--color-sand);
-  padding: clamp(80px, 10vh, 140px) 0 clamp(140px, 18vh, 280px);
+  padding: clamp(80px, 10vh, 140px) 0 clamp(80px, 10vh, 140px);
   position: relative;
 }
 
@@ -1141,7 +1210,7 @@ body::after {
 .s-maker {
   background: var(--color-warm-ivory);
   color: var(--color-earth-muted);
-  padding: 120px 0 120px;
+  padding: clamp(64px, 8vh, 120px) 0;
   position: relative;
 }
 
@@ -1151,7 +1220,7 @@ body::after {
 
 .s-maker__header {
   text-align: center;
-  margin-bottom: 56px;
+  margin-bottom: 32px;
 }
 
 .s-maker__title {
@@ -1170,12 +1239,14 @@ body::after {
 }
 
 .s-maker__sub {
-  font-size: 1rem;
-  font-weight: 300;
-  line-height: 2;
-  color: rgba(49, 46, 42, 0.65);
-  margin-top: 32px;
-  letter-spacing: 0.02em;
+  font-family: var(--font-pretendard);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  line-height: 2.2;
+  letter-spacing: 0.025em;
+  color: var(--color-earth-muted);
+  opacity: 0.7;
+  margin-top: 16px;
 }
 
 .s-maker__lead {
@@ -1201,6 +1272,251 @@ body::after {
   max-width: 500px;
 }
 
+/* Horizontal Card List */
+.s-maker__list {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.s-maker__row {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.s-maker__row:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.s-maker__row-image {
+  position: relative;
+  width: 280px;
+  min-width: 280px;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.s-maker__row-image img {
+  object-fit: cover;
+}
+
+.s-maker__row-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.s-maker__row:nth-child(even) .s-maker__row-info {
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* Row label — compact editorial */
+.s-maker__row-label {
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(184, 148, 63, 0.6);
+  margin-bottom: 6px;
+}
+
+.s-maker__row-name {
+  font-family: var(--font-heading);
+  font-size: clamp(17px, 2vw, 22px);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(49, 46, 42, 0.85);
+  line-height: 1.3;
+  margin: 0 0 6px;
+}
+
+.s-maker__row-name--soon {
+  color: rgba(49, 46, 42, 0.35);
+}
+
+.s-maker__row-location {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: rgba(49, 46, 42, 0.5);
+  margin-bottom: 4px;
+}
+
+.s-maker__row-heritage {
+  font-family: var(--font-cormorant-infant), 'Cormorant Infant', Georgia, serif;
+  font-size: clamp(14px, 1.6vw, 18px);
+  font-weight: 500;
+  font-style: italic;
+  color: #CCAD7B;
+  margin: 4px 0;
+}
+
+.s-maker__row-desc {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(49, 46, 42, 0.6);
+  max-width: 320px;
+}
+
+/* Placeholder image for coming soon */
+.s-maker__row-image--placeholder {
+  background: linear-gradient(135deg, rgba(49,46,42,0.06) 0%, rgba(49,46,42,0.03) 100%);
+  border: 0.5px solid rgba(49, 46, 42, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.s-maker__row-placeholder-text {
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(49, 46, 42, 0.2);
+}
+
+.s-maker__row--soon {
+  opacity: 0.7;
+}
+
+/* Horizontal Card — 이미지 좌 + 텍스트 우 (단일 카드) */
+.s-maker__hcard {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  background: #F5F3F0;
+  border: 0.5px solid rgba(49, 46, 42, 0.08);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.s-maker__hcard--inactive {
+  opacity: 0.3;
+}
+
+/* — 이미지 — */
+.s-maker__hcard-img {
+  position: relative;
+  width: 220px;
+  min-width: 220px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.s-maker__hcard-img img {
+  object-fit: cover;
+}
+
+.s-maker__hcard-img--placeholder {
+  background: linear-gradient(135deg, rgba(49,46,42,0.06) 0%, rgba(49,46,42,0.03) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.s-maker__hcard-soon {
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(49, 46, 42, 0.2);
+}
+
+/* — 텍스트 바디 — */
+.s-maker__hcard-body {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+.s-maker__hcard-top {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.s-maker__hcard-num {
+  font-family: var(--font-cormorant-infant), 'Cormorant Infant', Georgia, serif;
+  font-size: 1.125rem;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.05em;
+  color: #8B7328;
+}
+
+.s-maker__hcard-name {
+  font-family: var(--font-heading);
+  font-size: clamp(16px, 1.8vw, 21px);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(49, 46, 42, 0.85);
+  line-height: 1.3;
+  margin: 0;
+}
+
+.s-maker__hcard-name--soon {
+  color: rgba(49, 46, 42, 0.3);
+}
+
+.s-maker__hcard-loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(49, 46, 42, 0.6);
+  border: 0.5px solid rgba(49, 46, 42, 0.25);
+  padding: 2px 6px;
+  margin-top: 4px;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.s-maker__hcard-loc svg {
+  flex-shrink: 0;
+}
+
+/* — 하단: 헤리티지 + 설명 — */
+.s-maker__hcard-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 0.5px solid rgba(49, 46, 42, 0.06);
+}
+
+.s-maker__hcard-heritage {
+  font-family: var(--font-cormorant-infant), 'Cormorant Infant', Georgia, serif;
+  font-size: clamp(13px, 1.4vw, 16px);
+  font-weight: 500;
+  font-style: italic;
+  color: #8B7328;
+  margin: 0;
+}
+
+.s-maker__hcard-desc {
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.7;
+  color: rgba(49, 46, 42, 0.6);
+  max-width: 300px;
+  margin: 0;
+}
+
 /* Peek Carousel */
 .s-maker__peek {
   overflow: hidden;
@@ -1209,16 +1525,18 @@ body::after {
 
 .s-maker__peek-track {
   display: flex;
-  gap: 40px;
+  gap: 16px;
+  align-items: stretch;
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
-  padding-left: calc(50% - min(250px, 34vw));
+  padding-left: calc(50% - min(320px, 40vw));
 }
 
 .s-maker__peek-slide {
   position: relative;
-  min-width: min(500px, 68vw);
+  min-width: min(640px, 80vw);
   flex-shrink: 0;
+  display: flex;
 }
 
 .s-maker__peek-fade {
@@ -1233,10 +1551,11 @@ body::after {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 40px;
+  margin-top: 24px;
 }
 
 .s-maker__dot {
+  position: relative;
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -1245,6 +1564,16 @@ body::after {
   padding: 0;
   cursor: pointer;
   transition: all 0.4s ease;
+}
+
+.s-maker__dot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
 }
 
 .s-maker__dot--active {
@@ -1272,10 +1601,10 @@ body::after {
 .s-maker__card-image {
   width: 100%;
   align-self: stretch;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 10;
   position: relative;
   overflow: hidden;
-  margin-bottom: 28px;
+  margin-bottom: 16px;
 }
 
 .s-maker__card--inactive .s-maker__card-image {
@@ -1297,6 +1626,18 @@ body::after {
   pointer-events: none;
 }
 
+.s-maker__card-image--placeholder {
+  background: linear-gradient(135deg, rgba(49,46,42,0.06) 0%, rgba(49,46,42,0.03) 100%);
+  border: 0.5px solid rgba(49, 46, 42, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.s-maker__card-name--soon {
+  color: rgba(49, 46, 42, 0.35);
+}
+
 /* — Editorial Caption Block — */
 .s-maker__card-caption {
   display: flex;
@@ -1315,8 +1656,8 @@ body::after {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(49, 46, 42, 0.75);
-  padding: 6px 16px;
-  margin-bottom: 20px;
+  padding: 0;
+  margin-bottom: 8px;
 }
 .s-maker__card-label-num {
   font-family: var(--font-cormorant-infant), 'Cormorant Infant', Georgia, serif;
@@ -1330,18 +1671,18 @@ body::after {
   width: 32px;
   height: 0.5px;
   background: #CCAD7B;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 /* Maison name — editorial headline */
 .s-maker__card-name {
   font-family: var(--font-heading);
-  font-size: clamp(22px, 2.8vw, 32px);
+  font-size: clamp(18px, 2.2vw, 26px);
   font-weight: 300;
   font-style: italic;
   color: rgba(49, 46, 42, 0.85);
   line-height: 1.3;
-  margin: 0 0 14px;
+  margin: 0 0 8px;
 }
 
 /* Location — quiet geographic anchor */
@@ -1354,20 +1695,31 @@ body::after {
   margin-bottom: 8px;
 }
 
+/* Heritage stat — editorial pull-quote */
+.s-maker__card-heritage {
+  font-family: var(--font-cormorant-infant), 'Cormorant Infant', Georgia, serif;
+  font-size: clamp(15px, 1.8vw, 20px);
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  color: #CCAD7B;
+  margin: 8px 0 6px;
+}
+
 /* Description — restrained body */
 .s-maker__card-desc {
-  font-size: 0.9375rem;
+  font-size: 0.8125rem;
   font-weight: 400;
-  line-height: 1.8;
+  line-height: 1.7;
   color: rgba(49, 46, 42, 0.75);
-  max-width: 360px;
+  max-width: 320px;
   white-space: pre-line;
 }
 
 .s-maker__cta {
   display: flex;
   justify-content: center;
-  margin-top: clamp(64px, 8vh, 100px);
+  margin-top: clamp(32px, 4vh, 48px);
 }
 
 /* ══════════════════════════════════════════
@@ -1429,9 +1781,13 @@ body::after {
 }
 
 .s-archive__sub {
-  font-size: 1rem;
-  font-weight: 300;
-  color: rgba(49, 46, 42, 0.65);
+  font-family: var(--font-pretendard);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  line-height: 2.2;
+  letter-spacing: 0.025em;
+  color: var(--color-earth-muted);
+  opacity: 0.7;
   max-width: 480px;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -1468,8 +1824,6 @@ body::after {
 }
 
 .m-card__img-inner {
-  width: auto;
-  height: 100%;
   object-fit: contain;
   transition: transform 1s cubic-bezier(0.4, 0, 1, 1), filter 1s cubic-bezier(0.4, 0, 1, 1);
   will-change: transform;
@@ -1484,6 +1838,7 @@ body::after {
 }
 
 .m-card__img {
+  position: relative;
   width: 100%;
   height: calc(100% - 68px);
   display: flex;
@@ -1572,6 +1927,15 @@ body::after {
   transition: color 0.4s ease;
 }
 
+.m-card__name-kr {
+  font-family: var(--font-pretendard);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: rgba(49, 46, 42, 0.45);
+  margin-top: 2px;
+}
+
 .m-card__desc {
   font-family: var(--font-pretendard);
   font-size: 0.8125rem;
@@ -1580,6 +1944,10 @@ body::after {
   letter-spacing: 0.02em;
   color: rgba(49, 46, 42, 0.6);
   margin-top: 8px;
+}
+
+.m-card__desc strong {
+  font-weight: 700;
 }
 
 .m-card__sub {
@@ -1591,6 +1959,18 @@ body::after {
   margin-top: 4px;
 }
 
+.m-card__edition {
+  display: inline-block;
+  font-family: var(--font-pretendard);
+  font-size: 0.5625rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: rgba(49, 46, 42, 0.55);
+  border: 0.5px solid rgba(49, 46, 42, 0.2);
+  padding: 3px 8px;
+  margin-top: 6px;
+}
+
 .m-card__sold-out {
   font-family: var(--font-heading);
   font-size: 0.625rem;
@@ -1598,7 +1978,7 @@ body::after {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(49, 46, 42, 0.5);
-  margin-top: 12px;
+  margin-top: 8px;
 }
 
 .m-card--05 .m-card__name {
@@ -1780,6 +2160,149 @@ body::after {
 }
 
 /* ══════════════════════════════════════════
+   NFC — The Record
+   ══════════════════════════════════════════ */
+.s-nfc {
+  padding: clamp(80px, 12vh, 140px) 0;
+  background: #D8D4CE;
+  color: var(--color-earth-muted);
+  overflow: hidden;
+  position: relative;
+}
+
+.s-nfc__image {
+  position: relative;
+  width: 100%;
+  height: clamp(280px, 40vh, 420px);
+  overflow: hidden;
+  margin-bottom: clamp(48px, 6vh, 72px);
+  border-radius: 2px;
+}
+
+.s-nfc__placeholder {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    170deg,
+    #8A8580 0%,
+    #9A9590 40%,
+    #7A7570 100%
+  );
+}
+
+.s-nfc__header {
+  text-align: center;
+  margin-bottom: clamp(48px, 6vh, 80px);
+}
+
+.s-nfc__title {
+  font-family: var(--font-jj);
+  font-size: 50px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--color-earth-muted);
+  margin-bottom: 24px;
+}
+
+.s-nfc__sub {
+  font-family: var(--font-pretendard);
+  font-size: clamp(14px, 1.2vw, 17px);
+  font-weight: 350;
+  line-height: 1.8;
+  letter-spacing: 0.03em;
+  color: rgba(60, 50, 40, 0.55);
+}
+
+/* 수평 타임라인 */
+.s-nfc__timeline {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto clamp(48px, 6vh, 72px);
+  position: relative;
+}
+
+.s-nfc__timeline-line {
+  position: absolute;
+  top: 6px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: rgba(160, 140, 110, 0.2);
+}
+
+.s-nfc__timeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  position: relative;
+}
+
+.s-nfc__timeline-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(184, 148, 63, 0.4);
+  flex-shrink: 0;
+}
+
+.s-nfc__timeline-label {
+  font-family: var(--font-pretendard);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(60, 50, 40, 0.7);
+}
+
+.s-nfc__timeline-desc {
+  font-family: var(--font-pretendard);
+  font-size: 0.6875rem;
+  font-weight: 350;
+  color: rgba(60, 50, 40, 0.35);
+}
+
+/* 클로징 */
+.s-nfc__closing {
+  text-align: center;
+  font-family: var(--font-pretendard);
+  font-size: 0.875rem;
+  font-weight: 350;
+  letter-spacing: 0.03em;
+  line-height: 2;
+  color: rgba(60, 50, 40, 0.4);
+}
+
+.s-nfc__closing em {
+  font-family: var(--font-cormorant-infant), 'Cormorant Infant', Georgia, serif;
+  font-size: 1.0625rem;
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(184, 148, 63, 0.5);
+}
+
+.s-nfc__closing-sub {
+  font-size: 0.8125rem;
+  color: rgba(60, 50, 40, 0.3);
+}
+
+/* 모바일 */
+@media (max-width: 640px) {
+  .s-nfc__timeline {
+    gap: 0;
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+  .s-nfc__timeline-line {
+    display: none;
+  }
+}
+
+/* ══════════════════════════════════════════
    S6 — OCEAN CIRCLE
    ══════════════════════════════════════════ */
 /* ══════════════════════════════════════════
@@ -1789,8 +2312,6 @@ body::after {
   background: var(--color-void-bg);
   color: var(--color-sand);
   padding: clamp(64px, 8vh, 120px) 0 clamp(80px, 10vh, 140px);
-  display: flex;
-  align-items: center;
   position: relative;
   overflow: hidden;
 }
@@ -1798,11 +2319,8 @@ body::after {
 .s-premiere__inner {
   position: relative;
   z-index: 2;
-  max-width: 640px;
+  max-width: 560px;
   padding: 0 clamp(24px, 5vw, 80px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 /* 우측 이미지 — 섹션 높이 전체 */
@@ -1862,8 +2380,8 @@ body::after {
   width: 40px;
   height: 0.5px;
   background: var(--color-amber);
-  opacity: 0.35;
-  margin-bottom: clamp(16px, 2vh, 24px);
+  opacity: 0.2;
+  margin-bottom: clamp(32px, 4vh, 48px);
 }
 
 /* Title — ocean cellar. */
@@ -1875,7 +2393,7 @@ body::after {
   line-height: 1;
   color: var(--color-sand);
   white-space: nowrap;
-  margin-bottom: clamp(20px, 3vh, 32px);
+  margin-bottom: 12px;
   display: inline-flex;
   align-items: flex-start;
 }
@@ -1901,11 +2419,12 @@ body::after {
 /* Subtitle — quiet descriptor */
 .s-premiere__sub {
   font-family: var(--font-pretendard);
-  font-size: 0.8125rem;
+  font-size: 1rem;
   font-weight: 300;
+  line-height: 2;
   color: var(--color-sand);
-  opacity: 0.35;
-  margin-bottom: clamp(40px, 5vh, 64px);
+  opacity: 0.85;
+  margin-bottom: clamp(32px, 4vh, 48px);
 }
 
 /* Body copy */
@@ -2005,9 +2524,35 @@ body::after {
   letter-spacing: 0.01em;
 }
 
-/* Email Form */
+/* Tags — 파트너십과 동일 형식 */
+.s-premiere__tags {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(48px, 6vh, 72px);
+}
+
+.s-premiere__tag {
+  font-family: var(--font-pretendard);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--color-sand);
+  padding: 6px 16px;
+  background: rgba(204, 173, 123, 0.15);
+  border: none;
+  opacity: 0.6;
+}
+
+/* Links — 파트너십과 동일 */
+.s-premiere__links {
+  display: flex;
+  gap: clamp(32px, 4vw, 56px);
+}
+
+/* Email Form (legacy) */
 .s-premiere__form {
-  margin-top: clamp(24px, 3vh, 36px);
+  margin-top: clamp(16px, 2vh, 24px);
 }
 
 .s-premiere__form-group {
@@ -2122,6 +2667,8 @@ body::after {
   z-index: 2;
   max-width: 560px;
   margin-left: auto;
+  margin-right: clamp(40px, 5vw, 80px);
+  text-align: right;
 }
 
 /* Label — mono, earth tone */
@@ -2144,6 +2691,7 @@ body::after {
   background: var(--color-amber);
   opacity: 0.2;
   margin-bottom: clamp(32px, 4vh, 48px);
+  margin-left: auto;
 }
 
 /* Title — display font */
@@ -2191,6 +2739,7 @@ body::after {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  justify-content: flex-end;
   margin-bottom: clamp(48px, 6vh, 72px);
 }
 
@@ -2209,6 +2758,7 @@ body::after {
 .s-pro__links {
   display: flex;
   gap: clamp(32px, 4vw, 56px);
+  justify-content: flex-end;
 }
 
 @media (max-width: 768px) {
@@ -2272,6 +2822,19 @@ body::after {
 .cta-link--light:hover {
   border-color: rgba(49, 46, 42, 0.35);
   background: rgba(49, 46, 42, 0.03);
+}
+
+/* Active states — 터치 피드백 */
+.cta-link--dark:active {
+  border-color: rgba(232, 229, 225, 0.5);
+  background: rgba(232, 229, 225, 0.08);
+  transform: scale(0.98);
+}
+
+.cta-link--light:active {
+  border-color: rgba(49, 46, 42, 0.5);
+  background: rgba(49, 46, 42, 0.06);
+  transform: scale(0.98);
 }
 
 /* Variant: amber background */
@@ -2573,7 +3136,7 @@ body::after {
   right: 28px;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 90;
+  z-index: var(--z-header);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -2795,7 +3358,26 @@ body::after {
 
   /* S4 */
   .s-maker {
-    padding: 100px 0;
+    padding: 48px 0;
+  }
+
+  .s-maker__hcard {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .s-maker__hcard-img {
+    width: 100%;
+    min-width: unset;
+    aspect-ratio: 16 / 10;
+  }
+
+  .s-maker__peek-slide {
+    min-width: 85vw;
+  }
+
+  .s-maker__peek-track {
+    padding-left: 7.5vw;
   }
 
   .s-maker__cards {
@@ -2891,6 +3473,29 @@ body::after {
   .reveal {
     opacity: 1;
     transform: none;
+  }
+
+  .particle {
+    display: none;
+  }
+}
+
+/* ══════════════════════════════════════════
+   Reduced Motion — 접근성
+   ══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
   }
 
   .particle {

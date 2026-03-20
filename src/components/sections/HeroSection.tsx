@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 
 /** 파티클 데이터 — 와이어프레임과 동일 */
 const PARTICLES = [
@@ -178,7 +179,16 @@ export default function HeroSection() {
     <section id="void" className="s-void" ref={sectionRef}>
       <div className="s-void__pin">
         {/* 배경 이미지 */}
-        <div className="s-void__bg" />
+        <div className="s-void__bg">
+          <Image
+            src="/images/h1.webp"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="s-void__bg-img"
+          />
+        </div>
 
         {/* 배경 영상 */}
         <video
@@ -213,7 +223,9 @@ export default function HeroSection() {
         {/* 콘텐츠 */}
         <div className="s-void__content" ref={contentRef}>
           <h1 className="s-void__headline">두 개의 떼루아</h1>
-          <p className="s-void__sub">한국 바다가 숙성한 샴페인</p>
+          <p className="s-void__sub">
+            한국 바다가 숙성한 샴페인
+          </p>
         </div>
 
         {/* 하단 블러 */}

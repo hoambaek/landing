@@ -7,7 +7,7 @@ import { useHeaderScroll } from "@/hooks/useScrollSection";
 /** 메인 섹션 링크 */
 const MAIN_LINKS = [
   { href: "#void", label: "Home", tag: "" },
-  { href: "#data-archive", label: "Living Data", tag: "" },
+  { href: "#data-archive", label: "Sea Log", tag: "" },
   { href: "#archive", label: "Collection", tag: "" },
   { href: "#the-maker", label: "The Maker", tag: "" },
   { href: "#ocean-circle", label: "Ocean Cellar", tag: "membership" },

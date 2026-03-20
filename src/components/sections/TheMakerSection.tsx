@@ -1,24 +1,28 @@
-/** TheMakerSection — Client Component (Peek Carousel) */
+/** TheMakerSection — Client Component (Peek Carousel + 가로 캡션) */
 "use client";
 
 import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
+import { Map } from "lucide-react";
 import CTALink from "@/components/ui/CTALink";
 
 const MAKERS = [
   {
-    order: "Nº 1",
+    order: "1",
     name: "Champagne Mignon Boulard",
     image: "/images/m1.webp",
-    location: "Venteuil, Vallée de la Marne.",
+    location: "Venteuil, Vallée de la Marne",
+    heritage: "1911년부터 4세대",
     desc: "49개의 다른 토양, 준비되었을 때만 출시하는 메종.",
   },
   {
-    order: "Nº 2",
-    name: "Champagne Joseph Desruets",
-    image: "/images/m2.webp",
-    location: "Hautvillers, Vallée de la Marne.",
-    desc: "1888년부터 6세대. 샴페인의 요람에서 가장 오래된 프레스로 빚는 메종.",
+    order: "2",
+    name: "To Be Announced",
+    image: null,
+    location: "",
+    heritage: "",
+    desc: "두 번째 메종을 준비하고 있습니다.",
+    comingSoon: true,
   },
 ] as const;
 
@@ -63,7 +67,7 @@ export default function TheMakerSection() {
         <div className="s-maker__header reveal">
           <h2 className="s-maker__title">the maker<span className="dot">.</span></h2>
           <p className="s-maker__sub">
-            바다가 선택할 수 있는 가장 좋은 샴페인.
+            바다가 선택할 수 있는 최선의 샴페인.
             <br />
             그 기준으로 메종을 찾습니다.
           </p>
@@ -81,11 +85,12 @@ export default function TheMakerSection() {
             ref={trackRef}
             className="s-maker__peek-track"
             style={{
-              transform: `translateX(calc(-${current} * (min(500px, 68vw) + 40px)))`,
+              transform: `translateX(calc(-${current} * (min(640px, 80vw) + 16px)))`,
             }}
           >
             {MAKERS.map((maker, i) => {
-              const pos = i - current; // -1=left, 0=active, 1=right
+              const pos = i - current;
+              const isSoon = "comingSoon" in maker && maker.comingSoon;
               return (
                 <div
                   key={maker.name}
@@ -93,15 +98,14 @@ export default function TheMakerSection() {
                   onClick={() => pos !== 0 && goTo(i)}
                   style={{ cursor: pos !== 0 ? "pointer" : "default" }}
                 >
-                  <div className={`s-maker__card${pos === 0 ? "" : " s-maker__card--inactive"}`}>
-                    {/* Hero image */}
-                    <div className="s-maker__card-image">
-                      <Image
-                        src={maker.image}
-                        alt={maker.name}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 600px"
-                      />
+                  <div className={`s-maker__hcard${pos === 0 ? "" : " s-maker__hcard--inactive"}`}>
+                    {/* 이미지 */}
+                    <div className={`s-maker__hcard-img${isSoon ? " s-maker__hcard-img--placeholder" : ""}`}>
+                      {maker.image ? (
+                        <Image src={maker.image} alt={maker.name} fill sizes="220px" />
+                      ) : (
+                        <span className="s-maker__hcard-soon">coming soon</span>
+                      )}
                       <div
                         className="s-maker__peek-fade"
                         style={{
@@ -113,17 +117,22 @@ export default function TheMakerSection() {
                       />
                     </div>
 
-                    {/* Editorial caption */}
-                    <div className="s-maker__card-caption">
-                      <span className="s-maker__card-label">maison Nº <span className="s-maker__card-label-num">{maker.order.replace('Nº ', '')}</span></span>
-                      <div className="s-maker__card-accent" />
-                      <h3 className="s-maker__card-name">{maker.name}</h3>
-                      <p className="s-maker__card-location">{maker.location}</p>
-                      <p className="s-maker__card-desc">
-                        {maker.desc.includes('6세대.') ? (
-                          <>1888년부터 6세대.<br />샴페인의 요람에서 가장 오래된 프레스로 빚는 메종.</>
-                        ) : maker.desc}
-                      </p>
+                    {/* 텍스트 */}
+                    <div className="s-maker__hcard-body">
+                      <div className="s-maker__hcard-top">
+                        <span className="s-maker__hcard-num">Nº {maker.order}</span>
+                        <h3 className={`s-maker__hcard-name${isSoon ? " s-maker__hcard-name--soon" : ""}`}>{maker.name}</h3>
+                        {maker.location && (
+                          <span className="s-maker__hcard-loc">
+                            <Map size={12} strokeWidth={1.2} aria-hidden="true" style={{ flexShrink: 0 }} />
+                            {maker.location}
+                          </span>
+                        )}
+                      </div>
+                      <div className="s-maker__hcard-bottom">
+                        {maker.heritage && <p className="s-maker__hcard-heritage">{maker.heritage}</p>}
+                        <p className="s-maker__hcard-desc">{maker.desc}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -131,7 +140,6 @@ export default function TheMakerSection() {
             })}
           </div>
 
-          {/* 도트 인디케이터 */}
           <div className="s-maker__dots">
             {MAKERS.map((_, i) => (
               <button

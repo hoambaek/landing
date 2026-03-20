@@ -52,7 +52,7 @@ export default function Footer({ hideSubscribe = false }: { hideSubscribe?: bool
             <div className="footer__col">
               <div className="footer__col-label">Brand</div>
               <a href="#observation" className="footer__link">Ocean Aging</a>
-              <a href="#data-archive" className="footer__link">Living Data</a>
+              <a href="#data-archive" className="footer__link">Sea Log</a>
               <a href="#the-maker" className="footer__link">The Maker</a>
             </div>
             <div className="footer__col">
