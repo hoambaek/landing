@@ -8,9 +8,11 @@ export default function ObservationSection() {
         <div className="container">
           <div className="reveal">
             <h2 className="s-obs__headline">
-              바다가 숙성한
+              수심 50미터.
               <br />
-              샴페인
+              빛이 사라진 곳에서
+              <br />
+              숙성이 시작됩니다.
             </h2>
           </div>
 
@@ -19,25 +21,21 @@ export default function ObservationSection() {
           <div className="reveal reveal-delay-2">
             <div className="s-obs__intro">
               <p>
-                샹파뉴의 포도밭에서 태어난 한 병이
+                3.98기압의 수압이 기포를 다듬고,
                 <br />
-                한국 남해, 수심 50미터로 내려갑니다.
+                8°C의 해류가 온도를 지키고,
+                <br />
+                완벽한 어둠이 시간을 느리게 합니다.
               </p>
               <p>
-                빛 대신 수압이,
+                이 조건들은 상상이 아닙니다.
                 <br />
-                공기 대신 해류가,
-                <br />
-                시간 대신 파도가 병을 감쌉니다.
+                지금 이 순간에도 측정되고 있습니다.
               </p>
             </div>
           </div>
 
-          <div className="reveal reveal-delay-3">
-            <p className="s-obs__emphasis">
-              지상의 숙성이 도달할 수 없는 깊이.
-            </p>
-          </div>
+
         </div>
       </div>
 

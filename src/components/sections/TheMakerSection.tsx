@@ -12,17 +12,8 @@ const MAKERS = [
     name: "Champagne Mignon Boulard",
     image: "/images/m1.webp",
     location: "Venteuil, Vallée de la Marne",
-    heritage: "1911년부터 4세대",
-    desc: "49개의 다른 토양, 준비되었을 때만 출시하는 메종.",
-  },
-  {
-    order: "2",
-    name: "To Be Announced",
-    image: null,
-    location: "",
-    heritage: "",
-    desc: "두 번째 메종을 준비하고 있습니다.",
-    comingSoon: true,
+    heritage: "1911년부터 4세대가 지켜온 원칙",
+    desc: "49개의 서로 다른 구획, 각기 다른 토양. 효율적이지 않습니다. 대신, 정직합니다. 그래서 바다가 선택했습니다.",
   },
 ] as const;
 
@@ -67,9 +58,7 @@ export default function TheMakerSection() {
         <div className="s-maker__header reveal">
           <h2 className="s-maker__title">the maker<span className="dot">.</span></h2>
           <p className="s-maker__sub">
-            바다가 선택할 수 있는 최선의 샴페인.
-            <br />
-            그 기준으로 메종을 찾습니다.
+            바다에 맡길 수 있는 샴페인은 많지 않습니다.
           </p>
         </div>
 

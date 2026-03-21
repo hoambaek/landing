@@ -6,9 +6,11 @@ import ScrollReveal from "@/components/ScrollReveal";
 import HeroSection from "@/components/sections/HeroSection";
 import ObservationSection from "@/components/sections/ObservationSection";
 import DataArchiveSection from "@/components/sections/DataArchiveSection";
-import TheMakerSection from "@/components/sections/TheMakerSection";
+import TastingSection from "@/components/sections/TastingSection";
 import ArchiveSection from "@/components/sections/ArchiveSection";
-// import NfcSection from "@/components/sections/NfcSection";
+import NfcSection from "@/components/sections/NfcSection";
+import TheMakerSection from "@/components/sections/TheMakerSection";
+import OriginSection from "@/components/sections/OriginSection";
 import OceanCircleSection from "@/components/sections/OceanCircleSection";
 import ProfessionalsSection from "@/components/sections/ProfessionalsSection";
 
@@ -28,9 +30,11 @@ export default function Home() {
         >
           <DataArchiveSection />
         </Suspense>
+        <TastingSection />
         <ArchiveSection />
-        {/* <NfcSection /> */}
+        <NfcSection />
         <TheMakerSection />
+        <OriginSection />
         <OceanCircleSection />
         <ProfessionalsSection />
       </main>

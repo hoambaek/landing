@@ -222,9 +222,9 @@ export default function HeroSection() {
 
         {/* 콘텐츠 */}
         <div className="s-void__content" ref={contentRef}>
-          <h1 className="s-void__headline">두 개의 떼루아</h1>
+          <h1 className="s-void__headline">두 개의 떼루아, 하나의 샴페인.</h1>
           <p className="s-void__sub">
-            한국 바다가 숙성한 샴페인
+            샹파뉴에서 태어나, 한국의 바다에서 완성됩니다.
           </p>
         </div>
 

@@ -1,5 +1,6 @@
 /** ArchiveSection — Server Component (Masonry Grid) */
 import Image from "next/image";
+import CTALink from "@/components/ui/CTALink";
 
 const CUVEES = [
   // Upper: 01(large left) → 02(top right) → 03(right offset)
@@ -8,22 +9,25 @@ const CUVEES = [
     label: "archive nº 002",
     name: "En Lieu Sûr",
     nameKr: "엉리우쉬르",
-    desc: "Brut, 모든 큐베의 기준",
+    desc: "뮤즈드마레를 처음 만난다면, 여기서 시작하세요.",
+    story: "모든 컬렉션의 기준이 되는 큐베.",
   },
   {
     num: "02",
     label: "archive nº 003",
     name: "En Lieu Sûr Magnum",
     nameKr: "엉리우쉬르 매그넘",
-    desc: "Magnum 1500ml",
+    desc: "시간을 나눌 테이블을 위한 병.",
     edition: "24병 한정",
+    story: "시간을 나눌 테이블을 위한 병.",
   },
   {
     num: "03",
     label: "archive nº 004",
     name: "Élément de Surprise",
     nameKr: "엘레멍드쉬르프리즈",
-    desc: "Blanc de Blancs · Non-dosé",
+    desc: "바다가 더한 것 외에 아무것도 더하지 않았습니다.",
+    story: "바다가 더한 것 외에 아무것도 더하지 않았습니다.",
   },
   // Lower: 06(left) → 04(center offset) → 05(right climax)
   {
@@ -31,24 +35,27 @@ const CUVEES = [
     label: "archive nº 001",
     name: "Édition Zéro",
     nameKr: "에디션 제로",
-    desc: "2025",
+    desc: "되돌아갈 수 없는 순간은 가장 귀합니다.",
     edition: "50병 한정",
     soldOut: true,
+    story: "뮤즈드마레의 시작을 기록한 첫 번째 아카이브.",
   },
   {
     num: "04",
     label: "archive nº 005",
     name: "Atomes Crochus 1 Year Aged",
     nameKr: "아톰크로슈 1년 숙성",
-    desc: "Ultra-Brut · 희귀 품종 Petit Meslier 블렌드",
+    desc: "희귀 품종 Petit Meslier가 만드는 다른 차원의 미네랄리티.",
+    story: "거의 재배되지 않는 희귀 품종 Petit Meslier.",
   },
   {
     num: "05",
     label: "archive nº 006",
     name: "Atomes Crochus 3 Years Aged",
     nameKr: "아톰크로슈 3년 숙성",
-    desc: "Ultra-Brut · 희귀 품종 Petit Meslier 블렌드",
+    desc: "1년과 3년을 나란히 놓았을 때 바다가 한 일의 크기를 알게 됩니다.",
     edition: "40병 한정",
+    story: "같은 와인, 세 배의 시간.",
   },
 ] as const;
 
@@ -68,7 +75,7 @@ export default function ArchiveSection() {
       <div className="container">
         <div className="s-archive__header reveal">
           <h2 className="s-archive__title">collection<span className="dot">.</span></h2>
-          <p className="s-archive__sub">바다가 기록한 여섯 개의 시간.</p>
+          <p className="s-archive__sub">여섯 개의 큐베, 하나의 바다.</p>
         </div>
 
         {/* Masonry Grid */}
@@ -95,6 +102,7 @@ export default function ArchiveSection() {
                 <div className="m-card__name">{cuvee.name}</div>
                 <div className="m-card__name-kr">{cuvee.nameKr}</div>
                 <div className="m-card__desc">{cuvee.desc}</div>
+                {cuvee.story && <div className="m-card__story">{cuvee.story}</div>}
                 {"edition" in cuvee && (
                   <span className="m-card__edition">{cuvee.edition}</span>
                 )}
@@ -166,6 +174,11 @@ export default function ArchiveSection() {
           </p>
         </div>
         */}
+
+        <div className="s-archive__cta reveal">
+          <CTALink href="#ocean-circle" variant="light">컬렉션 문의하기</CTALink>
+          <CTALink href="#ocean-circle" variant="light">Ocean Cellar 멤버십으로 우선 예약</CTALink>
+        </div>
       </div>
     </section>
   );
