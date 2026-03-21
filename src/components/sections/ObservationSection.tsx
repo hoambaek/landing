@@ -41,7 +41,7 @@ export default function ObservationSection() {
 
       <div className="s-obs__image">
         <Image
-          src="/images/o1.webp"
+          src="/images/o2.webp"
           alt="해저 숙성 환경"
           fill
           className="s-obs__image-inner"

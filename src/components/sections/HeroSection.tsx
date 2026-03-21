@@ -222,14 +222,12 @@ export default function HeroSection() {
 
         {/* 콘텐츠 */}
         <div className="s-void__content" ref={contentRef}>
-          <h1 className="s-void__headline">
-            <span className="s-void__headline-line1">두 개의 떼루아,</span>
-            <span className="s-void__headline-line2">하나의 샴페인.</span>
+          <h1 className="s-void__headline s-void__headline--vertical">
+            <span className="s-void__headline-line1">하나의 샴페인</span>
+            <span className="s-void__headline-line2">두 개의 떼루아</span>
           </h1>
-          <p className="s-void__sub">
-            샹파뉴에서 태어나, 한국의 바다에서 완성됩니다.
-          </p>
         </div>
+
 
         {/* 하단 블러 */}
         <div className="s-void__bottom-blur" ref={bottomBlurRef} />

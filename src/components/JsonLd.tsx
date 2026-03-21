@@ -38,84 +38,50 @@ export default function JsonLd() {
       {
         "@type": "ListItem",
         position: 1,
-        item: {
-          "@type": "Product",
-          name: "En Lieu Sûr",
-          description:
-            "Brut — 모든 큐베의 기준. 프랑스 샹파뉴 Vallée de la Marne에서 생산, 한국 남해 수심 50미터에서 해저 숙성.",
-          brand: { "@type": "Brand", name: "Muse de Marée" },
-          category: "Champagne",
-          url: `${baseUrl}/#archive`,
-        },
+        name: "En Lieu Sûr",
+        description:
+          "Brut — 모든 큐베의 기준. 프랑스 샹파뉴 Vallée de la Marne에서 생산, 한국 남해 수심 50미터에서 해저 숙성.",
+        url: `${baseUrl}/#archive`,
       },
       {
         "@type": "ListItem",
         position: 2,
-        item: {
-          "@type": "Product",
-          name: "En Lieu Sûr Magnum",
-          description:
-            "Magnum 1500ml — 24병 한정 에디션. 프랑스 샹파뉴에서 생산, 한국 남해에서 해저 숙성.",
-          brand: { "@type": "Brand", name: "Muse de Marée" },
-          category: "Champagne",
-          url: `${baseUrl}/#archive`,
-        },
+        name: "En Lieu Sûr Magnum",
+        description:
+          "Magnum 1500ml — 24병 한정 에디션. 프랑스 샹파뉴에서 생산, 한국 남해에서 해저 숙성.",
+        url: `${baseUrl}/#archive`,
       },
       {
         "@type": "ListItem",
         position: 3,
-        item: {
-          "@type": "Product",
-          name: "Élément de Surprise",
-          description:
-            "Blanc de Blancs · Non-dosé — 샤르도네 100%의 순수한 표현. 한국 남해 해저 숙성.",
-          brand: { "@type": "Brand", name: "Muse de Marée" },
-          category: "Champagne",
-          url: `${baseUrl}/#archive`,
-        },
+        name: "Élément de Surprise",
+        description:
+          "Blanc de Blancs · Non-dosé — 샤르도네 100%의 순수한 표현. 한국 남해 해저 숙성.",
+        url: `${baseUrl}/#archive`,
       },
       {
         "@type": "ListItem",
         position: 4,
-        item: {
-          "@type": "Product",
-          name: "Édition Zéro",
-          description:
-            "2025년 첫 빈티지 — 50병 한정. Muse de Marée의 시작을 기록한 해저 숙성 샴페인.",
-          brand: { "@type": "Brand", name: "Muse de Marée" },
-          category: "Champagne",
-          url: `${baseUrl}/#archive`,
-          offers: {
-            "@type": "Offer",
-            availability: "https://schema.org/SoldOut",
-          },
-        },
+        name: "Édition Zéro",
+        description:
+          "2025년 첫 빈티지 — 50병 한정. Muse de Marée의 시작을 기록한 해저 숙성 샴페인.",
+        url: `${baseUrl}/#archive`,
       },
       {
         "@type": "ListItem",
         position: 5,
-        item: {
-          "@type": "Product",
-          name: "Atomes Crochus 1 Year Aged",
-          description:
-            "Ultra-Brut — 희귀 품종 Petit Meslier 블렌드. 1년 해저 숙성으로 완성된 독보적 미네랄리티.",
-          brand: { "@type": "Brand", name: "Muse de Marée" },
-          category: "Champagne",
-          url: `${baseUrl}/#archive`,
-        },
+        name: "Atomes Crochus 1 Year Aged",
+        description:
+          "Ultra-Brut — 희귀 품종 Petit Meslier 블렌드. 1년 해저 숙성으로 완성된 독보적 미네랄리티.",
+        url: `${baseUrl}/#archive`,
       },
       {
         "@type": "ListItem",
         position: 6,
-        item: {
-          "@type": "Product",
-          name: "Atomes Crochus 3 Years Aged",
-          description:
-            "Ultra-Brut — 희귀 품종 Petit Meslier 블렌드. 3년 해저 숙성, 40병 한정. 바다의 시간이 가장 깊이 새겨진 큐베.",
-          brand: { "@type": "Brand", name: "Muse de Marée" },
-          category: "Champagne",
-          url: `${baseUrl}/#archive`,
-        },
+        name: "Atomes Crochus 3 Years Aged",
+        description:
+          "Ultra-Brut — 희귀 품종 Petit Meslier 블렌드. 3년 해저 숙성, 40병 한정. 바다의 시간이 가장 깊이 새겨진 큐베.",
+        url: `${baseUrl}/#archive`,
       },
     ],
   };
@@ -191,14 +157,39 @@ export default function JsonLd() {
     name: "Muse de Marée 공식 런칭",
     description:
       "프랑스 샹파뉴에서 태어나 한국 남해 수심 50미터에서 숙성한 럭셔리 샴페인 브랜드 Muse de Marée의 공식 런칭",
-    startDate: "2026-07",
-    endDate: "2026-08",
+    startDate: "2026-07-01",
+    endDate: "2026-08-31",
     eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    location: {
+      "@type": "Place",
+      name: "한국 남해",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "남해",
+        addressRegion: "경상남도",
+        addressCountry: "KR",
+      },
+    },
     organizer: {
       "@type": "Organization",
       name: "Muse de Marée",
       url: baseUrl,
     },
+    performer: {
+      "@type": "Organization",
+      name: "Muse de Marée",
+      url: baseUrl,
+    },
+    offers: {
+      "@type": "Offer",
+      url: `${baseUrl}/#ocean-circle`,
+      availability: "https://schema.org/PreOrder",
+      priceCurrency: "KRW",
+      price: "0",
+      validFrom: "2026-01-01",
+    },
+    image: `${baseUrl}/images/og.webp`,
   };
 
   const schemas = [

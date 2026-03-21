@@ -720,7 +720,7 @@ input:focus-visible,
 
 .s-void__headline {
   font-family: var(--font-jj);
-  font-size: clamp(32px, 4.5vw, 60px);
+  font-size: clamp(22px, 3.2vw, 42px);
   font-weight: 400;
   letter-spacing: 0.08em;
   line-height: 1.4;
@@ -735,19 +735,35 @@ input:focus-visible,
 
 .s-void__headline-line1 {
   display: block;
+  padding-top: 4em;
+  color: rgba(49, 46, 42, 0.8);
 }
 
 .s-void__headline-line2 {
   display: block;
 }
 
+.s-void__headline--vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 0.15em;
+  line-height: 1.3;
+}
+
 .s-void__sub {
+  position: absolute;
+  bottom: 15%;
+  left: 43%;
+  transform: translateX(-50%);
+  z-index: 2;
   font-family: var(--font-pretendard);
   font-size: clamp(13px, 1.2vw, 17px);
   font-weight: 300;
   letter-spacing: 0.08em;
+  line-height: 2;
   color: rgba(255, 255, 255, 0.6);
   writing-mode: horizontal-tb;
+  text-align: center;
   opacity: 0;
   text-shadow: none;
   animation: title-in 1.5s 1.2s var(--ease-gentle) forwards;
@@ -796,12 +812,30 @@ input:focus-visible,
 .s-obs {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  min-height: 140vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   overflow: hidden;
   padding-bottom: 0;
+  padding-top: 30px;
+  background: var(--color-warm-ivory);
+}
+
+.s-obs::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 160px;
+  z-index: 1;
+  background: linear-gradient(to bottom,
+    rgba(236, 234, 230, 1) 0%,
+    rgba(236, 234, 230, 0.7) 30%,
+    rgba(236, 234, 230, 0.3) 60%,
+    transparent 100%);
+  pointer-events: none;
 }
 
 .s-obs::after {
@@ -832,13 +866,7 @@ input:focus-visible,
   z-index: 2;
   padding: 0 clamp(40px, 5vw, 80px) clamp(80px, 10vh, 120px);
   padding-top: 45vh;
-  background: linear-gradient(
-    to top,
-    rgba(10, 8, 6, 0.92) 0%,
-    rgba(10, 8, 6, 0.78) 35%,
-    rgba(10, 8, 6, 0.4) 65%,
-    transparent 100%
-  );
+  background: none;
   text-align: left;
   max-width: 700px;
 }
@@ -862,6 +890,7 @@ input:focus-visible,
   letter-spacing: 0.04em;
   margin-bottom: 0;
   color: rgba(232, 228, 223, 0.95);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.8), 0 4px 40px rgba(0, 0, 0, 0.5), 0 0 80px rgba(0, 0, 0, 0.3);
 }
 
 /* — Decorative rule — */
@@ -954,11 +983,13 @@ input:focus-visible,
     max-width: 100%;
     font-size: 0.9375rem;
     line-height: 2;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.6);
   }
 
   .s-obs__emphasis {
     font-size: 1rem;
     white-space: nowrap;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.6);
   }
 }
 
@@ -1252,93 +1283,95 @@ input:focus-visible,
 .s-tasting {
   background: var(--color-warm-ivory);
   color: var(--color-earth-muted);
-  padding: clamp(80px, 12vh, 140px) 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  align-items: center;
+  padding: clamp(80px, 12vh, 160px) 0;
   overflow: hidden;
 }
 
-.s-tasting .container {
-  padding-right: clamp(40px, 6vw, 80px);
+.s-tasting__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 clamp(24px, 5vw, 80px);
+}
+
+/* 상단 타이틀 영역 */
+.s-tasting__header {
+  text-align: center;
+  margin-bottom: clamp(48px, 6vh, 80px);
 }
 
 .s-tasting__title {
   font-family: var(--font-jj);
-  font-size: clamp(36px, 7vw, 72px);
-  font-weight: 300;
-  letter-spacing: -0.02em;
+  font-size: clamp(28px, 5vw, 50px);
+  font-weight: 400;
+  letter-spacing: 0.02em;
   line-height: 1.05;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   color: var(--color-earth-muted);
 }
 
 .s-tasting__headline {
   font-family: var(--font-jj);
-  font-size: clamp(18px, 2.8vw, 30px);
+  font-size: clamp(16px, 2.4vw, 26px);
   font-weight: 300;
   letter-spacing: 0.01em;
   line-height: 1.3;
-  margin-bottom: 40px;
   color: var(--color-earth-muted);
-  opacity: 0.75;
+  opacity: 0.7;
+}
+
+/* 중앙 이미지 — 주인공 */
+.s-tasting__image {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  overflow: hidden;
+  margin-bottom: clamp(48px, 6vh, 80px);
+}
+
+.s-tasting__image-inner {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* 하단 텍스트 + CTA */
+.s-tasting__footer {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .s-tasting__body {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   margin-bottom: 48px;
+  max-width: 520px;
 }
 
 .s-tasting__body p {
   font-family: var(--font-pretendard);
-  font-size: clamp(0.9rem, 1.2vw, 1.0625rem);
+  font-size: clamp(0.875rem, 1.1vw, 1rem);
   font-weight: 300;
   line-height: 2.2;
   letter-spacing: 0.01em;
   color: var(--color-earth-muted);
-  opacity: 0.8;
-}
-
-/* 이미지 영역 */
-.s-tasting__image {
-  position: relative;
-  height: 100%;
-  display: flex;
-  align-items: stretch;
-}
-
-.s-tasting__placeholder {
-  width: 100%;
-  aspect-ratio: 3 / 4;
-  background: #e8e4df;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.s-tasting__placeholder span {
-  font-family: var(--font-pretendard);
-  font-size: 0.6875rem;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(49, 46, 42, 0.3);
+  opacity: 0.75;
 }
 
 /* 모바일 */
 @media (max-width: 767px) {
   .s-tasting {
-    grid-template-columns: 1fr;
-    padding: 64px 0 0;
+    padding: 64px 0;
   }
 
-  .s-tasting .container {
-    padding-right: var(--container-padding, 24px);
-    padding-bottom: 48px;
+  .s-tasting__header {
+    margin-bottom: 36px;
   }
 
   .s-tasting__title {
@@ -1346,12 +1379,15 @@ input:focus-visible,
   }
 
   .s-tasting__headline {
-    font-size: clamp(16px, 5vw, 22px);
-    margin-bottom: 28px;
+    font-size: clamp(15px, 4.5vw, 20px);
+  }
+
+  .s-tasting__image {
+    margin-bottom: 36px;
   }
 
   .s-tasting__body {
-    gap: 16px;
+    gap: 12px;
     margin-bottom: 36px;
   }
 
@@ -1359,360 +1395,161 @@ input:focus-visible,
     font-size: 0.9375rem;
     line-height: 2.0;
   }
-
-  .s-tasting__image {
-    width: 100%;
-  }
-
-  .s-tasting__placeholder {
-    aspect-ratio: 4 / 3;
-    width: 100%;
-  }
 }
 
 /* ══════════════════════════════════════════
    S4 — THE MAKER
    ══════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   S4 — THE MAKER
+   Compact Editorial Card — Anti-Heritage
+   ══════════════════════════════════════════ */
+
 .s-maker {
   background: var(--color-warm-ivory);
   color: var(--color-earth-muted);
-  padding: clamp(64px, 8vh, 120px) 0;
+  padding: clamp(80px, 10vh, 140px) 0;
   position: relative;
 }
 
-.s-maker.hanji-texture::before {
-  opacity: 0.05;
+.s-maker__container {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 clamp(24px, 5vw, 60px);
 }
 
+/* — Header — */
 .s-maker__header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: clamp(40px, 5vh, 64px);
 }
 
 .s-maker__title {
   font-family: var(--font-jj);
-  font-size: clamp(28px, 6vw, 50px);
+  font-size: clamp(28px, 5vw, 50px);
   font-weight: 400;
   letter-spacing: 0.02em;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
-.s-maker__title-kr {
-  font-size: 0.8125rem;
-  font-weight: 300;
-  letter-spacing: 0.15em;
-  color: rgba(49, 46, 42, 0.35);
-}
-
-.s-maker__sub {
+.s-maker__manifesto {
   font-family: var(--font-pretendard);
-  font-size: 1.0625rem;
-  font-weight: 400;
+  font-size: clamp(0.8125rem, 1.1vw, 1rem);
+  font-weight: 300;
   line-height: 2.2;
-  letter-spacing: 0.025em;
+  letter-spacing: 0.02em;
   color: var(--color-earth-muted);
-  opacity: 0.7;
-  margin-top: 16px;
+  opacity: 0.55;
 }
 
-.s-maker__lead {
-  font-family: var(--font-serif-kr);
-  font-size: 1rem;
-  font-weight: 300;
-  line-height: 1.8;
-  color: rgba(49, 46, 42, 0.5);
-  text-align: center;
-  margin-bottom: 48px;
-}
-
-.s-maker__cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.s-maker__cards--single {
-  grid-template-columns: 1fr;
-  max-width: 500px;
-}
-
-/* Horizontal Card List */
-.s-maker__list {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.s-maker__row {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
-
-.s-maker__row:nth-child(even) {
-  flex-direction: row-reverse;
-}
-
-.s-maker__row-image {
-  position: relative;
-  width: 280px;
-  min-width: 280px;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.s-maker__row-image img {
-  object-fit: cover;
-}
-
-.s-maker__row-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.s-maker__row:nth-child(even) .s-maker__row-info {
-  align-items: flex-end;
-  text-align: right;
-}
-
-/* Row label — compact editorial */
-.s-maker__row-label {
-  font-family: var(--font-heading);
-  font-size: 0.6875rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(184, 148, 63, 0.6);
-  margin-bottom: 6px;
-}
-
-.s-maker__row-name {
-  font-family: var(--font-heading);
-  font-size: clamp(17px, 2vw, 22px);
-  font-weight: 300;
-  font-style: italic;
-  color: rgba(49, 46, 42, 0.85);
-  line-height: 1.3;
-  margin: 0 0 6px;
-}
-
-.s-maker__row-name--soon {
-  color: rgba(49, 46, 42, 0.35);
-}
-
-.s-maker__row-location {
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  color: rgba(49, 46, 42, 0.5);
-  margin-bottom: 4px;
-}
-
-.s-maker__row-heritage {
-  font-family: var(--font-cormorant-infant), 'Cormorant Infant', Georgia, serif;
-  font-size: clamp(14px, 1.6vw, 18px);
-  font-weight: 500;
-  font-style: italic;
-  color: #CCAD7B;
-  margin: 4px 0;
-}
-
-.s-maker__row-desc {
-  font-size: 0.8125rem;
-  font-weight: 400;
-  line-height: 1.6;
-  color: rgba(49, 46, 42, 0.6);
-  max-width: 320px;
-}
-
-/* Placeholder image for coming soon */
-.s-maker__row-image--placeholder {
-  background: linear-gradient(135deg, rgba(49,46,42,0.06) 0%, rgba(49,46,42,0.03) 100%);
-  border: 0.5px solid rgba(49, 46, 42, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.s-maker__row-placeholder-text {
-  font-family: var(--font-heading);
-  font-size: 0.6875rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(49, 46, 42, 0.2);
-}
-
-.s-maker__row--soon {
-  opacity: 0.7;
-}
-
-/* Horizontal Card — 이미지 좌 + 텍스트 우 (단일 카드) */
-.s-maker__hcard {
-  display: flex;
-  align-items: stretch;
-  flex: 1;
-  background: #F5F3F0;
-  border: 0.5px solid rgba(49, 46, 42, 0.08);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
-}
-
-.s-maker__hcard--inactive {
-  opacity: 0.3;
-}
-
-/* — 이미지 — */
-.s-maker__hcard-img {
-  position: relative;
-  width: 220px;
-  min-width: 220px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.s-maker__hcard-img img {
-  object-fit: cover;
-}
-
-.s-maker__hcard-img--placeholder {
-  background: linear-gradient(135deg, rgba(49,46,42,0.06) 0%, rgba(49,46,42,0.03) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.s-maker__hcard-soon {
-  font-family: var(--font-heading);
-  font-size: 0.6875rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(49, 46, 42, 0.2);
-}
-
-/* — 텍스트 바디 — */
-.s-maker__hcard-body {
-  padding: 24px 28px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-}
-
-.s-maker__hcard-top {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.s-maker__hcard-num {
-  font-family: var(--font-cormorant-infant), 'Cormorant Infant', Georgia, serif;
-  font-size: 1.125rem;
-  font-weight: 300;
-  font-style: italic;
-  letter-spacing: 0.05em;
-  color: #8B7328;
-}
-
-.s-maker__hcard-name {
-  font-family: var(--font-heading);
-  font-size: clamp(16px, 1.8vw, 21px);
-  font-weight: 300;
-  font-style: italic;
-  color: rgba(49, 46, 42, 0.85);
-  line-height: 1.3;
-  margin: 0;
-}
-
-.s-maker__hcard-name--soon {
-  color: rgba(49, 46, 42, 0.3);
-}
-
-.s-maker__hcard-loc {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-family: var(--font-heading);
-  font-size: 0.6875rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(49, 46, 42, 0.6);
-  border: 0.5px solid rgba(49, 46, 42, 0.25);
-  padding: 2px 6px;
-  margin-top: 4px;
-  width: fit-content;
-  white-space: nowrap;
-}
-
-.s-maker__hcard-loc svg {
-  flex-shrink: 0;
-}
-
-/* — 하단: 헤리티지 + 설명 — */
-.s-maker__hcard-bottom {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding-top: 8px;
-  border-top: 0.5px solid rgba(49, 46, 42, 0.06);
-}
-
-.s-maker__hcard-heritage {
-  font-family: var(--font-cormorant-infant), 'Cormorant Infant', Georgia, serif;
-  font-size: clamp(13px, 1.4vw, 16px);
-  font-weight: 500;
-  font-style: italic;
-  color: #8B7328;
-  margin: 0;
-}
-
-.s-maker__hcard-desc {
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.7;
-  color: rgba(49, 46, 42, 0.6);
-  max-width: 300px;
-  margin: 0;
-}
-
-/* Peek Carousel */
-.s-maker__peek {
+/* — Carousel — */
+.s-maker__carousel {
   overflow: hidden;
   user-select: none;
 }
 
-.s-maker__peek-track {
+.s-maker__track {
   display: flex;
-  gap: 16px;
-  align-items: stretch;
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
-  padding-left: calc(50% - min(320px, 40vw));
 }
 
-.s-maker__peek-slide {
-  position: relative;
-  min-width: min(640px, 85vw);
+.s-maker__slide {
+  min-width: 100%;
   flex-shrink: 0;
+}
+
+/* — Compact Card: 이미지 좌 + 텍스트 우 — */
+.s-maker__card {
   display: flex;
+  align-items: stretch;
+  gap: 0;
+  background: #F5F3F0;
+  border: 0.5px solid rgba(49, 46, 42, 0.07);
+  overflow: hidden;
 }
 
-.s-maker__peek-fade {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+.s-maker__card-image {
+  position: relative;
+  width: 42%;
+  min-width: 42%;
+  flex-shrink: 0;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
 }
 
+.s-maker__card-img {
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.s-maker__card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(28px, 3vw, 48px) clamp(24px, 3vw, 40px);
+  flex: 1;
+  min-width: 0;
+}
+
+.s-maker__card-num {
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(49, 46, 42, 0.4);
+  margin-bottom: 10px;
+}
+
+.s-maker__card-name {
+  font-family: var(--font-heading);
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(49, 46, 42, 0.85);
+  line-height: 1.3;
+  margin: 0 0 8px;
+}
+
+.s-maker__card-loc {
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: rgba(49, 46, 42, 0.45);
+  margin-bottom: 14px;
+}
+
+.s-maker__card-heritage {
+  display: inline-block;
+  font-family: var(--font-cormorant-infant), 'Cormorant Infant', Georgia, serif;
+  font-size: clamp(13px, 1.4vw, 16px);
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  color: #CCAD7B;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 0.5px solid rgba(49, 46, 42, 0.06);
+  width: fit-content;
+}
+
+.s-maker__card-desc {
+  font-family: var(--font-pretendard);
+  font-size: clamp(0.8125rem, 1vw, 0.875rem);
+  font-weight: 300;
+  line-height: 1.85;
+  color: rgba(49, 46, 42, 0.55);
+  white-space: pre-line;
+  margin: 0 0 24px;
+}
+
+.s-maker__card-cta {
+  margin-top: auto;
+}
+
+/* — Dots — */
 .s-maker__dots {
   display: flex;
   justify-content: center;
@@ -1745,147 +1582,6 @@ input:focus-visible,
 .s-maker__dot--active {
   background: rgba(49, 46, 42, 0.4);
   border-color: rgba(49, 46, 42, 0.4);
-}
-
-/* ═══════════════════════════════════════════
-   Maker Card — Editorial Portrait
-   Kinfolk feature-level typography hierarchy
-   ═══════════════════════════════════════════ */
-
-.s-maker__card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.s-maker__card--inactive {
-  opacity: 0.3;
-}
-
-/* — Hero Image — */
-.s-maker__card-image {
-  width: 100%;
-  align-self: stretch;
-  aspect-ratio: 16 / 10;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 16px;
-}
-
-.s-maker__card--inactive .s-maker__card-image {
-  opacity: 1;
-}
-
-.s-maker__card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-}
-
-.s-maker__card-image::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 0.5px solid rgba(49, 46, 42, 0.06);
-  pointer-events: none;
-}
-
-.s-maker__card-image--placeholder {
-  background: linear-gradient(135deg, rgba(49,46,42,0.06) 0%, rgba(49,46,42,0.03) 100%);
-  border: 0.5px solid rgba(49, 46, 42, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.s-maker__card-name--soon {
-  color: rgba(49, 46, 42, 0.35);
-}
-
-/* — Editorial Caption Block — */
-.s-maker__card-caption {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 0 16px;
-}
-
-/* Label: "maison nº 1" — archive nº 패턴과 동일 */
-.s-maker__card-label {
-  display: inline-block;
-  font-family: var(--font-heading);
-  font-size: 0.8125rem;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(49, 46, 42, 0.75);
-  padding: 0;
-  margin-bottom: 8px;
-}
-.s-maker__card-label-num {
-  font-family: var(--font-cormorant-infant), 'Cormorant Infant', Georgia, serif;
-  font-weight: 400;
-  font-size: 0.9375rem;
-  letter-spacing: 0.05em;
-}
-
-/* Amber accent line — 브랜드 시그니처 */
-.s-maker__card-accent {
-  width: 32px;
-  height: 0.5px;
-  background: #CCAD7B;
-  margin-bottom: 12px;
-}
-
-/* Maison name — editorial headline */
-.s-maker__card-name {
-  font-family: var(--font-heading);
-  font-size: clamp(18px, 2.2vw, 26px);
-  font-weight: 300;
-  font-style: italic;
-  color: rgba(49, 46, 42, 0.85);
-  line-height: 1.3;
-  margin: 0 0 8px;
-}
-
-/* Location — quiet geographic anchor */
-.s-maker__card-location {
-  font-family: var(--font-heading);
-  font-size: 0.875rem;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  color: rgba(49, 46, 42, 0.65);
-  margin-bottom: 8px;
-}
-
-/* Heritage stat — editorial pull-quote */
-.s-maker__card-heritage {
-  font-family: var(--font-cormorant-infant), 'Cormorant Infant', Georgia, serif;
-  font-size: clamp(15px, 1.8vw, 20px);
-  font-weight: 500;
-  font-style: italic;
-  letter-spacing: 0.02em;
-  color: #CCAD7B;
-  margin: 8px 0 6px;
-}
-
-/* Description — restrained body */
-.s-maker__card-desc {
-  font-size: 0.8125rem;
-  font-weight: 400;
-  line-height: 1.7;
-  color: rgba(49, 46, 42, 0.75);
-  max-width: 320px;
-  white-space: pre-line;
-}
-
-.s-maker__cta {
-  display: flex;
-  justify-content: center;
-  margin-top: clamp(32px, 4vh, 48px);
 }
 
 /* ══════════════════════════════════════════
@@ -3576,7 +3272,7 @@ input:focus-visible,
 
   /* S1 */
   .s-void__headline {
-    font-size: clamp(26px, 7.5vw, 38px);
+    font-size: clamp(18px, 5.2vw, 27px);
     letter-spacing: 0.04em;
   }
 
@@ -3749,64 +3445,32 @@ input:focus-visible,
     padding: 48px 0;
   }
 
-  .s-maker__hcard {
+  .s-maker__card {
     flex-direction: column;
-    gap: 0;
-    overflow: visible;
   }
 
-  .s-maker__hcard-img {
+  .s-maker__card-image {
     width: 100%;
     min-width: unset;
     aspect-ratio: 16 / 10;
   }
 
-  .s-maker__hcard-body {
-    padding: 20px 20px 24px;
+  .s-maker__card-body {
+    text-align: center;
     align-items: center;
+  }
+
+  .s-maker__card-name {
+    font-size: clamp(17px, 5vw, 22px);
+  }
+
+  .s-maker__card-desc {
+    max-width: 100%;
     text-align: center;
   }
 
-  .s-maker__hcard-desc {
-    max-width: 100%;
-    font-size: 0.8125rem;
-  }
-
-  .s-maker__hcard-name {
-    font-size: clamp(16px, 4.5vw, 22px);
-  }
-
-  .s-maker__hcard-loc {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .s-maker__hcard-bottom {
-    align-items: center;
-  }
-
-  .s-maker__hcard-top {
-    align-items: center;
-  }
-
-  .s-maker__peek {
-    overflow: visible;
-  }
-
-  .s-maker__peek-track {
-    padding-left: 24px;
-    padding-right: 24px;
-    gap: 0;
-  }
-
-  .s-maker__peek-slide {
-    min-width: 100%;
-    width: 100%;
-  }
-
-  .s-maker__cards {
-    grid-template-columns: 1fr;
-    gap: 48px;
+  .s-maker__card-cta {
+    margin-top: 0;
   }
 
   /* S5 — Archive */

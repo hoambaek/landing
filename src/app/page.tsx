@@ -10,7 +10,7 @@ import TastingSection from "@/components/sections/TastingSection";
 import ArchiveSection from "@/components/sections/ArchiveSection";
 import NfcSection from "@/components/sections/NfcSection";
 import TheMakerSection from "@/components/sections/TheMakerSection";
-import OriginSection from "@/components/sections/OriginSection";
+
 import OceanCircleSection from "@/components/sections/OceanCircleSection";
 import ProfessionalsSection from "@/components/sections/ProfessionalsSection";
 
@@ -34,7 +34,6 @@ export default function Home() {
         <ArchiveSection />
         <NfcSection />
         <TheMakerSection />
-        <OriginSection />
         <OceanCircleSection />
         <ProfessionalsSection />
       </main>
