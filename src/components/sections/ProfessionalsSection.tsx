@@ -9,11 +9,11 @@ export default function ProfessionalsSection() {
       className="s-pro"
       aria-labelledby="pro-headline"
     >
-      {/* 배경 이미지 */}
+      {/* 배경 이미지 — 장식용이므로 aria-hidden, alt="" */}
       <div className="s-pro__bg" aria-hidden="true">
         <Image
           src="/images/p1.webp"
-          alt="파트너십 — 파인다이닝 테이블"
+          alt=""
           fill
           className="s-pro__bg-img"
           sizes="100vw"
@@ -47,8 +47,8 @@ export default function ProfessionalsSection() {
           </div>
 
           <div className="s-pro__links reveal reveal-delay-4">
-            <CTALink href="#professionals" variant="dark">파트너 문의</CTALink>
-            <CTALink href="#professionals" variant="dark">브랜드 소개서 다운로드</CTALink>
+            <CTALink href="/partnership" variant="dark">파트너 문의</CTALink>
+            <CTALink href="/partnership" variant="dark">브랜드 소개서 다운로드</CTALink>
           </div>
         </div>
       </div>

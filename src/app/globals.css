@@ -2375,6 +2375,22 @@ input:focus-visible,
   color: #8B7A5E;
 }
 
+/* CTA 영역 */
+.s-archive__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  padding: clamp(48px, 8vh, 96px) 0 clamp(64px, 10vh, 120px);
+}
+
+@media (max-width: 480px) {
+  .s-archive__cta {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 /* ══════════════════════════════════════════
    NFC — The Record
    ══════════════════════════════════════════ */

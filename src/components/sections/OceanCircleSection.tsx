@@ -10,11 +10,11 @@ export default function OceanCircleSection() {
       className="s-premiere"
       aria-labelledby="premiere-title"
     >
-      {/* 우측 배경 이미지 */}
+      {/* 우측 배경 이미지 — 장식용이므로 aria-hidden, alt="" */}
       <div className="s-premiere__image" aria-hidden="true">
         <Image
           src="/images/c1.webp"
-          alt="Ocean Cellar 멤버십"
+          alt=""
           fill
           className="s-premiere__image-inner"
           sizes="(max-width: 768px) 100vw, 50vw"
@@ -45,7 +45,7 @@ export default function OceanCircleSection() {
           </div>
 
           <div className="s-premiere__links reveal reveal-delay-4">
-            <CTALink href="#ocean-circle" variant="dark">Ocean Cellar 초대 신청하기</CTALink>
+            <CTALink href="/membership" variant="dark">Ocean Cellar 초대 신청하기</CTALink>
           </div>
         </div>
       </div>

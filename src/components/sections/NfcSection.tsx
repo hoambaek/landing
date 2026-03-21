@@ -1,47 +1,57 @@
-/** NfcSection — 병의 여정 기록 섹션 */
+/** NfcSection — de key / 프로버넌스 섹션 (Server Component) */
 
-const JOURNEY = [
-  { label: "수확", desc: "포도밭" },
-  { label: "메종", desc: "양조" },
-  { label: "입수", desc: "남해" },
-  { label: "숙성", desc: "해저" },
-  { label: "인양", desc: "검수" },
+const RECORDS = [
+  "생산 메종",
+  "숙성 해역 좌표",
+  "투하일",
+  "인양일",
+  "평균 수온 · 해류 · 수압",
+  "고유 번호",
 ] as const;
 
 export default function NfcSection() {
   return (
-    <section id="nfc" className="s-nfc hanji-texture">
+    <section id="provenance" className="s-nfc" aria-label="De Key">
       <div className="container">
         <div className="s-nfc__header reveal">
-          <h2 className="s-nfc__title">the record<span className="dot">.</span></h2>
+          <h2 className="s-nfc__title">
+            de key<span className="dot">.</span>
+          </h2>
           <p className="s-nfc__sub">
-            병에 손을 가져가면,
-            <br />
-            이 병의 여정이 열린다.
+            모든 병에는 바다의 기록이 담겨 있습니다.
           </p>
         </div>
 
-        {/* 이미지 영역 */}
         <div className="s-nfc__image reveal reveal-delay-1">
-          <div className="s-nfc__placeholder" aria-label="NFC 체험 이미지 플레이스홀더" />
+          <div
+            className="s-nfc__placeholder"
+            role="img"
+            aria-label="NFC 프로버넌스 이미지 플레이스홀더"
+          />
         </div>
 
-        <div className="s-nfc__timeline reveal reveal-delay-1">
+        <div className="s-nfc__timeline reveal reveal-delay-2">
           <div className="s-nfc__timeline-line" aria-hidden="true" />
-          {JOURNEY.map((step) => (
-            <div key={step.label} className="s-nfc__timeline-step">
-              <span className="s-nfc__timeline-dot" aria-hidden="true" />
-              <span className="s-nfc__timeline-label">{step.label}</span>
-              <span className="s-nfc__timeline-desc">{step.desc}</span>
+          {RECORDS.map((record) => (
+            <div key={record} className="s-nfc__timeline-step">
+              <div className="s-nfc__timeline-dot" aria-hidden="true" />
+              <span className="s-nfc__timeline-label">{record}</span>
             </div>
           ))}
         </div>
 
-        <p className="s-nfc__closing reveal reveal-delay-2">
-          <em>하나의 병, 하나의 기록.</em>
-          <br />
-          <span className="s-nfc__closing-sub">위조할 수 없는 깊이의 증명.</span>
-        </p>
+        <div className="s-nfc__closing reveal reveal-delay-3">
+          <p>
+            병목의 NFC 태그에 스마트폰을 가까이 대세요.
+          </p>
+          <p>
+            이 한 병이 어디에서 태어났는지, 어느 바다에서, 얼마나 오래
+            잠들었는지, 언제 다시 빛을 보았는지 —
+          </p>
+          <p>
+            <em>변조 불가능한 기록으로 확인할 수 있습니다.</em>
+          </p>
+        </div>
       </div>
     </section>
   );

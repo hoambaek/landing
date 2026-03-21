@@ -142,7 +142,7 @@ export default function TheMakerSection() {
         </div>
 
         <div className="s-maker__cta reveal">
-          <CTALink href="#the-maker" variant="light">메이커 스토리 보기</CTALink>
+          <CTALink href="#ocean-circle" variant="light">메이커 스토리 보기</CTALink>
         </div>
       </div>
     </section>

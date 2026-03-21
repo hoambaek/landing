@@ -25,8 +25,12 @@ export default function OriginSection() {
 
         {/* placeholder 이미지 */}
         <div className="s-origin__image reveal">
-          <div className="s-origin__placeholder">
-            <span>ORIGIN IMAGE</span>
+          <div
+            className="s-origin__placeholder"
+            role="img"
+            aria-label="오리진 이미지 플레이스홀더"
+          >
+            <span aria-hidden="true">ORIGIN IMAGE</span>
           </div>
         </div>
       </div>
