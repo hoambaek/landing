@@ -2406,6 +2406,7 @@ input:focus-visible,
   padding: clamp(64px, 8vh, 120px) 0 clamp(80px, 10vh, 140px);
   position: relative;
   overflow: hidden;
+  min-height: 520px;
 }
 
 .s-premiere__inner {
@@ -2413,6 +2414,10 @@ input:focus-visible,
   z-index: 2;
   max-width: 560px;
   padding: 0 clamp(24px, 5vw, 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(520px - clamp(64px, 8vh, 120px) - clamp(80px, 10vh, 140px));
 }
 
 /* 우측 이미지 — 섹션 높이 전체 */
@@ -2487,7 +2492,8 @@ input:focus-visible,
   margin-bottom: 12px;
   display: inline-flex;
   align-items: flex-start;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .s-premiere__title-tag {
@@ -2730,6 +2736,7 @@ input:focus-visible,
   padding: clamp(64px, 8vh, 120px) 0 clamp(80px, 10vh, 140px);
   position: relative;
   overflow: hidden;
+  min-height: 520px;
 }
 
 /* 배경 이미지 */
@@ -3665,6 +3672,16 @@ input:focus-visible,
   }
 
   /* S6 */
+  .s-pro,
+  .s-premiere {
+    min-height: auto;
+  }
+
+  .s-premiere__title {
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+
   .s-circle {
     padding: 100px 0;
   }

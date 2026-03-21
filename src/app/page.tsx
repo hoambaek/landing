@@ -31,8 +31,8 @@ export default function Home() {
         <ArchiveSection />
         {/* <NfcSection /> */}
         <TheMakerSection />
-        <ProfessionalsSection />
         <OceanCircleSection />
+        <ProfessionalsSection />
       </main>
       <Footer hideSubscribe />
     </>
