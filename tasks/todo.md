@@ -26,6 +26,13 @@
 
 ## 완료
 
+- [x] 히어로 스크롤 화살표 가로 중앙 정렬 — scroll-in 전용 애니메이션 생성 (title-in이 translateX 덮어쓰는 문제 해결)
+- [x] 히어로 타이틀 크기 축소 — clamp(22px,3.2vw,42px) → clamp(20px,2.9vw,38px)
+- [x] Tasting 영상 크롭 — object-position: center bottom + scale(1.15)
+- [x] Sea Log → Tasting 그라데이션 개선 — 두 섹션에 걸쳐 16단계 자연스러운 전환, CTA부터 시작
+- [x] Hydration mismatch 에러 수정 — ScrollReveal MutationObserver 대기열 패턴 적용 (Suspense 스트리밍 호환)
+- [x] Collection 카드 설명 정리 — story 필드 제거, desc 한 줄 통일, 카피 전면 수정, word-break: keep-all 적용
+- [x] Collection CTA 버튼 하단 여백 확대
 - [x] Ocean Cellar 섹션 디자인 통일 (타이틀 font-jj + dot 패턴 + membership 태그 위치/가시성)
 - [x] Ocean Cellar 섹션 텍스트 가시성 개선 (copy/rewards/rule/form opacity 상향, 컬러 밝게)
 - [x] 메뉴 오버레이 리디자인 (다크 배경, 센터 정렬, 골드 그라데이션)

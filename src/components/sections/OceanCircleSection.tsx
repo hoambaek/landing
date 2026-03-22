@@ -40,12 +40,11 @@ export default function OceanCircleSection() {
 
           <div className="s-premiere__tags reveal reveal-delay-3">
             <span className="s-premiere__tag">신규 컬렉션 우선 예약</span>
-            <span className="s-premiere__tag">매월 숙성 노트 — 이 달, 바다가 한 일</span>
             <span className="s-premiere__tag">멤버 전용 테이스팅 초대</span>
           </div>
 
           <div className="s-premiere__links reveal reveal-delay-4">
-            <CTALink href="/membership" variant="dark">Ocean Cellar 초대 신청하기</CTALink>
+            <CTALink href="/membership" variant="light">Ocean Cellar 초대 신청하기</CTALink>
           </div>
         </div>
       </div>

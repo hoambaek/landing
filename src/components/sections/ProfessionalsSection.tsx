@@ -36,10 +36,6 @@ export default function ProfessionalsSection() {
             이 샴페인이 열리는 순간을 함께 만들 공간을 찾습니다.
           </p>
 
-          <p className="s-pro__desc reveal reveal-delay-2">
-            뮤즈드마레는 유통하지 않습니다. 경험을 설계할 수 있는 공간과만 함께합니다.
-          </p>
-
           <div className="s-pro__tags reveal reveal-delay-3">
             <span className="s-pro__tag">파인다이닝</span>
             <span className="s-pro__tag">럭셔리 호텔 바</span>

@@ -54,25 +54,25 @@ export default async function DataArchiveSection() {
         >
           sea log<span className="dot">.</span>
         </h2>
-        <div className="s-data__statements reveal reveal-delay-1">
-          <p className="s-data__statement-block">
-            <mark className="s-data__highlight">바다를 읽고, 시간을 설계합니다.</mark>
-          </p>
-          <p className="s-data__statement-block">
-            온도, 해류, 파도, 수압.
-            <br />
-            바다가 보내는 신호가 데이터가 됩니다.
-          </p>
-          <p className="s-data__statement-block">
-            그 데이터 위에서
-            <br />
-            각 컬렉션의 숙성을 예측합니다.
-          </p>
-        </div>
-
-        <p className="s-data__section-note reveal reveal-delay-2">
-          지금, 바다의 기록
+        <p className="s-data__headline reveal reveal-delay-1">
+          빛이 사라진 그곳에서,
+          <br />
+          지금 이 순간에도 기록되고 있습니다.
         </p>
+        <p className="s-data__statement-block reveal reveal-delay-1">
+          온도, 해류, 파도, 수압 — 바다가 보내는 신호가 데이터가 되고,
+          <br />
+          그 데이터 위에서 각 컬렉션의 숙성을 예측합니다.
+        </p>
+
+        {lastUpdate && (
+          <div className="s-data__chart-footer">
+            <span className="s-data__chart-update">
+              최근 30일간 측정 데이터 · {lastUpdate.replace(/-/g, ".")} KST
+            </span>
+          </div>
+        )}
+
         <DataMetricsClient
           metrics={METRICS.map((m) => ({
             key: m.key,
@@ -88,7 +88,6 @@ export default async function DataArchiveSection() {
           <DataArchiveClient
             data={data}
             depth={depth}
-            lastUpdate={lastUpdate}
           />
         )}
 

@@ -1,32 +1,30 @@
 /** TastingSection — Server Component (CSS-only reveals) */
-import Image from "next/image";
 import CTALink from "@/components/ui/CTALink";
 
 export default function TastingSection() {
   return (
     <section id="tasting" className="s-tasting" aria-label="The Tasting">
-      <div className="s-tasting__inner">
-        {/* 상단 타이틀 */}
-        <div className="s-tasting__header reveal">
-          <h2 className="s-tasting__title">
-            the tasting<span className="dot">.</span>
-          </h2>
+      {/* 다크→라이트 그라데이션 전환 영역 */}
+      <div className="s-tasting__bridge">
+        <div className="s-tasting__bridge-text reveal">
           <p className="s-tasting__headline">첫 모금에서 다릅니다.</p>
         </div>
+      </div>
 
-        {/* 중앙 이미지 */}
-        <div className="s-tasting__image reveal reveal-delay-1">
-          <Image
-            src="/images/tasting.webp"
-            alt="샴페인 기포 클로즈업"
-            width={800}
-            height={1067}
-            className="s-tasting__image-inner"
-            sizes="(max-width: 768px) 90vw, 60vw"
-          />
-        </div>
+      {/* 시네마틱 영상 */}
+      <div className="s-tasting__image reveal reveal-delay-1">
+        <video
+          className="s-tasting__video"
+          src="/images/tasting.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+      </div>
 
-        {/* 하단 텍스트 + CTA */}
+      {/* 하단 텍스트 + CTA */}
+      <div className="s-tasting__inner">
         <div className="s-tasting__footer reveal reveal-delay-2">
           <div className="s-tasting__body">
             <p>수압이 빚어낸 기포는 더 섬세하고, 더 조밀합니다.</p>

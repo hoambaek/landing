@@ -129,11 +129,9 @@ const ECHOES_PER_LINE = 8;
 export default function DataArchiveClient({
   data,
   depth,
-  lastUpdate,
 }: {
   data: OceanDataDaily[];
   depth: number;
-  lastUpdate: string | null;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
@@ -218,14 +216,6 @@ export default function DataArchiveClient({
           })}
         </svg>
       </motion.div>
-      <div className="s-data__chart-footer">
-        <span className="s-data__chart-update">
-          최근 30일간 측정 데이터
-          {lastUpdate
-            ? ` · ${lastUpdate.replace(/-/g, ".")} KST`
-            : ""}
-        </span>
-      </div>
     </div>
   );
 }
