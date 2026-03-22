@@ -2196,6 +2196,17 @@ input:focus-visible,
   padding: clamp(80px, 14vh, 160px) 0 clamp(64px, 10vh, 120px);
 }
 
+.s-archive__cta .cta-link {
+  background: #4A3F32;
+  color: #fff;
+  border-color: #4A3F32;
+}
+
+.s-archive__cta .cta-link:hover {
+  background: #3a3228;
+  border-color: #3a3228;
+}
+
 @media (max-width: 480px) {
   .s-archive__cta {
     flex-direction: column;
