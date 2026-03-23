@@ -1,12 +1,12 @@
 /** NfcSection — de key / 프로버넌스 섹션 (Server Component) */
 
 const RECORDS = [
-  "생산 메종",
-  "숙성 해역 좌표",
-  "투하일",
-  "인양일",
-  "평균 수온 · 해류 · 수압",
-  "고유 번호",
+  { num: "01", label: "생산 메종" },
+  { num: "02", label: "숙성 해역" },
+  { num: "03", label: "투하일" },
+  { num: "04", label: "인양일" },
+  { num: "05", label: "평균 수온 · 해류 · 수압" },
+  { num: "06", label: "고유 번호" },
 ] as const;
 
 export default function NfcSection() {
@@ -30,12 +30,12 @@ export default function NfcSection() {
           />
         </div>
 
-        <div className="s-nfc__timeline reveal reveal-delay-2">
-          <div className="s-nfc__timeline-line" aria-hidden="true" />
+        {/* 프로비넌스 레코드 — 넘버링 수직 리스트 */}
+        <div className="s-nfc__records reveal reveal-delay-2">
           {RECORDS.map((record) => (
-            <div key={record} className="s-nfc__timeline-step">
-              <div className="s-nfc__timeline-dot" aria-hidden="true" />
-              <span className="s-nfc__timeline-label">{record}</span>
+            <div key={record.num} className="s-nfc__record">
+              <span className="s-nfc__record-num">{record.num}</span>
+              <span className="s-nfc__record-label">{record.label}</span>
             </div>
           ))}
         </div>

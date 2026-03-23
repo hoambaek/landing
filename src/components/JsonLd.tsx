@@ -28,7 +28,7 @@ export default function JsonLd() {
       "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다. 바다의 온도, 해류, 수압이 만드는 시간의 기록.",
   };
 
-  const productCollectionSchema = {
+  const collectionSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "Muse de Marée Collection",
@@ -39,48 +39,36 @@ export default function JsonLd() {
         "@type": "ListItem",
         position: 1,
         name: "En Lieu Sûr",
-        description:
-          "Brut — 모든 큐베의 기준. 프랑스 샹파뉴 Vallée de la Marne에서 생산, 한국 남해 수심 50미터에서 해저 숙성.",
         url: `${baseUrl}/#archive`,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "En Lieu Sûr Magnum",
-        description:
-          "Magnum 1500ml — 24병 한정 에디션. 프랑스 샹파뉴에서 생산, 한국 남해에서 해저 숙성.",
         url: `${baseUrl}/#archive`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: "Élément de Surprise",
-        description:
-          "Blanc de Blancs · Non-dosé — 샤르도네 100%의 순수한 표현. 한국 남해 해저 숙성.",
         url: `${baseUrl}/#archive`,
       },
       {
         "@type": "ListItem",
         position: 4,
         name: "Édition Zéro",
-        description:
-          "2025년 첫 빈티지 — 50병 한정. Muse de Marée의 시작을 기록한 해저 숙성 샴페인.",
         url: `${baseUrl}/#archive`,
       },
       {
         "@type": "ListItem",
         position: 5,
         name: "Atomes Crochus 1 Year Aged",
-        description:
-          "Ultra-Brut — 희귀 품종 Petit Meslier 블렌드. 1년 해저 숙성으로 완성된 독보적 미네랄리티.",
         url: `${baseUrl}/#archive`,
       },
       {
         "@type": "ListItem",
         position: 6,
         name: "Atomes Crochus 3 Years Aged",
-        description:
-          "Ultra-Brut — 희귀 품종 Petit Meslier 블렌드. 3년 해저 숙성, 40병 한정. 바다의 시간이 가장 깊이 새겨진 큐베.",
         url: `${baseUrl}/#archive`,
       },
     ],
@@ -195,7 +183,7 @@ export default function JsonLd() {
   const schemas = [
     organizationSchema,
     websiteSchema,
-    productCollectionSchema,
+    collectionSchema,
     faqSchema,
     placeSchema,
     eventSchema,
