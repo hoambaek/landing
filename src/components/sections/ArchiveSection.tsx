@@ -6,14 +6,14 @@ const CUVEES = [
   // Upper: 01(large left) → 02(top right) → 03(right offset)
   {
     num: "01",
-    label: "archive nº 002",
+    label: "archive nº 001",
     name: "En Lieu Sûr",
     nameKr: "엉리우쉬르",
     desc: "2대에 걸친 솔레라 리저브 70%, Brut\n뮤즈드마레를 처음 만난다면, 여기서 시작하세요",
   },
   {
     num: "02",
-    label: "archive nº 003",
+    label: "archive nº 002",
     name: "En Lieu Sûr Magnum",
     nameKr: "엉리우쉬르 매그넘",
     desc: "해저의 느린 숙성, Magnum 1500ml\n큰 용량이 만드는 더 균일한 숙성",
@@ -21,7 +21,7 @@ const CUVEES = [
   },
   {
     num: "03",
-    label: "archive nº 004",
+    label: "archive nº 003",
     name: "Élément de Surprise",
     nameKr: "엘레멍드쉬르프리즈",
     desc: "BDB, Non-dosé, 솔레라 블렌딩\n해저숙성이 가장 직접적으로 드러나는 큐베",
@@ -29,7 +29,7 @@ const CUVEES = [
   // Lower: 06(left) → 04(center offset) → 05(right climax)
   {
     num: "06",
-    label: "archive nº 001",
+    label: "archive nº 000",
     name: "Édition Zéro",
     nameKr: "에디션 제로",
     desc: "뮤즈드마레의 시작을 기록한\n첫 번째 아카이브",
@@ -38,14 +38,14 @@ const CUVEES = [
   },
   {
     num: "04",
-    label: "archive nº 005",
+    label: "archive nº 004",
     name: "Atomes Crochus 1 Year Aged",
     nameKr: "아톰크로슈 1년 숙성",
     desc: "희귀 품종 Petit Meslier 30%,\n오크 배럴 숙성, Ultra-Brut",
   },
   {
     num: "05",
-    label: "archive nº 006",
+    label: "archive nº 005",
     name: "Atomes Crochus 3 Years Aged",
     nameKr: "아톰크로슈 3년 숙성",
     desc: "3년의 해저 숙성 - 희귀 품종 Petit Meslier 30%,\n오크 배럴 숙성, Ultra-Brut",

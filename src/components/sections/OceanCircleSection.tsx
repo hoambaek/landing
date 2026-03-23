@@ -10,41 +10,41 @@ export default function OceanCircleSection() {
       className="s-premiere"
       aria-labelledby="premiere-title"
     >
-      {/* 우측 배경 이미지 — 장식용이므로 aria-hidden, alt="" */}
-      <div className="s-premiere__image" aria-hidden="true">
-        <Image
-          src="/images/c1.webp"
-          alt=""
-          fill
-          className="s-premiere__image-inner"
-          sizes="(max-width: 768px) 100vw, 50vw"
-        />
-        <div className="s-premiere__image-fade" />
-      </div>
+      <div className="s-premiere__card">
+        {/* 이미지 영역 */}
+        <div className="s-premiere__visual">
+          <Image
+            src="/images/c1.webp"
+            alt=""
+            fill
+            className="s-premiere__visual-img"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+          <div className="s-premiere__visual-overlay" />
+        </div>
 
-      <div className="container">
-        <div className="s-premiere__inner">
-          <div className="s-premiere__rule reveal" aria-hidden="true" />
+        {/* 콘텐츠 영역 */}
+        <div className="s-premiere__content">
+          <span className="s-premiere__label reveal">membership</span>
 
           <h2
             className="s-premiere__title reveal reveal-delay-1"
             id="premiere-title"
           >
-            ocean cellar<span className="dot">.</span>
-            <span className="s-premiere__title-tag">membership</span>
+            Ocean Cellar<span className="dot">.</span>
           </h2>
 
           <p className="s-premiere__sub reveal reveal-delay-2">
             바다 아래, 당신의 셀러.
           </p>
 
-          <div className="s-premiere__tags reveal reveal-delay-3">
-            <span className="s-premiere__tag">신규 컬렉션 우선 예약</span>
-            <span className="s-premiere__tag">멤버 전용 테이스팅 초대</span>
-          </div>
+          <ul className="s-premiere__perks reveal reveal-delay-3">
+            <li className="s-premiere__perk">신규 컬렉션 우선 예약</li>
+            <li className="s-premiere__perk">멤버 전용 테이스팅 초대</li>
+          </ul>
 
           <div className="s-premiere__links reveal reveal-delay-4">
-            <CTALink href="/membership" variant="light">Ocean Cellar 초대 신청하기</CTALink>
+            <CTALink href="/membership" variant="light">초대 신청하기</CTALink>
           </div>
         </div>
       </div>
