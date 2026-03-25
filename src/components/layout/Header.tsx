@@ -10,7 +10,7 @@ const MAIN_LINKS = [
   { href: "#data-archive", label: "Sea Log", tag: "" },
   { href: "#archive", label: "Collection", tag: "" },
   { href: "#the-maker", label: "The Maker", tag: "" },
-  { href: "#ocean-circle", label: "Ocean Cellar", tag: "membership" },
+  { href: "#ocean-circle", label: "Ocean Cellar", tag: "" },
   { href: "#professionals", label: "Partnership", tag: "" },
 ] as const;
 

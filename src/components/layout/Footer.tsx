@@ -40,12 +40,24 @@ export default function Footer({ hideSubscribe = false }: { hideSubscribe?: bool
           </div>
         </div>
 
-        {/* 하단 — 법적 고지 + 소셜 + 언어 */}
+        {/* 법인 정보 */}
+        <div className="footer__entity">
+          <span>주식회사 오크니</span>
+          <span>대표 정설화</span>
+          <span>사업자등록번호 509-88-03399</span>
+          <span>서울특별시 강남구 압구정로 306, B1 #6-J14</span>
+          <span>info@musedemaree.com</span>
+        </div>
+
+        {/* 경고문 */}
+        <p className="footer__warning">
+          알코올은 발암물질로 지나친 음주는 간암, 위암 등을 일으킵니다. 임신 중 음주는 기형아 출생 위험을 높입니다.
+        </p>
+
+        {/* 하단 — 저작권 + 소셜 + 약관 + 언어 */}
         <div className="footer__bottom">
           <div className="footer__bottom-left">
-            <span className="footer__disclaimer">
-              지나친 음주는 건강에 해롭습니다. &copy; 2026 Muse de Mar&eacute;e
-            </span>
+            <span className="footer__copyright">&copy; 2026 Muse de Mar&eacute;e</span>
             <div className="footer__social">
               <a href="#" className="footer__social-link" aria-label="Instagram">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="5" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg>

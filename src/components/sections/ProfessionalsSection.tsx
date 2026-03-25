@@ -24,7 +24,7 @@ export default function ProfessionalsSection() {
 
         {/* 콘텐츠 영역 */}
         <div className="s-pro__content">
-          <span className="s-pro__label reveal">B2B</span>
+          <span className="s-pro__label reveal">Professional</span>
 
           <h2
             className="s-pro__title reveal reveal-delay-1"

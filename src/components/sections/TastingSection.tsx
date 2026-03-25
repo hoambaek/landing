@@ -28,11 +28,8 @@ export default function TastingSection() {
         <div className="s-tasting__footer reveal reveal-delay-2">
           <div className="s-tasting__body">
             <p>수압이 빚어낸 기포는 더 섬세하고, 더 조밀합니다.</p>
-            <p>해류가 지켜낸 온도는 산미를 더 선명하게, 여운을 더 길게 만듭니다.</p>
-            <p>
-              바다의 고요가 남긴 질감은 — 말로 설명하기보다 직접 확인하시길
-              권합니다.
-            </p>
+            <p>해류가 지켜낸 온도는 산미를 더 선명하게,<br/>여운을 더 길게 만듭니다.</p>
+            <p>바다의 고요가 남긴 질감은<br/>말로 설명하기보다 직접 확인하시길 권합니다.</p>
           </div>
 
           <CTALink href="#ocean-circle" variant="dark">
