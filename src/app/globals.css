@@ -3516,8 +3516,7 @@ input:focus-visible,
 
   .s-maker__editorial {
     flex-direction: column;
-    padding: 0;
-    box-shadow: none;
+    padding: 24px;
     align-items: center;
   }
 
