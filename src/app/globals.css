@@ -1677,12 +1677,14 @@ input:focus-visible,
 
 .s-maker__visual-img {
   object-fit: cover;
-  object-position: center 40%;
-  filter: sepia(0.15) saturate(0.8) brightness(0.95) contrast(1.05);
+  object-position: center 60%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .s-maker__visual--teaser {
-  opacity: 0.89;
+  opacity: 1;
 }
 
 
@@ -1720,7 +1722,7 @@ input:focus-visible,
 }
 
 .s-maker__name--muted {
-  color: rgba(49, 46, 42, 0.4);
+  color: inherit;
 }
 
 .s-maker__loc {
@@ -1759,7 +1761,7 @@ input:focus-visible,
 }
 
 .s-maker__desc--muted {
-  color: rgba(49, 46, 42, 0.4);
+  color: inherit;
 }
 
 .s-maker__cta {
