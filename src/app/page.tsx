@@ -22,10 +22,13 @@ export default function Home() {
       <main id="main-content">
         <HeroSection />
         <div className="s-bridge" aria-hidden="true">
+          <span className="s-bridge__rule" />
           <p className="s-bridge__text">
-            샹파뉴의 떼루아에서 태어난 샴페인이<br />
-            대한민국 남해의 바다에서 두 번째 시간을 보냅니다.
+            <span className="s-bridge__line">샹파뉴의 떼루아에서 태어난 샴페인이</span>
+            <span className="s-bridge__line">대한민국 남해의 바다에서</span>
+            <span className="s-bridge__line s-bridge__line--accent">두 번째 시간을 보냅니다.</span>
           </p>
+          <span className="s-bridge__rule" />
         </div>
         <ObservationSection />
         <Suspense
