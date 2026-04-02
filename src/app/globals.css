@@ -1559,7 +1559,7 @@ input:focus-visible,
 }
 
 .s-maker__container {
-  max-width: 920px;
+  max-width: 1120px;
   margin: 0 auto;
   padding: 0 clamp(24px, 5vw, 60px);
 }
@@ -1652,12 +1652,13 @@ input:focus-visible,
 .s-maker__editorial {
   display: flex;
   align-items: stretch;
-  gap: clamp(24px, 4vw, 40px);
+  gap: clamp(32px, 5vw, 56px);
   box-shadow: inset 0 0 0 0.5px rgba(49, 46, 42, 0.12);
-  padding: clamp(28px, 3.5vw, 44px);
+  padding: clamp(36px, 4vw, 56px);
   overflow: hidden;
   width: 100%;
   box-sizing: border-box;
+  min-height: 380px;
 }
 
 /* 텍스트 영역 */
@@ -1669,7 +1670,7 @@ input:focus-visible,
 /* 컴팩트 이미지 */
 .s-maker__visual {
   position: relative;
-  width: 35%;
+  width: 42%;
   flex-shrink: 0;
   overflow: hidden;
 }

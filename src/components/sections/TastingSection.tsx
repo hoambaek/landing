@@ -12,15 +12,17 @@ export default function TastingSection() {
       </div>
 
       {/* 시네마틱 영상 */}
-      <div className="s-tasting__image reveal reveal-delay-1">
+      <div className="s-tasting__image">
         <video
           className="s-tasting__video"
-          src="/images/tasting.mp4"
           autoPlay
           loop
           muted
           playsInline
-        />
+          preload="auto"
+        >
+          <source src="/images/tasting.mp4" type="video/mp4" />
+        </video>
       </div>
 
       {/* 하단 텍스트 + CTA */}

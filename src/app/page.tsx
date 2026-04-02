@@ -8,7 +8,6 @@ import ObservationSection from "@/components/sections/ObservationSection";
 import DataArchiveSection from "@/components/sections/DataArchiveSection";
 import TastingSection from "@/components/sections/TastingSection";
 import ArchiveSection from "@/components/sections/ArchiveSection";
-import NfcSection from "@/components/sections/NfcSection";
 import TheMakerSection from "@/components/sections/TheMakerSection";
 
 import OceanCircleSection from "@/components/sections/OceanCircleSection";
@@ -38,7 +37,6 @@ export default function Home() {
         </Suspense>
         <TastingSection />
         <ArchiveSection />
-        <NfcSection />
         <TheMakerSection />
         <div className="s-diptych">
           <OceanCircleSection />
