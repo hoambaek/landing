@@ -4,27 +4,11 @@
 
 ## 진행 중
 
-- [ ] **Claude Design 온보딩 사전 정비 (Phase 1-4)**
-  - [ ] Phase 1 — 토큰 누수 차단
-    - [ ] `@theme` 데이터/차트/라벨 팔레트 토큰 추가
-    - [ ] `DataArchiveSection.tsx` METRICS hex → var() 참조
-    - [ ] `DataArchiveClient.tsx` CHART_LINES hex → var() + SVG stroke를 style로
-    - [ ] `DataMetricsClient.tsx` `--metric-color` 커스텀 프로퍼티 패턴
-    - [ ] `ArchiveSection.tsx` 인라인 label 스타일 → BEM 클래스
-    - [ ] `opengraph-image.tsx` hex 상수 분리
-  - [ ] Phase 2 — 인라인 스타일 제거
-    - [ ] `HeroSection.tsx` 파티클 → `--particle-*` CSS 변수
-    - [ ] `DataMetricsClient.tsx` 인라인 `color`/`borderColor` CSS 변수 이관
-  - [ ] Phase 3 — 구조 정비
-    - [ ] 빈 `src/components/3d/` 삭제
-    - [ ] 루트 스크린샷 (hero-*.png, tasting-*.png, sea-log-chart.png) 삭제
-    - [ ] `ObservationImageSection.tsx` next/image 통일
-    - [ ] `globals.css` 섹션 구획 헤더 강화
-  - [ ] Phase 4 — 검증 & 커밋
-    - [ ] `pnpm dev --port 3600` 기동
-    - [ ] Playwright before/after 스크린샷 비교
-    - [ ] 타입체크 + 린트 + 빌드 통과
-    - [ ] 단일 커밋 `refactor: 토큰 누수 제거 및 인라인 스타일 정리 (Claude Design 온보딩 사전 정비)`
+- [x] **Claude Design 온보딩 사전 정비 (Phase 1-4)** — 커밋 faccd40
+  - [x] Phase 1 토큰 누수 차단: @theme +17 토큰, hex → var() 참조 전환 (METRICS/CHART_LINES), SVG stroke style 이관, OG BRAND 상수 분리, Archive 레이블 BEM
+  - [x] Phase 2 인라인 스타일 제거: `--particle-*`, `--metric-color` (color-mix 25% alpha)
+  - [x] Phase 3 구조 정비: 빈 3d/ 삭제, 루트 스크린샷 10개 정리, 고아 ObservationImageSection 제거, S2 중복 헤더 통합
+  - [x] Phase 4 검증: 타입체크·린트(기존 경고 2건만)·빌드(3.3s) 통과, Playwright 런타임 토큰 해석 확인 (메트릭 색상 일치, 레이블 border rgba 동일)
 - [x] P0: 헤더 색상 전환 구현 (S1 라이트↔S2 다크 스크롤 기반)
 - [x] P0: 메뉴 접근성 보강 (aria-expanded, 포커스 트랩, ESC 포커스 복원)
 
