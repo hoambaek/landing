@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { CSSProperties, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 
 /** 파티클 데이터 — 와이어프레임과 동일 */
@@ -209,13 +209,14 @@ export default function HeroSection() {
             <div
               key={i}
               className="particle"
-              style={{
-                left: p.left,
-                animationDuration: p.duration,
-                animationDelay: p.delay,
-                width: `${p.size}px`,
-                height: `${p.size}px`,
-              }}
+              style={
+                {
+                  "--particle-left": p.left,
+                  "--particle-duration": p.duration,
+                  "--particle-delay": p.delay,
+                  "--particle-size": `${p.size}px`,
+                } as CSSProperties
+              }
             />
           ))}
         </div>

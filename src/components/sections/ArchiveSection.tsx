@@ -92,9 +92,9 @@ export default function ArchiveSection() {
                 />
               </div>
               <div className="m-card__info">
-                <div className="m-card__label" style={{ background: 'rgba(206, 199, 187, 0.3)', border: '0.5px solid rgba(160, 140, 110, 0.35)' }}>
-                  <span style={{ opacity: 0.5 }}>archive nº </span>
-                  <span style={{ fontWeight: 600, fontSize: '0.75rem' }}>{cuvee.label.replace('archive nº ', '')}</span>
+                <div className="m-card__label">
+                  <span className="m-card__label-prefix">archive nº </span>
+                  <span className="m-card__label-num">{cuvee.label.replace('archive nº ', '')}</span>
                 </div>
                 <div className="m-card__name">{cuvee.name}</div>
                 <div className="m-card__name-kr">{cuvee.nameKr}</div>

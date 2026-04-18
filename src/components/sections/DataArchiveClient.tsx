@@ -5,12 +5,12 @@ import { motion, useInView } from "framer-motion";
 import { calculateWaterPressure, type OceanDataDaily } from "@/lib/supabase";
 
 const CHART_LINES = [
-  { key: "sea_temperature_avg", label: "수온", color: "#FFFFFF" },
-  { key: "current_velocity_avg", label: "해류", color: "#CCAD7B" },
-  { key: "wave_height_avg", label: "파고", color: "#6B4C2A" },
-  { key: "wave_period_avg", label: "파주기", color: "#7A9BAE" },
-  { key: "water_pressure", label: "수압", color: "#3D3028" },
-  { key: "current_direction_dominant", label: "방향", color: "#A08060" },
+  { key: "sea_temperature_avg", label: "수온", color: "var(--color-chart-temp)" },
+  { key: "current_velocity_avg", label: "해류", color: "var(--color-chart-current)" },
+  { key: "wave_height_avg", label: "파고", color: "var(--color-chart-wave-height)" },
+  { key: "wave_period_avg", label: "파주기", color: "var(--color-chart-wave-period)" },
+  { key: "water_pressure", label: "수압", color: "var(--color-chart-pressure)" },
+  { key: "current_direction_dominant", label: "방향", color: "var(--color-chart-direction)" },
 ] as const;
 
 /** Round to 2 decimal places for SVG precision reduction */
@@ -199,14 +199,14 @@ export default function DataArchiveClient({
                   <path
                     d={path1}
                     fill="none"
-                    stroke={color}
+                    style={{ stroke: color }}
                     strokeWidth={strokeW}
                     opacity={opacity}
                   />
                   <path
                     d={path2}
                     fill="none"
-                    stroke={color}
+                    style={{ stroke: color }}
                     strokeWidth={strokeW}
                     opacity={opacity}
                   />

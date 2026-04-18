@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 
 interface MetricItem {
   key: string;
   label: string;
   unit: string;
+  /** CSS color (var(--color-data-*) 참조 권장) */
   color: string;
   decimals: number;
   value: number | null;
@@ -74,9 +75,14 @@ export default function DataMetricsClient({
         <div
           key={m.key}
           className="s-data__point"
-          style={{ transitionDelay: `${i * 80}ms` }}
+          style={
+            {
+              "--metric-color": m.color,
+              transitionDelay: `${i * 80}ms`,
+            } as CSSProperties
+          }
         >
-          <p className="s-data__number" style={{ color: m.color }}>
+          <p className="s-data__number">
             {m.value !== null ? (
               <>
                 <AnimatedNumber
@@ -92,7 +98,7 @@ export default function DataMetricsClient({
               </>
             )}
           </p>
-          <p className="s-data__metric-label" style={{ color: m.color, borderColor: `${m.color}40` }}>{m.label}</p>
+          <p className="s-data__metric-label">{m.label}</p>
         </div>
       ))}
     </div>

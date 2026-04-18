@@ -5,6 +5,15 @@ export const alt = "Muse de Marée — 바다의 시간을 담은 샴페인";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+/** globals.css @theme 토큰과 동기화된 하드 카피 (edge runtime은 CSS 변수 미지원) */
+const BRAND = {
+  voidBg: "#0A0908",
+  navyMid: "#141110",
+  navy: "#0D0B09",
+  sand: "#E8E5E1",
+  amber: "#CCAD7B",
+} as const;
+
 export default function OgImage() {
   return new ImageResponse(
     (
@@ -16,8 +25,8 @@ export default function OgImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #0A0908 0%, #141110 50%, #0D0B09 100%)",
-          color: "#E8E5E1",
+          background: `linear-gradient(135deg, ${BRAND.voidBg} 0%, ${BRAND.navyMid} 50%, ${BRAND.navy} 100%)`,
+          color: BRAND.sand,
           fontFamily: "serif",
         }}
       >
@@ -25,7 +34,7 @@ export default function OgImage() {
           style={{
             fontSize: 18,
             letterSpacing: "0.35em",
-            color: "#CCAD7B",
+            color: BRAND.amber,
             marginBottom: 24,
             textTransform: "uppercase",
           }}
@@ -46,7 +55,7 @@ export default function OgImage() {
           style={{
             width: 40,
             height: 1,
-            background: "#CCAD7B",
+            background: BRAND.amber,
             marginBottom: 20,
             opacity: 0.5,
           }}
