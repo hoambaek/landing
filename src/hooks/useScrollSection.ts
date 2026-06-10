@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-const LIGHT_SECTIONS = new Set(["observation", "the-maker", "archive"]);
+/* 라이트 배경 섹션 — Collection(archive) · The Maker.
+   Partnership(professionals)은 다크 이미지 섹션이라 제외 → 헤더 흰색.
+   The First Record는 다크→라이트 복합이라 별도 처리(Phase 4). */
+const LIGHT_SECTIONS = new Set(["archive", "the-maker"]);
 
 /* ── Module-level shared scroll infrastructure ── */
 let ticking = false;
@@ -22,23 +25,19 @@ function findSectionAt(sects: HTMLElement[], y: number): string {
   return id;
 }
 
-/** 특정 Y 좌표가 어두운 영역인지 판별 (obs 이미지 영역 포함) */
+/** 특정 Y 좌표가 어두운 영역인지 판별 */
 function isDarkAtY(sects: HTMLElement[], y: number): boolean {
+  // 라이트 푸터 영역은 밝음 → 헤더 검정 로고
+  const footer = document.querySelector<HTMLElement>(".s-footer");
+  if (footer) {
+    const fTop = footer.getBoundingClientRect().top + window.scrollY;
+    if (y >= fTop) return false;
+  }
+
   const sectionId = findSectionAt(sects, y);
 
   // 기본 어두운 섹션
   if (!LIGHT_SECTIONS.has(sectionId)) return true;
-
-  // observation 이미지 영역은 어두움
-  if (sectionId === "observation") {
-    const obsImage = document.querySelector<HTMLElement>(".s-obs__image");
-    if (obsImage) {
-      const rect = obsImage.getBoundingClientRect();
-      const absTop = rect.top + window.scrollY;
-      const absBottom = absTop + rect.height;
-      if (y >= absTop && y <= absBottom) return true;
-    }
-  }
 
   return false; // 밝은 섹션 텍스트 영역
 }

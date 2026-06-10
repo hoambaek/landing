@@ -4,6 +4,48 @@
 
 ## 진행 중
 
+- [ ] **Paper 디자인 시안 — 새 페이지 구조 전체** (2026-06-10 대규모 세션)
+  - [x] 데스크톱 8섹션 신규/리디자인: 01 Hero(h3 이미지+기획 카피+J1950) · 02 The Living Record(풀블리드 관측일지, 771일째 카운터) · 03 The First Record(타임라인 플레이트 4컷, xAI 생성 rec01~04) · 04 Collection(시간 띠+큐베 그리드+NFC 기록 카드+라인 드로잉 3년 병) · 05 The Maker(메이커 캐러셀, N°2 비공개 티저) · 06 Ocean Cellar Privé / 07 Partnership 분리 · 08 Footer(통합 로고+모토 수미상관)
+  - [x] 모바일 8섹션 + 메뉴 오버레이 전체 신규 (히어로 h3_m2 세로 이미지, First Record 3컷 압축, Collection 2열 그리드, 푸터 중앙 정렬)
+  - [x] 데스크톱 메뉴 오버레이 (아카이브 넘버링 내비 + 라이브 관측 라인)
+  - [x] 헤더 로고 시스템: 심볼 좌 + 텍스트 로고 중앙, 다크 섹션 화이트/라이트 섹션 블랙
+  - [x] 캔버스 정렬: 1행 가이드 / 2행 데스크톱 / 3행 모바일 / 보관 구역([보관] 구버전 8개)
+  - [x] 컬러 그레이딩 기준 확립 → `docs/brand/image-generation-guide.md` (웜 하이라이트/콜드 섀도우 스플릿 토닝)
+  - [x] UI 문법 통일: 필 태그·채운 버튼 제거 → 점 구분 라인 + 헤어라인 언더라인 링크 (Ocean Cellar·Partnership 4곳)
+  - [x] 카피 정비: D+201→771일째(직관 표기) · 가격/티어 코드 제거 · "기다리는 사람의 것"→"천 일의 기록, 한 권의 책" · 시간 띠 한 문장화 · QR→NFC 전환
+  - [x] 서브 페이지 3종 디자인 (초대 신청 · 파트너 문의 · 브랜드 소개서 — 편지형 언더라인 폼)
+  - [x] **코드 구현 — Paper 01~08 전 섹션 1:1** (2026-06-10) → `docs/plans/2026-06-10-paper-to-code-plan.md`
+    - [x] Phase 1 헤더(20/48 패딩·심볼48·로고22·심볼33·3줄 햄버거) + 메뉴 오버레이(7항목 좌측 넘버링·워터마크·REC 라인·KR/EN/FR) · LIGHT_SECTIONS 갱신
+    - [x] Phase 2 Hero(정적 h3/h3_m2 + Cool Shadow Grade + Scrim/Top Blur + J1950 3행/5행 + 브랜드 라인) — 영상 상태머신 폐기
+    - [x] Phase 3 The Living Record(풀블리드 o3/o3_m + 771 카운터 시작일 2024-05-01 자동계산 + 관측 로그 + 클로징)
+    - [x] Phase 4 The First Record(다크→라이트 그라데이션 + Entry + 4컷/3컷 플레이트 rec01~04 + 타임코드 캡션 + ÉDITION ZÉRO)
+    - [x] Phase 5 Collection(f2 히어로 + 시간 띠 3단계 + 큐베 6카드 contain + SOLD OUT 디밍 + 라인드로잉 병 multiply + 증서 카드 rotate2° + NFC 심볼)
+    - [x] Phase 6 The Maker(캐러셀 2슬라이드 m1/m2 + 카운터·티저·‹›·스와이프 + 비공개 피크) — 옛 maker CSS 충돌 제거
+    - [x] Phase 7 Ocean Cellar Privé(좌하단 1링크)·Partnership(우하단 2링크) — c1/p1 풀블리드 + 점 구분 태그 + 헤어라인 언더라인, s-diptych 해제
+    - [x] Phase 8 Footer(로고 락업 + Mrs Saint Delafield 모토 + 앰버 헤어라인 + 3열 내비 + 법인 정보 + SNS·약관·언어)
+    - [x] Phase 0 정비: 에셋 중복 정리(old/ 이동)·rec webp 변환·글리프 검사 유틸(scripts/check-glyphs.mjs)·@theme 토큰 추가(main/delafield)
+    - [x] 검증: 타입체크·린트·프로덕션 빌드 통과 · Playwright 데스크톱1440+모바일390 Paper 대조 · 콘솔 에러 0
+  - [ ] 데스크톱 히어로/S2 이미지 원본 재보정 (현재 CSS 근사 — 가이드 §4 기준)
+  - [ ] 기획 문서 QR→NFC 표기 갱신 (brand-direction-2026.md §7, homepage-structure.md S4)
+  - [ ] 인양 실사 확보 시 First Record AI 이미지(rec01~04) 교체
+
+- [ ] **브랜드 북극성 채택 검토** (`docs/plans/2026-06-10-brand-north-star.md`)
+  - [x] 내부 기획 3편 분석 + 외부 24개 브랜드 4트랙 리서치
+  - [x] 북극성 제안: "바다의 시간을 기록하는 브랜드" — 병별 기록 동봉이 핵심 차별
+  - [x] 방향성+기획 마스터 문서 정리 → `docs/brand/brand-direction-2026.md`
+  - [x] 모토 확정: Written by the Sea / 바다가 쓴 시간 · 히어로 1년 기준(진행형) · 시간 3단계(T-6 지속/T-12 정식/T-36)
+  - [x] 메인 페이지 구조 기획 → `docs/plans/2026-06-10-homepage-structure.md` (스크롤=한 병의 여정)
+  - [ ] CEO 확인 후 수직 슬라이스 구현 시작 (Hero → Footer → 서막 비트 → Living Record → Collection)
+  - [ ] CEO 결정: 북극성 채택 / 병별 기록 실행 수준 / 히어로 A·B안 선택
+  - [ ] 승인 시 히어로부터 수직 슬라이스 카피 교체
+
+- [ ] **The Proof — 4섹션 재기획 실행** (`docs/plans/2026-05-15-the-proof.md`)
+  - [ ] page.tsx 4섹션으로 축소 (Observation · Tasting · TheMaker · Bridge 제거)
+  - [ ] Sea Log 섹션 리뉴얼: 입수/인양 사진 슬롯 + 메타데이터 + 감각의 닻 카피 + 미세 떨림 모션
+  - [ ] Hero 카피 점검 — "한국 바다에서 숙성한 샴페인" 직격 보강
+  - [ ] Access 섹션 CTA 톤 조정 — `Request →` / `Inquire →` / `Access Granted`
+  - [ ] Collection 카드 톤 점검 — Archive No. 노출 강화
+  - [ ] 검증: 타입체크 · 린트 · 빌드 · Playwright 모바일 점검
 - [x] **Claude Design 온보딩 사전 정비 (Phase 1-4)** — 커밋 faccd40
   - [x] Phase 1 토큰 누수 차단: @theme +17 토큰, hex → var() 참조 전환 (METRICS/CHART_LINES), SVG stroke style 이관, OG BRAND 상수 분리, Archive 레이블 BEM
   - [x] Phase 2 인라인 스타일 제거: `--particle-*`, `--metric-color` (color-mix 25% alpha)

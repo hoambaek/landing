@@ -9,6 +9,7 @@ import {
   DM_Mono,
   Gowun_Batang,
   EB_Garamond,
+  Mrs_Saint_Delafield,
 } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -66,6 +67,13 @@ const ebGaramond = EB_Garamond({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-eb-garamond",
+  display: "swap",
+});
+
+const mrsSaintDelafield = Mrs_Saint_Delafield({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-delafield",
   display: "swap",
 });
 
@@ -142,7 +150,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${jjFont.variable} antialiased`}
+        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} ${jjFont.variable} antialiased`}
       >
         <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
         <JsonLd />

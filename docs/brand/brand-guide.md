@@ -2,6 +2,7 @@
 
 > Abyssal Amber Design System
 > 작성 기준: 2026-04-02
+> 갱신: 2026-06-10 — 3-Font Trinity(한글·영문·숫자), 시맨틱 역할 토큰, IBM Plex Mono 데이터 서체, 다크 elevation 사다리, 컴포넌트 확장(Forms·Nav·Tags·Footer) 반영
 > Source of Truth: Paper 디자인 파일 + frontend-spec.md
 
 ---
@@ -10,20 +11,23 @@
 
 **Abyssal Amber** — Hue 연속성(H:30~38) 기반 2색 대비 시스템
 
-### Backgrounds — Dark
+### Backgrounds — Dark · Elevation 톤 사다리
 
-| 토큰 | HEX | 용도 |
+다크 배경은 "변형"이 아니라 표면 계층(elevation)으로 의미를 부여한다.
+
+| 토큰 | HEX | 역할 |
 |------|-----|------|
-| `void-bg` | `#0A0908` | 기본 다크 배경 (웜 블랙) |
-| `navy` | `#0D0B09` | 다크 배경 변형 |
-| `navy-mid` | `#141110` | 중간 다크 배경 |
-| `circle-bg` | `#0A0D12` | Ocean Cellar 배경 (블루 언더톤) |
+| `void-bg` | `#0A0908` | **canvas** — 기본 바닥 (웜 블랙) |
+| `navy` | `#0D0B09` | **surface** — 표면 1단 |
+| `navy-mid` | `#141110` | **elevated** — 상승 2단 |
+| `circle-bg` | `#0A0D12` | **special** — Ocean Cellar (블루 언더톤) |
 
 ### Backgrounds — Light
 
 | 토큰 | HEX | 용도 |
 |------|-----|------|
-| `sand` | `#E8E5E1` | 기본 라이트 배경 (소프트 그레이지) |
+| `main` | `#C4BFBB` | **메인 라이트 배경** (따뜻한 그레이) |
+| `sand` | `#E8E5E1` | 라이트 배경 변형 (소프트 그레이지) |
 | `sand-deep` | `#DDDAD5` | 라이트 배경 변형 (깊은 그레이지) |
 | `warm-ivory` | `#ECEAE6` | 라이트 배경 변형 (따뜻한 아이보리) |
 | `warm-paper` | `#E3E0DC` | 한지 텍스처 배경 |
@@ -38,6 +42,19 @@
 | `amber` | `#CCAD7B` | 유일한 악센트 (샴페인 골드) |
 | `amber-muted` | `#b89868` | 악센트 변형 (뮤트 골드) |
 
+### Semantic Roles — 역할 기반 토큰
+
+색 이름이 아니라 **역할**로 참조한다 (Bugatti DESIGN 시스템 비교 후 도입).
+
+| 토큰 | 매핑 / HEX | 용도 |
+|------|-----------|------|
+| `text-on-light` | → `earth` `#312E2A` | 라이트 배경 위 텍스트 |
+| `text-on-dark` | → `void-text` `#F1EFEB` | 다크 배경 위 텍스트 |
+| `hairline` | `rgba(49,46,42,.10)` | 구분선 기본 |
+| `link` | → `amber` `#CCAD7B` | 인라인 링크 (밑줄) |
+| `success` | `#6E7F63` | 폼 완료 (뮤트 모스) |
+| `warning` | `#B5703A` | 폼 오류 (번트 앰버) |
+
 ### Tailwind CSS 4 토큰 매핑
 
 ```css
@@ -46,6 +63,7 @@
   --color-navy: #0D0B09;
   --color-navy-mid: #141110;
   --color-circle-bg: #0A0D12;
+  --color-main: #C4BFBB;
   --color-sand: #E8E5E1;
   --color-sand-deep: #DDDAD5;
   --color-warm-ivory: #ECEAE6;
@@ -58,6 +76,16 @@
   --color-border-default: rgba(49, 46, 42, 0.10);
   --color-border-subtle: rgba(49, 46, 42, 0.08);
   --color-border-emphasis: rgba(49, 46, 42, 0.18);
+
+  /* Semantic roles */
+  --color-link: #CCAD7B;
+  --color-success: #6E7F63;
+  --color-warning: #B5703A;
+
+  /* Type families — 3-Font Trinity */
+  --font-heading: "Cormorant Garamond", serif;            /* 영문 표제 */
+  --font-sans: "Noto Sans KR", sans-serif;                /* 한글 본문·표제 */
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;  /* 숫자·데이터 */
 }
 ```
 
@@ -65,31 +93,52 @@
 
 ## 02. Typography
 
-극저 웨이트(200-300), 열린 행간(1.8-2.1), 넓은 자간
+3-Font Trinity (한글·영문·숫자) · 극저 웨이트(200–300) · 열린 행간 · 넓은 자간
 
-### Heading — Cormorant Garamond
+### Type Families — 3-Font Trinity
 
-Weight 300 (Light)
+폰트를 스크립트별로 분리한다. **숫자는 모노스페이스로 통일** — Cormorant의 올드스타일 숫자를 쓰지 않고, 데이터/아카이브 정체성을 강화한다.
 
-| 레벨 | 크기 | 예시 |
-|------|------|------|
-| H1 | 72px | 두 개의 떼루아 |
-| H2 | 48px | collection. |
-| H3 | 36px | the maker. |
-| H4 | 28px | Ocean Cellar Prive |
-| H5 | 22px | living data. |
+| 역할 | 폰트 | 웨이트 | 용도 |
+|------|------|--------|------|
+| **영문 / Latin** | Cormorant Garamond | 300 Light | 표제·디스플레이 |
+| **한글 / Korean** | Noto Sans KR | 300, 400 | 표제·본문 |
+| **숫자 / Numerals** | IBM Plex Mono | 400 | 측정값·좌표·연도·아카이브 No. |
+
+### Heading Scale — 동일 폰트 · 사이즈 램프
+
+헤딩은 **같은 폰트(영문 Cormorant / 한글 Noto)를 사이즈만 다르게** 보여준다. 레벨마다 다른 폰트가 아니라, 하나의 폰트가 스케일을 따라 커진다. 영문·한글 동일 스케일 적용.
+
+| 레벨 | 크기 | 행간 | 자간 |
+|------|------|------|------|
+| H1 | 72px | 1.1 | .01em |
+| H2 | 48px | 1.15 | .01em |
+| H3 | 36px | 1.2 | .01em |
+| H4 | 28px | 1.25 | .02em |
+| H5 | 22px | 1.3 | .02em |
 
 ### Body — Noto Sans KR
 
 Weight 300, 400
 
-| 레벨 | 크기 | 용도 |
-|------|------|------|
-| Body L | 16px | 주요 본문 텍스트 |
-| Body M | 14px | 일반 본문 텍스트 |
-| Body S | 13px | 보조 텍스트 |
-| Caption | 11px | 데이터 캡션 (uppercase) |
-| Label | 10px | 섹션 라벨, 내비게이션, 메타데이터 (uppercase, letter-spacing: 0.15em) |
+| 레벨 | 크기 | 행간 | 자간 | 용도 |
+|------|------|------|------|------|
+| Body L | 16px | 1.8 | 0 | 주요 본문 텍스트 |
+| Body M | 14px | 1.75 | 0 | 일반 본문 텍스트 |
+| Body S | 13px | 1.7 | 0 | 보조 텍스트 |
+| Caption | 11px | 1.5 | .12em | 메타데이터 (uppercase) |
+| Label | 10px | 1.4 | .15em | 섹션 라벨·내비·메타데이터 (uppercase) |
+
+### Data — IBM Plex Mono
+
+측정값·좌표·타임스탬프·라이브 데이터 전용. 숫자가 들어가는 모든 데이터 표기는 이 서체로.
+
+| 레벨 | 크기 | 행간 | 자간 | 용도 |
+|------|------|------|------|------|
+| Metric | 24px | 1.0 | .02em | 단일 측정값 (`1.8°C`) |
+| Telemetry | 13px | 1.4 | .04em | `DEPTH 70.0 M · TEMP 1.8°C · PRESSURE 7.1 ATM` |
+| Coord | 12px | 1.4 | .08em | 좌표 · `Archive No. 001` |
+| Stamp | 11px | 1.4 | .10em | 타임스탬프 · `LIVE` |
 
 ### Dark Context
 
@@ -153,6 +202,41 @@ CTA 언어 규칙:
 | Light 미세 | `0.5px solid rgba(49, 46, 42, 0.12)` | 라이트 배경 위 미세 구분 |
 | Accent / Hover | `0.5px solid #CCAD7B` | 악센트 구분선, 호버 보더 |
 | Dark 기본 | `0.5px solid rgba(241, 239, 235, 0.12)` | 다크 배경 위 구분선 |
+
+> 컴포넌트는 raw hex 대신 토큰을 참조한다: 라이트 카드 → `border-default`, 다크 카드 → `border-dark`, 호버 → `link`(amber).
+
+### Forms & Inputs
+
+밑줄 전용(underline-only) · 투명 배경 · `border-radius: 0`
+
+| 상태 | 스타일 |
+|------|--------|
+| Default | 하단 보더만 `0.5px solid rgba(49,46,42,0.40)`, placeholder `text` 50% |
+| Focus | 하단 보더 `0.5px solid var(--amber)` (#CCAD7B) |
+| Error | 하단 보더 `var(--warning)` (#B5703A) |
+| Success | 하단 보더 `var(--success)` (#6E7F63) |
+
+높이 44px (터치 타깃). 라벨은 `Label 10px` uppercase / ls .15em.
+
+### Navigation — Top Bar
+
+투명 배경 · 상하 `0.5px hairline` · 워드마크 중앙. 높이 56px.
+- 좌: `Menu` (Label 10px uppercase / ls .15em)
+- 중앙: 워드마크 `MUSE DE MARÉE` (Cormorant, ls .18em)
+- 우: `Ocean Cellar Privé` (amber-muted)
+
+### Tags & Captions
+
+- **캡션**: 서체 자체 (배경·보더 없음). `Caption 11px` uppercase / ls .12em.
+- **태그 칩**: 직각(`radius 0`) hairline 보더, padding 7px 14px.
+- **한정 넘버**: `Limited 001 / 300` 등 숫자는 IBM Plex Mono.
+
+### Footer
+
+다크 밴드(`void-bg #0A0908`) · padding 48px.
+- 워드마크 `Muse de Marée` (Cormorant) + 한 줄 소개
+- 링크 컬럼: Explore / Connect (Label 10px uppercase 헤더 + Body 12px 링크)
+- 하단 바: `0.5px` hairline 구분 위 — 좌 카피라이트 `© 2026 MUSE DE MARÉE` (Mono), 우 태그라인 (amber)
 
 ---
 
@@ -341,10 +425,25 @@ column-gap: 12px;    /* mobile */
 | 컬러 | Warm Black `#0A0908` + Greige `#E8E5E1` + Gold `#CCAD7B` |
 | 영문/프랑스어 폰트 | Cormorant Garamond |
 | 한글 폰트 | Noto Sans KR |
+| 숫자 폰트 | IBM Plex Mono (측정·연도·아카이브 No.) |
 | 본문 최소 크기 | 18pt 이하 금지 |
 | 텍스트 한도 | 슬라이드당 한글 60~100자 이내 (캡션 제외) |
 | 이미지 비율 | 페이지당 60~80% |
 
 ---
 
+## 11. Known Gaps — 미커버 항목
+
+디자인 시스템에서 아직 정의되지 않은 영역 (정직하게 기록):
+
+- 모션 타이밍 상세(ScrollTrigger·캐러셀·리플) → `frontend-spec.md` §5
+- 반응형 브레이크포인트·터치 타깃 → `frontend-spec.md` §6
+- 폼 검증 전체 상태 — `success`/`warning`는 토큰만 정의, 인라인 에러/메시지 UI 미정
+- 데이터 시각화(차트·게이지·라이브 그래프) 컴포넌트 미정의
+- 모바일 하단 네비게이션 바 별도 스펙 필요
+- **border 토큰값 일원화 미완** — 카드 보더 `rgba(.25)` vs `hairline` `rgba(.10)` 정합 필요
+
+---
+
 *Source: Paper design file "Muse de Maree" + docs/tech/frontend-spec.md + teams/00-luxury-branding-team/brand-standards.md*
+*2026-06-10 갱신: Bugatti DESIGN 시스템 비교 분석 → 3-Font Trinity, 시맨틱 토큰, Mono 데이터 서체, elevation 사다리, 컴포넌트 확장 반영*
