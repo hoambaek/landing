@@ -74,7 +74,13 @@ The Living Record · First Record · Collection 인트로 · The Maker · Ocean 
 - 타입체크·ESLint·프로덕션 빌드 통과, 콘솔 에러 0
 - Playwright 데스크톱 1440 + 모바일 390 전 섹션 Paper 대조
 
-## 6. 후속 (미구현)
-- Phase 9 서브 페이지 3종(`/invite`·`/partner`·`/brand-book`) — 링크만 연결, 페이지 미생성
+## 6. 서브 페이지 3종 (Paper Page 1M8/1N0/1O7 — 완료)
+- `/invite`(초대 신청, 다크블루 #0A0D12) · `/partner`(파트너 문의, #F5F1E8) · `/brand-book`(브랜드 소개서, #E8E5E1)
+- 편지형 560px 공용 셸(`LetterShell`) + `UnderlineField`(포커스 시 앰버) + 테마별 CSS 변수
+- 제출 → Supabase insert(RLS `anon insert-only`). 테이블 `invitations`/`partner_inquiries`/`brandbook_requests` 생성
+- 이메일 검증·성공 확인 문구·robots noindex·모바일 반응형, 실제 저장 검증 완료
+
+## 7. 후속 (미구현)
 - 인양 실사 확보 시 First Record AI 이미지(rec01~04) 교체
 - 미사용 옛 섹션 파일(ObservationSection·DataArchiveSection·TastingSection 등) 정리
+- 폼 제출 알림(이메일/슬랙) 연동 검토
