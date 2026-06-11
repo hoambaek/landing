@@ -25,9 +25,25 @@
     - [x] Phase 8 Footer(로고 락업 + Mrs Saint Delafield 모토 + 앰버 헤어라인 + 3열 내비 + 법인 정보 + SNS·약관·언어)
     - [x] Phase 0 정비: 에셋 중복 정리(old/ 이동)·rec webp 변환·글리프 검사 유틸(scripts/check-glyphs.mjs)·@theme 토큰 추가(main/delafield)
     - [x] 검증: 타입체크·린트·프로덕션 빌드 통과 · Playwright 데스크톱1440+모바일390 Paper 대조 · 콘솔 에러 0
+    - [x] 커밋 `e651360` 푸시 → 체인지로그 `docs/plans/2026-06-11-paper-to-code-changelog.md`
+  - [x] **2026-06-11 리파인 세션** (커밋 `e651360` 포함)
+    - [x] Hero: 영상 폐기 정적 히어로, 모바일 프로스티드 블러(인라인 backdrop-filter blur 15px — Lightning CSS 스트립 우회), 타이틀 위치/크기 미세조정(모바일 21px)
+    - [x] Living Record 데스크톱 높이 Paper 동일 1196px, 클로징 데스크톱 삭제
+    - [x] First Record 이미지 축소(440/312/580/580)·REC02 커넥터 제거·간격 120px·캡션 화이트·ÉDITION ZÉRO 삭제
+    - [x] Collection 시간 띠 삭제·24병한정 삭제·SOLD OUT 하단 이동·desc 줄바꿈
+    - [x] The Maker 2번 카드 = coming soon(이미지 좌+텍스트 우)
+    - [x] 카피 마침표 일괄 제거(중간 콤마 유지)·좌표 34.1434°N/126.5792°E·수온 13.5°C·REC→기록·사업자번호 859-85-03139
+    - [x] Footer 라이트 테마(#C4BFBB→ 내비 실제 링크·Contact 삭제·이메일 강조)·헤더 푸터 위 검정
+    - [x] 메뉴 오버레이 라이트(#C4BFBB)·골드 #8C6B33 대비 확보
+  - [x] **서브 페이지 3종 구현** (커밋 `1e92d36`) — `/invite`·`/partner`·`/brand-book`
+    - [x] 편지형 셸(LetterShell) + UnderlineField(포커스 앰버) + 테마별 CSS 변수
+    - [x] Supabase insert(RLS anon insert-only): `invitations`/`partner_inquiries`/`brandbook_requests` 테이블 생성 + 실제 저장 검증
+    - [x] 이메일 검증·성공 확인 문구·robots noindex·모바일 반응형
   - [ ] 데스크톱 히어로/S2 이미지 원본 재보정 (현재 CSS 근사 — 가이드 §4 기준)
   - [ ] 기획 문서 QR→NFC 표기 갱신 (brand-direction-2026.md §7, homepage-structure.md S4)
   - [ ] 인양 실사 확보 시 First Record AI 이미지(rec01~04) 교체
+  - [ ] 미사용 옛 섹션 파일 정리(ObservationSection·DataArchiveSection·TastingSection·NfcSection·OriginSection)
+  - [ ] 폼 제출 알림(이메일/슬랙) 연동 검토
 
 - [ ] **브랜드 북극성 채택 검토** (`docs/plans/2026-06-10-brand-north-star.md`)
   - [x] 내부 기획 3편 분석 + 외부 24개 브랜드 4트랙 리서치
