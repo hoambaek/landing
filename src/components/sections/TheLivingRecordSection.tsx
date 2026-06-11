@@ -69,6 +69,16 @@ function DaysCounter() {
       <p className="s-living__counter-caption">
         이 바다를 기록한 시간 — 측정은 멈추지 않습니다.
       </p>
+
+      {/* 측정은 멈추지 않습니다 — 지금 이 순간의 측정값 */}
+      <div className="s-living__log">
+        <span className="s-living__log-rule" />
+        <div className="s-living__log-vals">
+          <span>수온 13.5°C</span>
+          <span>해류 2.46 m/s</span>
+          <span>수압 3.98 atm</span>
+        </div>
+      </div>
     </div>
   );
 }
@@ -110,32 +120,8 @@ export default function TheLivingRecordSection() {
           <span>기록이 시작됩니다</span>
         </div>
 
-        {/* 771 카운터 */}
+        {/* 771 카운터 + 측정값 */}
         <DaysCounter />
-      </div>
-
-      {/* 관측 로그 — 데스크톱 1행 5항목 */}
-      <div className="s-living__log s-living__log--desktop">
-        <span className="s-living__log-rule" />
-        <div className="s-living__log-row">
-          <span>기록 · 2026.06.10 KST</span>
-          <span>수온 13.5°C</span>
-          <span>해류 2.46 m/s</span>
-          <span>수압 3.98 atm</span>
-          <span>남해 34.1434°N · 126.5792°E</span>
-        </div>
-      </div>
-      {/* 관측 로그 — 모바일 2행 */}
-      <div className="s-living__log s-living__log--mobile">
-        <span className="s-living__log-rule" />
-        <div className="s-living__log-row">
-          <span>기록 · 2026.06.10 KST</span>
-          <span>수온 13.5°C · 수압 3.98atm</span>
-        </div>
-        <div className="s-living__log-row">
-          <span>해류 2.46 m/s</span>
-          <span>남해 34.1434°N · 126.5792°E</span>
-        </div>
       </div>
     </section>
   );

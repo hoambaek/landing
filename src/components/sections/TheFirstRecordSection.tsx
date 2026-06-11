@@ -15,7 +15,7 @@ export default function TheFirstRecordSection() {
           <span>2026. 06.</span>
           <span className="s-first__hl-sentence">
             <span>첫 번째 기록이</span>{" "}
-            <span>수면 위로 돌아왔습니다</span>
+            <span>수면 위로 떠올랐습니다</span>
           </span>
         </p>
       </header>

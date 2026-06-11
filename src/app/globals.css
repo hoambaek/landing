@@ -1085,7 +1085,7 @@ input:focus-visible,
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: 38px;
   letter-spacing: 0.01em;
   line-height: 56px;
@@ -1155,20 +1155,13 @@ input:focus-visible,
   color: rgba(241, 239, 235, 0.85);
 }
 
-/* 관측 로그 — 하단 풀폭 */
+/* 관측 로그 — 카운터 아래, "측정은 멈추지 않습니다"를 잇는 측정값 */
 .s-living__log {
-  position: absolute;
-  z-index: 2;
-  left: 80px;
-  right: 80px;
-  bottom: 48px;
+  margin-top: 44px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-.s-living__log--mobile {
-  display: none;
+  gap: 12px;
+  max-width: 460px;
 }
 
 .s-living__log-rule {
@@ -1176,21 +1169,31 @@ input:focus-visible,
   width: 100%;
   height: 1px;
   background: rgba(241, 239, 235, 0.18);
+  margin-bottom: 4px;
 }
 
-.s-living__log-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-
-.s-living__log-row span {
+.s-living__log-time,
+.s-living__log-coord {
   font-family: var(--font-mono);
   font-weight: 300;
   font-size: 12px;
   letter-spacing: 0.12em;
   line-height: 16px;
   color: #9A938A;
+}
+
+.s-living__log-vals {
+  display: flex;
+  gap: 28px;
+}
+
+.s-living__log-vals span {
+  font-family: var(--font-mono);
+  font-weight: 300;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  line-height: 16px;
+  color: #C9C4BC;
 }
 
 /* ── The Living Record 모바일 ── */
@@ -1267,24 +1270,21 @@ input:focus-visible,
   }
 
   .s-living__log {
-    left: 24px;
-    right: 24px;
-    bottom: 36px;
-    gap: 12px;
+    max-width: none;
+    margin-top: 32px;
   }
 
-  .s-living__log--desktop {
-    display: none;
+  .s-living__log-vals {
+    flex-wrap: wrap;
+    gap: 8px 22px;
   }
 
-  .s-living__log--mobile {
-    display: flex;
-  }
-
-  .s-living__log-row span {
+  .s-living__log-time,
+  .s-living__log-coord,
+  .s-living__log-vals span {
     font-size: 10px;
     letter-spacing: 0.1em;
-    line-height: 12px;
+    line-height: 14px;
   }
 }
 
@@ -1329,7 +1329,7 @@ input:focus-visible,
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: 36px;
   line-height: 54px;
   text-align: center;
