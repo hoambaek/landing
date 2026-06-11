@@ -10,24 +10,24 @@ const NAV_COLS = [
   {
     head: "COLLECTION",
     items: [
-      { label: "En Lieu Sûr", href: "#archive" },
-      { label: "Élément de Surprise", href: "#archive" },
-      { label: "Atomes Crochus", href: "#archive" },
+      { label: "En Lieu Sûr", href: "/#archive" },
+      { label: "Élément de Surprise", href: "/#archive" },
+      { label: "Atomes Crochus", href: "/#archive" },
     ],
   },
   {
     head: "RECORD",
     items: [
-      { label: "The Living Record", href: "#data-archive" },
-      { label: "The First Record", href: "#the-first-record" },
-      { label: "The Maker", href: "#the-maker" },
+      { label: "The Living Record", href: "/#data-archive" },
+      { label: "The First Record", href: "/#the-first-record" },
+      { label: "The Maker", href: "/#the-maker" },
     ],
   },
   {
     head: "RELATION",
     items: [
-      { label: "Ocean Cellar Privé", href: "#ocean-circle" },
-      { label: "Partnership", href: "#professionals" },
+      { label: "Ocean Cellar Privé", href: "/#ocean-circle" },
+      { label: "Partnership", href: "/#professionals" },
     ],
   },
 ];

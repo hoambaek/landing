@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function BrandBookPage() {
   return (
-    <LetterShell theme="brand">
+    <LetterShell theme="brand" image="/images/letter/top-03-brand.webp" imageAlt="석회암 위 따개비가 붙은 인양 병">
       <BrandBookForm />
     </LetterShell>
   );

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function PartnerPage() {
   return (
-    <LetterShell theme="partner">
+    <LetterShell theme="partner" image="/images/letter/top-02-partner.webp" imageAlt="흰 장갑으로 따개비 병에 택을 다는 손">
       <PartnerForm />
     </LetterShell>
   );

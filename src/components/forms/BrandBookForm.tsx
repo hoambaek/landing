@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import UnderlineField from "./UnderlineField";
-import { submitBrandBook, isValidEmail } from "@/lib/forms";
+import { submitBrandBook } from "@/lib/forms";
+import { isValidEmail } from "@/lib/validation";
 
 export default function BrandBookForm() {
   const [email, setEmail] = useState("");
@@ -28,47 +30,40 @@ export default function BrandBookForm() {
 
   return (
     <>
-      <span className="s-letter__eyebrow">BRAND BOOK</span>
+      <div className="s-letter__brandmark">
+        <Image src="/images/logo/logo_trans.png" alt="" width={1000} height={829} className="s-letter__brandmark-symbol" />
+        <Image src="/images/logo/logo_text_trans.png" alt="MUSE DE MARÉE" width={1000} height={152} className="s-letter__brandmark-word" />
+      </div>
       <h1 className="s-letter__title">브랜드 소개서</h1>
-      <p className="s-letter__sub">바다가 쓴 시간의 기록</p>
-      <p className="s-letter__body">
-        브랜드 철학과 기록 시스템, 큐베 라인업,
-        <br />
-        파트너십 안내를 담았습니다. 이메일로 보내드립니다.
-      </p>
+      <p className="s-letter__sub">바다가 쓴 시간.</p>
 
       {status === "done" ? (
         <div className="s-letter__success">
           <span className="s-letter__success-rule" />
           <p className="s-letter__success-line">곧 메일로 보내드립니다.</p>
-          <div className="s-letter__tags">
-            <span>PDF</span>
-            <span className="s-letter__tag-dot" aria-hidden="true" />
-            <span>한국어 / ENGLISH</span>
-          </div>
+          <p className="s-letter__note">PDF · 한국어 / ENGLISH</p>
         </div>
       ) : (
-        <form className="s-letter__form" onSubmit={onSubmit} noValidate>
-          <UnderlineField label="EMAIL" placeholder="이메일 주소" name="email" type="email" value={email} onChange={setEmail} required />
+        <>
+          <div className="s-letter__body">
+            <p>한국 심해에서 숙성한 샴페인, 그 시작과 기록.</p>
+            <p>브랜드의 철학, 측정의 방식, 큐베 라인업과 파트너십.</p>
+            <p>한 권의 소개서로 전합니다.</p>
+          </div>
 
-          <button type="submit" className="s-letter__submit" disabled={status === "sending"}>
-            <span className="s-letter__submit-row">
+          <form className="s-letter__form" onSubmit={onSubmit} noValidate>
+            <UnderlineField label="EMAIL" placeholder="이메일 주소" name="email" type="email" value={email} onChange={setEmail} required />
+
+            <button type="submit" className="s-letter__submit" disabled={status === "sending"}>
               <span className="s-letter__submit-label">{status === "sending" ? "전송 중" : "소개서 받기"}</span>
               <span className="s-letter__submit-arrow">›</span>
-            </span>
-            <span className="s-letter__submit-rule" />
-          </button>
+            </button>
 
-          {error ? (
-            <p className="s-letter__note">{error}</p>
-          ) : (
-            <div className="s-letter__tags" style={{ marginTop: 40 }}>
-              <span>PDF</span>
-              <span className="s-letter__tag-dot" aria-hidden="true" />
-              <span>한국어 / ENGLISH</span>
-            </div>
-          )}
-        </form>
+            <p className="s-letter__note">
+              {error || "이메일을 남겨주시면 브랜드 소개서(PDF)를 보내드립니다. 한국어 · 영문 제공."}
+            </p>
+          </form>
+        </>
       )}
     </>
   );

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function InvitePage() {
   return (
-    <LetterShell theme="invite">
+    <LetterShell theme="invite" image="/images/letter/top-01-invite.webp" imageAlt="빛기둥 속에서 인양되는 병">
       <InviteForm />
     </LetterShell>
   );
