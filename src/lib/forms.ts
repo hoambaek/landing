@@ -1,5 +1,7 @@
 "use server";
 
+import { readFile } from "fs/promises";
+import path from "path";
 import { render } from "@react-email/render";
 import { supabaseAdmin } from "./supabase/admin";
 import {
@@ -36,11 +38,15 @@ export type BrandBookPayload = { email: string };
 
 export type SubmitResult = { ok: boolean; error?: string };
 
+type Attachment = { filename: string; content: string };
+
 type NotifyArgs = {
   kind: FormKind;
   applicantEmail: string;
   applicantName?: string;
   adminFields: Record<string, string>;
+  /** 신청자 메일에 첨부할 파일 (브랜드 소개서 PDF 등) */
+  attachments?: Attachment[];
 };
 
 /** insert 성공 후 이메일 2종 발송(병렬, 실패 무시) */
@@ -74,6 +80,7 @@ async function sendEmails({
   applicantEmail,
   applicantName,
   adminFields,
+  attachments,
 }: NotifyArgs): Promise<void> {
   if (!isResendConfigured() || !resend) {
     console.warn("[forms] Resend 미설정 — 이메일 발송 건너뜀");
@@ -98,6 +105,7 @@ async function sendEmails({
         to: applicantEmail,
         subject: getApplicantSubject(kind),
         html: applicantHtml,
+        ...(attachments?.length ? { attachments } : {}),
       }),
       resend.emails.send({
         from: FROM_EMAIL,
@@ -160,9 +168,28 @@ export async function submitPartner(p: PartnerPayload): Promise<SubmitResult> {
   );
 }
 
+/** 브랜드 소개서 PDF를 base64로 로드 (없으면 첨부 없이 graceful) */
+async function loadBrandBookPdf(): Promise<Attachment[] | undefined> {
+  try {
+    const buf = await readFile(
+      path.join(process.cwd(), "public/files/musedemaree-brandbook.pdf")
+    );
+    return [
+      {
+        filename: "Muse de Marée — Brand Book.pdf",
+        content: buf.toString("base64"),
+      },
+    ];
+  } catch {
+    console.warn("[forms] 브랜드 소개서 PDF 없음 — 첨부 없이 발송");
+    return undefined;
+  }
+}
+
 export async function submitBrandBook(
   p: BrandBookPayload
 ): Promise<SubmitResult> {
+  const attachments = await loadBrandBookPdf();
   return insertAndNotify(
     "brandbook_requests",
     { email: p.email },
@@ -170,6 +197,7 @@ export async function submitBrandBook(
       kind: "brandbook",
       applicantEmail: p.email,
       adminFields: { 이메일: p.email },
+      attachments,
     }
   );
 }
