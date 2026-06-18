@@ -64,10 +64,16 @@ function DaysCounter() {
     <div className="s-living__counter" ref={ref}>
       <div className="s-living__counter-num">
         <span className="s-living__counter-value">{days}</span>
-        <span className="s-living__counter-unit">일째</span>
+        <Image
+          src="/text/counter-unit.png"
+          alt="일째"
+          width={59}
+          height={40}
+          className="s-living__counter-unit"
+        />
       </div>
       <p className="s-living__counter-caption">
-        이 바다를 기록한 시간 — 측정은 멈추지 않습니다.
+        이 바다를 기록한 시간, 측정은 멈추지 않습니다.
       </p>
 
       {/* 측정은 멈추지 않습니다 — 지금 이 순간의 측정값 */}
@@ -109,15 +115,23 @@ export default function TheLivingRecordSection() {
       <div className="s-living__text">
         {/* 도입 카피 — 데스크톱 3행 */}
         <div className="s-living__copy s-living__copy--desktop reveal">
-          <span>깊은 바다 속</span>
-          <span>빛이 사라진 곳에서,</span>
-          <span>기록이 시작됩니다</span>
+          <Image
+            src="/text/living-copy.png"
+            alt="깊은 바다 속 빛이 사라진 곳에서, 기록이 시작됩니다"
+            width={354}
+            height={184}
+            className="s-living__copy-img"
+          />
         </div>
         {/* 도입 카피 — 모바일 3행 (내용은 데스크톱과 동일) */}
         <div className="s-living__copy s-living__copy--mobile">
-          <span>깊은 바다 속</span>
-          <span>빛이 사라진 곳에서,</span>
-          <span>기록이 시작됩니다</span>
+          <Image
+            src="/text/living-copy.png"
+            alt="깊은 바다 속 빛이 사라진 곳에서, 기록이 시작됩니다"
+            width={354}
+            height={184}
+            className="s-living__copy-img"
+          />
         </div>
 
         {/* 771 카운터 + 측정값 */}

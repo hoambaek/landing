@@ -45,3 +45,7 @@ next-env.d.ts
 
 # Playwright MCP artifacts (스크린샷·console log·snapshot yml)
 .playwright-mcp/
+
+# 작업 임시물 / 이미지 백업본 (배포·소스 무관)
+_workspace/
+public/images/*_old.webp

@@ -14,7 +14,7 @@ export default function OriginSection() {
             </p>
             <p>
               이 질문은 낭만이 아니라 가설이었습니다. 수압, 수온, 광차단,
-              해류 — 해저의 조건들을 하나씩 측정하고, 예측하고, 검증하면서
+              해류. 해저의 조건들을 하나씩 측정하고, 예측하고, 검증하면서
               뮤즈드마레의 첫 번째 병이 바다로 내려갔습니다.
             </p>
             <p className="s-origin__conclusion">

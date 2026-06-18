@@ -32,7 +32,7 @@ export default function JsonLd() {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "Muse de Marée Collection",
-    description: "바다가 기록한 여섯 개의 시간 — 해저 숙성 샴페인 컬렉션",
+    description: "바다가 기록한 여섯 개의 시간 · 해저 숙성 샴페인 컬렉션",
     numberOfItems: 6,
     itemListElement: [
       {

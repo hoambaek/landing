@@ -899,7 +899,7 @@ input:focus-visible,
   display: flex;
   flex-direction: column;
   gap: 4px;
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-weight: 400;
   font-size: 37px;
   letter-spacing: 0.01em;
@@ -910,6 +910,18 @@ input:focus-visible,
 .s-void__h1 span {
   display: block;
   white-space: nowrap;
+}
+
+/* H1 텍스트 이미지 (J1950 → PNG) */
+.s-void__content--desktop .s-void__h1-img {
+  display: block;
+  width: 563px;
+  height: auto;
+}
+.s-void__content--mobile .s-void__h1-img {
+  display: block;
+  width: 255px;
+  height: auto;
 }
 
 /* 브랜드 라인 — 데스크톱 인라인 페어 (앰버) */
@@ -930,11 +942,26 @@ input:focus-visible,
 }
 
 .s-void__brand-name {
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: 22px;
   letter-spacing: 0.04em;
   line-height: 28px;
   color: var(--color-amber);
+}
+
+/* 브랜드명 텍스트 이미지 (J1950 → PNG) — baseline 정렬 */
+.s-void__brand-name-img {
+  display: inline-block;
+  width: 107px;
+  height: auto;
+  vertical-align: baseline;
+}
+/* 이미지 박스 하단 여백만큼 내려 label '해저숙성 샴페인'과 글자 밑선 정렬 */
+.s-void__content--desktop .s-void__brand-name-img {
+  transform: translateY(7px);
+}
+.s-void__content--mobile .s-void__brand-name-img {
+  width: 88px;
 }
 
 /* 스크롤 힌트 */
@@ -1097,6 +1124,18 @@ input:focus-visible,
   white-space: nowrap;
 }
 
+/* 도입 카피 텍스트 이미지 (J1950 → PNG) */
+.s-living__copy--desktop .s-living__copy-img {
+  display: block;
+  width: 354px;
+  height: auto;
+}
+.s-living__copy--mobile .s-living__copy-img {
+  display: block;
+  width: 196px;
+  height: auto;
+}
+
 .s-living__copy--mobile {
   display: none;
 }
@@ -1115,18 +1154,20 @@ input:focus-visible,
 }
 
 .s-living__counter-value {
-  font-family: var(--font-jj);
+  font-family: var(--font-hero);
+  font-weight: 400;
   font-size: 96px;
   line-height: 96px;
   color: var(--color-amber);
   font-variant-numeric: tabular-nums;
 }
 
+/* '일째' 텍스트 이미지 (J1950 → PNG) — 779 옆 baseline 정렬 */
 .s-living__counter-unit {
-  font-family: var(--font-jj);
-  font-size: 34px;
-  line-height: 40px;
-  color: var(--color-amber);
+  display: block;
+  width: 59px;
+  height: auto;
+  transform: translateY(7px);
 }
 
 .s-living__counter-caption {
@@ -1148,7 +1189,7 @@ input:focus-visible,
   z-index: 2;
   right: 80px;
   bottom: 116px;
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: 20px;
   letter-spacing: 0.01em;
   line-height: 24px;
@@ -1246,8 +1287,7 @@ input:focus-visible,
   }
 
   .s-living__counter-unit {
-    font-size: 20px;
-    line-height: 24px;
+    width: 35px;
   }
 
   .s-living__counter-caption {
@@ -1345,6 +1385,18 @@ input:focus-visible,
   display: inline;
 }
 
+/* 헤드라인 텍스트 이미지 (J1950 → PNG): 데스크톱 2행 / 모바일 3행 */
+.s-first__headline-img {
+  display: block;
+  height: auto;
+}
+.s-first__headline-img--d {
+  width: 679px;
+}
+.s-first__headline-img--m {
+  display: none;
+}
+
 /* Rows */
 .s-first__rows {
   width: 100%;
@@ -1398,7 +1450,7 @@ input:focus-visible,
   overflow: clip;
 }
 
-.s-first__plate--01 { width: 440px; aspect-ratio: 680 / 907; }
+.s-first__plate--01 { width: 440px; aspect-ratio: 1920 / 1440; }
 .s-first__plate--02 { width: 312px; aspect-ratio: 480 / 640; }
 .s-first__plate--03 { width: 580px; aspect-ratio: 920 / 1227; }
 .s-first__plate--04 { width: 580px; aspect-ratio: 1 / 1; }
@@ -1436,7 +1488,7 @@ input:focus-visible,
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: 30px;
   line-height: 48px;
   text-align: center;
@@ -1445,6 +1497,13 @@ input:focus-visible,
 
 .s-first__closing-line span {
   display: block;
+}
+
+/* 클로징 텍스트 이미지 (J1950 → PNG) */
+.s-first__closing-img {
+  display: block;
+  width: 350px;
+  height: auto;
 }
 
 /* span 셀렉터(0,2,0)를 이기도록 결합 — lessons: specificity */
@@ -1503,6 +1562,10 @@ input:focus-visible,
     display: block;
   }
 
+  /* 헤드라인 이미지: 모바일은 3행 버전으로 교체 */
+  .s-first__headline-img--d { display: none; }
+  .s-first__headline-img--m { display: block; width: 233px; }
+
   .s-first__rows--desktop {
     display: none;
   }
@@ -1521,7 +1584,7 @@ input:focus-visible,
     align-items: stretch;
   }
 
-  .s-first__plate--m1 { width: 300px; aspect-ratio: 300 / 400; }
+  .s-first__plate--m1 { width: 300px; aspect-ratio: 1920 / 1440; }
   .s-first__plate--m2 { width: 100%; aspect-ratio: 390 / 500; }
   .s-first__plate--m3 { width: 300px; aspect-ratio: 1 / 1; }
 
@@ -1556,6 +1619,8 @@ input:focus-visible,
     font-size: 19px;
     line-height: 32px;
   }
+
+  .s-first__closing-img { width: 222px; }
 
   .s-first__closing-line .s-first__cl--desktop { display: none; }
   .s-first__closing-line .s-first__cl--mobile { display: block; }
@@ -1622,7 +1687,7 @@ input:focus-visible,
 }
 
 .s-col__sub {
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: 20px;
   line-height: 32px;
   color: #5A544B;
@@ -1631,6 +1696,14 @@ input:focus-visible,
 /* 인트로 2행 줄바꿈 */
 .s-col__sub span {
   display: block;
+}
+
+/* 인트로 텍스트 이미지 (J1950 → PNG) */
+.s-col__sub-img {
+  display: block;
+  width: 311px;
+  height: auto;
+  margin: 0 auto;
 }
 
 /* 시간 띠 */
@@ -1657,7 +1730,7 @@ input:focus-visible,
 }
 
 .s-col__band-line {
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: 21px;
   line-height: 26px;
   color: var(--color-earth);
@@ -1959,6 +2032,8 @@ input:focus-visible,
     line-height: 24px;
   }
 
+  .s-col__sub-img { width: 218px; }
+
   /* 시간 띠 — 세로 스택 */
   .s-col__band {
     flex-direction: column;
@@ -2187,11 +2262,19 @@ input:focus-visible,
   gap: 40px;
 }
 
+/* Filled CTA — amber 배경, 어두운 텍스트 (brand-guide) */
 .s-prive__link {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: inline-flex;
+  align-items: center;
   width: fit-content;
+  background: var(--color-amber);
+  border: 0.5px solid var(--color-amber);
+  padding: 14px 28px;
+  transition: background 0.4s var(--ease-water);
+}
+
+.s-prive__link:hover {
+  background: var(--color-amber-muted);
 }
 
 .s-prive__link-row {
@@ -2202,42 +2285,39 @@ input:focus-visible,
 
 .s-prive__link-label {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 15px;
   letter-spacing: 0.06em;
   line-height: 18px;
-  color: var(--color-void-text);
+  color: var(--color-void-bg);
 }
 
 .s-prive__link-arrow {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 15px;
   line-height: 18px;
-  color: var(--color-amber);
+  color: var(--color-void-bg);
 }
 
+/* 밑줄 헤어라인은 filled CTA에서 미사용 */
 .s-prive__link-rule {
-  height: 1px;
-  width: 100%;
-  background: rgba(241, 239, 235, 0.4);
-  transition: background-color 0.4s var(--ease-water);
+  display: none;
 }
 
-.s-prive__link:hover .s-prive__link-rule {
-  background: rgba(241, 239, 235, 0.75);
+/* 보조 버튼(브랜드 소개서) — amber 보더, 투명 배경으로 위계 구분 */
+.s-prive__link--muted {
+  background: transparent;
+  border: 0.5px solid var(--color-amber);
 }
 
-.s-prive__link--muted .s-prive__link-label {
-  color: rgba(241, 239, 235, 0.7);
+.s-prive__link--muted:hover {
+  background: rgba(204, 173, 123, 0.12);
 }
 
+.s-prive__link--muted .s-prive__link-label,
 .s-prive__link--muted .s-prive__link-arrow {
-  color: #8C857A;
-}
-
-.s-prive__link--muted .s-prive__link-rule {
-  background: rgba(241, 239, 235, 0.25);
+  color: var(--color-amber);
 }
 
 /* ── Privé / Partnership 모바일 ── */
@@ -2792,7 +2872,7 @@ input:focus-visible,
 
 /* — Headline — */
 .s-obs__headline {
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: clamp(1.75rem, 3vw, 2.5rem);
   font-weight: 400;
   line-height: 1.5;
@@ -2836,7 +2916,7 @@ input:focus-visible,
 .s-obs__emphasis {
   max-width: 400px;
   margin: clamp(32px, 4vh, 48px) 0 0;
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-weight: 400;
   font-size: 1.125rem;
   line-height: 2;
@@ -2970,7 +3050,7 @@ input:focus-visible,
 }
 
 .s-data__title {
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: clamp(28px, 6vw, 50px);
   font-weight: 400;
   color: inherit;
@@ -3257,7 +3337,7 @@ input:focus-visible,
 }
 
 .s-tasting__headline {
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: clamp(18px, 2.8vw, 32px);
   font-weight: 300;
   letter-spacing: 0.02em;
@@ -3439,13 +3519,20 @@ input:focus-visible,
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: 20px;
   line-height: 34px;
   color: #45403A;
 }
 
 .s-maker__subtitle span { display: block; }
+
+/* 서브타이틀 텍스트 이미지 (J1950 → PNG) */
+.s-maker__subtitle-img {
+  display: block;
+  width: 302px;
+  height: auto;
+}
 
 .s-maker__viewport {
   position: relative;
@@ -3669,6 +3756,8 @@ input:focus-visible,
     line-height: 24px;
   }
 
+  .s-maker__subtitle-img { width: 211px; }
+
   .s-maker__viewport {
     height: 520px;
   }
@@ -3817,7 +3906,7 @@ input:focus-visible,
 }
 
 .s-archive__title {
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: clamp(28px, 6vw, 50px);
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -4279,7 +4368,7 @@ input:focus-visible,
 }
 
 .s-nfc__title {
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: 50px;
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -4396,7 +4485,7 @@ input:focus-visible,
 }
 
 .s-origin__content h2 {
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: clamp(40px, 6vw, 72px);
   font-weight: 400;
   letter-spacing: -0.01em;
@@ -4429,7 +4518,7 @@ input:focus-visible,
 }
 
 .s-origin__body .s-origin__conclusion {
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
   font-style: normal;
   opacity: 0.85;
@@ -4544,7 +4633,7 @@ input:focus-visible,
 
 /* Title */
 .s-premiere__title {
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -4669,7 +4758,7 @@ input:focus-visible,
 
 /* Title */
 .s-pro__title {
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -4909,7 +4998,7 @@ input:focus-visible,
 }
 
 .footer__brand {
-  font-family: var(--font-jj);
+  font-family: var(--font-body);
   font-size: clamp(2.5rem, 5vw, 4.5rem);
   font-weight: 300;
   letter-spacing: 0.15em;
@@ -5362,7 +5451,7 @@ input:focus-visible,
   }
 
   .s-data__highlight {
-    font-family: var(--font-jj);
+    font-family: var(--font-body);
     font-size: 1.1875rem;
     font-weight: 400;
     letter-spacing: 0.04em;
@@ -5910,6 +5999,8 @@ html {
 /* ── 파트너십 유형 카테고리 카드 ── */
 .s-cat {
   margin-top: 52px;
+  padding-top: 40px;
+  border-top: 0.5px solid rgba(49, 46, 42, 0.14);
   width: 100%;
   max-width: 480px;
   text-align: left;
@@ -5922,7 +6013,17 @@ html {
   letter-spacing: 0.2em;
   line-height: 12px;
   color: #B89868;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
+}
+
+.s-cat__hint {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  color: #8C857A;
+  margin-bottom: 24px;
 }
 
 .s-cat__grid {

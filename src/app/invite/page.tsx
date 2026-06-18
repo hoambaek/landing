@@ -3,7 +3,7 @@ import LetterShell from "@/components/forms/LetterShell";
 import InviteForm from "@/components/forms/InviteForm";
 
 export const metadata: Metadata = {
-  title: "초대 신청 — Ocean Cellar Privé | Muse de Marée",
+  title: "초대 신청 | Ocean Cellar Privé | Muse de Marée",
   description: "인양을 가장 먼저 지켜보는 사람들. Ocean Cellar Privé 초대 신청.",
   robots: { index: false, follow: true },
 };

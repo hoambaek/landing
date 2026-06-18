@@ -71,6 +71,7 @@ export default function PartnerForm() {
 
           <div className="s-cat">
             <span className="s-cat__label">PARTNERSHIP TYPE</span>
+            <p className="s-cat__hint">운영하시는 공간에 맞는 파트너십 유형을 선택해 주세요.</p>
             <div className="s-cat__grid">
               {CATEGORIES.map((c, i) => (
                 <button
@@ -94,7 +95,7 @@ export default function PartnerForm() {
               <UnderlineField label="NAME" placeholder="담당자" name="name" value={name} onChange={setName} required />
             </div>
             <UnderlineField label="EMAIL" placeholder="이메일 주소" name="email" type="email" value={email} onChange={setEmail} required />
-            <UnderlineField label="MESSAGE — 선택" placeholder="공간과 필요한 제안을 알려주세요" name="message" multiline value={message} onChange={setMessage} />
+            <UnderlineField label="MESSAGE (선택)" placeholder="공간과 필요한 제안을 알려주세요" name="message" multiline value={message} onChange={setMessage} />
 
             <button type="submit" className="s-letter__submit" disabled={status === "sending"}>
               <span className="s-letter__submit-label">{status === "sending" ? "전송 중" : "문의 보내기"}</span>

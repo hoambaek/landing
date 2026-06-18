@@ -18,8 +18,8 @@ type Cuvee = {
 
 /* 그리드 순서: 데스크톱 3열(001 002 003 / 000 004 005), 모바일 2열 동일 흐름 */
 const CUVEES: Cuvee[] = [
-  { n: "ARCHIVE N° 001", name: "En Lieu Sûr", desc: "엉리우쉬르 — 첫 만남을 위한 시작", img: "/images/01.webp" },
-  { n: "ARCHIVE N° 002", name: "En Lieu Sûr Magnum", desc: "매그넘 1500ml — 더 느린 숙성", img: "/images/02.webp" },
+  { n: "ARCHIVE N° 001", name: "En Lieu Sûr", desc: "엉리우쉬르 · 첫 만남을 위한 시작", img: "/images/01.webp" },
+  { n: "ARCHIVE N° 002", name: "En Lieu Sûr Magnum", desc: "매그넘 1500ml · 더 느린 숙성", img: "/images/02.webp" },
   { n: "ARCHIVE N° 003", name: "Élément de Surprise", desc: "BDB Non-dosé\n해저 숙성의 직설", img: "/images/03.webp" },
   { n: "ARCHIVE N° 000", name: "Édition Zéro", desc: "시작을 기록한 첫 번째 아카이브", img: "/images/06.webp", soldOut: true },
   { n: "ARCHIVE N° 004", name: "Atomes Crochus", desc: "희귀 품종 Petit Meslier\n1년의 기록", img: "/images/05.webp" },
@@ -77,8 +77,13 @@ export default function ArchiveSection() {
       <div className="s-col__intro reveal">
         <h2 className="s-col__title">collection.</h2>
         <p className="s-col__sub">
-          <span>각 큐베는 하나의 기록</span>{" "}
-          <span>바다가 만든 시간을, 맡아두는 일</span>
+          <Image
+            src="/text/col-sub.png"
+            alt="각 큐베는 하나의 기록 바다가 만든 시간을, 맡아두는 일"
+            width={311}
+            height={64}
+            className="s-col__sub-img"
+          />
         </p>
       </div>
 

@@ -11,7 +11,6 @@ import {
   EB_Garamond,
   Mrs_Saint_Delafield,
 } from "next/font/google";
-import localFont from "next/font/local";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -77,15 +76,9 @@ const mrsSaintDelafield = Mrs_Saint_Delafield({
   display: "swap",
 });
 
-const jjFont = localFont({
-  src: "../../public/jj.ttf",
-  variable: "--font-jj",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.musedemaree.com"),
-  title: "Muse de Marée — 바다의 시간을 담은 샴페인",
+  title: "Muse de Marée | 바다의 시간을 담은 샴페인",
   description:
     "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다. 바다의 온도, 해류, 수압이 만드는 시간의 기록. 2026년 런칭.",
   alternates: {
@@ -107,7 +100,7 @@ export const metadata: Metadata = {
     "Champagne Mignon Boulard",
   ],
   openGraph: {
-    title: "Muse de Marée — 바다의 시간을 담은 샴페인",
+    title: "Muse de Marée | 바다의 시간을 담은 샴페인",
     description:
       "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다. 바다의 온도, 해류, 수압이 만드는 시간의 기록.",
     locale: "ko_KR",
@@ -118,13 +111,13 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Muse de Marée — 바다의 시간을 담은 샴페인",
+        alt: "Muse de Marée | 바다의 시간을 담은 샴페인",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Muse de Marée — 바다의 시간을 담은 샴페인",
+    title: "Muse de Marée | 바다의 시간을 담은 샴페인",
     description:
       "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다. 바다의 온도, 해류, 수압이 만드는 시간의 기록.",
     images: ["/opengraph-image"],
@@ -150,7 +143,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} ${jjFont.variable} antialiased`}
+        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} antialiased`}
       >
         <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
         <JsonLd />

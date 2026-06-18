@@ -60,7 +60,7 @@ export default async function DataArchiveSection() {
           지금 이 순간에도 기록되고 있습니다.
         </p>
         <p className="s-data__statement-block reveal reveal-delay-1">
-          온도, 해류, 파도, 수압 — 바다가 보내는 신호가 데이터가 되고,
+          온도, 해류, 파도, 수압. 바다가 보내는 신호가 데이터가 되고,
           <br />
           그 데이터 위에서 각 컬렉션의 숙성을 예측합니다.
         </p>

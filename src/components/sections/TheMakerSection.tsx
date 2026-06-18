@@ -40,7 +40,7 @@ const MAKERS: Maker[] = [
   },
 ];
 
-const TEASER = "두 번째 서명 — 2027, 다음 입수와 함께 공개";
+const TEASER = "두 번째 서명 · 2027, 다음 입수와 함께 공개";
 
 export default function TheMakerSection() {
   const [index, setIndex] = useState(0);
@@ -65,8 +65,13 @@ export default function TheMakerSection() {
       <header className="s-maker__header reveal">
         <h2 className="s-maker__title">the maker.</h2>
         <p className="s-maker__subtitle">
-          <span>샴페인은 샹파뉴가 만들었습니다</span>
-          <span>기록은 남해에서 시작됩니다</span>
+          <Image
+            src="/text/maker-subtitle.png"
+            alt="샴페인은 샹파뉴가 만들었습니다 기록은 남해에서 시작됩니다"
+            width={302}
+            height={72}
+            className="s-maker__subtitle-img"
+          />
         </p>
       </header>
 

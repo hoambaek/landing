@@ -4,8 +4,14 @@
 
 ## 프로젝트 개요
 
-**뮤즈드마레** — 한국 심해에서 숙성한 샴페인 브랜드 랜딩 페이지. 런칭 2026년 7-8월.
-콘셉트: "바다의 시간을 기록하는 디지털 아카이브" | 레퍼런스: Krug.com + Kinfolk.com
+**뮤즈드마레** — 바다의 시간을 기록하는 샴페인 브랜드. 런칭 2026년 7-8월.
+
+> **브랜드 정의 (북극성):** 샴페인 하우스가 아니다. **바다의 시간을 기록하는 브랜드.**
+> 샴페인은 샹파뉴가 만들었고, 변화는 바다가 만든다. 우리가 하는 일은 — 지켜보고, 기록하고, 그 기록과 함께 병을 건네는 것.
+> **모토(고정):** *Written by the Sea.* / 바다가 쓴 시간 / *Écrit par la mer*
+> **방향성 정본 (Source of Truth):** [`docs/brand/brand-direction-2026.md`](./docs/brand/brand-direction-2026.md) + [`docs/plans/2026-06-10-brand-north-star.md`](./docs/plans/2026-06-10-brand-north-star.md) — 이 두 문서가 모든 브랜드 결정의 최종 심판. (기존 `project.md`·`brand-guide.md`는 하위 실행 레이어)
+
+레퍼런스: Krug.com + Kinfolk.com
 
 ---
 
@@ -103,8 +109,12 @@ teams/
 ```
 docs/
 ├── brand/                ← 브랜드 철학, 전략, 기획
-│   ├── project.md           브랜드 철학/전략/타겟
+│   ├── brand-direction-2026.md  ★ 방향성 정본 (정의·포지셔닝·4기둥·톤)
+│   ├── project.md           브랜드 철학/전략/타겟 (하위 레이어)
+│   ├── brand-book.md        브랜드 소개서(Paper) 문서
 │   └── PLAN.md              홈페이지 기획
+├── plans/
+│   └── 2026-06-10-brand-north-star.md  ★ 북극성 (전략 근거)
 ├── tech/                 ← 기술 스펙
 │   ├── spec.md              기술 스택 전체
 │   └── frontend-spec.md     CSS/컴포넌트/성능 상세
@@ -121,10 +131,12 @@ docs/
 
 | 문서 | 역할 | 참조 시점 |
 |------|------|-----------|
+| [`docs/brand/brand-direction-2026.md`](./docs/brand/brand-direction-2026.md) | ★ **브랜드 방향성 정본** (정의·포지셔닝·4기둥·톤·금지목록) | **카피/디자인 방향 시 최우선** |
+| [`docs/plans/2026-06-10-brand-north-star.md`](./docs/plans/2026-06-10-brand-north-star.md) | ★ 북극성 (전략 근거·리서치) | 방향성 근거 확인 시 |
 | [`docs/tech/spec.md`](./docs/tech/spec.md) | 기술 스택 전체 | 개발 시작 전 필수 |
 | [`docs/tech/frontend-spec.md`](./docs/tech/frontend-spec.md) | CSS/컴포넌트/성능 상세 | UI 구현 시 |
 | [`docs/brand/PLAN.md`](./docs/brand/PLAN.md) | 홈페이지 기획 | 페이지 구조 파악 시 |
-| [`docs/brand/project.md`](./docs/brand/project.md) | 브랜드 철학/전략/타겟 | 카피/디자인 방향 시 |
+| [`docs/brand/project.md`](./docs/brand/project.md) | 브랜드 철학/전략/타겟 (하위 레이어) | 보조 참조 |
 | [`homepage-plan.html`](./homepage-plan.html) | 브랜드 기획 + 라이브 데모 | 레이아웃 레퍼런스 |
 | [`tasks/todo.md`](./tasks/todo.md) | 작업 추적 | 세션 시작/종료 시 |
 | [`tasks/lessons.md`](./tasks/lessons.md) | 실수 기록 | 교정 발생 시 |
@@ -166,10 +178,13 @@ docs/
 - 성능 목표: LCP 2.0s↓, First Load JS 90KB↓
 
 ### 브랜드 어조
+- **숫자는 형용사보다 조용하다**: "깊고 신비로운" 대신 "수심 30m · 11.4°C". 데이터는 이야기의 각주 위치
 - 판매 언어 금지: "구매" → "발견", "결제" → "경험 시작"
 - "맛", "향", "풍미" 등 직접적 감각 단어 사용 금지
-- 명사형 종결 선호. 여백이 카피의 일부
-- 상세 → [`docs/brand/project.md`](./docs/project.md)
+- 명사형 종결 선호. 여백이 카피의 일부. 톤 일관성 = 헤리티지의 대체재
+- **🔴 영구 금지어**: "두 개의 떼루아"(Abyss 선점) · 풍미 우위 주장 · 수압 가속 주장 · 깊이/기간 스펙 경쟁 · "luxury/exclusive/timeless" · 연출된 희소성
+- **수심 표기는 30m로 통일** (코드베이스 일부 "50미터"는 구표기 — 30m가 정본)
+- 상세 → [`docs/brand/brand-direction-2026.md`](./docs/brand/brand-direction-2026.md) §6 (톤·금지목록)
 
 ---
 
@@ -177,7 +192,7 @@ docs/
 
 | 메뉴명 | 섹션 ID | 타이틀 | 역할 |
 |--------|---------|--------|------|
-| Home | void | 두 개의 떼루아 | 히어로 (라이트 배경) |
+| Home | void | 바다가 쓴 시간 | 히어로 — 열린 고리 (기준 시간 1년, 진행형). ⚠️ "두 개의 떼루아" 표기 폐기 |
 | *(메뉴 미노출)* | observation | — | 브랜드 스토리 · 해저 숙성 철학 |
 | Living Data | data-archive | living data. | 해양 데이터 실시간 측정 · AI 입수/인양 예측 |
 | Collection | archive | collection. | 6개 큐베 라인업 |

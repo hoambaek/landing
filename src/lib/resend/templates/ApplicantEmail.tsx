@@ -89,9 +89,9 @@ export function getApplicantSubject(kind: FormKind): string {
 }
 
 const SUBJECT: Record<FormKind, string> = {
-  invite: "초대 신청이 접수되었습니다 — Muse de Marée",
-  partner: "파트너십 문의가 접수되었습니다 — Muse de Marée",
-  brandbook: "브랜드 소개서를 보내드립니다 — Muse de Marée",
+  invite: "초대 신청이 접수되었습니다 | Muse de Marée",
+  partner: "파트너십 문의가 접수되었습니다 | Muse de Marée",
+  brandbook: "브랜드 소개서를 보내드립니다 | Muse de Marée",
 };
 
 const COPY: Record<

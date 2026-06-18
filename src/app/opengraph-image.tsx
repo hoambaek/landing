@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Muse de Marée — 바다의 시간을 담은 샴페인";
+export const alt = "Muse de Marée | 바다의 시간을 담은 샴페인";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

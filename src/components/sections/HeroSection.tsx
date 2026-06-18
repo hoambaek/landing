@@ -38,27 +38,48 @@ export default function HeroSection() {
       {/* 카피 — 데스크톱 (좌측 정렬, 3행) */}
       <div className="s-void__content s-void__content--desktop">
         <h1 className="s-void__h1">
-          <span>지금 이 순간에도,</span>
-          <span>한 병의 샴페인이 바다 아래에서</span>
-          <span>시간을 기록하고 있습니다</span>
+          <Image
+            src="/text/hero-h1-d.png"
+            alt="지금 이 순간에도, 한 병의 샴페인이 바다 아래에서 시간을 기록하고 있습니다"
+            width={563}
+            height={182}
+            priority
+            className="s-void__h1-img"
+          />
         </h1>
         <p className="s-void__brand">
           <span className="s-void__brand-label">해저숙성 샴페인</span>
-          <span className="s-void__brand-name">뮤즈드마레</span>
+          <Image
+            src="/text/brand-name.png"
+            alt="뮤즈드마레"
+            width={107}
+            height={28}
+            className="s-void__brand-name-img"
+          />
         </p>
       </div>
 
       {/* 카피 — 모바일 (중앙 정렬, 지정 줄바꿈 4행) */}
       <div className="s-void__content s-void__content--mobile">
         <h1 className="s-void__h1">
-          <span>지금 이 순간에도</span>
-          <span>한 병의 샴페인이</span>
-          <span>바다 아래에서</span>
-          <span>시간을 기록하고 있습니다</span>
+          <Image
+            src="/text/hero-h1-m.png"
+            alt="지금 이 순간에도 한 병의 샴페인이 바다 아래에서 시간을 기록하고 있습니다"
+            width={255}
+            height={150}
+            priority
+            className="s-void__h1-img"
+          />
         </h1>
         <p className="s-void__brand">
           <span className="s-void__brand-label">해저숙성 샴페인</span>
-          <span className="s-void__brand-name">뮤즈드마레</span>
+          <Image
+            src="/text/brand-name.png"
+            alt="뮤즈드마레"
+            width={107}
+            height={28}
+            className="s-void__brand-name-img"
+          />
         </p>
       </div>
 
