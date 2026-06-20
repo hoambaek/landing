@@ -35,7 +35,7 @@ export default function LetterShell({
 
       {/* 상단 풀와이드 이미지 */}
       <aside className="s-letter__visual">
-        <Image src={image} alt={imageAlt} fill sizes="100vw" priority />
+        <Image src={image} alt={imageAlt} fill sizes="100vw" priority unoptimized />
         {/* 파트너 — 헤더 가독용 스크림 (CSS에서 theme별 표시) */}
         <span className="s-letter__scrim" aria-hidden="true" />
       </aside>

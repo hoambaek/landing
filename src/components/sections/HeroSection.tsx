@@ -13,11 +13,12 @@ export default function HeroSection() {
         <source media="(max-width: 768px)" srcSet="/images/h3_m2.webp" />
         <Image
           src="/images/h3.webp"
-          alt="남해 수심 30m, 케이지에 든 한 병의 샴페인 — Muse de Marée"
+          alt="남해 수심 30m, 케이지에 든 한 병의 샴페인 · Muse de Marée"
           fill
           priority
           sizes="100vw"
           className="s-void__bg-img"
+          unoptimized
         />
       </picture>
 

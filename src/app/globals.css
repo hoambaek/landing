@@ -382,6 +382,17 @@ input:focus-visible,
 /* ══════════════════════════════════════════
    HEADER
    ══════════════════════════════════════════ */
+/* Safe-area(노치) 블러 바 — 헤더와 독립, mask 없는 순수 backdrop로 노치 영역 블러 */
+.header__safe-blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top);
+  z-index: var(--z-menu);
+  pointer-events: none;
+}
+
 .header {
   position: fixed;
   top: 0;
