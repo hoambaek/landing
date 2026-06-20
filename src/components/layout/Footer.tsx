@@ -44,9 +44,9 @@ const EMAIL = "info@musedemaree.com";
 function InstagramIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="rgb(49 46 42 / 40%)" strokeWidth="1.5" />
-      <circle cx="12" cy="12" r="5" fill="none" stroke="rgb(49 46 42 / 40%)" strokeWidth="1.5" />
-      <circle cx="17.5" cy="6.5" r="1" fill="rgb(49 46 42 / 40%)" />
+      <rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
     </svg>
   );
 }
@@ -54,8 +54,8 @@ function InstagramIcon() {
 function YoutubeIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z" fill="none" stroke="rgb(49 46 42 / 40%)" strokeWidth="1.5" />
-      <path d="M9.75 15.02l5.75-3.27-5.75-3.27v6.54z" fill="none" stroke="rgb(49 46 42 / 40%)" strokeWidth="1.5" />
+      <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z" fill="none" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M9.75 15.02l5.75-3.27-5.75-3.27v6.54z" fill="none" stroke="currentColor" strokeWidth="1.5" />
     </svg>
   );
 }
@@ -76,6 +76,8 @@ export default function Footer() {
         <span className="s-footer__motto-rule" aria-hidden="true" />
       </div>
 
+      {/* ── 하단 다크 블록 ── */}
+      <div className="s-footer__lower">
       {/* 내비 3열 */}
       <nav className="s-footer__nav">
         {NAV_COLS.map((col) => (
@@ -124,6 +126,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </footer>
   );

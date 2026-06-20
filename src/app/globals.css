@@ -389,6 +389,7 @@ input:focus-visible,
   right: 0;
   z-index: var(--z-menu);
   padding: 20px 48px;
+  padding-top: calc(20px + env(safe-area-inset-top));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2388,12 +2389,19 @@ input:focus-visible,
 .s-footer {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  background: #C4BFBB;
+  background: #0A0908;
   color: var(--color-earth);
-  padding: 72px 120px 48px;
+  padding: 0;
   overflow: clip;
+}
+
+/* 하단 다크 블록 — 내비·법인정보·하단바 (로고존은 라이트 유지) */
+.s-footer__lower {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 60px 120px 48px;
 }
 
 /* 로고 락업 + 모토 */
@@ -2402,17 +2410,13 @@ input:focus-visible,
   flex-direction: column;
   align-items: center;
   gap: 26px;
-  width: 1200px;
-  max-width: 100%;
-  padding: 10px 0 30px;
+  padding: 82px 120px 60px;
 }
 
 .s-footer__logo {
   width: 284px;
   height: auto;
   opacity: 0.9;
-  /* 화이트 로고를 라이트 배경용으로 다크 반전 */
-  filter: brightness(0) saturate(100%) opacity(0.85);
 }
 
 .s-footer__motto {
@@ -2420,7 +2424,7 @@ input:focus-visible,
   font-size: 18px;
   letter-spacing: 0.04em;
   line-height: 26px;
-  color: var(--color-earth);
+  color: #ECEAE6;
   margin-top: 34px;
 }
 
@@ -2451,7 +2455,7 @@ input:focus-visible,
   font-size: 11px;
   letter-spacing: 0.26em;
   line-height: 14px;
-  color: #6E675D;
+  color: rgba(232, 229, 225, 0.5);
 }
 
 .s-footer__nav-items {
@@ -2467,13 +2471,13 @@ input:focus-visible,
   font-weight: 300;
   font-size: 13px;
   line-height: 16px;
-  color: #5A544B;
+  color: rgba(232, 229, 225, 0.72);
   cursor: pointer;
   transition: color 0.3s var(--ease-water);
 }
 
 .s-footer__nav-item:hover {
-  color: var(--color-earth);
+  color: var(--color-amber);
 }
 
 /* 법인 정보 */
@@ -2484,8 +2488,8 @@ input:focus-visible,
   justify-content: center;
   width: 100%;
   margin-top: 14px;
-  padding: 20px 120px;
-  border-top: 0.5px solid rgba(49, 46, 42, 0.14);
+  padding: 24px 0;
+  border-top: 0.5px solid rgba(204, 173, 123, 0.18);
 }
 
 .s-footer__legal span {
@@ -2494,12 +2498,12 @@ input:focus-visible,
   font-size: 10px;
   letter-spacing: 0.02em;
   line-height: 12px;
-  color: rgba(49, 46, 42, 0.45);
+  color: rgba(232, 229, 225, 0.4);
   flex-shrink: 0;
 }
 
 .s-footer__legal span:first-child {
-  color: rgba(49, 46, 42, 0.6);
+  color: rgba(232, 229, 225, 0.62);
 }
 
 /* 이메일 — 다른 법인정보와 동일 서체·크기, 색만 진하게(주소보다 강조) */
@@ -2509,14 +2513,14 @@ input:focus-visible,
   font-size: 10px;
   letter-spacing: 0.02em;
   line-height: 12px;
-  color: rgba(49, 46, 42, 0.75);
+  color: var(--color-amber);
   flex-shrink: 0;
   cursor: pointer;
   transition: color 0.3s var(--ease-water);
 }
 
 .s-footer__legal-email:hover {
-  color: var(--color-earth);
+  color: #ECEAE6;
 }
 
 /* 하단 */
@@ -2525,7 +2529,7 @@ input:focus-visible,
   flex-direction: column;
   gap: 16px;
   width: 100%;
-  padding: 0 120px 40px;
+  padding: 0;
 }
 
 .s-footer__warning {
@@ -2535,7 +2539,7 @@ input:focus-visible,
   letter-spacing: 0.02em;
   line-height: 12px;
   text-align: center;
-  color: rgba(49, 46, 42, 0.3);
+  color: rgba(232, 229, 225, 0.36);
 }
 
 .s-footer__bar {
@@ -2544,7 +2548,7 @@ input:focus-visible,
   justify-content: space-between;
   width: 100%;
   padding-top: 12px;
-  border-top: 0.5px solid rgba(49, 46, 42, 0.14);
+  border-top: 0.5px solid rgba(204, 173, 123, 0.18);
 }
 
 .s-footer__bar-left {
@@ -2558,13 +2562,14 @@ input:focus-visible,
   font-weight: 300;
   font-size: 11px;
   line-height: 14px;
-  color: rgba(49, 46, 42, 0.45);
+  color: rgba(232, 229, 225, 0.45);
 }
 
 .s-footer__social {
   display: flex;
   align-items: center;
   gap: 16px;
+  color: rgba(232, 229, 225, 0.5);
 }
 
 .s-footer__bar-right {
@@ -2584,7 +2589,7 @@ input:focus-visible,
   font-weight: 300;
   font-size: 11px;
   line-height: 14px;
-  color: rgba(49, 46, 42, 0.45);
+  color: rgba(232, 229, 225, 0.45);
 }
 
 .s-footer__lang {
@@ -2593,18 +2598,22 @@ input:focus-visible,
 }
 
 .s-footer__lang-active {
-  color: rgba(49, 46, 42, 0.7) !important;
+  color: var(--color-amber) !important;
 }
 
 /* ── Footer 모바일 ── */
 @media (max-width: 768px) {
   .s-footer {
-    padding: 56px 0 0;
+    padding: 0;
   }
 
   .s-footer__identity {
     gap: 18px;
-    padding: 0 0 40px;
+    padding: 56px 24px 40px;
+  }
+
+  .s-footer__lower {
+    padding: 44px 0 0;
   }
 
   .s-footer__logo {
@@ -2663,12 +2672,12 @@ input:focus-visible,
   .s-footer__legal span {
     font-size: 11px;
     line-height: 18px;
-    color: #6E675D;
+    color: rgba(232, 229, 225, 0.4);
   }
 
   .s-footer__legal span:first-child,
   .s-footer__legal span:last-child {
-    color: #9A938A;
+    color: rgba(232, 229, 225, 0.62);
   }
 
   .s-footer__bottom {
@@ -5294,6 +5303,7 @@ input:focus-visible,
 
   .header {
     padding: 36px 40px;
+    padding-top: calc(36px + env(safe-area-inset-top));
   }
 
   .header__menu {
@@ -5347,6 +5357,7 @@ input:focus-visible,
 
   .header {
     padding: 24px;
+    padding-top: calc(24px + env(safe-area-inset-top));
   }
 
   .header__menu {

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import JsonLd from "@/components/JsonLd";
 import {
   Cormorant_Garamond,
@@ -75,6 +75,12 @@ const mrsSaintDelafield = Mrs_Saint_Delafield({
   variable: "--font-delafield",
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.musedemaree.com"),
