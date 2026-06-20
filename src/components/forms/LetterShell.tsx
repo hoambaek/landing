@@ -1,7 +1,6 @@
-import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/layout/Footer";
-import LetterMenu from "./LetterMenu";
+import LetterHeader from "./LetterHeader";
 
 /**
  * 서브 페이지 공용 셸 — 상단 이미지 레터 레이아웃 (Paper R3 시안).
@@ -20,18 +19,8 @@ export default function LetterShell({
 }) {
   return (
     <main className={`s-letter-page s-letter-page--${theme}`}>
-      {/* 헤더 — 심볼(좌) + 워드마크(중앙) + 햄버거(우) */}
-      <header className="s-letter__header">
-        <Link href="/" className="s-letter__symbol" aria-label="홈으로 이동">
-          <Image src="/images/logo/logo_trans_W.png" alt="" width={1000} height={829} className="sym-white" />
-          <Image src="/images/logo/logo_trans.png" alt="" aria-hidden="true" width={1000} height={829} className="sym-black" />
-        </Link>
-        <Link href="/" className="s-letter__wordmark" aria-label="Muse de Marée 홈">
-          <Image src="/images/logo/logo_text_trans_W.png" alt="MUSE DE MARÉE" width={1000} height={152} />
-        </Link>
-        {/* 햄버거 + 전체화면 메뉴 오버레이 (랜딩과 동일 동작) */}
-        <LetterMenu />
-      </header>
+      {/* 헤더 — 심볼(좌) + 워드마크(중앙) + 햄버거(우), 스크롤 시 다크 배경+노치 차폐 */}
+      <LetterHeader />
 
       {/* 상단 풀와이드 이미지 */}
       <aside className="s-letter__visual">

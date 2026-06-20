@@ -5828,14 +5828,38 @@ html {
 }
 
 /* ── 헤더 (01 Hero: 심볼 + 워드마크 + 햄버거, 이미지 위 오버레이) ── */
-.s-letter__header {
+/* 노치(safe-area) 차폐 바 — 스크롤 시 void 컬러 */
+.s-letter__safe {
   position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top);
+  z-index: var(--z-header);
+  pointer-events: none;
+  transition: background-color 0.4s ease;
+}
+
+.s-letter__safe.is-scrolled {
+  background: #0A0908;
+}
+
+.s-letter__header {
+  position: fixed;
+  top: env(safe-area-inset-top);
   left: 0;
   right: 0;
   height: 64px;
   z-index: var(--z-header);
   pointer-events: none;
+  transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
+}
+
+/* 스크롤 시 — 다크 반투명 + 블러 (메뉴바 불투명 효과) */
+.s-letter__header.is-scrolled {
+  background: rgba(10, 9, 8, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .s-letter__header > * { pointer-events: auto; }
@@ -5903,6 +5927,12 @@ html {
 
 .s-letter-page--brand .s-letter__menu span { background: #312E2A; }
 
+/* 스크롤 시 — 모든 테마 흰 로고/심볼/햄버거 (다크 헤더 위 가독) */
+.s-letter__header.is-scrolled .s-letter__symbol .sym-black { opacity: 0; }
+.s-letter__header.is-scrolled .s-letter__symbol .sym-white { opacity: 1; }
+.s-letter__header.is-scrolled .s-letter__wordmark img { filter: brightness(0) invert(1); }
+.s-letter__header.is-scrolled .s-letter__menu span { background: #F1EFEB; }
+
 /* ── 상단 풀와이드 이미지 (21:9) ── */
 .s-letter__visual {
   position: relative;
@@ -5948,9 +5978,6 @@ html {
   align-items: center;
   text-align: center;
 }
-
-/* 서브페이지 푸터 — 패널과 동일 배경 톤 (랜딩 푸터는 #C4BFBB 유지) */
-.s-letter-page .s-footer { background: #F5F1E8; }
 
 /* ── 브랜드 마크 (브랜드 소개서 전용) ── */
 .s-letter__brandmark {

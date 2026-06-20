@@ -100,14 +100,13 @@ export default function Header() {
   };
 
   const safeBlurStyle: React.CSSProperties = {
-    backdropFilter: isScrolled ? "blur(16px)" : "none",
-    WebkitBackdropFilter: isScrolled ? "blur(16px)" : "none",
-    transition: "backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease",
+    backgroundColor: isScrolled ? "#0A0908" : "transparent",
+    transition: "background-color 0.5s ease",
   };
 
   return (
     <>
-      {/* ── Safe-area(노치) 블러 바 — 헤더 mask가 iOS에서 노치 backdrop를 막아 별도 처리 ── */}
+      {/* ── Safe-area(노치) 바 — iOS backdrop-filter가 노치에 안 먹어 불투명 컬러로 차폐 ── */}
       <div className="header__safe-blur" aria-hidden="true" style={safeBlurStyle} />
 
       {/* ── Header bar ── */}
