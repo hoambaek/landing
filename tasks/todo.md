@@ -89,6 +89,21 @@
 
 ## 완료
 
+### 2026-06 디자인·성능·iOS 라운드
+
+- [x] J1950(jj) 폰트 텍스트 → 투명 PNG 이미지화 후 폰트 파일(jj.ttf) 제거 (sharp+pango 렌더, `_workspace/font2img/`)
+- [x] 카운터 숫자 779 → Diphylleia, "일째"는 J1950 이미지로 (baseline 정렬)
+- [x] Ocean Cellar·Partnership 버튼 → Filled CTA (amber 배경, 0.5px 보더)
+- [x] em dash(—) → 한국어 부호로 일괄 교체 (마침표·쉼표·가운뎃점·말줄임표·괄호 / 제목은 `|`)
+- [x] THE FIRST RECORD 정리 — rec00 교체 후 삭제, 2컷만, 캡션 텍스트 제거
+- [x] next/image 최적화 활성화(`unoptimized` 해제) — 얇은 라인 모아레 해결
+- [x] priority 히어로 이미지(h3·LetterShell)는 `unoptimized` — webp 재변환 cold(~300ms) 제거
+- [x] 푸터 다크(void #0A0908) 통일 — 메인+서브, 화이트 로고, amber 액센트
+- [x] 서브페이지 헤더 client 전환(LetterHeader) — 스크롤 시 다크 배경+blur, 로고 흰색, 노치 차폐
+- [x] iOS safe-area(노치) — viewport-fit=cover + theme-color(#0A0908) + 노치 차폐 바(z 110, 합성 강제)
+- [x] 헤더 로고 푸터 영역 판정 수정 — 다크 푸터에서 흰 로고 유지 (`isDarkAtY` 푸터 false→true)
+- [x] 파트너 폼 PARTNERSHIP TYPE 섹션 구분선 + 한글 안내문
+
 - [x] 히어로 스크롤 화살표 가로 중앙 정렬 — scroll-in 전용 애니메이션 생성 (title-in이 translateX 덮어쓰는 문제 해결)
 - [x] 히어로 타이틀 크기 축소 — clamp(22px,3.2vw,42px) → clamp(20px,2.9vw,38px)
 - [x] Tasting 영상 크롭 — object-position: center bottom + scale(1.15)

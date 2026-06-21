@@ -27,11 +27,11 @@ function findSectionAt(sects: HTMLElement[], y: number): string {
 
 /** 특정 Y 좌표가 어두운 영역인지 판별 */
 function isDarkAtY(sects: HTMLElement[], y: number): boolean {
-  // 라이트 푸터 영역은 밝음 → 헤더 검정 로고
+  // 푸터는 다크(void) → 헤더 흰색 로고
   const footer = document.querySelector<HTMLElement>(".s-footer");
   if (footer) {
     const fTop = footer.getBoundingClientRect().top + window.scrollY;
-    if (y >= fTop) return false;
+    if (y >= fTop) return true;
   }
 
   const sectionId = findSectionAt(sects, y);
