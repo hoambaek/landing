@@ -382,15 +382,18 @@ input:focus-visible,
 /* ══════════════════════════════════════════
    HEADER
    ══════════════════════════════════════════ */
-/* Safe-area(노치) 블러 바 — 헤더와 독립, mask 없는 순수 backdrop로 노치 영역 블러 */
+/* Safe-area(노치) 차폐 바 — 헤더보다 위(z 110), 합성 강제로 iOS 페인팅 누락 방지 */
 .header__safe-blur {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: env(safe-area-inset-top);
-  z-index: var(--z-menu);
+  min-height: env(safe-area-inset-top);
+  z-index: 110;
   pointer-events: none;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .header {
@@ -5835,8 +5838,11 @@ html {
   left: 0;
   right: 0;
   height: env(safe-area-inset-top);
-  z-index: var(--z-header);
+  min-height: env(safe-area-inset-top);
+  z-index: 110;
   pointer-events: none;
+  transform: translateZ(0);
+  will-change: transform;
   transition: background-color 0.4s ease;
 }
 
