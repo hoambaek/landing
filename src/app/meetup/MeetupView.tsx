@@ -7,7 +7,7 @@ import s from "./meetup.module.css";
 const EMAIL = "info@musedemaree.com";
 const TEL_DISPLAY = "010-5212-9514";
 const TEL_HREF = "tel:01052129514";
-const PDF_HREF = "/files/musedemaree-brandbook.pdf";
+const PDF_HREF = "/musedemaree-brandbook.pdf";
 
 const MAILTO =
   `mailto:${EMAIL}` +
@@ -30,7 +30,7 @@ const CHANNELS: Channel[] = [
     num: "01",
     label: "호텔·리조트",
     title: "객실에서 시작되는 브랜드 경험",
-    sub: "바다에서 숙성한 술은, 바다를 면한 공간에서 완성됩니다.",
+    sub: "바다에서 숙성한 한 병이, 머무는 시간을 특별하게 만듭니다.",
     collab: [
       "객실 웰컴 키트·턴다운 어메니티 (미니어처 + 스토리 카드)",
       "미니바 한정 SKU (해당 리조트 전용 넘버링)",
