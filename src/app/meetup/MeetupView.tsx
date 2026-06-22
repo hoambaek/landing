@@ -19,7 +19,7 @@ const MAILTO =
 type Channel = {
   num: string;
   label: string;
-  headline: { src: string; w: number; h: number; alt: string };
+  title: string;
   sub: string;
   collab: string[];
   value: string;
@@ -29,7 +29,7 @@ const CHANNELS: Channel[] = [
   {
     num: "01",
     label: "호텔·리조트",
-    headline: { src: "/text/mu-card1-h.png", w: 177, h: 64, alt: "객실에서 시작되는 브랜드 경험" },
+    title: "객실에서 시작되는 브랜드 경험",
     sub: "바다에서 숙성한 술은, 바다를 면한 공간에서 완성됩니다.",
     collab: [
       "객실 웰컴 키트·턴다운 어메니티 (미니어처 + 스토리 카드)",
@@ -43,7 +43,7 @@ const CHANNELS: Channel[] = [
   {
     num: "02",
     label: "금융·모빌리티",
-    headline: { src: "/text/mu-card2-h.png", w: 136, h: 64, alt: "이름이 새겨진 한 병" },
+    title: "세상에 단 한 병, 그 사람의 이름으로",
     sub: "VVIP에게 보내는 건 선물이 아니라, 그분만을 위한 한 병이어야 합니다.",
     collab: [
       "넘버링 한정판 (고객 성명·기념일 각인 가능)",
@@ -57,7 +57,7 @@ const CHANNELS: Channel[] = [
   {
     num: "03",
     label: "백화점·면세",
-    headline: { src: "/text/mu-card3-h.png", w: 209, h: 64, alt: "K-luxury, 인바운드의 다음 문법" },
+    title: "여행자가 가져가는, 한국의 시간",
     sub: "한국을 가져가고 싶은 여행자에게, 시간이 깃든 한 병을.",
     collab: [
       "프리미엄 팝업 (시즌·테마 큐레이션 부스)",
@@ -146,8 +146,8 @@ export default function MeetupView() {
             <img
               className={s.j1950}
               src="/text/mu-bh-heading.png"
-              alt="하나의 바다, 두 개의 술"
-              width={288}
+              alt="하나의 바다, 두 개의 기록"
+              width={327}
               height={38}
               style={{ marginTop: 22 }}
             />
@@ -171,9 +171,9 @@ export default function MeetupView() {
               <div className={s.bhCard}>
                 <img
                   className={s.bhCardTypeImg}
-                  src="/text/mu-bh-hanja.png"
-                  alt="水中釀法"
-                  width={87}
+                  src="/text/mu-bh-sujung.png"
+                  alt="수중양법"
+                  width={96}
                   height={31}
                   loading="lazy"
                 />
@@ -183,7 +183,7 @@ export default function MeetupView() {
 
             <span className={s.connector} style={{ height: 24, marginTop: 30 }} aria-hidden="true" />
             <p className={s.bhUnifyLabel} style={{ marginTop: 14 }}>
-              둘 다, 바다에서 숙성됩니다
+              숙성을 바다에 맡긴다는, 하나의 원칙
             </p>
 
             <p className={s.bhSuture}>
@@ -292,13 +292,15 @@ export default function MeetupView() {
           </div>
 
           <div className={s.panel} role="tabpanel">
-            <img
-              className={s.panelHeadline}
-              src={card.headline.src}
-              alt={card.headline.alt}
-              width={card.headline.w}
-              height={card.headline.h}
-            />
+            <h3 className={s.panelHeadline}>
+              {card.title.split(", ").map((part, i, arr) => (
+                <span key={i}>
+                  {part}
+                  {i < arr.length - 1 ? "," : ""}
+                  {i < arr.length - 1 && <br />}
+                </span>
+              ))}
+            </h3>
             <p className={s.panelSub}>{card.sub}</p>
 
             <div className={s.collabBlock}>
@@ -348,6 +350,15 @@ export default function MeetupView() {
                 {TEL_DISPLAY}
               </a>
             </div>
+            <div className={s.cRow}>
+              <span className={s.cRowLabel}>홈페이지</span>
+              <a className={`${s.cRowValueMono} ${s.cRowHome}`} href="/">
+                musedemaree.com
+                <span className={s.cRowHomeArrow} aria-hidden="true">
+                  ↗
+                </span>
+              </a>
+            </div>
           </div>
 
           <div className={s.ctaBlock}>
@@ -367,7 +378,14 @@ export default function MeetupView() {
       {/* ══════ FOOTER ══════ */}
       <footer className={s.footer}>
         <div className={s.footerInner}>
-          <p className={s.footerWordmark}>Muse de Marée</p>
+          <img
+            className={s.footerLogo}
+            src="/images/logo/logo_text_trans_W.png"
+            alt="Muse de Marée"
+            width={188}
+            height={29}
+            loading="lazy"
+          />
           <p className={s.footerTagline}>바다의 시간을 기록하는 브랜드</p>
           <div className={s.footerMeta}>
             <span className={s.footerCopy}>© 2026 MUSE DE MARÉE</span>

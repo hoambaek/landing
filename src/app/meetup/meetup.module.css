@@ -372,10 +372,15 @@
   border-top: none;
 }
 .panelHeadline {
-  display: block;
-  height: auto;
   align-self: flex-start;
   margin-bottom: 14px;
+  font-family: var(--font-pretendard);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 32px;
+  letter-spacing: -0.01em;
+  color: #f1efeb;
+  text-wrap: balance;
 }
 .panelSub {
   font-size: 13px;
@@ -495,6 +500,22 @@
   line-height: 18px;
   color: #ccad7b;
 }
+.cRowHome {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #e6cf9b;
+  border-bottom: 1px solid rgba(204, 173, 123, 0.55);
+  padding-bottom: 3px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.cRowHome:hover {
+  color: #f1efeb;
+  border-color: rgba(204, 173, 123, 0.9);
+}
+.cRowHomeArrow {
+  font-size: 12px;
+}
 .ctaBlock {
   display: flex;
   flex-direction: column;
@@ -553,13 +574,11 @@
   margin: 0 auto;
   width: 100%;
 }
-.footerWordmark {
-  font-family: var(--font-heading);
-  font-weight: 300;
-  font-size: 22px;
-  letter-spacing: 0.04em;
-  line-height: 26px;
-  color: #f1efeb;
+.footerLogo {
+  display: block;
+  width: 188px;
+  height: auto;
+  opacity: 0.92;
 }
 .footerTagline {
   font-size: 12px;
