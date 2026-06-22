@@ -172,7 +172,7 @@ export async function submitPartner(p: PartnerPayload): Promise<SubmitResult> {
 async function loadBrandBookPdf(): Promise<Attachment[] | undefined> {
   try {
     const buf = await readFile(
-      path.join(process.cwd(), "public/files/musedemaree-brandbook.pdf")
+      path.join(process.cwd(), "public/musedemaree-brandbook.pdf")
     );
     return [
       {
