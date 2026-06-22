@@ -73,7 +73,7 @@ const CHANNELS: Channel[] = [
 const STATS = [
   {
     num: "110,000+",
-    img: "/images/meetup/1.png",
+    img: "/images/meetup/1.webp",
     cap: "와인과 발효식품 11만여 건을 학습한 예측 모델입니다. 바다가 만드는 숙성의 변화를, 감이 아니라 데이터로 읽습니다.",
   },
   {
@@ -83,7 +83,7 @@ const STATS = [
   },
   {
     num: "365일",
-    img: "/images/meetup/3.png",
+    img: "/images/meetup/3.webp",
     cap: "한 병이 남해 수심 30m에서 보낸 시간입니다. 네 계절을 건너온 그 365일의 수온과 해류가 빠짐없이 기록되어, 병과 함께 건네집니다.",
   },
 ];
