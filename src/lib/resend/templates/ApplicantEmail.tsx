@@ -48,7 +48,6 @@ export function ApplicantEmail({ kind, name }: ApplicantEmailProps) {
               alt="MUSE DE MARÉE"
               style={styles.wordmark}
             />
-            <Text style={styles.motto}>Written by the Sea.</Text>
           </Section>
 
           {/* ── 본문 ── */}
@@ -62,12 +61,24 @@ export function ApplicantEmail({ kind, name }: ApplicantEmailProps) {
               </Text>
             ))}
             <Hr style={styles.rule} />
-            <Text style={styles.sign}>Muse de Marée</Text>
+            <Img
+              src={`${BASE_URL}/images/logo/logo_text_trans.png`}
+              width="150"
+              height="23"
+              alt="Muse de Marée"
+              style={styles.sign}
+            />
           </Section>
 
           {/* ── 법적 푸터 (다크) ── */}
           <Section style={styles.footer}>
-            <Text style={styles.fName}>MUSE DE MARÉE</Text>
+            <Img
+              src={`${BASE_URL}/images/logo/logo_text_trans_W.png`}
+              width="112"
+              height="16"
+              alt="MUSE DE MARÉE"
+              style={styles.fName}
+            />
             <Text style={styles.fInfo}>
               주식회사 오크니 · 대표 정설화 · 사업자등록번호 859-85-03139
             </Text>
@@ -160,14 +171,6 @@ const styles = {
     margin: "18px auto 0",
     opacity: 0.92,
   },
-  motto: {
-    margin: "16px 0 0",
-    fontFamily: '"Mrs Saint Delafield", "Snell Roundhand", cursive',
-    fontSize: "22px",
-    lineHeight: "1",
-    color: "rgba(49,46,42,0.65)",
-    textAlign: "center" as const,
-  },
   content: {
     padding: "48px 56px 52px",
   },
@@ -210,12 +213,8 @@ const styles = {
     borderTop: "1px solid #8C6B33",
   },
   sign: {
+    display: "block",
     margin: "0",
-    fontFamily: serif,
-    fontSize: "17px",
-    fontWeight: 400,
-    letterSpacing: "0.04em",
-    color: "#312E2A",
   },
   footer: {
     padding: "40px 48px 44px",
@@ -223,11 +222,9 @@ const styles = {
     textAlign: "center" as const,
   },
   fName: {
-    margin: "0 0 12px",
-    fontFamily: mono,
-    fontSize: "11px",
-    letterSpacing: "0.2em",
-    color: "rgba(242,239,233,0.7)",
+    display: "block",
+    margin: "0 auto 12px",
+    opacity: 0.92,
   },
   fInfo: {
     margin: "0 0 5px",
