@@ -19,12 +19,17 @@ export default function BrandBookForm() {
       return;
     }
     setStatus("sending");
-    const res = await submitBrandBook({ email: email.trim() });
-    if (res.ok) {
-      setStatus("done");
-    } else {
+    try {
+      const res = await submitBrandBook({ email: email.trim() });
+      if (res.ok) {
+        setStatus("done");
+      } else {
+        setStatus("idle");
+        setError(res.error ?? "전송에 실패했습니다.");
+      }
+    } catch {
       setStatus("idle");
-      setError(res.error ?? "전송에 실패했습니다.");
+      setError("네트워크 연결을 확인한 뒤 다시 시도해 주세요.");
     }
   };
 

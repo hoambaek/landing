@@ -34,18 +34,23 @@ export default function PartnerForm() {
     }
     setStatus("sending");
     const catLabel = CATEGORIES.find((c) => c.key === category)?.label ?? "";
-    const res = await submitPartner({
-      category: catLabel,
-      venue: venue.trim(),
-      name: name.trim(),
-      email: email.trim(),
-      message: message.trim(),
-    });
-    if (res.ok) {
-      setStatus("done");
-    } else {
+    try {
+      const res = await submitPartner({
+        category: catLabel,
+        venue: venue.trim(),
+        name: name.trim(),
+        email: email.trim(),
+        message: message.trim(),
+      });
+      if (res.ok) {
+        setStatus("done");
+      } else {
+        setStatus("idle");
+        setError(res.error ?? "전송에 실패했습니다.");
+      }
+    } catch {
       setStatus("idle");
-      setError(res.error ?? "전송에 실패했습니다.");
+      setError("네트워크 연결을 확인한 뒤 다시 시도해 주세요.");
     }
   };
 
