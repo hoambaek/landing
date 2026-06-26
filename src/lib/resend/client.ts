@@ -1,7 +1,8 @@
 import { Resend } from "resend";
 
-// env 값에 섞일 수 있는 개행/공백 제거 — 헤더로 쓰일 때 "invalid header value" 방지
-const resendApiKey = process.env.RESEND_API_KEY?.trim();
+// env 값에 섞일 수 있는 공백/개행(중간 줄바꿈 포함) 전부 제거 — 헤더로 쓰일 때
+// "invalid header value" 방지. API 키는 공백문자를 포함하지 않으므로 전체 제거가 안전.
+const resendApiKey = process.env.RESEND_API_KEY?.replace(/\s+/g, "");
 
 /** Resend 클라이언트 — API 키 없으면 null (graceful) */
 export const resend = resendApiKey ? new Resend(resendApiKey) : null;
