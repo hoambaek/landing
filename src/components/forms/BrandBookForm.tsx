@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import UnderlineField from "./UnderlineField";
+import SubmitButton from "./SubmitButton";
 import { submitBrandBook } from "@/lib/forms";
 import { isValidEmail } from "@/lib/validation";
 
@@ -59,10 +60,7 @@ export default function BrandBookForm() {
           <form className="s-letter__form" onSubmit={onSubmit} noValidate>
             <UnderlineField label="EMAIL" placeholder="이메일 주소" name="email" type="email" value={email} onChange={setEmail} required />
 
-            <button type="submit" className="s-letter__submit" disabled={status === "sending"}>
-              <span className="s-letter__submit-label">{status === "sending" ? "전송 중" : "소개서 받기"}</span>
-              <span className="s-letter__submit-arrow">›</span>
-            </button>
+            <SubmitButton label="소개서 받기" sending={status === "sending"} />
 
             <p className="s-letter__note">
               {error || "이메일을 남겨주시면 브랜드 소개서(PDF)를 보내드립니다. 한국어 · 영문 제공."}

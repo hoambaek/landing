@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import UnderlineField from "./UnderlineField";
+import SubmitButton from "./SubmitButton";
 import { submitPartner } from "@/lib/forms";
 import { isValidEmail } from "@/lib/validation";
 
@@ -102,10 +103,7 @@ export default function PartnerForm() {
             <UnderlineField label="EMAIL" placeholder="이메일 주소" name="email" type="email" value={email} onChange={setEmail} required />
             <UnderlineField label="MESSAGE (선택)" placeholder="공간과 필요한 제안을 알려주세요" name="message" multiline value={message} onChange={setMessage} />
 
-            <button type="submit" className="s-letter__submit" disabled={status === "sending"}>
-              <span className="s-letter__submit-label">{status === "sending" ? "전송 중" : "문의 보내기"}</span>
-              <span className="s-letter__submit-arrow">›</span>
-            </button>
+            <SubmitButton label="문의 보내기" sending={status === "sending"} />
 
             <p className="s-letter__note">
               {error || "보내주신 내용을 검토한 뒤, 영업일 기준 2일 이내 담당자가 제안서로 회신드립니다."}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import UnderlineField from "./UnderlineField";
+import SubmitButton from "./SubmitButton";
 import { submitInvite } from "@/lib/forms";
 import { isValidEmail } from "@/lib/validation";
 
@@ -57,10 +58,7 @@ export default function InviteForm() {
             <UnderlineField label="NAME" placeholder="성함" name="name" value={name} onChange={setName} required />
             <UnderlineField label="EMAIL" placeholder="이메일 주소" name="email" type="email" value={email} onChange={setEmail} required />
 
-            <button type="submit" className="s-letter__submit" disabled={status === "sending"}>
-              <span className="s-letter__submit-label">{status === "sending" ? "전송 중" : "초대 신청하기"}</span>
-              <span className="s-letter__submit-arrow">›</span>
-            </button>
+            <SubmitButton label="초대 신청하기" sending={status === "sending"} />
 
             <p className="s-letter__note">
               {error || "신청서를 남겨주시면, 멤버십 모집이 열릴 때 가장 먼저 이메일로 안내해 드립니다."}
