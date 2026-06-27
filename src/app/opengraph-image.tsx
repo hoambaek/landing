@@ -68,7 +68,7 @@ export default function OgImage() {
             letterSpacing: "0.08em",
           }}
         >
-          한국 남해 · 수심 50미터 · 해저 숙성
+          한국 남해 · 수심 30m · 해저 숙성
         </div>
       </div>
     ),

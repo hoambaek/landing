@@ -87,7 +87,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.musedemaree.com"),
   title: "Muse de Marée | 바다의 시간을 담은 샴페인",
   description:
-    "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다. 바다의 온도, 해류, 수압이 만드는 시간의 기록. 2026년 런칭.",
+    "샴페인 하우스가 아니라, 바다의 시간을 기록하는 브랜드. 프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 30m에서 숙성하고, 입수부터 인양까지의 기록과 함께 병을 건넵니다. 2026년 런칭.",
   alternates: {
     canonical: "/",
     types: {
@@ -97,11 +97,11 @@ export const metadata: Metadata = {
   keywords: [
     "해저 숙성 샴페인",
     "underwater aged champagne",
-    "럭셔리 샴페인",
+    "바다의 시간을 기록하는 브랜드",
     "Muse de Marée",
     "뮤즈드마레",
-    "한국 심해 숙성",
-    "프리미엄 샴페인",
+    "한국 남해 해저 숙성",
+    "기록과 함께 오는 샴페인",
     "ocean aged champagne",
     "해저 와인 숙성",
     "Champagne Mignon Boulard",
@@ -109,7 +109,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Muse de Marée | 바다의 시간을 담은 샴페인",
     description:
-      "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다. 바다의 온도, 해류, 수압이 만드는 시간의 기록.",
+      "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 30m에서 숙성합니다. 입수부터 인양까지, 바다의 시간을 기록해 병과 함께 건넵니다.",
     locale: "ko_KR",
     type: "website",
     siteName: "Muse de Marée",
@@ -126,7 +126,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Muse de Marée | 바다의 시간을 담은 샴페인",
     description:
-      "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 50미터에서 숙성합니다. 바다의 온도, 해류, 수압이 만드는 시간의 기록.",
+      "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 30m에서 숙성합니다. 입수부터 인양까지, 바다의 시간을 기록해 병과 함께 건넵니다.",
     images: ["/opengraph-image"],
   },
   robots: {
