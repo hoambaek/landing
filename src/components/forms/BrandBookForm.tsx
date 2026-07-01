@@ -8,6 +8,8 @@ import { submitBrandBook } from "@/lib/forms";
 import { isValidEmail } from "@/lib/validation";
 
 export default function BrandBookForm() {
+  const [name, setName] = useState("");
+  const [affiliation, setAffiliation] = useState("");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState("");
@@ -15,13 +17,17 @@ export default function BrandBookForm() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (!isValidEmail(email)) {
-      setError("올바른 이메일 주소를 입력해 주세요.");
+    if (!name.trim() || !affiliation.trim() || !isValidEmail(email)) {
+      setError("성함, 소속, 올바른 이메일 주소를 입력해 주세요.");
       return;
     }
     setStatus("sending");
     try {
-      const res = await submitBrandBook({ email: email.trim() });
+      const res = await submitBrandBook({
+        name: name.trim(),
+        affiliation: affiliation.trim(),
+        email: email.trim(),
+      });
       if (res.ok) {
         setStatus("done");
       } else {
@@ -46,8 +52,8 @@ export default function BrandBookForm() {
       {status === "done" ? (
         <div className="s-letter__success">
           <span className="s-letter__success-rule" />
-          <p className="s-letter__success-line">곧 메일로 보내드립니다.</p>
-          <p className="s-letter__note">PDF · 한국어 / ENGLISH</p>
+          <p className="s-letter__success-line">요청이 접수되었습니다.</p>
+          <p className="s-letter__note">확인 후, 소개서를 이메일로 보내드립니다.</p>
         </div>
       ) : (
         <>
@@ -58,12 +64,16 @@ export default function BrandBookForm() {
           </div>
 
           <form className="s-letter__form" onSubmit={onSubmit} noValidate>
+            <div className="s-letter__form-row">
+              <UnderlineField label="NAME" placeholder="성함" name="name" value={name} onChange={setName} required />
+              <UnderlineField label="AFFILIATION" placeholder="소속 · 회사" name="affiliation" value={affiliation} onChange={setAffiliation} required />
+            </div>
             <UnderlineField label="EMAIL" placeholder="이메일 주소" name="email" type="email" value={email} onChange={setEmail} required />
 
-            <SubmitButton label="소개서 받기" sending={status === "sending"} />
+            <SubmitButton label="소개서 신청하기" sending={status === "sending"} />
 
             <p className="s-letter__note">
-              {error || "이메일을 남겨주시면 브랜드 소개서(PDF)를 보내드립니다. 한국어 · 영문 제공."}
+              {error || "성함·소속·이메일을 남겨주시면, 확인 후 브랜드 소개서(PDF)를 이메일로 보내드립니다. 한국어 · 영문 제공."}
             </p>
           </form>
         </>

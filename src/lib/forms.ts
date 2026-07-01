@@ -14,6 +14,7 @@ import {
   ApplicantEmail,
   getApplicantSubject,
   type FormKind,
+  type EmailMode,
 } from "./resend/templates/ApplicantEmail";
 import {
   AdminNotifyEmail,
@@ -34,7 +35,7 @@ export type PartnerPayload = {
   email: string;
   message: string;
 };
-export type BrandBookPayload = { email: string };
+export type BrandBookPayload = { name: string; affiliation: string; email: string };
 
 export type SubmitResult = { ok: boolean; error?: string };
 
@@ -47,6 +48,8 @@ type NotifyArgs = {
   adminFields: Record<string, string>;
   /** 신청자 메일에 첨부할 파일 (브랜드 소개서 PDF 등) */
   attachments?: Attachment[];
+  /** 신청자 메일 모드 — 브랜드 소개서 접수확인("ack") vs 전달("send") */
+  mode?: EmailMode;
 };
 
 /** insert 성공 후 이메일 2종 발송(병렬, 실패 무시) */
@@ -81,6 +84,7 @@ async function sendEmails({
   applicantName,
   adminFields,
   attachments,
+  mode = "send",
 }: NotifyArgs): Promise<void> {
   if (!isResendConfigured() || !resend) {
     console.warn("[forms] Resend 미설정 — 이메일 발송 건너뜀");
@@ -95,7 +99,7 @@ async function sendEmails({
 
   try {
     const [applicantHtml, adminHtml] = await Promise.all([
-      render(ApplicantEmail({ kind, name: applicantName })),
+      render(ApplicantEmail({ kind, name: applicantName, mode })),
       render(AdminNotifyEmail({ kind, fields: adminFields, receivedAt })),
     ]);
 
@@ -103,7 +107,7 @@ async function sendEmails({
       resend.emails.send({
         from: FROM_EMAIL,
         to: applicantEmail,
-        subject: getApplicantSubject(kind),
+        subject: getApplicantSubject(kind, mode),
         html: applicantHtml,
         ...(attachments?.length ? { attachments } : {}),
       }),
@@ -127,6 +131,43 @@ async function sendEmails({
   } catch (e) {
     // 렌더/발송 예외는 신청을 실패시키지 않음
     console.error("[forms] 이메일 처리 예외:", e);
+  }
+}
+
+/**
+ * 브랜드 소개서 전달 메일(PDF 첨부) — 관리자 승인 시 발송.
+ * 신청자에게만 발송(운영자 알림 없음). 발송 성공 여부를 반환한다.
+ */
+export async function sendBrandBookDelivery(p: {
+  email: string;
+  name?: string;
+}): Promise<SubmitResult> {
+  if (!isResendConfigured() || !resend) {
+    return { ok: false, error: "이메일 발송이 설정되지 않았습니다." };
+  }
+  const attachments = await loadBrandBookPdf();
+  if (!attachments?.length) {
+    return { ok: false, error: "브랜드 소개서 PDF를 찾을 수 없습니다." };
+  }
+  try {
+    const html = await render(
+      ApplicantEmail({ kind: "brandbook", name: p.name, mode: "send" })
+    );
+    const { error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: p.email,
+      subject: getApplicantSubject("brandbook", "send"),
+      html,
+      attachments,
+    });
+    if (error) {
+      console.error("[forms] 소개서 전달 메일 실패:", error);
+      return { ok: false, error: "메일 발송에 실패했습니다." };
+    }
+    return { ok: true };
+  } catch (e) {
+    console.error("[forms] 소개서 전달 예외:", e);
+    return { ok: false, error: "메일 발송 중 오류가 발생했습니다." };
   }
 }
 
@@ -172,7 +213,7 @@ export async function submitPartner(p: PartnerPayload): Promise<SubmitResult> {
 async function loadBrandBookPdf(): Promise<Attachment[] | undefined> {
   try {
     const buf = await readFile(
-      path.join(process.cwd(), "public/musedemaree-brandbook.pdf")
+      path.join(process.cwd(), "private-assets/musedemaree-brandbook.pdf")
     );
     return [
       {
@@ -189,15 +230,17 @@ async function loadBrandBookPdf(): Promise<Attachment[] | undefined> {
 export async function submitBrandBook(
   p: BrandBookPayload
 ): Promise<SubmitResult> {
-  const attachments = await loadBrandBookPdf();
+  // 수집형 전환: 제출 시 PDF 자동첨부 없음. pending으로 저장하고 접수 확인 메일만 발송.
+  // 실제 소개서(PDF)는 관리자 승인 시 sendBrandBookDelivery로 전달.
   return insertAndNotify(
     "brandbook_requests",
-    { email: p.email },
+    { name: p.name, affiliation: p.affiliation, email: p.email },
     {
       kind: "brandbook",
       applicantEmail: p.email,
-      adminFields: { 이메일: p.email },
-      attachments,
+      applicantName: p.name,
+      adminFields: { 이름: p.name, 소속: p.affiliation, 이메일: p.email },
+      mode: "ack",
     }
   );
 }

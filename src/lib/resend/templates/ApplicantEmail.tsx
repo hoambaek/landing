@@ -11,9 +11,18 @@ import {
 
 export type FormKind = "invite" | "partner" | "brandbook";
 
+/**
+ * 브랜드 소개서는 2단계 발송:
+ * - "ack": 신청 접수 확인 (PDF 없음) — 공개 폼 제출 시
+ * - "send": 소개서 전달 (PDF 첨부) — 관리자 승인 시
+ * invite·partner는 항상 "send".
+ */
+export type EmailMode = "ack" | "send";
+
 interface ApplicantEmailProps {
   kind: FormKind;
   name?: string;
+  mode?: EmailMode;
 }
 
 /** 발송 메일의 이미지(로고)용 절대 URL */
@@ -23,8 +32,9 @@ const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://musedemaree.com";
  * 신청자 확인 메일 — Paper v2 시안(프레임 + 카드 + 법적 푸터).
  * 외곽 연회색 프레임 안에 #C4BFBB 카드, 브랜드 로고 헤더, 본문, 다크 법적 푸터.
  */
-export function ApplicantEmail({ kind, name }: ApplicantEmailProps) {
-  const t = COPY[kind];
+export function ApplicantEmail({ kind, name, mode = "send" }: ApplicantEmailProps) {
+  const t =
+    kind === "brandbook" && mode === "ack" ? BRANDBOOK_ACK_COPY : COPY[kind];
   const greeting = name ? `${name} 님, 안녕하세요.` : "안녕하세요.";
 
   return (
@@ -95,7 +105,8 @@ export function ApplicantEmail({ kind, name }: ApplicantEmailProps) {
   );
 }
 
-export function getApplicantSubject(kind: FormKind): string {
+export function getApplicantSubject(kind: FormKind, mode: EmailMode = "send"): string {
+  if (kind === "brandbook" && mode === "ack") return BRANDBOOK_ACK_SUBJECT;
   return SUBJECT[kind];
 }
 
@@ -103,6 +114,20 @@ const SUBJECT: Record<FormKind, string> = {
   invite: "초대 신청이 접수되었습니다 | Muse de Marée",
   partner: "파트너십 문의가 접수되었습니다 | Muse de Marée",
   brandbook: "바다의 시간을 한 권에 담았습니다 | Muse de Marée",
+};
+
+/** 브랜드 소개서 접수 확인(ack) 전용 제목·본문 */
+const BRANDBOOK_ACK_SUBJECT =
+  "브랜드 소개서 요청이 접수되었습니다 | Muse de Marée";
+
+const BRANDBOOK_ACK_COPY = {
+  eyebrow: "BRAND",
+  title: "요청이 접수되었습니다",
+  body: [
+    "Muse de Marée 브랜드 소개서를 요청해 주셔서 감사합니다. 요청은 정상적으로 접수되었습니다.",
+    "보내주신 정보를 확인한 뒤, 준비되는 대로 소개서를 이 메일로 보내드리겠습니다.",
+    "잠시만 기다려 주세요. 곧 다시 인사드리겠습니다.",
+  ],
 };
 
 const COPY: Record<
