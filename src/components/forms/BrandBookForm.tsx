@@ -73,7 +73,13 @@ export default function BrandBookForm() {
             <SubmitButton label="소개서 신청하기" sending={status === "sending"} />
 
             <p className="s-letter__note">
-              {error || "성함·소속·이메일을 남겨주시면, 확인 후 브랜드 소개서(PDF)를 이메일로 보내드립니다. 한국어 · 영문 제공."}
+              {error || (
+                <>
+                  성함·소속·이메일을 남겨주시면, 확인 후 브랜드 소개서(PDF)를 이메일로 보내드립니다.
+                  <br />
+                  한국어 · 영문 제공.
+                </>
+              )}
             </p>
           </form>
         </>
