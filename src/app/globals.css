@@ -5049,7 +5049,8 @@ input:focus-visible,
 .age-gate {
   position: fixed;
   inset: 0;
-  z-index: 9000;
+  /* 필름 그레인(body::after, z 9999)보다 위 — 그레인을 가려 배경 톤 균일 */
+  z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;

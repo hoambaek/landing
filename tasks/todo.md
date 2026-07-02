@@ -6,25 +6,31 @@
 
 - [x] **주류 연령확인(19금) 게이트 + 면허 확인** (2026-07-02)
   - 면허 확보 확인: 오크니 주류수출입업면허(나) 409-2-00256 → 국민건강증진법 §8의2 광고 적법 (메모리 `reference_liquor_license`)
-  - 진입 1회 19세 확인 모달 `src/components/legal/AgeGate.tsx`(루트 layout 마운트, useSyncExternalStore로 localStorage 90일 지속) · "아니요"→`/exit` 안내 페이지(`AgeExit` + ko/en/fr 라우트 3개)
-  - 콘텐츠 `src/content/age-gate.ts`(ko/en/fr, 경고문구는 전 로케일 ko 유지) · CSS `.age-gate`/`.age-exit`(Ocean Glass 다크+앰버 헤어라인)
-  - 푸터 경고문구 "경고 :" 박스 형식 보완(시행령 표기방법)
-  - 검증: tsc·eslint 0 · 프로덕션 빌드(exit 3라우트 정적) · Playwright 데스크톱/모바일/en, 확인·거부·지속성·스크롤잠금·포커스 전 항목 통과
-  - 정본: `docs/plans/2026-07-02-legal-review-verdict.md`
+  - 진입 1회 19세 확인 모달 `src/components/legal/AgeGate.tsx`(루트 layout 마운트, useSyncExternalStore로 localStorage 90일 지속) · "아니요, 19세 미만입니다"→`/exit` 안내 페이지(`AgeExit` + ko/en/fr 라우트 3개)
+  - 콘텐츠 `src/content/age-gate.ts`(ko/en/fr, 경고문구는 전 로케일 ko 유지)
+  - **디자인 = MDM 디자인 가이드 재정합(1차 글라스모피즘 폐기)**: 합본 로고 이미지(`logo_all_W_KR`) · 평면·직각·무테(글라스/box-shadow 제거) · 경고문구 무테 중앙정렬("경고" 라벨 + 문구, 본문 폭에 맞춤) · amber 0.5px 보더 CTA · 모바일 대응 · `word-break: keep-all`
+  - **버그 수정**: 자동 포커스를 확인버튼→다이얼로그 패널로 이동(focus-visible 이중 테두리 제거)
+  - **테마 = 다크 확정** (2026-07-02): Paper에 라이트 대안(`Age Gate — Light (대안)`) 제작·비교 후 다크 유지. 정본 Paper 아트보드 = `Age Gate — Dark (현재 적용)`
+  - CSS `.age-gate`/`.age-exit`(void 다크 · 앰버 헤어라인 · 필름그레인)
+  - 검증: tsc·eslint 0 · 프로덕션 빌드(exit 3라우트 정적) · Playwright 데스크톱/모바일/en, 확인·거부·지속성·스크롤잠금·포커스·이중테두리 전 항목 통과
+  - 커밋: `e280d34`(초기) · 정본 문서 `docs/plans/2026-07-02-legal-review-verdict.md`
 
 - [x] **법적 문서 페이지 3종** (이용약관·개인정보처리방침·쿠키 정책) — 2026-07-02 **ko 구현 완료** (Paper 라이트 템플릿 → 코드)
   - content `src/content/legal/{terms,privacy,cookies}.ts` + `LegalDoc`/`LegalShell`(LetterHeader --brand 재사용) · 라우트 `/terms`·`/privacy`·`/cookies`(ko, 색인 허용)
   - 푸터 `<span>`→`<Link>` 연결(전 로케일 공통 ko 페이지) · sitemap 3경로 · CSS `.s-legal__*`(라이트 pro-bg)
   - 국외이전 §6 Resend 5항목 완비(P0) · 검증 tsc·lint·빌드·Playwright(데스크톱/모바일/푸터링크) 통과
   - 배포 전 변호사 감수(국외이전·약관 면책) 권장. en/fr 번역은 향후(플랜 B로 ko만)
-- [ ] ~~(과거) 법적 문서 페이지 3종 — 법무 검토 반영 완료, 구현 대기~~ → 위에서 완료
-  - 플랜 정본: [`docs/plans/2026-07-02-legal-pages-plan.md`](../docs/plans/2026-07-02-legal-pages-plan.md) (§8 = 법무 검토 결과·리스크 등록부)
-  - 확정: CPO=정설화/info@ · 보유 3년 · 쿠키 최소(트래커0, 배너無)
-  - 🔴 **P0(배포차단)**: ① 국외이전 고지 필수 5개 항목 완비(Resend — 연락처·거부방법 누락 보완) ② Supabase "서울리전=국내" 판단 재확정(미국 원격접근 시 국외처리 소지, 불명확 시 보수적 고지)
-  - 🟡 **P1(권장)**: 주류 19금 연령확인 고지+면허 보유 확인(국민건강증진법 §8의2 · 플랜 원안 누락) · PostHog 도입 게이트 · 커머스 런칭 전 신고/판매약관 블록
-  - 배포 전 변호사 감수: 국외이전 판단·고지문 / 약관 면책조항 / 주류광고 적법성
-  - 착수 전 확인 1건: 언어 범위 (A)3개국어 번역 vs (B)ko만 — 추천 (A)
-  - 현재: 푸터에 라벨(`<span>`)만, 링크·페이지 모두 없음 (`Footer.tsx:128-132`)
+  - 플랜/법무검토 정본: [`docs/plans/2026-07-02-legal-pages-plan.md`](../docs/plans/2026-07-02-legal-pages-plan.md)(§8 리스크 등록부) · [`2026-07-02-legal-review-verdict.md`](../docs/plans/2026-07-02-legal-review-verdict.md)
+  - 남은 배포 전 변호사 감수: 국외이전 판단(Supabase 서울리전 국내 표기)·약관 면책조항
+  - 커밋: `a122d24`(법적 페이지) · `65d51e3`(푸터 링크 폰트 크기 fix)
+
+- [x] **푸터 정책·언어 링크 폰트 크기 fix** (2026-07-02, `65d51e3`)
+  - 정책 `<span>`→`<Link>`(a) 전환 후 `.s-footer__policies span` 셀렉터 미적용 → 기본 크기로 커짐. 셀렉터에 `a` 추가(데스크톱 11px·모바일 9px) + 링크 호버색. 언어(KR/EN/FR)도 동일 적용
+
+- [x] **Paper 캔버스 코드 동기화** (2026-07-02, Paper 전용 — 레포 커밋 없음)
+  - 푸터: 사업자번호 509-88-03399→**859-85-03139** · RELATION "Contact" 제거 (데스크톱·모바일)
+  - 메뉴 오버레이: 다크→**라이트(#C4BFBB)** 전환 (코드가 골드대비 라이트로 리디자인된 것 반영, 데스크톱·모바일)
+  - 법적 페이지 라이트 템플릿 `Age Gate — Light (대안)`·`Legal — 개인정보처리방침 (Light)` 아트보드 신설
 
 - [x] **다국어(KR/EN/FR) 랜딩페이지** (2026-07-01 착수 · 구현 완료, 감수·커밋 대기)
   - 성공 기준: `/`(ko)·`/en`·`/fr` 3개 URL이 각 언어로 렌더 · 언어 스위처 동작 · hreflang · 빌드/타입/린트 통과
