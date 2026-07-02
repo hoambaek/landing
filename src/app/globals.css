@@ -2633,13 +2633,21 @@ input:focus-visible,
   gap: 20px;
 }
 
+.s-footer__policies a,
 .s-footer__policies span,
+.s-footer__lang a,
 .s-footer__lang span {
   font-family: var(--font-body);
   font-weight: 300;
   font-size: 11px;
   line-height: 14px;
   color: rgba(232, 229, 225, 0.45);
+  transition: color 0.3s ease;
+}
+
+.s-footer__policies a:hover,
+.s-footer__lang a:hover {
+  color: rgba(232, 229, 225, 0.75);
 }
 
 .s-footer__lang {
@@ -2763,7 +2771,9 @@ input:focus-visible,
     gap: 12px;
   }
 
+  .s-footer__policies a,
   .s-footer__policies span,
+  .s-footer__lang a,
   .s-footer__lang span {
     font-size: 9px;
   }
