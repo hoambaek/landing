@@ -6640,3 +6640,185 @@ html {
   font-style: italic;
   font-weight: 400;
 }
+
+/* ══════════════════════════════════════════
+   LEGAL PAGES — 이용약관·개인정보처리방침·쿠키 정책 (라이트)
+   ══════════════════════════════════════════ */
+.s-legal__panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 148px 24px 120px;
+  background: var(--color-pro-bg);
+}
+
+.s-legal__col {
+  width: 100%;
+  max-width: 760px;
+}
+
+.s-legal__doc {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* 제목 블록 */
+.s-legal__title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.s-legal__eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  color: var(--color-amber-muted);
+}
+
+.s-legal__title {
+  margin-top: 22px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 46px;
+  line-height: 56px;
+  letter-spacing: 0.01em;
+  color: var(--color-earth);
+}
+
+.s-legal__meta {
+  margin-top: 20px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: #8C857A;
+}
+
+.s-legal__rule {
+  margin-top: 36px;
+  width: 100%;
+  height: 1px;
+  background: rgba(49, 46, 42, 0.25);
+}
+
+/* 본문 */
+.s-legal__intro {
+  margin-top: 44px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 28px;
+  letter-spacing: 0.01em;
+  color: rgba(49, 46, 42, 0.72);
+  word-break: keep-all;
+}
+
+.s-legal__section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 48px;
+}
+
+.s-legal__heading {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 30px;
+  letter-spacing: 0.01em;
+  color: var(--color-earth);
+}
+
+.s-legal__body {
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 28px;
+  letter-spacing: 0.01em;
+  color: rgba(49, 46, 42, 0.72);
+  word-break: keep-all;
+}
+
+.s-legal__body + .s-legal__body {
+  margin-top: 10px;
+}
+
+/* 데이터 표 (위탁·국외이전) */
+.s-legal__table {
+  width: 100%;
+  margin-top: 28px;
+  border-top: 0.5px solid rgba(49, 46, 42, 0.25);
+}
+
+.s-legal__row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 15px 0;
+  border-bottom: 0.5px solid rgba(49, 46, 42, 0.12);
+}
+
+.s-legal__row-label {
+  flex-shrink: 0;
+  width: 210px;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 22px;
+  letter-spacing: 0.02em;
+  color: #6E675D;
+}
+
+.s-legal__row-value {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--color-earth);
+  word-break: keep-all;
+}
+
+.s-legal__footnote {
+  margin-top: 48px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 18px;
+  letter-spacing: 0.04em;
+  color: #8C857A;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+  .s-legal__panel {
+    padding: 116px 24px 80px;
+  }
+
+  .s-legal__title {
+    font-size: 34px;
+    line-height: 42px;
+  }
+
+  .s-legal__section {
+    margin-top: 40px;
+  }
+
+  .s-legal__heading {
+    font-size: 19px;
+    line-height: 27px;
+  }
+
+  .s-legal__row {
+    flex-direction: column;
+    gap: 4px;
+    padding: 13px 0;
+  }
+
+  .s-legal__row-label {
+    width: auto;
+  }
+}

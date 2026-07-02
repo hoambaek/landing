@@ -12,7 +12,12 @@
   - 검증: tsc·eslint 0 · 프로덕션 빌드(exit 3라우트 정적) · Playwright 데스크톱/모바일/en, 확인·거부·지속성·스크롤잠금·포커스 전 항목 통과
   - 정본: `docs/plans/2026-07-02-legal-review-verdict.md`
 
-- [ ] **법적 문서 페이지 3종** (이용약관·개인정보처리방침·쿠키 정책) — 2026-07-02 **법무 검토 반영 완료**, 구현 대기(다음 세션)
+- [x] **법적 문서 페이지 3종** (이용약관·개인정보처리방침·쿠키 정책) — 2026-07-02 **ko 구현 완료** (Paper 라이트 템플릿 → 코드)
+  - content `src/content/legal/{terms,privacy,cookies}.ts` + `LegalDoc`/`LegalShell`(LetterHeader --brand 재사용) · 라우트 `/terms`·`/privacy`·`/cookies`(ko, 색인 허용)
+  - 푸터 `<span>`→`<Link>` 연결(전 로케일 공통 ko 페이지) · sitemap 3경로 · CSS `.s-legal__*`(라이트 pro-bg)
+  - 국외이전 §6 Resend 5항목 완비(P0) · 검증 tsc·lint·빌드·Playwright(데스크톱/모바일/푸터링크) 통과
+  - 배포 전 변호사 감수(국외이전·약관 면책) 권장. en/fr 번역은 향후(플랜 B로 ko만)
+- [ ] ~~(과거) 법적 문서 페이지 3종 — 법무 검토 반영 완료, 구현 대기~~ → 위에서 완료
   - 플랜 정본: [`docs/plans/2026-07-02-legal-pages-plan.md`](../docs/plans/2026-07-02-legal-pages-plan.md) (§8 = 법무 검토 결과·리스크 등록부)
   - 확정: CPO=정설화/info@ · 보유 3년 · 쿠키 최소(트래커0, 배너無)
   - 🔴 **P0(배포차단)**: ① 국외이전 고지 필수 5개 항목 완비(Resend — 연락처·거부방법 누락 보완) ② Supabase "서울리전=국내" 판단 재확정(미국 원격접근 시 국외처리 소지, 불명확 시 보수적 고지)

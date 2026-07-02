@@ -126,9 +126,9 @@ export default function Footer({
           </div>
           <div className="s-footer__bar-right">
             <div className="s-footer__policies">
-              <span>{dict.policies.terms}</span>
-              <span>{dict.policies.privacy}</span>
-              <span>{dict.policies.cookies}</span>
+              <Link href="/terms">{dict.policies.terms}</Link>
+              <Link href="/privacy">{dict.policies.privacy}</Link>
+              <Link href="/cookies">{dict.policies.cookies}</Link>
             </div>
             <div className="s-footer__lang">
               {locales.map((lc) => (
