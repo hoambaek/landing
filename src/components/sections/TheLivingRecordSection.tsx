@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import type { Locale } from "@/i18n/config";
+import type { Dictionary } from "@/i18n/types";
 
 /* G3 — 측정 시작일(입수일). 오늘이 771일째가 되도록 역산한 기준값. */
 const MEASURE_START = Date.UTC(2024, 4, 1); // 2024-05-01
@@ -12,7 +14,13 @@ function computeDays(): number {
 }
 
 /** 771 숫자 카운팅 — 뷰 진입 시 0→target, 2.0s ease-out. reduced-motion 즉시 표기. */
-function DaysCounter() {
+function DaysCounter({
+  locale,
+  dict,
+}: {
+  locale: Locale;
+  dict: Dictionary["living"];
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const [days, setDays] = useState(0);
 
@@ -64,25 +72,27 @@ function DaysCounter() {
     <div className="s-living__counter" ref={ref}>
       <div className="s-living__counter-num">
         <span className="s-living__counter-value">{days}</span>
-        <Image
-          src="/text/counter-unit.png"
-          alt="일째"
-          width={59}
-          height={40}
-          className="s-living__counter-unit"
-        />
+        {locale === "ko" ? (
+          <Image
+            src="/text/counter-unit.png"
+            alt={dict.counterUnit}
+            width={59}
+            height={40}
+            className="s-living__counter-unit"
+          />
+        ) : (
+          <span className="s-living__counter-unit-text">{dict.counterUnit}</span>
+        )}
       </div>
-      <p className="s-living__counter-caption">
-        이 바다를 기록한 시간, 측정은 멈추지 않습니다.
-      </p>
+      <p className="s-living__counter-caption">{dict.counterCaption}</p>
 
       {/* 측정은 멈추지 않습니다 — 지금 이 순간의 측정값 */}
       <div className="s-living__log">
         <span className="s-living__log-rule" />
         <div className="s-living__log-vals">
-          <span>수온 13.5°C</span>
-          <span>해류 2.46 m/s</span>
-          <span>수압 3.98 atm</span>
+          <span>{dict.log.temp}</span>
+          <span>{dict.log.current}</span>
+          <span>{dict.log.pressure}</span>
         </div>
       </div>
     </div>
@@ -93,7 +103,27 @@ function DaysCounter() {
  * S2 · The Living Record `data-archive` — 심해의 시간 (다크, Paper 02 1:1)
  * 풀블리드 o3 + 카피 3행 + 771 카운터 + 관측 로그 라인 + 클로징.
  */
-export default function TheLivingRecordSection() {
+export default function TheLivingRecordSection({
+  locale,
+  dict,
+}: {
+  locale: Locale;
+  dict: Dictionary["living"];
+}) {
+  const isKo = locale === "ko";
+  /** 도입 카피 — ko는 PNG, en/fr은 텍스트 */
+  const copy = isKo ? (
+    <Image
+      src="/text/living-copy.png"
+      alt={dict.copy}
+      width={354}
+      height={184}
+      className="s-living__copy-img"
+    />
+  ) : (
+    <span className="s-living__copy-text">{dict.copy}</span>
+  );
+
   return (
     <section id="data-archive" className="s-living">
       {/* 풀블리드 배경 — 데스크톱 o3 / 모바일 o3_m */}
@@ -102,7 +132,7 @@ export default function TheLivingRecordSection() {
           <source media="(max-width: 768px)" srcSet="/images/o3_m.webp" />
           <Image
             src="/images/o3.webp"
-            alt="남해 수심 30m, 인양 케이지 — 측정 현장"
+            alt={dict.bgAlt}
             fill
             sizes="100vw"
             className="s-living__bg-img"
@@ -114,28 +144,12 @@ export default function TheLivingRecordSection() {
 
       <div className="s-living__text">
         {/* 도입 카피 — 데스크톱 3행 */}
-        <div className="s-living__copy s-living__copy--desktop reveal">
-          <Image
-            src="/text/living-copy.png"
-            alt="깊은 바다 속 빛이 사라진 곳에서, 기록이 시작됩니다"
-            width={354}
-            height={184}
-            className="s-living__copy-img"
-          />
-        </div>
+        <div className="s-living__copy s-living__copy--desktop reveal">{copy}</div>
         {/* 도입 카피 — 모바일 3행 (내용은 데스크톱과 동일) */}
-        <div className="s-living__copy s-living__copy--mobile">
-          <Image
-            src="/text/living-copy.png"
-            alt="깊은 바다 속 빛이 사라진 곳에서, 기록이 시작됩니다"
-            width={354}
-            height={184}
-            className="s-living__copy-img"
-          />
-        </div>
+        <div className="s-living__copy s-living__copy--mobile">{copy}</div>
 
         {/* 771 카운터 + 측정값 */}
-        <DaysCounter />
+        <DaysCounter locale={locale} dict={dict} />
       </div>
     </section>
   );

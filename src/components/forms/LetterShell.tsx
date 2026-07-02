@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Footer from "@/components/layout/Footer";
 import LetterHeader from "./LetterHeader";
+import { defaultLocale, type Locale } from "@/i18n/config";
+import type { Dictionary } from "@/i18n/types";
+import koDict from "@/i18n/messages/ko.json";
 
 /**
  * 서브 페이지 공용 셸 — 상단 이미지 레터 레이아웃 (Paper R3 시안).
@@ -10,17 +13,23 @@ export default function LetterShell({
   theme,
   image,
   imageAlt = "",
+  locale = defaultLocale,
+  headerDict = koDict.header,
+  footerDict = koDict.footer,
   children,
 }: {
   theme: "invite" | "partner" | "brand";
   image: string;
   imageAlt?: string;
+  locale?: Locale;
+  headerDict?: Dictionary["header"];
+  footerDict?: Dictionary["footer"];
   children: React.ReactNode;
 }) {
   return (
     <main className={`s-letter-page s-letter-page--${theme}`}>
       {/* 헤더 — 심볼(좌) + 워드마크(중앙) + 햄버거(우), 스크롤 시 다크 배경+노치 차폐 */}
-      <LetterHeader />
+      <LetterHeader locale={locale} dict={headerDict} />
 
       {/* 상단 풀와이드 이미지 */}
       <aside className="s-letter__visual">
@@ -35,7 +44,7 @@ export default function LetterShell({
       </div>
 
       {/* 공용 푸터 */}
-      <Footer />
+      <Footer locale={locale} dict={footerDict} />
     </main>
   );
 }

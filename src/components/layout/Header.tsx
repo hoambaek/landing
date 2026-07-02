@@ -4,8 +4,10 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useHeaderScroll, useIndicatorScroll } from "@/hooks/useScrollSection";
+import { locales, localePrefixMap, type Locale } from "@/i18n/config";
+import type { Dictionary } from "@/i18n/types";
 
-/** 메뉴 오버레이 내비 — Paper 시안 7항목 (아카이브 넘버링) */
+/** 메뉴 오버레이 내비 — Paper 시안 7항목 (아카이브 넘버링). 라벨은 브랜드 고유 영문 명칭이라 전 로케일 공통 */
 const MAIN_LINKS = [
   { id: "void", href: "#void", label: "Home" },
   { id: "data-archive", href: "#data-archive", label: "The Living Record" },
@@ -16,15 +18,18 @@ const MAIN_LINKS = [
   { id: "professionals", href: "#professionals", label: "Partnership" },
 ] as const;
 
-/** 하단 관측 라인 — 1차 정적 스냅샷 (Phase 3에서 라이브 연동 검토) */
-const REC_LINE = "기록 · 남해 34.1434°N · 수온 13.5°C";
-const REC_DAYS = "측정 771일째";
-
 /** 포커스 가능한 요소 셀렉터 */
 const FOCUSABLE =
   'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-export default function Header() {
+export default function Header({
+  locale,
+  dict,
+}: {
+  locale: Locale;
+  dict: Dictionary["header"];
+}) {
+  const homeHref = localePrefixMap[locale];
   const [isOpen, setIsOpen] = useState(false);
   const { isDark, isScrolled } = useHeaderScroll();
   const { activeId } = useIndicatorScroll();
@@ -111,7 +116,7 @@ export default function Header() {
 
       {/* ── Header bar ── */}
       <header className={`header${headerColorClass}${heroInitClass}`} style={headerStyle}>
-        <Link href="/" className="header__symbol" aria-label="홈으로 이동">
+        <Link href={homeHref} className="header__symbol" aria-label={dict.aria.home}>
           <Image
             src="/images/logo/logo_trans_W.png"
             alt=""
@@ -127,7 +132,7 @@ export default function Header() {
             className="header__symbol-img header__symbol-img--black"
           />
         </Link>
-        <Link href="/" className="header__logo">
+        <Link href={homeHref} className="header__logo">
           <Image
             src="/images/logo/logo_text_trans_W.png"
             alt="MUSE DE MARÉE"
@@ -147,7 +152,7 @@ export default function Header() {
         <button
           ref={menuBtnRef}
           className={`header__menu${isOpen ? " is-active" : ""}`}
-          aria-label="메뉴 열기"
+          aria-label={dict.aria.menuOpen}
           aria-expanded={isOpen}
           onClick={() => setIsOpen(true)}
         >
@@ -162,7 +167,7 @@ export default function Header() {
         ref={overlayRef}
         className={`menu-overlay${isOpen ? " is-open" : ""}`}
         role="dialog"
-        aria-label="내비게이션 메뉴"
+        aria-label={dict.aria.menuLabel}
         aria-modal="true"
       >
         {/* 심볼 워터마크 */}
@@ -177,7 +182,7 @@ export default function Header() {
 
         {/* 상단: 로고(중앙) + X 닫기(우) */}
         <div className="menu-overlay__top">
-          <Link href="/" className="menu-overlay__logo" onClick={close} aria-label="홈으로 이동">
+          <Link href={homeHref} className="menu-overlay__logo" onClick={close} aria-label={dict.aria.home}>
             <Image
               src="/images/logo/logo_text_trans_W.png"
               alt="MUSE DE MARÉE"
@@ -189,7 +194,7 @@ export default function Header() {
             ref={closeBtnRef}
             className="menu-overlay__close"
             onClick={close}
-            aria-label="닫기"
+            aria-label={dict.aria.close}
           >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
               <line x1="1" y1="1" x2="19" y2="19" stroke="#312E2A" strokeWidth="0.8" opacity="0.85" />
@@ -218,13 +223,20 @@ export default function Header() {
         {/* 하단: REC 관측 라인(좌) + 언어(우) */}
         <div className="menu-overlay__bottom">
           <div className="menu-overlay__rec">
-            <span className="menu-overlay__rec-line">{REC_LINE}</span>
-            <span className="menu-overlay__rec-days">{REC_DAYS}</span>
+            <span className="menu-overlay__rec-line">{dict.recLine}</span>
+            <span className="menu-overlay__rec-days">{dict.recDays}</span>
           </div>
           <div className="menu-overlay__lang">
-            <a href="#" className="menu-overlay__lang-active">KR</a>
-            <a href="#">EN</a>
-            <a href="#">FR</a>
+            {locales.map((lc) => (
+              <Link
+                key={lc}
+                href={localePrefixMap[lc]}
+                className={lc === locale ? "menu-overlay__lang-active" : ""}
+                onClick={close}
+              >
+                {lc === "ko" ? "KR" : lc.toUpperCase()}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

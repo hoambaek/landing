@@ -65,6 +65,7 @@ const cormorantInfant = Cormorant_Infant({
 const ebGaramond = EB_Garamond({
   subsets: ["latin"],
   weight: ["400", "500"],
+  style: ["normal", "italic"],
   variable: "--font-eb-garamond",
   display: "swap",
 });
@@ -90,6 +91,12 @@ export const metadata: Metadata = {
     "샴페인 하우스가 아니라, 바다의 시간을 기록하는 브랜드. 프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 30m에서 숙성하고, 입수부터 인양까지의 기록과 함께 병을 건넵니다. 2026년 런칭.",
   alternates: {
     canonical: "/",
+    languages: {
+      ko: "/",
+      en: "/en",
+      fr: "/fr",
+      "x-default": "/",
+    },
     types: {
       "application/rss+xml": "https://blog.musedemaree.com/feed.xml",
     },

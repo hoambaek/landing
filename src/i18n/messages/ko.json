@@ -1,0 +1,195 @@
+{
+  "hero": {
+    "headline": "지금 이 순간에도, 한 병의 샴페인이 바다 아래에서 시간을 기록하고 있습니다",
+    "brandLabel": "해저숙성 샴페인",
+    "brandName": "뮤즈드마레",
+    "bgAlt": "남해 수심 30m, 케이지에 든 한 병의 샴페인 · Muse de Marée"
+  },
+  "header": {
+    "recLine": "기록 · 남해 34.1434°N · 수온 13.5°C",
+    "recDays": "측정 771일째",
+    "aria": {
+      "home": "홈으로 이동",
+      "menuOpen": "메뉴 열기",
+      "menuLabel": "내비게이션 메뉴",
+      "close": "닫기"
+    }
+  },
+  "living": {
+    "bgAlt": "남해 수심 30m, 인양 케이지 — 측정 현장",
+    "copy": "깊은 바다 속 빛이 사라진 곳에서, 기록이 시작됩니다",
+    "counterUnit": "일째",
+    "counterCaption": "이 바다를 기록한 시간, 측정은 멈추지 않습니다.",
+    "log": {
+      "temp": "수온 13.5°C",
+      "current": "해류 2.46 m/s",
+      "pressure": "수압 3.98 atm"
+    }
+  },
+  "first": {
+    "eyebrow": "THE FIRST RECORD",
+    "headline": "첫 번째 기록이 수면 위로 떠올랐습니다",
+    "closing": "병마다 다른 바다의 지문, 같은 병은 없습니다",
+    "plateAlt": {
+      "light": "수면에서 만나는 첫 빛 · 첫 빛",
+      "manuscript": "따개비와 소금 결정이 앉은 병 표면 · 바다가 쓴 원고"
+    }
+  },
+  "collection": {
+    "title": "collection.",
+    "sub": "각 큐베는 하나의 기록, 바다가 만든 시간을 맡아두는 일",
+    "heroAlt": "남해에서 인양된 큐베 라인업",
+    "cuvees": {
+      "enLieuSur": "엉리우쉬르 · 첫 만남을 위한 시작",
+      "enLieuSurMagnum": "매그넘 1500ml · 더 느린 숙성",
+      "elementDeSurprise": "BDB Non-dosé\n해저 숙성의 직설",
+      "editionZero": "시작을 기록한 첫 번째 아카이브",
+      "atomesCrochus1yr": "희귀 품종 Petit Meslier\n1년의 기록",
+      "atomesCrochus3yr": "아직 바다 아래에 있습니다\n천 일의 기록이 되는 중",
+      "tag3yr": "3년",
+      "soldOut": "· SOLD OUT"
+    },
+    "cert": {
+      "showcaseAlt": "En Lieu Sûr — 기록 카드와 함께",
+      "entry": "입수",
+      "coordinates": "좌표",
+      "aging": "해저 숙성",
+      "agingValue": "365일",
+      "recovery": "인양",
+      "nfcText": "병에 가까이 대면,\n이 병이 살아낸 365일의 기록"
+    },
+    "note": {
+      "numbering": "전 병 개별 넘버링",
+      "card": "기록 카드 동봉",
+      "nfc": "NFC 기록 열람"
+    }
+  },
+  "maker": {
+    "title": "the maker.",
+    "subtitle": "샴페인은 샹파뉴가 만들었습니다, 기록은 남해에서 시작됩니다",
+    "imgAlt": "Champagne Mignon Boulard — 샹파뉴 메종",
+    "boulard": {
+      "desc": "1911년부터 4세대, 49개의 서로 다른 토양.\n균일화할 복잡함을 고스란히 살리는 메종."
+    },
+    "comingSoon": {
+      "name": "coming soon",
+      "desc": "앞으로 해저 숙성에 어울리는\n새로운 생산자를 차례로 소개합니다."
+    },
+    "teaser": "두 번째 서명 · 2027, 다음 입수와 함께 공개",
+    "aria": {
+      "prev": "이전 메이커",
+      "next": "다음 메이커"
+    }
+  },
+  "oceanCellar": {
+    "eyebrow": "membership",
+    "title": "Ocean Cellar Privé",
+    "sub": "인양을 가장 먼저 지켜보는 사람들",
+    "tags": {
+      "schedule": "인양 일정 선공개",
+      "attend": "인양 참관",
+      "archive": "내 병의 기록, 평생 열람"
+    },
+    "link": "초대 신청하기"
+  },
+  "partnership": {
+    "eyebrow": "Professional",
+    "title": "Partnership",
+    "sub": "바다가 기록한 시간을, 당신의 식탁이 잇는다",
+    "tags": {
+      "fineDining": "파인다이닝",
+      "hotelBar": "럭셔리 호텔 바",
+      "cellar": "프라이빗 셀러"
+    },
+    "links": {
+      "partner": "파트너 문의",
+      "brandBook": "브랜드 소개서"
+    }
+  },
+  "forms": {
+    "common": {
+      "sending": "전송 중",
+      "errNetwork": "네트워크 연결을 확인한 뒤 다시 시도해 주세요.",
+      "errFailed": "전송 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+      "placeholder": {
+        "name": "성함",
+        "email": "이메일 주소",
+        "venue": "업장명",
+        "contact": "담당자",
+        "affiliation": "소속 · 회사",
+        "message": "공간과 필요한 제안을 알려주세요"
+      },
+      "menu": {
+        "open": "메뉴 열기",
+        "label": "내비게이션 메뉴",
+        "close": "닫기",
+        "home": "홈으로 이동"
+      }
+    },
+    "invite": {
+      "metaTitle": "초대 신청 | Ocean Cellar Privé | Muse de Marée",
+      "metaDesc": "인양을 가장 먼저 지켜보는 사람들. Ocean Cellar Privé 초대 신청.",
+      "eyebrow": "OCEAN CELLAR PRIVÉ",
+      "title": "초대 신청",
+      "sub": "가장 먼저, 당신을 초대합니다.",
+      "imageAlt": "빛기둥 속에서 인양되는 병",
+      "body1": "바다에서 끌어올리는 첫 병을, 가장 먼저 만나는 자리.",
+      "body2": "인양의 일정과 현장, 그 병이 심해에서 보낸 시간의 기록까지.",
+      "body3": "자리는 끌어올린 수량만큼만 열립니다.",
+      "submit": "초대 신청하기",
+      "note": "신청서를 남겨주시면, 멤버십 모집이 열릴 때 가장 먼저 이메일로 안내해 드립니다.",
+      "errValidation": "성함과 올바른 이메일 주소를 입력해 주세요.",
+      "successLine": "신청이 전해졌습니다.",
+      "successNote": "초대장은 다음 인양 소식과 함께 전해집니다."
+    },
+    "partner": {
+      "metaTitle": "파트너 문의 | Partnership | Muse de Marée",
+      "metaDesc": "바다가 기록한 시간을, 당신의 식탁이 잇는다. 파인다이닝·호텔 바·프라이빗 셀러 파트너 문의.",
+      "eyebrow": "PARTNERSHIP",
+      "title": "파트너 문의",
+      "sub": "바다의 시간을 테이블 위에 놓는 일.",
+      "imageAlt": "흰 장갑으로 따개비 병에 택을 다는 손",
+      "body1": "모든 병에는, 심해에서 보낸 시간의 기록이 함께 담깁니다.",
+      "body2": "좌표와 수심, 숙성의 날들이 손님에게 건넬 이야기가 됩니다.",
+      "body3": "파인다이닝과 호텔 바, 프라이빗 셀러. 공간의 격에 맞는 제안을 준비합니다.",
+      "catLabel": "PARTNERSHIP TYPE",
+      "catHint": "운영하시는 공간에 맞는 파트너십 유형을 선택해 주세요.",
+      "categories": {
+        "dining": { "label": "다이닝 · 바 리스트", "desc": "와인 리스트 · 바이더글래스 등재" },
+        "event": { "label": "프라이빗 이벤트 · 페어링", "desc": "소믈리에 · 셰프 동행 디너" },
+        "cellar": { "label": "셀러 · 컬렉션", "desc": "프라이빗 셀러 · 멤버십 보틀" },
+        "other": { "label": "그 외 제안", "desc": "리테일 · 기프팅 · 협업" }
+      },
+      "messageLabel": "MESSAGE (선택)",
+      "submit": "문의 보내기",
+      "note": "보내주신 내용을 검토한 뒤, 영업일 기준 2일 이내 담당자가 제안서로 회신드립니다.",
+      "errCategory": "파트너십 유형을 선택해 주세요.",
+      "errValidation": "업장명, 담당자, 올바른 이메일 주소를 입력해 주세요.",
+      "successLine": "문의가 접수되었습니다.",
+      "successNote": "영업일 기준 2일 내, 담당자가 직접 답합니다."
+    },
+    "brandBook": {
+      "metaTitle": "브랜드 소개서 | Brand Book | Muse de Marée",
+      "metaDesc": "바다가 쓴 시간의 기록. 브랜드 철학과 기록 시스템, 큐베 라인업, 파트너십 안내를 이메일로 보내드립니다.",
+      "title": "브랜드 소개서",
+      "sub": "바다가 쓴 시간.",
+      "imageAlt": "석회암 위 따개비가 붙은 인양 병",
+      "body1": "한국 심해에서 숙성한 샴페인, 그 시작과 기록.",
+      "body2": "브랜드의 철학, 측정의 방식, 큐베 라인업과 파트너십.",
+      "body3": "한 권의 소개서로 전합니다.",
+      "submit": "소개서 신청하기",
+      "note1": "성함·소속·이메일을 남겨주시면, 확인 후 브랜드 소개서(PDF)를 이메일로 보내드립니다.",
+      "note2": "한국어 · 영문 제공.",
+      "errValidation": "성함, 소속, 올바른 이메일 주소를 입력해 주세요.",
+      "successLine": "요청이 접수되었습니다.",
+      "successNote": "확인 후, 소개서를 이메일로 보내드립니다."
+    }
+  },
+  "footer": {
+    "policies": {
+      "terms": "이용약관",
+      "privacy": "개인정보처리방침",
+      "cookies": "쿠키 정책"
+    }
+  }
+}

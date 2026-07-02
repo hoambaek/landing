@@ -3,9 +3,9 @@ import InviteLetter from "@/components/forms/InviteLetter";
 import { buildFormMetadata } from "@/i18n/metadata";
 
 export function generateMetadata(): Promise<Metadata> {
-  return buildFormMetadata("ko", "invite");
+  return buildFormMetadata("fr", "invite");
 }
 
-export default function InvitePage() {
-  return <InviteLetter locale="ko" />;
+export default function InvitePageFr() {
+  return <InviteLetter locale="fr" />;
 }

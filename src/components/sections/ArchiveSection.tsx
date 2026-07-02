@@ -1,4 +1,6 @@
 import Image from "next/image";
+import type { Locale } from "@/i18n/config";
+import type { Dictionary } from "@/i18n/types";
 
 /**
  * S4 · Collection `archive` — 기록의 소유 (라이트, Paper 04 1:1)
@@ -6,24 +8,27 @@ import Image from "next/image";
  * 큐베 이미지는 object-fit: contain (crop 금지 — 확정 선호).
  */
 
+type CuveeDict = Dictionary["collection"]["cuvees"];
+
 type Cuvee = {
   n: string;
   name: string;
-  nameTag?: string;
-  desc: string;
+  nameTagKey?: keyof CuveeDict;
+  descKey: keyof CuveeDict;
   img?: string;
   soldOut?: boolean;
   outline?: boolean;
 };
 
-/* 그리드 순서: 데스크톱 3열(001 002 003 / 000 004 005), 모바일 2열 동일 흐름 */
+/* 그리드 순서: 데스크톱 3열(001 002 003 / 000 004 005), 모바일 2열 동일 흐름.
+   name은 브랜드 고유명이라 전 로케일 공통, desc/nameTag/soldOut만 dict 참조. */
 const CUVEES: Cuvee[] = [
-  { n: "ARCHIVE N° 001", name: "En Lieu Sûr", desc: "엉리우쉬르 · 첫 만남을 위한 시작", img: "/images/01.webp" },
-  { n: "ARCHIVE N° 002", name: "En Lieu Sûr Magnum", desc: "매그넘 1500ml · 더 느린 숙성", img: "/images/02.webp" },
-  { n: "ARCHIVE N° 003", name: "Élément de Surprise", desc: "BDB Non-dosé\n해저 숙성의 직설", img: "/images/03.webp" },
-  { n: "ARCHIVE N° 000", name: "Édition Zéro", desc: "시작을 기록한 첫 번째 아카이브", img: "/images/06.webp", soldOut: true },
-  { n: "ARCHIVE N° 004", name: "Atomes Crochus", desc: "희귀 품종 Petit Meslier\n1년의 기록", img: "/images/05.webp" },
-  { n: "ARCHIVE N° 005", name: "Atomes Crochus", nameTag: "3년", desc: "아직 바다 아래에 있습니다\n천 일의 기록이 되는 중", outline: true },
+  { n: "ARCHIVE N° 001", name: "En Lieu Sûr", descKey: "enLieuSur", img: "/images/01.webp" },
+  { n: "ARCHIVE N° 002", name: "En Lieu Sûr Magnum", descKey: "enLieuSurMagnum", img: "/images/02.webp" },
+  { n: "ARCHIVE N° 003", name: "Élément de Surprise", descKey: "elementDeSurprise", img: "/images/03.webp" },
+  { n: "ARCHIVE N° 000", name: "Édition Zéro", descKey: "editionZero", img: "/images/06.webp", soldOut: true },
+  { n: "ARCHIVE N° 004", name: "Atomes Crochus", descKey: "atomesCrochus1yr", img: "/images/05.webp" },
+  { n: "ARCHIVE N° 005", name: "Atomes Crochus", nameTagKey: "tag3yr", descKey: "atomesCrochus3yr", outline: true },
 ];
 
 /* NFC 심볼 — 동심 아크 (QR 아님) */
@@ -41,7 +46,7 @@ function NfcMark() {
   );
 }
 
-function Certificate() {
+function Certificate({ dict }: { dict: Dictionary["collection"]["cert"] }) {
   return (
     <div className="s-col__cert">
       <div className="s-col__cert-head">
@@ -50,40 +55,58 @@ function Certificate() {
       </div>
       <span className="s-col__cert-rule" />
       <div className="s-col__cert-data">
-        <div className="s-col__cert-row"><span>입수</span><span>2025.11.21</span></div>
-        <div className="s-col__cert-row"><span>좌표</span><span>34.1434°N · 126.5792°E</span></div>
-        <div className="s-col__cert-row"><span>해저 숙성</span><span>365일</span></div>
-        <div className="s-col__cert-row"><span>인양</span><span>2026.11.20</span></div>
+        <div className="s-col__cert-row"><span>{dict.entry}</span><span>2025.11.21</span></div>
+        <div className="s-col__cert-row"><span>{dict.coordinates}</span><span>34.1434°N · 126.5792°E</span></div>
+        <div className="s-col__cert-row"><span>{dict.aging}</span><span>{dict.agingValue}</span></div>
+        <div className="s-col__cert-row"><span>{dict.recovery}</span><span>2026.11.20</span></div>
       </div>
       <span className="s-col__cert-rule" />
       <div className="s-col__cert-nfc">
-        <p className="s-col__cert-nfc-text">병에 가까이 대면,<br />이 병이 살아낸 365일의 기록</p>
+        <p className="s-col__cert-nfc-text">
+          {dict.nfcText.split("\n").map((line, i, arr) => (
+            <span key={i}>
+              {line}
+              {i < arr.length - 1 && <br />}
+            </span>
+          ))}
+        </p>
         <NfcMark />
       </div>
     </div>
   );
 }
 
-export default function ArchiveSection() {
+export default function ArchiveSection({
+  locale,
+  dict,
+}: {
+  locale: Locale;
+  dict: Dictionary["collection"];
+}) {
+  const isKo = locale === "ko";
   return (
     <section id="archive" className="s-col">
       {/* 히어로 — f2 풀블리드 + 하단 sand 그라데이션 */}
       <div className="s-col__hero">
-        <Image src="/images/f2.webp" alt="남해에서 인양된 큐베 라인업" fill sizes="100vw" className="s-col__hero-img" />
+        <Image src="/images/f2.webp" alt={dict.heroAlt} fill sizes="100vw" className="s-col__hero-img" />
         <div className="s-col__hero-fade" aria-hidden="true" />
       </div>
 
       {/* 인트로 */}
       <div className="s-col__intro reveal">
-        <h2 className="s-col__title">collection.</h2>
+        <h2 className="s-col__title">{dict.title}</h2>
         <p className="s-col__sub">
-          <Image
-            src="/text/col-sub.png"
-            alt="각 큐베는 하나의 기록 바다가 만든 시간을, 맡아두는 일"
-            width={311}
-            height={64}
-            className="s-col__sub-img"
-          />
+          {isKo ? (
+            <Image
+              src="/text/col-sub.png"
+              alt={dict.sub}
+              width={311}
+              height={64}
+              className="s-col__sub-img"
+            />
+          ) : (
+            <span className="s-col__sub-text">{dict.sub}</span>
+          )}
         </p>
       </div>
 
@@ -102,10 +125,10 @@ export default function ArchiveSection() {
               <span className="s-col__card-n">{c.n}</span>
               <span className="s-col__card-name">
                 {c.name}
-                {c.nameTag && <span className="s-col__card-name-tag"> {c.nameTag}</span>}
+                {c.nameTagKey && <span className="s-col__card-name-tag"> {dict.cuvees[c.nameTagKey]}</span>}
               </span>
-              <span className="s-col__card-desc">{c.desc}</span>
-              {c.soldOut && <span className="s-col__card-sold">· SOLD OUT</span>}
+              <span className="s-col__card-desc">{dict.cuvees[c.descKey]}</span>
+              {c.soldOut && <span className="s-col__card-sold">{dict.cuvees.soldOut}</span>}
             </figcaption>
           </figure>
         ))}
@@ -114,18 +137,18 @@ export default function ArchiveSection() {
       {/* 기록 카드 쇼케이스 */}
       <div className="s-col__showcase">
         <div className="s-col__showcase-bottle">
-          <Image src="/images/01.webp" alt="En Lieu Sûr — 기록 카드와 함께" fill sizes="260px" className="s-col__showcase-img" />
+          <Image src="/images/01.webp" alt={dict.cert.showcaseAlt} fill sizes="260px" className="s-col__showcase-img" />
         </div>
-        <Certificate />
+        <Certificate dict={dict.cert} />
       </div>
 
       {/* 하단 노트 */}
       <div className="s-col__note">
-        <span>전 병 개별 넘버링</span>
+        <span>{dict.note.numbering}</span>
         <span className="s-col__note-dot" aria-hidden="true" />
-        <span>기록 카드 동봉</span>
+        <span>{dict.note.card}</span>
         <span className="s-col__note-dot" aria-hidden="true" />
-        <span>NFC 기록 열람</span>
+        <span>{dict.note.nfc}</span>
       </div>
     </section>
   );

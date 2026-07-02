@@ -3,9 +3,9 @@ import BrandBookLetter from "@/components/forms/BrandBookLetter";
 import { buildFormMetadata } from "@/i18n/metadata";
 
 export function generateMetadata(): Promise<Metadata> {
-  return buildFormMetadata("ko", "brandBook");
+  return buildFormMetadata("en", "brandBook");
 }
 
-export default function BrandBookPage() {
-  return <BrandBookLetter locale="ko" />;
+export default function BrandBookPageEn() {
+  return <BrandBookLetter locale="en" />;
 }

@@ -1,33 +1,37 @@
 import Image from "next/image";
+import Link from "next/link";
+import { locales, localePrefixMap, type Locale } from "@/i18n/config";
+import type { Dictionary } from "@/i18n/types";
+import koDict from "@/i18n/messages/ko.json";
 
 /**
  * F · Footer — 서명 (다크, Paper 08 1:1)
  * 로고 락업 + 모토(Mrs Saint Delafield) + 앰버 헤어라인 + 내비 3열 + 법인 정보 + 약관·SNS·언어.
- * 모토는 S1 히어로 서명과 수미상관.
+ * 모토는 S1 히어로 서명과 수미상관. 내비 라벨은 브랜드 고유명이라 전 로케일 공통, 앵커만 locale prefix.
  */
 
 const NAV_COLS = [
   {
     head: "COLLECTION",
     items: [
-      { label: "En Lieu Sûr", href: "/#archive" },
-      { label: "Élément de Surprise", href: "/#archive" },
-      { label: "Atomes Crochus", href: "/#archive" },
+      { label: "En Lieu Sûr", anchor: "#archive" },
+      { label: "Élément de Surprise", anchor: "#archive" },
+      { label: "Atomes Crochus", anchor: "#archive" },
     ],
   },
   {
     head: "RECORD",
     items: [
-      { label: "The Living Record", href: "/#data-archive" },
-      { label: "The First Record", href: "/#the-first-record" },
-      { label: "The Maker", href: "/#the-maker" },
+      { label: "The Living Record", anchor: "#data-archive" },
+      { label: "The First Record", anchor: "#the-first-record" },
+      { label: "The Maker", anchor: "#the-maker" },
     ],
   },
   {
     head: "RELATION",
     items: [
-      { label: "Ocean Cellar Privé", href: "/#ocean-circle" },
-      { label: "Partnership", href: "/#professionals" },
+      { label: "Ocean Cellar Privé", anchor: "#ocean-circle" },
+      { label: "Partnership", anchor: "#professionals" },
     ],
   },
 ];
@@ -60,7 +64,14 @@ function YoutubeIcon() {
   );
 }
 
-export default function Footer() {
+export default function Footer({
+  locale = "ko",
+  dict = koDict.footer,
+}: {
+  locale?: Locale;
+  dict?: Dictionary["footer"];
+} = {}) {
+  const base = localePrefixMap[locale];
   return (
     <footer className="s-footer">
       {/* 로고 락업 + 모토 + 앰버 헤어라인 */}
@@ -85,7 +96,7 @@ export default function Footer() {
             <span className="s-footer__nav-head">{col.head}</span>
             <div className="s-footer__nav-items">
               {col.items.map((it) => (
-                <a key={it.label} href={it.href} className="s-footer__nav-item">{it.label}</a>
+                <a key={it.label} href={`${base}${it.anchor}`} className="s-footer__nav-item">{it.label}</a>
               ))}
             </div>
           </div>
@@ -115,14 +126,20 @@ export default function Footer() {
           </div>
           <div className="s-footer__bar-right">
             <div className="s-footer__policies">
-              <span>이용약관</span>
-              <span>개인정보처리방침</span>
-              <span>쿠키 정책</span>
+              <span>{dict.policies.terms}</span>
+              <span>{dict.policies.privacy}</span>
+              <span>{dict.policies.cookies}</span>
             </div>
             <div className="s-footer__lang">
-              <span className="s-footer__lang-active">KR</span>
-              <span>EN</span>
-              <span>FR</span>
+              {locales.map((lc) => (
+                <Link
+                  key={lc}
+                  href={localePrefixMap[lc]}
+                  className={lc === locale ? "s-footer__lang-active" : undefined}
+                >
+                  {lc === "ko" ? "KR" : lc.toUpperCase()}
+                </Link>
+              ))}
             </div>
           </div>
         </div>

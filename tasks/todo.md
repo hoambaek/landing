@@ -4,6 +4,23 @@
 
 ## 진행 중
 
+- [x] **다국어(KR/EN/FR) 랜딩페이지** (2026-07-01 착수 · 구현 완료, 감수·커밋 대기)
+  - 성공 기준: `/`(ko)·`/en`·`/fr` 3개 URL이 각 언어로 렌더 · 언어 스위처 동작 · hreflang · 빌드/타입/린트 통과
+  - 방식: 경량 자체 i18n(딕셔너리 JSON + 라우트 분리). next-intl 미도입(범위 격리 — 서브페이지 5개·root html 구조 무손상)
+  - 한글 이미지 타이틀은 ko 전용 유지, en/fr은 웹폰트 텍스트로 조건부 렌더
+  - [x] Phase A 인프라: `src/i18n`(config·dictionaries·types·metadata) + `messages/{ko,en,fr}.json`
+  - [x] Phase B 첫 슬라이스: Hero+Header+Footer + `/en`·`/fr` 라우트 — 데스크톱/모바일 Playwright 검증(히어로 텍스트 렌더·언어 스위처 라우팅·REC/aria 번역·콘솔0), 타입체크 통과
+    - 발견: Footer가 LetterShell(서브페이지)에서도 공유 → ko 기본값 부여로 무손상. HeroSection은 en/fr 텍스트=Cormorant Garamond
+  - [x] Phase C 나머지 6섹션 카피 키화 + en/fr 초안 — 6섹션 전부 dict화, 이미지 타이틀 6종(living-copy·counter-unit·first-headline·first-closing·col-sub·maker-subtitle) ko PNG/en·fr 텍스트 조건부. Playwright로 전 섹션 텍스트 렌더 검증(넘침·accent·앰버 카운터 단위 정상)
+  - [x] Phase D `<html lang>` 로케일 분기 — HtmlLang 클라이언트 컴포넌트(hydration 후 교정, root layout ko 고정 한계 보완) + sitemap.ts에 en/fr·hreflang alternates 추가
+  - [x] Phase E 검증: 프로덕션 빌드 통과(/·/en·/fr 정적 프리렌더) · 타입체크 통과 · 린트(변경분 클린, 기존 에러만 잔존) · Playwright 데스크톱/모바일
+  - [x] Phase F 서브페이지 폼 3종 i18n (2026-07-02) — 초대신청·파트너문의·브랜드소개서
+    - PartnerForm(편집 중단분 마무리: JSX 하드코딩→dict, `CATEGORIES`→`CATEGORY_KEYS`+`dict.categories`) · BrandBookForm(dict/common props 신규 배선, note1/note2) 완료
+    - 공용 Letter 컴포넌트 3종(InviteLetter·PartnerLetter·BrandBookLetter — LandingPage 패턴, locale→dict 로드) + `buildFormMetadata(locale, form)` 헬퍼(noindex 고정)
+    - 라우트 9개: ko 3개(dict 미배선 상태였음) 재작성 + `/en/{invite,partner,brand-book}`·`/fr/{...}` 6개 신규
+    - 검증: `tsc --noEmit` 0 · en/fr forms 딕셔너리 구조 ko와 완전일치(78키, 누락·잉여 0) · 프로덕션 빌드 통과(폼 9라우트 정적 프리렌더)
+  - 남은 권장: 프랑스어 네이티브 감수 · 법적 문구(음주경고·법인정보)는 전 로케일 ko 원문 유지(의도적)
+
 - [ ] **Paper 디자인 시안 — 새 페이지 구조 전체** (2026-06-10 대규모 세션)
   - [x] 데스크톱 8섹션 신규/리디자인: 01 Hero(h3 이미지+기획 카피+J1950) · 02 The Living Record(풀블리드 관측일지, 771일째 카운터) · 03 The First Record(타임라인 플레이트 4컷, xAI 생성 rec01~04) · 04 Collection(시간 띠+큐베 그리드+NFC 기록 카드+라인 드로잉 3년 병) · 05 The Maker(메이커 캐러셀, N°2 비공개 티저) · 06 Ocean Cellar Privé / 07 Partnership 분리 · 08 Footer(통합 로고+모토 수미상관)
   - [x] 모바일 8섹션 + 메뉴 오버레이 전체 신규 (히어로 h3_m2 세로 이미지, First Record 3컷 압축, Collection 2열 그리드, 푸터 중앙 정렬)

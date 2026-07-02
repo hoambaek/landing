@@ -1,0 +1,195 @@
+{
+  "hero": {
+    "headline": "En ce moment même, une bouteille de champagne inscrit le temps au fond de la mer.",
+    "brandLabel": "Champagne vieilli en mer",
+    "brandName": "Muse de Marée",
+    "bgAlt": "Une bouteille de champagne dans une cage à 30 m de profondeur au large de Namhae · Muse de Marée"
+  },
+  "header": {
+    "recLine": "Relevé · Namhae 34,1434°N · Temp. 13,5°C",
+    "recDays": "771e jour d'observation",
+    "aria": {
+      "home": "Aller à l'accueil",
+      "menuOpen": "Ouvrir le menu",
+      "menuLabel": "Menu de navigation",
+      "close": "Fermer"
+    }
+  },
+  "living": {
+    "bgAlt": "Une cage de remontée à 30 m de profondeur au large de Namhae — le site de mesure",
+    "copy": "Là où la lumière s'efface dans les profondeurs, le relevé commence.",
+    "counterUnit": "jours",
+    "counterCaption": "Le temps passé à écrire cette mer ; la mesure ne s'arrête jamais.",
+    "log": {
+      "temp": "Temp. 13,5°C",
+      "current": "Courant 2,46 m/s",
+      "pressure": "Pression 3,98 atm"
+    }
+  },
+  "first": {
+    "eyebrow": "THE FIRST RECORD",
+    "headline": "Le premier relevé a émergé.",
+    "closing": "À chaque bouteille son empreinte de la mer ; aucune n'est identique.",
+    "plateAlt": {
+      "light": "La première lumière rencontrée à la surface",
+      "manuscript": "Balanes et cristaux de sel à la surface de la bouteille — un manuscrit écrit par la mer"
+    }
+  },
+  "collection": {
+    "title": "collection.",
+    "sub": "Chaque cuvée est un relevé — veiller sur le temps que la mer a façonné.",
+    "heroAlt": "La gamme de cuvées remontée au large de Namhae",
+    "cuvees": {
+      "enLieuSur": "Un commencement, pour la première rencontre",
+      "enLieuSurMagnum": "Magnum 1500 ml · un vieillissement plus lent",
+      "elementDeSurprise": "BDB Non-dosé\nLa franchise du vieillissement sous-marin",
+      "editionZero": "La première archive, consignant le commencement",
+      "atomesCrochus1yr": "Cépage rare Petit Meslier\nUn relevé d'une année",
+      "atomesCrochus3yr": "Encore sous la mer\nen passe de devenir un relevé de mille jours",
+      "tag3yr": "3 ans",
+      "soldOut": "· ÉPUISÉ"
+    },
+    "cert": {
+      "showcaseAlt": "En Lieu Sûr — avec sa carte de relevé",
+      "entry": "Immersion",
+      "coordinates": "Coordonnées",
+      "aging": "Vieillissement sous-marin",
+      "agingValue": "365 jours",
+      "recovery": "Remontée",
+      "nfcText": "Approchez votre téléphone de la bouteille,\nles 365 jours que cette bouteille a vécus"
+    },
+    "note": {
+      "numbering": "Numérotées individuellement",
+      "card": "Carte de relevé incluse",
+      "nfc": "Accès au relevé NFC"
+    }
+  },
+  "maker": {
+    "title": "the maker.",
+    "subtitle": "Le champagne est né en Champagne ; le relevé commence à Namhae.",
+    "imgAlt": "Champagne Mignon Boulard — une maison de Champagne",
+    "boulard": {
+      "desc": "Quatre générations depuis 1911, 49 sols distincts.\nUne maison qui préserve intacte la complexité que d'autres chercheraient à uniformiser."
+    },
+    "comingSoon": {
+      "name": "coming soon",
+      "desc": "De nouveaux producteurs adaptés au vieillissement sous-marin,\nprésentés l'un après l'autre."
+    },
+    "teaser": "La deuxième signature · 2027, dévoilée avec la prochaine immersion",
+    "aria": {
+      "prev": "Producteur précédent",
+      "next": "Producteur suivant"
+    }
+  },
+  "oceanCellar": {
+    "eyebrow": "membership",
+    "title": "Ocean Cellar Privé",
+    "sub": "Les premiers à assister à chaque remontée",
+    "tags": {
+      "schedule": "Accès anticipé aux dates de remontée",
+      "attend": "Assister à la remontée",
+      "archive": "Le relevé de votre bouteille, à vie"
+    },
+    "link": "Demander une invitation"
+  },
+  "partnership": {
+    "eyebrow": "Professional",
+    "title": "Partnership",
+    "sub": "Le temps que la mer a inscrit, que prolonge votre table",
+    "tags": {
+      "fineDining": "Haute gastronomie",
+      "hotelBar": "Bars de grands hôtels",
+      "cellar": "Caves privées"
+    },
+    "links": {
+      "partner": "Contact partenaire",
+      "brandBook": "Dossier de marque"
+    }
+  },
+  "forms": {
+    "common": {
+      "sending": "Envoi",
+      "errNetwork": "Veuillez vérifier votre connexion et réessayer.",
+      "errFailed": "Une erreur s'est produite. Veuillez réessayer dans un instant.",
+      "placeholder": {
+        "name": "Nom complet",
+        "email": "Adresse e-mail",
+        "venue": "Nom de l'établissement",
+        "contact": "Personne à contacter",
+        "affiliation": "Affiliation · Société",
+        "message": "Parlez-nous de votre espace et de vos besoins"
+      },
+      "menu": {
+        "open": "Ouvrir le menu",
+        "label": "Menu de navigation",
+        "close": "Fermer",
+        "home": "Aller à l'accueil"
+      }
+    },
+    "invite": {
+      "metaTitle": "Demander une invitation | Ocean Cellar Privé | Muse de Marée",
+      "metaDesc": "Les premiers à assister à chaque remontée. Demandez une invitation à Ocean Cellar Privé.",
+      "eyebrow": "OCEAN CELLAR PRIVÉ",
+      "title": "Demander une invitation",
+      "sub": "Vous, parmi les premiers invités.",
+      "imageAlt": "Une bouteille remontée dans une colonne de lumière",
+      "body1": "Les premiers à rencontrer la première bouteille remontée de la mer.",
+      "body2": "Le calendrier et le lieu de chaque remontée, et le relevé du temps passé dans les profondeurs.",
+      "body3": "Les places n'ouvrent qu'à hauteur des bouteilles remontées.",
+      "submit": "Demander une invitation",
+      "note": "Laissez vos coordonnées : nous vous écrirons en premier à l'ouverture des adhésions.",
+      "errValidation": "Veuillez saisir votre nom et une adresse e-mail valide.",
+      "successLine": "Votre demande a bien été reçue.",
+      "successNote": "L'invitation vous parviendra avec les nouvelles de la prochaine remontée."
+    },
+    "partner": {
+      "metaTitle": "Contact partenaire | Partnership | Muse de Marée",
+      "metaDesc": "Le temps que la mer a inscrit, prolongé à votre table. Contact partenaire pour la haute gastronomie, les bars d'hôtel et les caves privées.",
+      "eyebrow": "PARTNERSHIP",
+      "title": "Contact partenaire",
+      "sub": "Poser le temps de la mer sur la table.",
+      "imageAlt": "Une main gantée posant une étiquette sur une bouteille couverte de balanes",
+      "body1": "Chaque bouteille porte le relevé du temps passé dans les profondeurs.",
+      "body2": "Coordonnées, profondeur et jours de vieillissement deviennent une histoire à partager avec vos convives.",
+      "body3": "Haute gastronomie, bars d'hôtel, caves privées. Nous préparons une proposition à la hauteur de votre lieu.",
+      "catLabel": "PARTNERSHIP TYPE",
+      "catHint": "Choisissez le type de partenariat adapté à votre établissement.",
+      "categories": {
+        "dining": { "label": "Restaurant · Carte des vins", "desc": "Carte des vins · au verre" },
+        "event": { "label": "Événement privé · Accords", "desc": "Dîners avec sommelier ou chef" },
+        "cellar": { "label": "Cave · Collection", "desc": "Cave privée · bouteilles d'adhésion" },
+        "other": { "label": "Autres propositions", "desc": "Détail · cadeaux · collaboration" }
+      },
+      "messageLabel": "MESSAGE (facultatif)",
+      "submit": "Envoyer la demande",
+      "note": "Nous étudierons votre message et vous répondrons par une proposition sous deux jours ouvrés.",
+      "errCategory": "Veuillez sélectionner un type de partenariat.",
+      "errValidation": "Veuillez saisir le nom de l'établissement, la personne à contacter et une adresse e-mail valide.",
+      "successLine": "Votre demande a bien été reçue.",
+      "successNote": "Un membre de notre équipe vous répondra sous deux jours ouvrés."
+    },
+    "brandBook": {
+      "metaTitle": "Dossier de marque | Muse de Marée",
+      "metaDesc": "Écrit par la mer. La philosophie de la marque, le système de relevé, la gamme de cuvées et le partenariat — envoyés dans votre boîte mail.",
+      "title": "Dossier de marque",
+      "sub": "Écrit par la mer.",
+      "imageAlt": "Une bouteille couverte de balanes sur du calcaire après la remontée",
+      "body1": "Un champagne vieilli dans les profondeurs de la Corée — son commencement et son relevé.",
+      "body2": "La philosophie de la marque, sa façon de mesurer, la gamme de cuvées et le partenariat.",
+      "body3": "Réunis en un seul dossier.",
+      "submit": "Demander le dossier",
+      "note1": "Laissez votre nom, votre affiliation et votre e-mail ; après vérification, nous vous enverrons le dossier de marque (PDF).",
+      "note2": "Disponible en coréen et en anglais.",
+      "errValidation": "Veuillez saisir votre nom, votre affiliation et une adresse e-mail valide.",
+      "successLine": "Votre demande a bien été reçue.",
+      "successNote": "Après vérification, nous vous enverrons le dossier par e-mail."
+    }
+  },
+  "footer": {
+    "policies": {
+      "terms": "Conditions d'utilisation",
+      "privacy": "Politique de confidentialité",
+      "cookies": "Politique relative aux cookies"
+    }
+  }
+}

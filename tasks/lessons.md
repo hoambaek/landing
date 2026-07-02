@@ -79,3 +79,12 @@
 - **신호**: CSS 문법은 정상이고, 빌드도 통과하는데 스타일이 적용 안 되면 Turbopack 캐시 문제
 - **방지**: 새 CSS 규칙 추가 후 적용 안 되면 즉시 `rm -rf .next && npm run dev`로 캐시 삭제 + 재시작. CSS 문법 에러 탓으로 돌리지 말고 캐시부터 의심할 것
 - **추가**: `@theme`에 없는 CSS 변수(예: `--color-cream`) 사용하면 해당 속성이 무시됨. 반드시 정의된 변수만 사용
+
+### 다국어(i18n) — next-intl 대신 경량 자체 딕셔너리 (2026-07-01)
+- **맥락**: KR/EN/FR 랜딩 다국어화. next-intl 표준([locale]/layout.tsx)은 root layout의 <html>·폰트와 서브페이지 5개(meetup·partner 등)를 전부 [locale] 아래로 이전해야 해 범위가 크게 번짐
+- **선택**: `src/i18n`(config·dictionaries·types·metadata) + `messages/{ko,en,fr}.json` + 정적 라우트(`/`·`/en`·`/fr`)가 `LandingPage locale=` 재사용. 컴포넌트는 dict를 props로 받음(client 컴포넌트도 직렬화 OK)
+- **한글 이미지 타이틀**: ko는 특수서체(J1950) PNG 유지, en/fr은 라틴이라 `locale==='ko' ? <Image> : <span 텍스트>` 조건부 + Cormorant Garamond CSS. 새 폰트/이미지 생성 불필요
+- **함정 1 — 공유 컴포넌트**: Footer가 LetterShell(서브페이지)에서도 쓰임 → props 필수화하면 타입 에러. `locale='ko', dict=koDict.footer` 기본값으로 무손상
+- **함정 2 — <html lang>**: 방법 B는 root layout이 정적 라우트 locale을 몰라 ko 고정. HtmlLang 클라이언트 컴포넌트가 hydration 후 documentElement.lang 교정(SEO 언어 신호는 hreflang이 담당)
+- **금지어**: 번역 시 "luxury/exclusive/timeless" 회피 — ko "럭셔리 호텔 바" → en "Grand hotel bars". 법적 문구(음주경고·법인정보)는 한국 법령 기준이라 전 로케일 ko 원문 유지
+- **검증**: `.reveal`은 IntersectionObserver로 opacity:0 시작 → Playwright 정적 캡처 시 안 보임. `document.querySelectorAll('.reveal').forEach(e=>e.classList.add('is-visible'))`로 강제 후 캡처

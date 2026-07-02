@@ -1,11 +1,39 @@
 import Image from "next/image";
+import type { Locale } from "@/i18n/config";
+import type { Dictionary } from "@/i18n/types";
 
 /**
  * S1 · Hero `void` — 수면 (Paper 01 — Hero 1:1)
  * 정적 히어로: h3 배경 + Cool Shadow Grade + Scrim/Top Blur + H1 + 브랜드 라인.
- * 데스크톱 3행("시간을 기록하고 있습니다") / 모바일 5행("1년의 시간을 보내고 있습니다") 아트디렉션.
+ * ko는 특수 서체(J1950) PNG 타이틀, en/fr은 라틴 웹폰트 텍스트 타이틀.
  */
-export default function HeroSection() {
+export default function HeroSection({
+  locale,
+  dict,
+}: {
+  locale: Locale;
+  dict: Dictionary["hero"];
+}) {
+  const isKo = locale === "ko";
+
+  /** 브랜드 라인 — ko는 로고 이미지, en/fr은 텍스트 */
+  const brand = (
+    <p className="s-void__brand">
+      <span className="s-void__brand-label">{dict.brandLabel}</span>
+      {isKo ? (
+        <Image
+          src="/text/brand-name.png"
+          alt={dict.brandName}
+          width={107}
+          height={28}
+          className="s-void__brand-name-img"
+        />
+      ) : (
+        <span className="s-void__brand-name-text">{dict.brandName}</span>
+      )}
+    </p>
+  );
+
   return (
     <section id="void" className="s-void">
       {/* 배경 이미지 — 데스크톱 h3 / 모바일 h3_m2 */}
@@ -13,7 +41,7 @@ export default function HeroSection() {
         <source media="(max-width: 768px)" srcSet="/images/h3_m2.webp" />
         <Image
           src="/images/h3.webp"
-          alt="남해 수심 30m, 케이지에 든 한 병의 샴페인 · Muse de Marée"
+          alt={dict.bgAlt}
           fill
           priority
           sizes="100vw"
@@ -39,49 +67,39 @@ export default function HeroSection() {
       {/* 카피 — 데스크톱 (좌측 정렬, 3행) */}
       <div className="s-void__content s-void__content--desktop">
         <h1 className="s-void__h1">
-          <Image
-            src="/text/hero-h1-d.png"
-            alt="지금 이 순간에도, 한 병의 샴페인이 바다 아래에서 시간을 기록하고 있습니다"
-            width={563}
-            height={182}
-            priority
-            className="s-void__h1-img"
-          />
+          {isKo ? (
+            <Image
+              src="/text/hero-h1-d.png"
+              alt={dict.headline}
+              width={563}
+              height={182}
+              priority
+              className="s-void__h1-img"
+            />
+          ) : (
+            <span className="s-void__h1-text">{dict.headline}</span>
+          )}
         </h1>
-        <p className="s-void__brand">
-          <span className="s-void__brand-label">해저숙성 샴페인</span>
-          <Image
-            src="/text/brand-name.png"
-            alt="뮤즈드마레"
-            width={107}
-            height={28}
-            className="s-void__brand-name-img"
-          />
-        </p>
+        {brand}
       </div>
 
       {/* 카피 — 모바일 (중앙 정렬, 지정 줄바꿈 4행) */}
       <div className="s-void__content s-void__content--mobile">
         <h1 className="s-void__h1">
-          <Image
-            src="/text/hero-h1-m.png"
-            alt="지금 이 순간에도 한 병의 샴페인이 바다 아래에서 시간을 기록하고 있습니다"
-            width={255}
-            height={150}
-            priority
-            className="s-void__h1-img"
-          />
+          {isKo ? (
+            <Image
+              src="/text/hero-h1-m.png"
+              alt={dict.headline}
+              width={255}
+              height={150}
+              priority
+              className="s-void__h1-img"
+            />
+          ) : (
+            <span className="s-void__h1-text">{dict.headline}</span>
+          )}
         </h1>
-        <p className="s-void__brand">
-          <span className="s-void__brand-label">해저숙성 샴페인</span>
-          <Image
-            src="/text/brand-name.png"
-            alt="뮤즈드마레"
-            width={107}
-            height={28}
-            className="s-void__brand-name-img"
-          />
-        </p>
+        {brand}
       </div>
 
       {/* 스크롤 힌트 */}

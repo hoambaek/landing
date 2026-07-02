@@ -1,0 +1,195 @@
+{
+  "hero": {
+    "headline": "Even now, a bottle of champagne is recording time beneath the sea.",
+    "brandLabel": "Undersea-aged champagne",
+    "brandName": "Muse de Marée",
+    "bgAlt": "A bottle of champagne in a cage at 30 m depth off Namhae · Muse de Marée"
+  },
+  "header": {
+    "recLine": "Record · Namhae 34.1434°N · Temp 13.5°C",
+    "recDays": "Day 771 of measurement",
+    "aria": {
+      "home": "Go to home",
+      "menuOpen": "Open menu",
+      "menuLabel": "Navigation menu",
+      "close": "Close"
+    }
+  },
+  "living": {
+    "bgAlt": "A recovery cage at 30 m depth off Namhae — the site of measurement",
+    "copy": "Where light fades in the deep, the record begins.",
+    "counterUnit": "days",
+    "counterCaption": "The time spent recording this sea — measurement never stops.",
+    "log": {
+      "temp": "Temp 13.5°C",
+      "current": "Current 2.46 m/s",
+      "pressure": "Pressure 3.98 atm"
+    }
+  },
+  "first": {
+    "eyebrow": "THE FIRST RECORD",
+    "headline": "The first record has surfaced.",
+    "closing": "Every bottle a different fingerprint of the sea; no two are alike.",
+    "plateAlt": {
+      "light": "The first light at the surface",
+      "manuscript": "Barnacles and salt crystals on the bottle's surface — a manuscript written by the sea"
+    }
+  },
+  "collection": {
+    "title": "collection.",
+    "sub": "Each cuvée is a record — holding in trust the time the sea has made.",
+    "heroAlt": "The cuvée lineup recovered off Namhae",
+    "cuvees": {
+      "enLieuSur": "A beginning, for the first encounter",
+      "enLieuSurMagnum": "Magnum 1500 ml · slower ageing",
+      "elementDeSurprise": "BDB Non-dosé\nUndersea ageing, spoken plainly",
+      "editionZero": "The first archive, recording the beginning",
+      "atomesCrochus1yr": "Rare varietal Petit Meslier\nA record of one year",
+      "atomesCrochus3yr": "Still beneath the sea\nbecoming a record of a thousand days",
+      "tag3yr": "3 yr",
+      "soldOut": "· SOLD OUT"
+    },
+    "cert": {
+      "showcaseAlt": "En Lieu Sûr — with its record card",
+      "entry": "Immersed",
+      "coordinates": "Coordinates",
+      "aging": "Undersea ageing",
+      "agingValue": "365 days",
+      "recovery": "Recovered",
+      "nfcText": "Hold your phone near the bottle,\nthe 365 days this bottle has lived"
+    },
+    "note": {
+      "numbering": "Individually numbered",
+      "card": "Record card enclosed",
+      "nfc": "NFC record access"
+    }
+  },
+  "maker": {
+    "title": "the maker.",
+    "subtitle": "Champagne was made in Champagne; the record begins in Namhae.",
+    "imgAlt": "Champagne Mignon Boulard — a Champagne maison",
+    "boulard": {
+      "desc": "Four generations since 1911, 49 distinct soils.\nA maison that keeps intact the complexity others would smooth away."
+    },
+    "comingSoon": {
+      "name": "coming soon",
+      "desc": "New producers suited to undersea ageing,\nintroduced one by one."
+    },
+    "teaser": "The second signature · 2027, revealed with the next immersion",
+    "aria": {
+      "prev": "Previous maker",
+      "next": "Next maker"
+    }
+  },
+  "oceanCellar": {
+    "eyebrow": "membership",
+    "title": "Ocean Cellar Privé",
+    "sub": "The first to witness each recovery",
+    "tags": {
+      "schedule": "Early access to recovery dates",
+      "attend": "Attend the recovery",
+      "archive": "Your bottle's record, for life"
+    },
+    "link": "Request an invitation"
+  },
+  "partnership": {
+    "eyebrow": "Professional",
+    "title": "Partnership",
+    "sub": "The time the sea has recorded, continued at your table",
+    "tags": {
+      "fineDining": "Fine dining",
+      "hotelBar": "Grand hotel bars",
+      "cellar": "Private cellars"
+    },
+    "links": {
+      "partner": "Partnership inquiry",
+      "brandBook": "Brand brochure"
+    }
+  },
+  "forms": {
+    "common": {
+      "sending": "Sending",
+      "errNetwork": "Please check your connection and try again.",
+      "errFailed": "Something went wrong. Please try again in a moment.",
+      "placeholder": {
+        "name": "Full name",
+        "email": "Email address",
+        "venue": "Venue name",
+        "contact": "Contact person",
+        "affiliation": "Affiliation · Company",
+        "message": "Tell us about your space and what you're looking for"
+      },
+      "menu": {
+        "open": "Open menu",
+        "label": "Navigation menu",
+        "close": "Close",
+        "home": "Go to home"
+      }
+    },
+    "invite": {
+      "metaTitle": "Request an Invitation | Ocean Cellar Privé | Muse de Marée",
+      "metaDesc": "The first to witness each recovery. Request an invitation to Ocean Cellar Privé.",
+      "eyebrow": "OCEAN CELLAR PRIVÉ",
+      "title": "Request an Invitation",
+      "sub": "You, among the first to be invited.",
+      "imageAlt": "A bottle raised through a column of light",
+      "body1": "The first to meet the first bottle raised from the sea.",
+      "body2": "The schedule and site of each recovery, and the record of the time it spent in the deep.",
+      "body3": "Seats open only to the number of bottles raised.",
+      "submit": "Request an invitation",
+      "note": "Leave your details and we'll be the first to write when membership opens.",
+      "errValidation": "Please enter your name and a valid email address.",
+      "successLine": "Your request has been received.",
+      "successNote": "The invitation will arrive with news of the next recovery."
+    },
+    "partner": {
+      "metaTitle": "Partnership Inquiry | Partnership | Muse de Marée",
+      "metaDesc": "The time the sea has recorded, continued at your table. Partnership inquiries for fine dining, hotel bars, and private cellars.",
+      "eyebrow": "PARTNERSHIP",
+      "title": "Partnership Inquiry",
+      "sub": "Bringing the sea's time to the table.",
+      "imageAlt": "A gloved hand tagging a barnacled bottle",
+      "body1": "Every bottle carries the record of the time it spent in the deep.",
+      "body2": "Coordinates, depth, and the days of ageing become a story to share with your guests.",
+      "body3": "Fine dining, hotel bars, private cellars. We prepare a proposal suited to your space.",
+      "catLabel": "PARTNERSHIP TYPE",
+      "catHint": "Choose the partnership type that suits the space you run.",
+      "categories": {
+        "dining": { "label": "Dining · Bar list", "desc": "Wine list · by-the-glass listing" },
+        "event": { "label": "Private event · Pairing", "desc": "Sommelier · chef-accompanied dinners" },
+        "cellar": { "label": "Cellar · Collection", "desc": "Private cellar · membership bottles" },
+        "other": { "label": "Other proposals", "desc": "Retail · gifting · collaboration" }
+      },
+      "messageLabel": "MESSAGE (optional)",
+      "submit": "Send inquiry",
+      "note": "We'll review your message and reply with a proposal within two business days.",
+      "errCategory": "Please select a partnership type.",
+      "errValidation": "Please enter your venue, contact name, and a valid email address.",
+      "successLine": "Your inquiry has been received.",
+      "successNote": "A member of our team will reply within two business days."
+    },
+    "brandBook": {
+      "metaTitle": "Brand Book | Muse de Marée",
+      "metaDesc": "Written by the sea. The brand philosophy, recording system, cuvée lineup, and partnership — sent to your inbox.",
+      "title": "Brand Book",
+      "sub": "Written by the sea.",
+      "imageAlt": "A barnacled bottle on limestone after recovery",
+      "body1": "Champagne aged in Korea's deep sea — its beginning and its record.",
+      "body2": "The brand's philosophy, its way of measuring, the cuvée lineup, and partnership.",
+      "body3": "Told in a single book.",
+      "submit": "Request the book",
+      "note1": "Leave your name, affiliation, and email, and we'll send the brand book (PDF) after review.",
+      "note2": "Available in Korean and English.",
+      "errValidation": "Please enter your name, affiliation, and a valid email address.",
+      "successLine": "Your request has been received.",
+      "successNote": "After review, we'll send the book to your email."
+    }
+  },
+  "footer": {
+    "policies": {
+      "terms": "Terms of Use",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookie Policy"
+    }
+  }
+}
