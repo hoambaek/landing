@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import JsonLd from "@/components/JsonLd";
+import AgeGate from "@/components/legal/AgeGate";
 import {
   Cormorant_Garamond,
   Cormorant_Infant,
@@ -162,6 +163,7 @@ export default function RootLayout({
         <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
         <JsonLd />
         {children}
+        <AgeGate />
       </body>
     </html>
   );

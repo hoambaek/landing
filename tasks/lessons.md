@@ -88,3 +88,10 @@
 - **함정 2 — <html lang>**: 방법 B는 root layout이 정적 라우트 locale을 몰라 ko 고정. HtmlLang 클라이언트 컴포넌트가 hydration 후 documentElement.lang 교정(SEO 언어 신호는 hreflang이 담당)
 - **금지어**: 번역 시 "luxury/exclusive/timeless" 회피 — ko "럭셔리 호텔 바" → en "Grand hotel bars". 법적 문구(음주경고·법인정보)는 한국 법령 기준이라 전 로케일 ko 원문 유지
 - **검증**: `.reveal`은 IntersectionObserver로 opacity:0 시작 → Playwright 정적 캡처 시 안 보임. `document.querySelectorAll('.reveal').forEach(e=>e.classList.add('is-visible'))`로 강제 후 캡처
+
+### 럭셔리 톤 = 평면·직각·무채 (글라스모피즘 금지) (2026-07-02)
+- **맥락**: 연령확인 게이트 모달 1차 구현이 "촌스럽다" 지적받음. 원인: backdrop-filter blur(글라스모피즘) + box-shadow + 텍스트 로고 사용
+- **근본 원인**: **Paper 디자인 가이드 Components 아트보드의 DON'T** — 글라스효과·그림자·둥근 모서리는 "소비자 테크"로 읽힘. 럭셔리 = 평면·0.5px 보더·직각·무채·넓은 여백. CLAUDE.md의 "Ocean Glass glassmorphism" 표기와 상충하나 **Paper 가이드가 정본**
+- **감지 신호**: 다크 모달/오버레이에 blur·shadow·card box를 쓰고 싶을 때 → 멈추고 Paper Components 가이드 확인. 브랜드 자체 UI 문법(헤어라인 언더라인 링크·직각 hairline 보더)을 먼저 볼 것
+- **방지 규칙**: ① UI 디자인 전 Paper "MDM 디자인 가이드" 페이지(특히 Components DO/DON'T)를 get_screenshot으로 먼저 확인 ② 로고는 반드시 이미지 에셋(합본=logo_all_W_KR.png, 심볼=logo_trans_W.png, 텍스트=logo_text_trans_W.png), 텍스트로 대체 금지 ③ Paper 로컬이미지 삽입은 paper-asset:// 실패 시 기존 노드 x-paper-clone
+- **검증**: Paper에서 아트보드 디자인 → get_computed_styles로 값 이식 → 코드 반영 후 Playwright 대조. CSS 새 규칙은 Turbopack HMR이 부분 누락 → `rm -rf .next` 후 재시작으로 확정 검증(getComputedStyle로 확인)

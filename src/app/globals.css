@@ -2578,14 +2578,18 @@ input:focus-visible,
   padding: 0;
 }
 
+/* 경고문구 — 무테 중앙정렬 미세 텍스트 (디자인 가이드 푸터와 동일) */
 .s-footer__warning {
+  align-self: center;
+  max-width: 620px;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.02em;
-  line-height: 12px;
+  line-height: 1.6;
   text-align: center;
-  color: rgba(232, 229, 225, 0.36);
+  color: rgba(232, 229, 225, 0.4);
+  word-break: keep-all;
 }
 
 .s-footer__bar {
@@ -2733,8 +2737,8 @@ input:focus-visible,
   }
 
   .s-footer__warning {
-    font-size: 8px;
-    line-height: 1.6;
+    font-size: 9px;
+    line-height: 1.55;
   }
 
   .s-footer__bar {
@@ -5025,6 +5029,235 @@ input:focus-visible,
 }
 
 .not-found__back:hover {
+  border-color: var(--color-amber);
+}
+
+/* ══════════════════════════════════════════
+   AGE GATE — 진입 연령확인(19세) 모달
+   ══════════════════════════════════════════ */
+/* 평면 다크 그라운드 — 글라스효과·섀도우 없음 (디자인 가이드 DON'T) */
+.age-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: var(--color-void-bg);
+  animation: age-gate-fade 0.7s var(--ease-gentle) both;
+}
+
+@keyframes age-gate-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 무테 중앙 컴포지션 — 카드 박스 없이 표면에 직접 (가이드 DO) */
+.age-gate__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 460px;
+}
+
+/* 패널은 포커스 이동 대상일 뿐 — 시각적 링 없음 */
+.age-gate__panel:focus,
+.age-gate__panel:focus-visible {
+  outline: none;
+}
+
+.age-gate__logo {
+  width: 144px;
+  height: auto;
+  opacity: 0.95;
+}
+
+.age-gate__rule {
+  width: 40px;
+  height: 1px;
+  margin-top: 38px;
+  background: var(--color-amber);
+  opacity: 0.85;
+}
+
+.age-gate__title {
+  margin-top: 30px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 30px;
+  line-height: 40px;
+  letter-spacing: 0.01em;
+  color: var(--color-void-text);
+}
+
+.age-gate__desc {
+  margin-top: 22px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 27px;
+  letter-spacing: 0.01em;
+  color: rgba(241, 239, 235, 0.6);
+  word-break: keep-all;
+}
+
+.age-gate__desc span {
+  display: block;
+}
+
+.age-gate__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 44px;
+}
+
+/* Primary CTA — amber 0.5px 보더, 직각, 호버 시 채움 (가이드 Components) */
+.age-gate__btn--confirm {
+  min-height: 52px;
+  padding: 17px 44px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 15px;
+  letter-spacing: 0.03em;
+  color: var(--color-amber);
+  background: transparent;
+  border: 0.5px solid var(--color-amber);
+  transition: color 0.4s var(--ease-water), background-color 0.4s var(--ease-water);
+}
+
+.age-gate__btn--confirm:hover {
+  color: var(--color-void-bg);
+  background: var(--color-amber);
+}
+
+/* 거부 — 조용한 헤어라인 언더라인 링크 */
+.age-gate__btn--deny {
+  margin-top: 20px;
+  padding-bottom: 2px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgba(241, 239, 235, 0.55);
+  background: transparent;
+  border: none;
+  border-bottom: 0.5px solid rgba(241, 239, 235, 0.3);
+  transition: color 0.3s var(--ease-water), border-color 0.3s var(--ease-water);
+}
+
+.age-gate__btn--deny:hover {
+  color: rgba(241, 239, 235, 0.85);
+  border-color: rgba(241, 239, 235, 0.55);
+}
+
+/* 경고문구 — 무테 중앙정렬, 본문 폭에 맞춤 ("경고" 라벨 + 문구) */
+.age-gate__warning {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 370px;
+  max-width: 100%;
+  margin-top: 52px;
+  text-align: center;
+}
+
+.age-gate__warning-label {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--color-amber);
+}
+
+.age-gate__warning-text {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 11px;
+  line-height: 18px;
+  letter-spacing: 0.01em;
+  color: rgba(241, 239, 235, 0.5);
+  word-break: keep-all;
+  white-space: pre-line; /* \n = 문장 단위 줄바꿈 (Paper 일치) */
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+  .age-gate__logo { width: 120px; }
+  .age-gate__rule { margin-top: 32px; }
+  .age-gate__title { margin-top: 26px; font-size: 25px; line-height: 34px; }
+  .age-gate__desc { font-size: 14px; line-height: 25px; }
+  .age-gate__actions { margin-top: 38px; }
+  .age-gate__warning { margin-top: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .age-gate { animation: none; }
+}
+
+/* ══════════════════════════════════════════
+   AGE EXIT — 미성년 안내 페이지 (not-found 언어 공유)
+   ══════════════════════════════════════════ */
+.age-exit {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--color-void-bg);
+  color: var(--color-sand);
+}
+
+.age-exit__inner {
+  text-align: center;
+  max-width: 460px;
+}
+
+.age-exit__eyebrow {
+  font-family: var(--font-motto);
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--color-amber);
+}
+
+.age-exit__title {
+  font-family: var(--font-batang);
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 400;
+  margin-top: 18px;
+  color: var(--color-sand);
+}
+
+.age-exit__desc {
+  font-family: var(--font-serif-kr);
+  font-size: 0.9375rem;
+  font-weight: 300;
+  line-height: 1.9;
+  color: rgba(232, 229, 225, 0.5);
+  margin-top: 22px;
+}
+
+.age-exit__desc span {
+  display: block;
+}
+
+.age-exit__back {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.15em;
+  color: var(--color-amber);
+  border: 0.5px solid rgba(204, 173, 123, 0.3);
+  padding: 12px 28px;
+  margin-top: 44px;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.age-exit__back:hover {
   border-color: var(--color-amber);
 }
 
