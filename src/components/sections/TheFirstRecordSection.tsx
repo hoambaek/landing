@@ -28,6 +28,7 @@ export default function TheFirstRecordSection({
                 alt={dict.headline}
                 width={679}
                 height={54}
+                unoptimized
                 className="s-first__headline-img s-first__headline-img--d"
               />
               <Image
@@ -35,6 +36,7 @@ export default function TheFirstRecordSection({
                 alt={dict.headline}
                 width={233}
                 height={70}
+                unoptimized
                 className="s-first__headline-img s-first__headline-img--m"
               />
             </>
@@ -87,6 +89,7 @@ export default function TheFirstRecordSection({
               alt={dict.closing}
               width={350}
               height={104}
+              unoptimized
               className="s-first__closing-img"
             />
           ) : (

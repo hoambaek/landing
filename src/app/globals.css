@@ -668,7 +668,7 @@ input:focus-visible,
   color: var(--color-earth);
 }
 
-/* 하단 바: REC 관측 라인(좌) + 언어(우) */
+/* 하단 바: [신조 + REC 관측 라인](좌) + 언어(우) */
 .menu-overlay__bottom {
   position: absolute;
   left: 120px;
@@ -676,7 +676,24 @@ input:focus-visible,
   bottom: clamp(28px, 6vh, 52px);
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: flex-end;
+}
+
+.menu-overlay__bottom-left {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* 신조 — 브랜드 포지셔닝 상설 노출 (북극성 §3 축약) */
+.menu-overlay__creed {
+  max-width: 380px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  line-height: 22px;
+  color: rgba(49, 46, 42, 0.7);
 }
 
 .menu-overlay__rec {
@@ -787,7 +804,17 @@ input:focus-visible,
     bottom: 36px;
     flex-direction: column;
     align-items: flex-start;
+    gap: 18px;
+  }
+
+  .menu-overlay__bottom-left {
     gap: 14px;
+  }
+
+  .menu-overlay__creed {
+    max-width: 300px;
+    font-size: 13px;
+    line-height: 20px;
   }
 
   .menu-overlay__rec {
@@ -1017,6 +1044,20 @@ input:focus-visible,
   animation: scroll-breathe 2.4s ease-in-out infinite;
 }
 
+/* 모토 서명 — 우하단, 푸터와 동일 필기체(Mrs Saint Delafield) */
+.s-void__signature {
+  position: absolute;
+  z-index: 3;
+  right: 80px;
+  bottom: 40px;
+  font-family: var(--font-motto);
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  line-height: 26px;
+  color: rgba(241, 239, 235, 0.82);
+}
+
 @keyframes scroll-breathe {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
@@ -1082,6 +1123,11 @@ input:focus-visible,
     font-size: 14px;
     line-height: 18px;
     color: rgba(241, 239, 235, 0.6);
+  }
+
+  /* 모바일은 히어로 여백이 좁아 코너 서명 숨김 (푸터 모토로 대체) */
+  .s-void__signature {
+    display: none;
   }
 }
 
@@ -1284,6 +1330,18 @@ input:focus-visible,
   color: #C9C4BC;
 }
 
+/* 제품 선언 — 데이터 클러스터와 분리된 조용한 한 줄 (각주 톤) */
+.s-living__declaration {
+  margin-top: 26px;
+  max-width: 460px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  line-height: 20px;
+  color: rgba(241, 239, 235, 0.68);
+}
+
 /* ── The Living Record 모바일 ── */
 @media (max-width: 768px) {
   /* 모바일은 한 뷰포트 높이 (Paper 모바일 844) */
@@ -1372,6 +1430,12 @@ input:focus-visible,
     font-size: 10px;
     letter-spacing: 0.1em;
     line-height: 14px;
+  }
+
+  .s-living__declaration {
+    margin-top: 18px;
+    font-size: 12px;
+    line-height: 18px;
   }
 }
 
@@ -1708,13 +1772,6 @@ input:focus-visible,
   object-position: center;
 }
 
-.s-col__hero-fade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent 78%, var(--color-sand) 100%);
-  pointer-events: none;
-}
-
 /* 인트로 */
 .s-col__intro {
   display: flex;
@@ -2035,6 +2092,48 @@ input:focus-visible,
 }
 
 /* 하단 노트 */
+/* 기프트 브릿지 — 증서가 있는 선물 (showcase와 note 사이) */
+.s-col__gift {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  padding: 0 24px 96px;
+}
+
+.s-col__gift-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  line-height: 14px;
+  text-transform: uppercase;
+  color: var(--color-amber-muted);
+}
+
+.s-col__gift-head {
+  max-width: 640px;
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: 30px;
+  letter-spacing: 0.01em;
+  line-height: 38px;
+  color: var(--color-earth);
+  word-break: keep-all;
+}
+
+.s-col__gift-body {
+  max-width: 440px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  line-height: 24px;
+  color: rgba(49, 46, 42, 0.72);
+  word-break: keep-all;
+}
+
 .s-col__note {
   display: flex;
   align-items: center;

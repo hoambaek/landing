@@ -4,14 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
-
-/* G3 — 측정 시작일(입수일). 오늘이 771일째가 되도록 역산한 기준값. */
-const MEASURE_START = Date.UTC(2024, 4, 1); // 2024-05-01
-
-function computeDays(): number {
-  const elapsed = Date.now() - MEASURE_START;
-  return Math.floor(elapsed / 86_400_000) + 1; // 1-indexed "N일째"
-}
+import { computeMeasureDays } from "@/lib/measurement";
 
 /** 771 숫자 카운팅 — 뷰 진입 시 0→target, 2.0s ease-out. reduced-motion 즉시 표기. */
 function DaysCounter({
@@ -25,7 +18,7 @@ function DaysCounter({
   const [days, setDays] = useState(0);
 
   useEffect(() => {
-    const target = computeDays();
+    const target = computeMeasureDays();
     const el = ref.current;
     if (!el) return;
 
@@ -78,6 +71,7 @@ function DaysCounter({
             alt={dict.counterUnit}
             width={59}
             height={40}
+            unoptimized
             className="s-living__counter-unit"
           />
         ) : (
@@ -92,9 +86,12 @@ function DaysCounter({
         <div className="s-living__log-vals">
           <span>{dict.log.temp}</span>
           <span>{dict.log.current}</span>
-          <span>{dict.log.pressure}</span>
+          <span>{dict.log.depth}</span>
         </div>
       </div>
+
+      {/* 제품 선언 — 데이터가 병과 함께 건네짐을 처음 명시 (북극성 §8) */}
+      <p className="s-living__declaration">{dict.declaration}</p>
     </div>
   );
 }
@@ -118,6 +115,7 @@ export default function TheLivingRecordSection({
       alt={dict.copy}
       width={354}
       height={184}
+      unoptimized
       className="s-living__copy-img"
     />
   ) : (

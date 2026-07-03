@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Dictionary } from "@/i18n/types";
 
 /**
- * S7 · Partnership `professionals` — 식탁 (다크, Paper 07 1:1)
+ * S7 · Partnership `professionals` — 테이블 (다크, Paper 07 1:1)
  * p1 풀블리드 + 우하단 편지형 + 점 구분 태그 + 헤어라인 언더라인 링크 2종.
  */
 export default function ProfessionalsSection({

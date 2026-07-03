@@ -7,7 +7,8 @@
   },
   "header": {
     "recLine": "Relevé · Namhae 34,1434°N · Temp. 13,5°C",
-    "recDays": "771e jour d'observation",
+    "recDays": "{n}e jour d'observation",
+    "creed": "Chaque bouteille arrive avec le relevé du temps qu'elle a vécu.",
     "aria": {
       "home": "Aller à l'accueil",
       "menuOpen": "Ouvrir le menu",
@@ -20,10 +21,11 @@
     "copy": "Là où la lumière s'efface dans les profondeurs, le relevé commence.",
     "counterUnit": "jours",
     "counterCaption": "Le temps passé à écrire cette mer ; la mesure ne s'arrête jamais.",
+    "declaration": "Ce relevé accompagne la bouteille.",
     "log": {
       "temp": "Temp. 13,5°C",
       "current": "Courant 2,46 m/s",
-      "pressure": "Pression 3,98 atm"
+      "depth": "Profondeur 30 m"
     }
   },
   "first": {
@@ -57,6 +59,11 @@
       "agingValue": "365 jours",
       "recovery": "Remontée",
       "nfcText": "Approchez votre téléphone de la bouteille,\nles 365 jours que cette bouteille a vécus"
+    },
+    "gift": {
+      "eyebrow": "En cadeau",
+      "head": "Le temps, gravé à leur nom",
+      "body": "La bouteille se vide, le relevé demeure."
     },
     "note": {
       "numbering": "Numérotées individuellement",

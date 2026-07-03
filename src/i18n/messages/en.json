@@ -7,7 +7,8 @@
   },
   "header": {
     "recLine": "Record · Namhae 34.1434°N · Temp 13.5°C",
-    "recDays": "Day 771 of measurement",
+    "recDays": "Day {n} of measurement",
+    "creed": "Every bottle arrives with the record of the time it lived.",
     "aria": {
       "home": "Go to home",
       "menuOpen": "Open menu",
@@ -20,10 +21,11 @@
     "copy": "Where light fades in the deep, the record begins.",
     "counterUnit": "days",
     "counterCaption": "The time spent recording this sea — measurement never stops.",
+    "declaration": "This record travels with the bottle.",
     "log": {
       "temp": "Temp 13.5°C",
       "current": "Current 2.46 m/s",
-      "pressure": "Pressure 3.98 atm"
+      "depth": "Depth 30m"
     }
   },
   "first": {
@@ -57,6 +59,11 @@
       "agingValue": "365 days",
       "recovery": "Recovered",
       "nfcText": "Hold your phone near the bottle,\nthe 365 days this bottle has lived"
+    },
+    "gift": {
+      "eyebrow": "A Gift",
+      "head": "Time, engraved with their name",
+      "body": "The bottle empties, the record remains."
     },
     "note": {
       "numbering": "Individually numbered",

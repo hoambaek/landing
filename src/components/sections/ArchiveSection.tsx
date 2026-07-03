@@ -86,10 +86,9 @@ export default function ArchiveSection({
   const isKo = locale === "ko";
   return (
     <section id="archive" className="s-col">
-      {/* 히어로 — f2 풀블리드 + 하단 sand 그라데이션 */}
+      {/* 히어로 — f2 풀블리드 */}
       <div className="s-col__hero">
         <Image src="/images/f2.webp" alt={dict.heroAlt} fill sizes="100vw" className="s-col__hero-img" />
-        <div className="s-col__hero-fade" aria-hidden="true" />
       </div>
 
       {/* 인트로 */}
@@ -102,6 +101,7 @@ export default function ArchiveSection({
               alt={dict.sub}
               width={311}
               height={64}
+              unoptimized
               className="s-col__sub-img"
             />
           ) : (
@@ -140,6 +140,13 @@ export default function ArchiveSection({
           <Image src="/images/01.webp" alt={dict.cert.showcaseAlt} fill sizes="260px" className="s-col__showcase-img" />
         </div>
         <Certificate dict={dict.cert} />
+      </div>
+
+      {/* 기프트 브릿지 — 증서가 있는 선물 (북극성 §6 · 1순위 고객) */}
+      <div className="s-col__gift reveal">
+        <span className="s-col__gift-eyebrow">{dict.gift.eyebrow}</span>
+        <h3 className="s-col__gift-head">{dict.gift.head}</h3>
+        <p className="s-col__gift-body">{dict.gift.body}</p>
       </div>
 
       {/* 하단 노트 */}

@@ -26,6 +26,7 @@ export default function HeroSection({
           alt={dict.brandName}
           width={107}
           height={28}
+          unoptimized
           className="s-void__brand-name-img"
         />
       ) : (
@@ -74,6 +75,7 @@ export default function HeroSection({
               width={563}
               height={182}
               priority
+              unoptimized
               className="s-void__h1-img"
             />
           ) : (
@@ -93,6 +95,7 @@ export default function HeroSection({
               width={255}
               height={150}
               priority
+              unoptimized
               className="s-void__h1-img"
             />
           ) : (
@@ -101,6 +104,9 @@ export default function HeroSection({
         </h1>
         {brand}
       </div>
+
+      {/* 모토 서명 — 우하단 (푸터와 수미상관). 고정 모토라 전 로케일 공통 */}
+      <span className="s-void__signature" aria-hidden="true">Written by the Sea.</span>
 
       {/* 스크롤 힌트 */}
       <div className="s-void__scroll" aria-hidden="true">↓</div>

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useHeaderScroll, useIndicatorScroll } from "@/hooks/useScrollSection";
 import { locales, localePrefixMap, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
+import { computeMeasureDays } from "@/lib/measurement";
 
 /** 메뉴 오버레이 내비 — Paper 시안 7항목 (아카이브 넘버링). 라벨은 브랜드 고유 영문 명칭이라 전 로케일 공통 */
 const MAIN_LINKS = [
@@ -33,6 +34,18 @@ export default function Header({
   const [isOpen, setIsOpen] = useState(false);
   const { isDark, isScrolled } = useHeaderScroll();
   const { activeId } = useIndicatorScroll();
+
+  /* 측정 경과일 — Living Data 카운터와 동일 소스로 계산(숫자 단일 출처).
+     하이드레이션 불일치 방지를 위해 마운트 후 채운다. 메뉴는 마운트 뒤 열리므로
+     사용자에게 빈 값이 노출되지 않는다. */
+  const [measureDays, setMeasureDays] = useState<number | null>(null);
+  useEffect(() => {
+    setMeasureDays(computeMeasureDays());
+  }, []);
+  const recDays = dict.recDays.replace(
+    "{n}",
+    measureDays !== null ? String(measureDays) : "",
+  );
 
   const menuBtnRef = useRef<HTMLButtonElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -220,11 +233,14 @@ export default function Header({
           ))}
         </nav>
 
-        {/* 하단: REC 관측 라인(좌) + 언어(우) */}
+        {/* 하단: 신조 + REC 관측 라인(좌) + 언어(우) */}
         <div className="menu-overlay__bottom">
-          <div className="menu-overlay__rec">
-            <span className="menu-overlay__rec-line">{dict.recLine}</span>
-            <span className="menu-overlay__rec-days">{dict.recDays}</span>
+          <div className="menu-overlay__bottom-left">
+            <p className="menu-overlay__creed">{dict.creed}</p>
+            <div className="menu-overlay__rec">
+              <span className="menu-overlay__rec-line">{dict.recLine}</span>
+              <span className="menu-overlay__rec-days">{recDays}</span>
+            </div>
           </div>
           <div className="menu-overlay__lang">
             {locales.map((lc) => (
