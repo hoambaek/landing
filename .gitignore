@@ -49,3 +49,31 @@ next-env.d.ts
 # 작업 임시물 / 이미지 백업본 (배포·소스 무관)
 _workspace/
 public/images/*_old.webp
+
+# AI agent skill installs via `npx skills add` — local tooling, reproducible from skills-lock.json, not committed.
+# (keeps already-tracked .agents/skills/seo-geo)
+.agents/skills/*
+!.agents/skills/seo-geo/
+.claude/skills/
+.codebuddy/
+.commandcode/
+.continue/
+.crush/
+.factory/
+.goose/
+.junie/
+.kilocode/
+.kiro/
+.kode/
+.mcpjam/
+.mux/
+.neovate/
+.openhands/
+.pi/
+.pochi/
+.qoder/
+.qwen/
+.roo/
+.trae/
+.windsurf/
+.zencoder/
