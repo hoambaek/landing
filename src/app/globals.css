@@ -851,7 +851,8 @@ input:focus-visible,
   position: relative;
   height: 100vh;
   min-height: 800px;
-  background: var(--color-warm-ivory);
+  /* 히어로 배경 이미지(골든아워 웜톤)의 평균색 — 로드 전 회색 대신 어두운 히어로로 보이게 */
+  background: #463829;
   overflow: clip;
   z-index: 2;
 }
