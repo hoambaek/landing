@@ -85,15 +85,18 @@ export default function ArchiveSection({
 }) {
   const isKo = locale === "ko";
   return (
-    <section id="archive" className="s-col">
+    <section id="archive" className="s-col" aria-labelledby="archive-title">
       {/* 히어로 — f2 풀블리드 */}
       <div className="s-col__hero">
-        <Image src="/images/f2.webp" alt={dict.heroAlt} fill sizes="100vw" className="s-col__hero-img" />
+        <picture>
+          <source media="(max-width: 768px)" srcSet="/images/f2_m.webp" />
+          <Image src="/images/f2.webp" alt={dict.heroAlt} fill sizes="100vw" className="s-col__hero-img" />
+        </picture>
       </div>
 
       {/* 인트로 */}
       <div className="s-col__intro reveal">
-        <h2 className="s-col__title">{dict.title}</h2>
+        <h2 id="archive-title" className="s-col__title">{dict.title}</h2>
         <p className="s-col__sub">
           {isKo ? (
             <Image
@@ -111,9 +114,9 @@ export default function ArchiveSection({
       </div>
 
       {/* 큐베 그리드 — 박스 없는 진열, contain */}
-      <div className="s-col__grid">
+      <ul className="s-col__grid">
         {CUVEES.map((c) => (
-          <figure key={c.n} className="s-col__card">
+          <li key={c.n} className="s-col__card">
             <div className={`s-col__card-img${c.outline ? " s-col__card-img--outline" : ""}${c.soldOut ? " s-col__card-img--sold" : ""}`}>
               {c.outline ? (
                 <Image src="/images/bottle-outline-3yr.png" alt="" width={184} height={308} className="s-col__outline-img" />
@@ -121,7 +124,7 @@ export default function ArchiveSection({
                 <Image src={c.img!} alt={c.name} fill sizes="(max-width: 768px) 50vw, 330px" className="s-col__bottle-img" />
               )}
             </div>
-            <figcaption className="s-col__card-info">
+            <div className="s-col__card-info">
               <span className="s-col__card-n">{c.n}</span>
               <span className="s-col__card-name">
                 {c.name}
@@ -129,10 +132,10 @@ export default function ArchiveSection({
               </span>
               <span className="s-col__card-desc">{dict.cuvees[c.descKey]}</span>
               {c.soldOut && <span className="s-col__card-sold">{dict.cuvees.soldOut}</span>}
-            </figcaption>
-          </figure>
+            </div>
+          </li>
         ))}
-      </div>
+      </ul>
 
       {/* 기록 카드 쇼케이스 */}
       <div className="s-col__showcase">
@@ -144,7 +147,6 @@ export default function ArchiveSection({
 
       {/* 기프트 브릿지 — 증서가 있는 선물 (북극성 §6 · 1순위 고객) */}
       <div className="s-col__gift reveal">
-        <span className="s-col__gift-eyebrow">{dict.gift.eyebrow}</span>
         <h3 className="s-col__gift-head">{dict.gift.head}</h3>
         <p className="s-col__gift-body">{dict.gift.body}</p>
       </div>
@@ -152,9 +154,7 @@ export default function ArchiveSection({
       {/* 하단 노트 */}
       <div className="s-col__note">
         <span>{dict.note.numbering}</span>
-        <span className="s-col__note-dot" aria-hidden="true" />
         <span>{dict.note.card}</span>
-        <span className="s-col__note-dot" aria-hidden="true" />
         <span>{dict.note.nfc}</span>
       </div>
     </section>

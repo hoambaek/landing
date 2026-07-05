@@ -6,7 +6,7 @@
     "bgAlt": "남해 수심 30m, 케이지에 든 한 병의 샴페인 · Muse de Marée"
   },
   "header": {
-    "recLine": "기록 · 남해 34.1434°N · 수온 13.5°C",
+    "recLine": "남해 34.1434°N · 수온 13.5°C",
     "recDays": "측정 {n}일째",
     "creed": "모든 병에 담긴, 바다에서 보낸 시간의 기록.",
     "aria": {
@@ -17,7 +17,7 @@
     }
   },
   "living": {
-    "bgAlt": "남해 수심 30m, 인양 케이지 — 측정 현장",
+    "bgAlt": "남해 수심 30m, 인양 케이지, 측정 현장",
     "copy": "깊은 바다 속 빛이 사라진 곳에서, 기록이 시작됩니다",
     "counterUnit": "일째",
     "counterCaption": "이 바다를 기록한 시간, 측정은 멈추지 않습니다.",
@@ -52,7 +52,7 @@
       "soldOut": "· SOLD OUT"
     },
     "cert": {
-      "showcaseAlt": "En Lieu Sûr — 기록 카드와 함께",
+      "showcaseAlt": "En Lieu Sûr, 기록 카드와 함께",
       "entry": "입수",
       "coordinates": "좌표",
       "aging": "해저 숙성",
@@ -74,7 +74,7 @@
   "maker": {
     "title": "the maker.",
     "subtitle": "샴페인은 샹파뉴가 만들었습니다, 기록은 남해에서 시작됩니다",
-    "imgAlt": "Champagne Mignon Boulard — 샹파뉴 메종",
+    "imgAlt": "Champagne Mignon Boulard, 샹파뉴 메종",
     "boulard": {
       "desc": "1911년부터 4세대, 49개의 서로 다른 토양.\n균일화할 복잡함을 고스란히 살리는 메종."
     },
@@ -165,7 +165,7 @@
         "dining": { "label": "다이닝 · 바 리스트", "desc": "와인 리스트 · 바이더글래스 등재" },
         "event": { "label": "프라이빗 이벤트 · 페어링", "desc": "소믈리에 · 셰프 동행 디너" },
         "cellar": { "label": "셀러 · 컬렉션", "desc": "프라이빗 셀러 · 멤버십 보틀" },
-        "other": { "label": "그 외 제안", "desc": "리테일 · 기프팅 · 협업" }
+        "other": { "label": "그 외 제안", "desc": "리테일, 기프팅, 협업" }
       },
       "messageLabel": "MESSAGE (선택)",
       "submit": "문의 보내기",

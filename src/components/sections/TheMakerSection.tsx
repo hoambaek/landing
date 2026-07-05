@@ -65,10 +65,10 @@ export default function TheMakerSection({
   };
 
   return (
-    <section id="the-maker" className="s-maker">
+    <section id="the-maker" className="s-maker" aria-labelledby="maker-title">
       {/* 헤더 */}
       <header className="s-maker__header reveal">
-        <h2 className="s-maker__title">{dict.title}</h2>
+        <h2 id="maker-title" className="s-maker__title">{dict.title}</h2>
         <p className="s-maker__subtitle">
           {isKo ? (
             <Image

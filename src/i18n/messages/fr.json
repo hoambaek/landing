@@ -6,7 +6,7 @@
     "bgAlt": "Une bouteille de champagne dans une cage à 30 m de profondeur au large de Namhae · Muse de Marée"
   },
   "header": {
-    "recLine": "Relevé · Namhae 34,1434°N · Temp. 13,5°C",
+    "recLine": "Namhae 34,1434°N · Temp. 13,5°C",
     "recDays": "{n}e jour d'observation",
     "creed": "Dans chaque bouteille, le relevé de son temps en mer.",
     "aria": {
@@ -17,7 +17,7 @@
     }
   },
   "living": {
-    "bgAlt": "Une cage de remontée à 30 m de profondeur au large de Namhae — le site de mesure",
+    "bgAlt": "Une cage de remontée à 30 m de profondeur au large de Namhae, le site de mesure",
     "copy": "Là où la lumière s'efface dans les profondeurs, le relevé commence.",
     "counterUnit": "jours",
     "counterCaption": "Le temps passé à écrire cette mer ; la mesure ne s'arrête jamais.",
@@ -34,12 +34,12 @@
     "closing": "À chaque bouteille son empreinte de la mer ; aucune n'est identique.",
     "plateAlt": {
       "light": "La première lumière rencontrée à la surface",
-      "manuscript": "Balanes et cristaux de sel à la surface de la bouteille — un manuscrit écrit par la mer"
+      "manuscript": "Balanes et cristaux de sel à la surface de la bouteille, un manuscrit écrit par la mer"
     }
   },
   "collection": {
     "title": "collection.",
-    "sub": "Chaque cuvée est un relevé — veiller sur le temps que la mer a façonné.",
+    "sub": "Chaque cuvée est un relevé, veiller sur le temps que la mer a façonné.",
     "heroAlt": "La gamme de cuvées remontée au large de Namhae",
     "cuvees": {
       "enLieuSur": "Un commencement, pour la première rencontre",
@@ -52,7 +52,7 @@
       "soldOut": "· ÉPUISÉ"
     },
     "cert": {
-      "showcaseAlt": "En Lieu Sûr — avec sa carte de relevé",
+      "showcaseAlt": "En Lieu Sûr, avec sa carte de relevé",
       "entry": "Immersion",
       "coordinates": "Coordonnées",
       "aging": "Vieillissement sous-marin",
@@ -74,7 +74,7 @@
   "maker": {
     "title": "the maker.",
     "subtitle": "Le champagne est né en Champagne ; le relevé commence à Namhae.",
-    "imgAlt": "Champagne Mignon Boulard — une maison de Champagne",
+    "imgAlt": "Champagne Mignon Boulard, une maison de Champagne",
     "boulard": {
       "desc": "Quatre générations depuis 1911, 49 sols distincts.\nUne maison qui préserve intacte la complexité que d'autres chercheraient à uniformiser."
     },
@@ -165,7 +165,7 @@
         "dining": { "label": "Restaurant · Carte des vins", "desc": "Carte des vins · au verre" },
         "event": { "label": "Événement privé · Accords", "desc": "Dîners avec sommelier ou chef" },
         "cellar": { "label": "Cave · Collection", "desc": "Cave privée · bouteilles d'adhésion" },
-        "other": { "label": "Autres propositions", "desc": "Détail · cadeaux · collaboration" }
+        "other": { "label": "Autres propositions", "desc": "Détail, cadeaux, collaboration" }
       },
       "messageLabel": "MESSAGE (facultatif)",
       "submit": "Envoyer la demande",
@@ -177,11 +177,11 @@
     },
     "brandBook": {
       "metaTitle": "Dossier de marque | Muse de Marée",
-      "metaDesc": "Écrit par la mer. La philosophie de la marque, le système de relevé, la gamme de cuvées et le partenariat — envoyés dans votre boîte mail.",
+      "metaDesc": "Écrit par la mer. La philosophie de la marque, le système de relevé, la gamme de cuvées et le partenariat, envoyés dans votre boîte mail.",
       "title": "Dossier de marque",
       "sub": "Écrit par la mer.",
       "imageAlt": "Une bouteille couverte de balanes sur du calcaire après la remontée",
-      "body1": "Un champagne vieilli dans les profondeurs de la Corée — son commencement et son relevé.",
+      "body1": "Un champagne vieilli dans les profondeurs de la Corée, son commencement et son relevé.",
       "body2": "La philosophie de la marque, sa façon de mesurer, la gamme de cuvées et le partenariat.",
       "body3": "Réunis en un seul dossier.",
       "submit": "Demander le dossier",

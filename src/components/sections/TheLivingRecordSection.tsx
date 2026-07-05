@@ -83,11 +83,11 @@ function DaysCounter({
       {/* 측정은 멈추지 않습니다 — 지금 이 순간의 측정값 */}
       <div className="s-living__log">
         <span className="s-living__log-rule" />
-        <div className="s-living__log-vals">
-          <span>{dict.log.temp}</span>
-          <span>{dict.log.current}</span>
-          <span>{dict.log.depth}</span>
-        </div>
+        <ul className="s-living__log-vals">
+          <li><span>{dict.log.temp}</span></li>
+          <li><span>{dict.log.current}</span></li>
+          <li><span>{dict.log.depth}</span></li>
+        </ul>
       </div>
 
       {/* 제품 선언 — 데이터가 병과 함께 건네짐을 처음 명시 (북극성 §8) */}
@@ -123,7 +123,7 @@ export default function TheLivingRecordSection({
   );
 
   return (
-    <section id="data-archive" className="s-living">
+    <section id="data-archive" className="s-living" aria-label="The Living Record">
       {/* 풀블리드 배경 — 데스크톱 o3 / 모바일 o3_m */}
       <div className="s-living__bg">
         <picture>
@@ -138,13 +138,10 @@ export default function TheLivingRecordSection({
         </picture>
       </div>
       <div className="s-living__overlay" aria-hidden="true" />
-      <div className="s-living__overlay-m" aria-hidden="true" />
 
       <div className="s-living__text">
-        {/* 도입 카피 — 데스크톱 3행 */}
-        <div className="s-living__copy s-living__copy--desktop reveal">{copy}</div>
-        {/* 도입 카피 — 모바일 3행 (내용은 데스크톱과 동일) */}
-        <div className="s-living__copy s-living__copy--mobile">{copy}</div>
+        {/* 도입 카피 — 단일 소스 (데스크톱 3행 / 모바일 축소) */}
+        <div className="s-living__copy reveal">{copy}</div>
 
         {/* 771 카운터 + 측정값 */}
         <DaysCounter locale={locale} dict={dict} />

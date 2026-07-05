@@ -16,66 +16,42 @@ export default function TheFirstRecordSection({
 }) {
   const isKo = locale === "ko";
   return (
-    <section id="the-first-record" className="s-first">
+    <section id="the-first-record" className="s-first" aria-label="The First Record">
       {/* Entry */}
       <header className="s-first__entry reveal">
         <span className="s-first__eyebrow">{dict.eyebrow}</span>
         <p className="s-first__headline">
           {isKo ? (
-            <>
+            <picture>
+              <source media="(max-width: 768px)" srcSet="/text/first-headline-m.png" />
               <Image
                 src="/text/first-headline.png"
                 alt={dict.headline}
                 width={679}
                 height={54}
                 unoptimized
-                className="s-first__headline-img s-first__headline-img--d"
+                className="s-first__headline-img"
               />
-              <Image
-                src="/text/first-headline-m.png"
-                alt={dict.headline}
-                width={233}
-                height={70}
-                unoptimized
-                className="s-first__headline-img s-first__headline-img--m"
-              />
-            </>
+            </picture>
           ) : (
             <span className="s-first__headline-text">{dict.headline}</span>
           )}
         </p>
       </header>
 
-      {/* ── 데스크톱 4컷 ── */}
-      <div className="s-first__rows s-first__rows--desktop">
-        <figure className="s-first__row s-first__row--center">
-          <div className="s-first__plate s-first__plate--03">
-            <Image src="/images/ai/rec03.webp" alt={dict.plateAlt.light} fill sizes="920px" className="s-first__img" />
-          </div>
-        </figure>
-
-        <span className="s-first__connector" aria-hidden="true" />
-
-        <figure className="s-first__row s-first__row--center">
-          <div className="s-first__plate s-first__plate--04">
-            <Image src="/images/ai/rec04.webp" alt={dict.plateAlt.manuscript} fill sizes="920px" className="s-first__img" />
-          </div>
-        </figure>
-      </div>
-
-      {/* ── 모바일 3컷 ── */}
-      <div className="s-first__rows s-first__rows--mobile">
-        <figure className="s-first__row s-first__row--bleed">
-          <div className="s-first__plate s-first__plate--m2">
-            <Image src="/images/ai/rec03.webp" alt={dict.plateAlt.light} fill sizes="100vw" className="s-first__img" />
+      {/* 인양 기록 2컷 — 단일 소스, 반응형 (데스크톱 센터 / 모바일 블리드) */}
+      <div className="s-first__rows">
+        <figure className="s-first__row s-first__row--center s-first__row--bleed">
+          <div className="s-first__plate s-first__plate--03 s-first__plate--m2">
+            <Image src="/images/ai/rec03.webp" alt={dict.plateAlt.light} fill sizes="(max-width: 768px) 100vw, 920px" className="s-first__img" />
           </div>
         </figure>
 
         <span className="s-first__connector s-first__connector--dim" aria-hidden="true" />
 
-        <figure className="s-first__row">
-          <div className="s-first__plate s-first__plate--m3">
-            <Image src="/images/ai/rec04.webp" alt={dict.plateAlt.manuscript} fill sizes="300px" className="s-first__img" />
+        <figure className="s-first__row s-first__row--center">
+          <div className="s-first__plate s-first__plate--04 s-first__plate--m3">
+            <Image src="/images/ai/rec04.webp" alt={dict.plateAlt.manuscript} fill sizes="(max-width: 768px) 300px, 920px" className="s-first__img" />
           </div>
         </figure>
       </div>

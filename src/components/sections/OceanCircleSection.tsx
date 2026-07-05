@@ -12,21 +12,19 @@ export default function OceanCircleSection({
   dict: Dictionary["oceanCellar"];
 }) {
   return (
-    <section id="ocean-circle" className="s-prive s-prive--left">
+    <section id="ocean-circle" className="s-prive s-prive--left" aria-labelledby="ocean-circle-title">
       <div className="s-prive__media">
         <Image src="/images/c1.webp" alt="" fill sizes="100vw" className="s-prive__img" />
         <div className="s-prive__scrim s-prive__scrim--left" aria-hidden="true" />
         <div className="s-prive__content">
           <span className="s-prive__eyebrow">{dict.eyebrow}</span>
-          <h2 className="s-prive__title">{dict.title}</h2>
+          <h2 id="ocean-circle-title" className="s-prive__title">{dict.title}</h2>
           <p className="s-prive__sub">{dict.sub}</p>
-          <div className="s-prive__tags">
-            <span>{dict.tags.schedule}</span>
-            <span className="s-prive__tag-dot" aria-hidden="true" />
-            <span>{dict.tags.attend}</span>
-            <span className="s-prive__tag-dot" aria-hidden="true" />
-            <span>{dict.tags.archive}</span>
-          </div>
+          <ul className="s-prive__tags">
+            <li><span>{dict.tags.schedule}</span></li>
+            <li><span>{dict.tags.attend}</span></li>
+            <li><span>{dict.tags.archive}</span></li>
+          </ul>
           <div className="s-prive__links">
             <Link href="/invite" className="s-prive__link">
               <span className="s-prive__link-row">

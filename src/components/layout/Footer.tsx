@@ -94,11 +94,13 @@ export default function Footer({
         {NAV_COLS.map((col) => (
           <div key={col.head} className="s-footer__nav-col">
             <span className="s-footer__nav-head">{col.head}</span>
-            <div className="s-footer__nav-items">
+            <ul className="s-footer__nav-items">
               {col.items.map((it) => (
-                <a key={it.label} href={`${base}${it.anchor}`} className="s-footer__nav-item">{it.label}</a>
+                <li key={it.label}>
+                  <a href={`${base}${it.anchor}`} className="s-footer__nav-item">{it.label}</a>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         ))}
       </nav>

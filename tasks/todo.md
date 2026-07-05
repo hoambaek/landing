@@ -4,6 +4,35 @@
 
 ## 진행 중
 
+- [x] **taste-skill(design-taste-frontend) anti-slop 감사 + 즉시개선** (2026-07-05)
+  - 설치: `npx skills add Leonxlnx/taste-skill` (`.agents/skills/` 14종). audit-first 리디자인 프로토콜로 랜딩 대조
+  - **삼분류 결과**: 대부분 tell이 아니라 의도적 헤리티지 보이스(Cormorant serif·"Written by the Sea" 모토·다크→라이트→다크 서사·큐베 N° 번호 = 전부 유지). 진짜 개선점만 실행
+  - **실행**: ①스크롤 큐 `↓` 제거(HeroSection+CSS+keyframe) ②em-dash 전량 `,`로(ko3·en8·fr7, 페이지 내 0) ③다중 가운뎃점 정리(recLine 라벨 제거→점1개, 폼 3항목 나열 쉼표) ④gift eyebrow 제거(4→3) ⑤장식점 `.s-col__note-dot`×2 제거(gap 18px로 자연 간격)
+  - **보존(사용자 결정)**: 좌표·수온 수치=실시간 데이터 연동 예정이라 유지 · 다크전환·큐베번호=의도적 브랜드 장치
+  - 검증: 빌드28 · 중괄호702 · Playwright(scroll_cue 없음·note_dots 0·em-dash 0·recLine 점1개) · 콘솔0
+
+- [x] **랜딩 구조 리팩터 (StyleGallery 감사 로드맵 C단계)** — C1·C2 완료, C3 스킵 (플랜 `~/.claude/plans/magical-dreaming-wilkinson.md`)
+  - 범위: 저·중리스크만. 제외(고위험) = Maker 캐러셀 cover·Maker/Header 리스트화(애니메이션)·container query 전면·Privé 모바일 고정높이
+  - **[x] C1 시맨틱 접근성** (2026-07-05): 7섹션 aria 부여(void·archive·maker·ocean·professionals=labelledby+h2 id, living·first=aria-label "The Living/First Record") · 4종 리스트 ul/li 변환(Footer nav·Archive 큐베그리드 figure→li·Living 로그값·Privé 태그×2) · Privé 구분점 span→`li:not(:last-child)::after` 재현 · 새 ul마다 `list-style:none;margin:0;padding:0` 리셋. 검증: 빌드28 · Playwright 데스크톱+모바일 시각동일·구분점 유지 · 접근성 트리(7섹션 라벨·ul 7개·h1 2개[C2에서 1개로]) · 콘솔0
+  - **[x] C2 DOM 이중화 제거** (2026-07-05): Hero 데스크톱/모바일 두 블록→단일 `.s-void__content` + 단일 `<h1 id=void-title>`(ko는 `<picture>`로 hero-h1-m/d.png 아트디렉션) → **h1 2→1** · Living copy/overlay 2벌→1벌 · First rows 2벌→1벌(단일 DOM에 데스크톱+모바일 클래스 병기, `@media`가 소스순서로 오버라이드) + headline `<picture>` · 죽은 CSS 정리(s-first__cl--*·plate--m1). 검증: 빌드28 · Playwright **ko/en/fr × 데스크톱/모바일** — h1=1·아트디렉션 스왑(ko m/d, en/fr 텍스트)·plate 블리드/센터·connector dim·시각 회귀 0·콘솔0
+  - [~] **C3 안전 cover = 스킵** (2026-07-05): 텍스트 담은 고정높이 섹션(Living·Hero)이 전부 `position:absolute`라 min-height 전환이 클립을 실제로 못 고치고, 텍스트 없는 배너(s-col__hero)는 전환 불필요. 진짜 위험한 Maker 캐러셀·Privé 모바일은 이미 고위험 제외. → 이 코드베이스엔 실익 없어 스킵(사용자 승인)
+
+- [x] **랜딩 레이아웃 토큰화 (StyleGallery 감사 로드맵 B단계)** (2026-07-05)
+  - `@theme`에 레이아웃 토큰 3종 신설: `--w-content: 1240px` · `--gutter-page: 80px` · `--gutter-limit: 48px` (기존엔 색·폰트·z-index 토큰만 있었음)
+  - 검증된 동일-개념 9곳 치환: 콘텐츠폭 3곳(s-col__grid·showcase·maker__nav, `1238/1240`→`var(--w-content)`으로 통일) · 페이지거터 3곳(.container·히어로·리빙 `left/padding 80px`→`var(--gutter-page)`) · 리미터거터 2곳(`calc(100%-48px)`→`var(--gutter-limit)`) · breakpoint 표준화(단 1곳 남은 `max-width:767px`→`768px`, 나머지 12곳과 일치)
+  - **의도적 축소**: 감사가 지목한 매직넘버 무차별 치환(80×48회·24×79회·48×52회)은 **하지 않음** — 같은 숫자가 거터·line-height·수직패딩 등 역할이 제각각이라 blanck 치환은 위험. "공유 어휘"가 명확한 폭·페이지거터·리미터거터만 토큰화. 광범위 spacing 스케일 이관은 C단계/후속으로 유보
+  - 검증: 중괄호 728/728 · 빌드 28라우트 정상 · Playwright 데스크톱 풀페이지 픽셀 동일(시각 회귀 0)·콘솔 에러 0
+  - 미커밋. 남은 로드맵: C(구조 리팩터 — 고정높이→cover·DOM이중화→container query·시맨틱 ul/li·aria·h1)
+
+- [x] **랜딩 죽은 코드 정리 (StyleGallery 감사 로드맵 A단계)** (2026-07-05)
+  - 정본: [`docs/reports/2026-07-05-landing-layout-stylegallery-audit.md`](../docs/reports/2026-07-05-landing-layout-stylegallery-audit.md)
+  - **삭제 전 전량 직접 검증**(grep 참조 0건 + 동적 클래스 조립 없음 + @keyframes 라이브 참조 없음). 서브에이전트 오탐 1건 교정: `.card-slider`는 "살아있음"이 아니라 `CardSlider.tsx`가 렌더 0건인 죽은 컴포넌트였음 → CSS까지 죽음
+  - 삭제 컴포넌트 8개: DataArchiveSection·ObservationSection·OriginSection·NfcSection·TastingSection·DataArchiveClient·DataMetricsClient·CardSlider(전부 import 0건)
+  - `globals.css` **6,936 → 4,845줄 (−2,091, ≈30%)**: s-bridge·s-obs·s-data·s-tasting·s-archive(+m-card·card-slider·masonry·muselog)·s-nfc·s-origin·s-diptych·footer(bare, s-footer 아님) 데스크톱·모바일@media 전부 + 죽은 하위클래스(s-col__band*·s-first__plate--01/02·s-maker__slide--veiled) + 라인단위(m-card/.footer__*:active)
+  - **스코프 확장 고지**: 감사 A목록엔 없던 `.m-card*`·`.card-slider*`·CardSlider.tsx도 archive 영역에 얽힌 죽은 코드라 함께 제거(직접 검증). `.indicator`/SectionIndicator.tsx는 "주석 처리 보류"라 **의도적으로 남김**
+  - 검증: 중괄호 728/728 균형 · 잔여 참조 0건 · **프로덕션 빌드 28라우트 정상** (tsc/CSS 컴파일 통과)
+  - 미커밋(요청 시 커밋). 남은 로드맵: B(토큰화)·C(구조 리팩터 — 고정높이→cover·DOM이중화→container query·시맨틱)
+
 - [x] **주류 연령확인(19금) 게이트 + 면허 확인** (2026-07-02)
   - 면허 확보 확인: 오크니 주류수출입업면허(나) 409-2-00256 → 국민건강증진법 §8의2 광고 적법 (메모리 `reference_liquor_license`)
   - 진입 1회 19세 확인 모달 `src/components/legal/AgeGate.tsx`(루트 layout 마운트, useSyncExternalStore로 localStorage 90일 지속) · "아니요, 19세 미만입니다"→`/exit` 안내 페이지(`AgeExit` + ko/en/fr 라우트 3개)

@@ -6,7 +6,7 @@
     "bgAlt": "A bottle of champagne in a cage at 30 m depth off Namhae · Muse de Marée"
   },
   "header": {
-    "recLine": "Record · Namhae 34.1434°N · Temp 13.5°C",
+    "recLine": "Namhae 34.1434°N · Temp 13.5°C",
     "recDays": "Day {n} of measurement",
     "creed": "In every bottle, the record of its time at sea.",
     "aria": {
@@ -17,10 +17,10 @@
     }
   },
   "living": {
-    "bgAlt": "A recovery cage at 30 m depth off Namhae — the site of measurement",
+    "bgAlt": "A recovery cage at 30 m depth off Namhae, the site of measurement",
     "copy": "Where light fades in the deep, the record begins.",
     "counterUnit": "days",
-    "counterCaption": "The time spent recording this sea — measurement never stops.",
+    "counterCaption": "The time spent recording this sea, measurement never stops.",
     "declaration": "This record travels with the bottle.",
     "log": {
       "temp": "Temp 13.5°C",
@@ -34,12 +34,12 @@
     "closing": "Every bottle a different fingerprint of the sea; no two are alike.",
     "plateAlt": {
       "light": "The first light at the surface",
-      "manuscript": "Barnacles and salt crystals on the bottle's surface — a manuscript written by the sea"
+      "manuscript": "Barnacles and salt crystals on the bottle's surface, a manuscript written by the sea"
     }
   },
   "collection": {
     "title": "collection.",
-    "sub": "Each cuvée is a record — holding in trust the time the sea has made.",
+    "sub": "Each cuvée is a record, holding in trust the time the sea has made.",
     "heroAlt": "The cuvée lineup recovered off Namhae",
     "cuvees": {
       "enLieuSur": "A beginning, for the first encounter",
@@ -52,7 +52,7 @@
       "soldOut": "· SOLD OUT"
     },
     "cert": {
-      "showcaseAlt": "En Lieu Sûr — with its record card",
+      "showcaseAlt": "En Lieu Sûr, with its record card",
       "entry": "Immersed",
       "coordinates": "Coordinates",
       "aging": "Undersea ageing",
@@ -74,7 +74,7 @@
   "maker": {
     "title": "the maker.",
     "subtitle": "Champagne was made in Champagne; the record begins in Namhae.",
-    "imgAlt": "Champagne Mignon Boulard — a Champagne maison",
+    "imgAlt": "Champagne Mignon Boulard, a Champagne maison",
     "boulard": {
       "desc": "Four generations since 1911, 49 distinct soils.\nA maison that keeps intact the complexity others would smooth away."
     },
@@ -165,7 +165,7 @@
         "dining": { "label": "Dining · Bar list", "desc": "Wine list · by-the-glass listing" },
         "event": { "label": "Private event · Pairing", "desc": "Sommelier · chef-accompanied dinners" },
         "cellar": { "label": "Cellar · Collection", "desc": "Private cellar · membership bottles" },
-        "other": { "label": "Other proposals", "desc": "Retail · gifting · collaboration" }
+        "other": { "label": "Other proposals", "desc": "Retail, gifting, collaboration" }
       },
       "messageLabel": "MESSAGE (optional)",
       "submit": "Send inquiry",
@@ -177,11 +177,11 @@
     },
     "brandBook": {
       "metaTitle": "Brand Book | Muse de Marée",
-      "metaDesc": "Written by the sea. The brand philosophy, recording system, cuvée lineup, and partnership — sent to your inbox.",
+      "metaDesc": "Written by the sea. The brand philosophy, recording system, cuvée lineup, and partnership, sent to your inbox.",
       "title": "Brand Book",
       "sub": "Written by the sea.",
       "imageAlt": "A barnacled bottle on limestone after recovery",
-      "body1": "Champagne aged in Korea's deep sea — its beginning and its record.",
+      "body1": "Champagne aged in Korea's deep sea, its beginning and its record.",
       "body2": "The brand's philosophy, its way of measuring, the cuvée lineup, and partnership.",
       "body3": "Told in a single book.",
       "submit": "Request the book",

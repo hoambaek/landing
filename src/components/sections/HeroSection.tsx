@@ -36,7 +36,7 @@ export default function HeroSection({
   );
 
   return (
-    <section id="void" className="s-void">
+    <section id="void" className="s-void" aria-labelledby="void-title">
       {/* 배경 이미지 — 데스크톱 h3 / 모바일 h3_m2 */}
       <picture className="s-void__bg">
         <source media="(max-width: 768px)" srcSet="/images/h3_m2.webp" />
@@ -65,39 +65,22 @@ export default function HeroSection({
         style={{ backdropFilter: "blur(15px)", WebkitBackdropFilter: "blur(15px)" }}
       />
 
-      {/* 카피 — 데스크톱 (좌측 정렬, 3행) */}
-      <div className="s-void__content s-void__content--desktop">
-        <h1 className="s-void__h1">
+      {/* 카피 — 단일 소스. ko 타이틀은 <picture>로 데스크톱(3행)/모바일(4행) 에셋 아트디렉션 */}
+      <div className="s-void__content">
+        <h1 id="void-title" className="s-void__h1">
           {isKo ? (
-            <Image
-              src="/text/hero-h1-d.png"
-              alt={dict.headline}
-              width={563}
-              height={182}
-              priority
-              unoptimized
-              className="s-void__h1-img"
-            />
-          ) : (
-            <span className="s-void__h1-text">{dict.headline}</span>
-          )}
-        </h1>
-        {brand}
-      </div>
-
-      {/* 카피 — 모바일 (중앙 정렬, 지정 줄바꿈 4행) */}
-      <div className="s-void__content s-void__content--mobile">
-        <h1 className="s-void__h1">
-          {isKo ? (
-            <Image
-              src="/text/hero-h1-m.png"
-              alt={dict.headline}
-              width={255}
-              height={150}
-              priority
-              unoptimized
-              className="s-void__h1-img"
-            />
+            <picture>
+              <source media="(max-width: 768px)" srcSet="/text/hero-h1-m.png" />
+              <Image
+                src="/text/hero-h1-d.png"
+                alt={dict.headline}
+                width={563}
+                height={182}
+                priority
+                unoptimized
+                className="s-void__h1-img"
+              />
+            </picture>
           ) : (
             <span className="s-void__h1-text">{dict.headline}</span>
           )}
@@ -107,9 +90,6 @@ export default function HeroSection({
 
       {/* 모토 서명 — 우하단 (푸터와 수미상관). 고정 모토라 전 로케일 공통 */}
       <span className="s-void__signature" aria-hidden="true">Written by the Sea.</span>
-
-      {/* 스크롤 힌트 */}
-      <div className="s-void__scroll" aria-hidden="true">↓</div>
     </section>
   );
 }

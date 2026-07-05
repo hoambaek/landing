@@ -12,21 +12,19 @@ export default function ProfessionalsSection({
   dict: Dictionary["partnership"];
 }) {
   return (
-    <section id="professionals" className="s-prive s-prive--right">
+    <section id="professionals" className="s-prive s-prive--right" aria-labelledby="professionals-title">
       <div className="s-prive__media">
         <Image src="/images/p1.webp" alt="" fill sizes="100vw" className="s-prive__img" />
         <div className="s-prive__scrim s-prive__scrim--right" aria-hidden="true" />
         <div className="s-prive__content">
           <span className="s-prive__eyebrow">{dict.eyebrow}</span>
-          <h2 className="s-prive__title">{dict.title}</h2>
+          <h2 id="professionals-title" className="s-prive__title">{dict.title}</h2>
           <p className="s-prive__sub">{dict.sub}</p>
-          <div className="s-prive__tags">
-            <span>{dict.tags.fineDining}</span>
-            <span className="s-prive__tag-dot" aria-hidden="true" />
-            <span>{dict.tags.hotelBar}</span>
-            <span className="s-prive__tag-dot" aria-hidden="true" />
-            <span>{dict.tags.cellar}</span>
-          </div>
+          <ul className="s-prive__tags">
+            <li><span>{dict.tags.fineDining}</span></li>
+            <li><span>{dict.tags.hotelBar}</span></li>
+            <li><span>{dict.tags.cellar}</span></li>
+          </ul>
           <div className="s-prive__links s-prive__links--row">
             <Link href="/partner" className="s-prive__link">
               <span className="s-prive__link-row">
