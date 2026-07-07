@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import JsonLd from "@/components/JsonLd";
 import AgeGate from "@/components/legal/AgeGate";
 import {
@@ -148,6 +150,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID ?? "G-YVXMD6VF59";
   return (
     <html lang="ko">
       <head>
@@ -164,6 +167,8 @@ export default function RootLayout({
         <JsonLd />
         {children}
         <AgeGate />
+        <Analytics />
+        {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
     </html>
   );
