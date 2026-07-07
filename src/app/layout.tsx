@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import AnalyticsEvents from "@/components/AnalyticsEvents";
 import JsonLd from "@/components/JsonLd";
 import AgeGate from "@/components/legal/AgeGate";
 import {
@@ -171,6 +172,7 @@ export default function RootLayout({
         <AgeGate />
         <Analytics />
         {gaEnabled && <GoogleAnalytics gaId={gaId} />}
+        <AnalyticsEvents />
       </body>
     </html>
   );

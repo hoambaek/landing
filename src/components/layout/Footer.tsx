@@ -25,6 +25,7 @@ const NAV_COLS = [
       { label: "The Living Record", anchor: "#data-archive" },
       { label: "The First Record", anchor: "#the-first-record" },
       { label: "The Maker", anchor: "#the-maker" },
+      { label: "Journal", url: "https://blog.musedemaree.com" },
     ],
   },
   {
@@ -97,7 +98,12 @@ export default function Footer({
             <ul className="s-footer__nav-items">
               {col.items.map((it) => (
                 <li key={it.label}>
-                  <a href={`${base}${it.anchor}`} className="s-footer__nav-item">{it.label}</a>
+                  <a
+                    href={"url" in it ? it.url : `${base}${it.anchor}`}
+                    className="s-footer__nav-item"
+                  >
+                    {it.label}
+                  </a>
                 </li>
               ))}
             </ul>

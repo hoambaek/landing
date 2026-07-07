@@ -17,6 +17,7 @@ const MAIN_LINKS = [
   { id: "the-maker", href: "#the-maker", label: "The Maker" },
   { id: "ocean-circle", href: "#ocean-circle", label: "Ocean Cellar Privé" },
   { id: "professionals", href: "#professionals", label: "Partnership" },
+  { id: "journal", href: "https://blog.musedemaree.com", label: "Journal" },
 ] as const;
 
 /** 포커스 가능한 요소 셀렉터 */
