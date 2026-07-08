@@ -22,6 +22,7 @@
     "counterUnit": "jours",
     "counterCaption": "Le temps passé à écrire cette mer ; la mesure ne s'arrête jamais.",
     "declaration": "Ce relevé accompagne la bouteille.",
+    "methodLink": "Comment la mer s'écrit",
     "log": {
       "temp": "Temp. 13,5°C",
       "current": "Courant 2,46 m/s",

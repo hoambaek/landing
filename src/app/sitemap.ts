@@ -31,6 +31,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
       alternates: { languages },
     },
+    ...(["/method", "/en/method", "/fr/method"] as const).map((path) => ({
+      url: `${baseUrl}${path}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+      alternates: {
+        languages: {
+          ko: `${baseUrl}/method`,
+          en: `${baseUrl}/en/method`,
+          fr: `${baseUrl}/fr/method`,
+        },
+      },
+    })),
     ...["terms", "privacy", "cookies"].map((slug) => ({
       url: `${baseUrl}/${slug}`,
       lastModified: new Date(),

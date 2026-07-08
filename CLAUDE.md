@@ -14,7 +14,8 @@
 
 ## 프로젝트 개요
 
-**뮤즈드마레** — 바다의 시간을 기록하는 샴페인 브랜드. 런칭 2026년 7-8월.
+**뮤즈드마레** — 바다의 시간을 기록하는 샴페인 브랜드.
+**정식 런칭 = 2026년 12월 첫 상품 인양.** (입수 2026-01-30 · 테스트 인양은 완료됐으나 "첫 기록"으로 쓰지 않음 · First Record 인양 실측 데이터는 12월 대기 — 그 전까지 관측 수치는 시드/실시간 연동 예정 값)
 
 > **브랜드 정의 (북극성):** 샴페인 하우스가 아니다. **바다의 시간을 기록하는 브랜드.**
 > 샴페인은 샹파뉴가 만들었고, 변화는 바다가 만든다. 우리가 하는 일은 — 지켜보고, 기록하고, 그 기록과 함께 병을 건네는 것.
@@ -147,44 +148,58 @@ docs/
 | [`docs/tech/frontend-spec.md`](./docs/tech/frontend-spec.md) | CSS/컴포넌트/성능 상세 | UI 구현 시 |
 | [`docs/brand/PLAN.md`](./docs/brand/PLAN.md) | 홈페이지 기획 | 페이지 구조 파악 시 |
 | [`docs/brand/project.md`](./docs/brand/project.md) | 브랜드 철학/전략/타겟 (하위 레이어) | 보조 참조 |
-| [`homepage-plan.html`](./homepage-plan.html) | 브랜드 기획 + 라이브 데모 | 레이아웃 레퍼런스 |
+| [`homepage-plan.html`](./homepage-plan.html) | 브랜드 기획 + 라이브 데모 (구버전 레퍼런스 — 수치는 신뢰 금지) | 레이아웃 레퍼런스 |
+| [`docs/reports/2026-07-03-landing-brand-audit.md`](./docs/reports/2026-07-03-landing-brand-audit.md) | 랜딩 브랜드 감사 정본 (런칭 타임라인 근거) | 카피·수치 정합 확인 시 |
+| [`docs/reports/2026-07-05-landing-layout-stylegallery-audit.md`](./docs/reports/2026-07-05-landing-layout-stylegallery-audit.md) | 레이아웃 감사 정본 (A/B/C 로드맵·실행 결과) | CSS/구조 리팩터 시 |
 | [`tasks/todo.md`](./tasks/todo.md) | 작업 추적 | 세션 시작/종료 시 |
-| [`tasks/lessons.md`](./tasks/lessons.md) | 실수 기록 | 교정 발생 시 |
+| [`tasks/lessons.md`](./tasks/lessons.md) | 실수 기록 (**CSS 함정·폰트·Paper 규칙 다수 — 디자인 작업 전 필독**) | 교정 발생 시 + UI 작업 전 |
 
 ---
 
-## 기술 스택
-
-상세: [`docs/tech/spec.md`](./docs/spec.md)
+## 기술 스택 (실사용 기준 — package.json이 정본)
 
 | 영역 | 기술 |
 |------|------|
-| 프레임워크 | Next.js 16 + React 19 + TypeScript |
-| 스타일링 | Tailwind CSS 4 |
-| 애니메이션 | Framer Motion 12+ · GSAP 3+ |
-| 3D/WebGL | Three.js / React Three Fiber |
-| 스크롤 | Lenis |
-| DB | Supabase (PostgreSQL + RLS) |
-| 배포 | Vercel Edge Runtime |
-| 분석 | PostHog |
+| 프레임워크 | Next.js 16 (Turbopack) + React 19 + TypeScript |
+| 스타일링 | Tailwind CSS 4 + `globals.css` raw CSS (섹션별 `.s-*` BEM) · `@theme` 토큰(색·폰트·z-index·`--w-content`·`--gutter-*`) |
+| 애니메이션 | **CSS 트랜지션 + IntersectionObserver** (`ScrollReveal` → `.reveal`/`.is-visible` 패턴) |
+| i18n | 경량 자체 구현 — `src/i18n`(config·dictionaries·messages/{ko,en,fr}.json) + `/`·`/en`·`/fr` 라우트. 한글 타이틀은 J1950 PNG(ko 전용, `<picture>` 아트디렉션), en/fr은 Cormorant 텍스트 |
+| DB | Supabase (blog와 프로젝트 공유) |
+| 메일 | Resend + react-email (`src/lib/resend/templates/`) — 폼 3종(초대·파트너·소개서) |
+| 아이콘 | @phosphor-icons/react · lucide-react |
+| 배포 | Vercel |
+
+> ⚠️ **GSAP·Three.js·Lenis·PostHog·framer-motion은 미사용.** `docs/tech/spec.md`의 해당 항목은 초기 계획(aspirational)이다. framer-motion은 설치만 되어 있고 src에서 import 0건 — 새 모션은 기존 CSS+IO 패턴을 따르고, 라이브러리 도입은 사용자 승인 후.
+
+---
+
+## 개발 환경 (필수 규칙)
+
+- **pnpm 전용 — npm 금지** (`npm install` 하면 node_modules 깨짐)
+- **dev 서버: `pnpm dev --port 3600`** (3000은 다른 프로젝트 사용 중)
+- **CSS 변경이 반영 안 되면: `rm -rf .next` 후 재시작** — Turbopack이 새 CSS 규칙을 캐시로 무시하는 일이 반복됨 (최다 빈발 함정)
+- **`backdrop-filter`는 인라인 스타일로** — Tailwind 4 Lightning CSS가 raw CSS의 backdrop-filter를 스트립함
+- **커밋·푸시는 사용자가 명시적으로 요청할 때만** (자동 커밋 금지) · push 계정 = `hoambaek`
+- **브라우저 확인은 Playwright MCP** · 스크린샷은 사용 후 반드시 삭제
+- **이미지 에셋은 사용자 소유** — 이해 안 되는 에셋 변경을 발견해도 revert 전에 먼저 물어볼 것 (rec04 사건)
 
 ---
 
 ## 작업 규칙
 
 ### UI 작업
-- 반드시 `ui-ux-pro-max` 스킬 먼저 호출
-- 스타일: Glassmorphism (Ocean Glass) + Editorial Minimalism
-- CSS 스펙 → [`docs/tech/frontend-spec.md`](./docs/frontend-spec.md) §2
-- 컬러 토큰 → [`docs/tech/spec.md`](./docs/spec.md) §7
+- 반드시 `ui-ux-pro-max` 스킬 먼저 호출 (또는 frontend-design 스킬)
+- 스타일: Glassmorphism (Ocean Glass) + Editorial Minimalism · **디자인 가이드 정본은 Paper 안에 있음** (코드/문서 아님 — Abyssal Amber + 3-Font Trinity)
+- 실제 CSS 토큰은 `src/app/globals.css`의 `@theme` 블록만 사용 (미정의 변수 금지)
+- 작업 전 [`tasks/lessons.md`](./tasks/lessons.md)의 CSS·폰트 함정 목록 확인 (dot 클래스·`--font-jj`·J1950 글리프 누락 등)
 
 ### 애니메이션
-- Framer Motion: 컴포넌트 전환 · 드래그
-- GSAP: 타임라인 · 카운터 · ScrollTrigger
+- **기존 패턴 = CSS 트랜지션 + `ScrollReveal`(IntersectionObserver → `.reveal`/`.is-visible`)** — 새 모션도 이 패턴 우선
+- 모션 라이브러리 도입(GSAP·Motion 등)은 사용자 승인 후에만
 
 ### 코드
-- 새 라이브러리 추가 전 [`docs/tech/spec.md`](./docs/spec.md) 확인
-- Supabase: RLS 필수 적용
+- 새 라이브러리 추가 전 package.json 확인 + 사용자 승인
+- Supabase: RLS 필수 적용 · 폼 env 4개(Supabase 2 + Resend 2, `.trim()` 주의 — 개행 들어가면 프로덕션만 invalid header)
 - 성능 목표: LCP 2.0s↓, First Load JS 90KB↓
 
 ### 브랜드 어조
@@ -193,22 +208,30 @@ docs/
 - "맛", "향", "풍미" 등 직접적 감각 단어 사용 금지
 - 명사형 종결 선호. 여백이 카피의 일부. 톤 일관성 = 헤리티지의 대체재
 - **🔴 영구 금지어**: "두 개의 떼루아"(Abyss 선점) · 풍미 우위 주장 · 수압 가속 주장 · 깊이/기간 스펙 경쟁 · "luxury/exclusive/timeless" · 연출된 희소성
+- **표기 규칙 (2026-07-05 확립)**: em-dash(`—`) 금지 → 쉼표/마침표로 · 가운뎃점(`·`)은 한 줄에 1개까지 · 스크롤 큐(`↓`) 금지 · 좌표/수온 등 정밀 수치는 실측·실시간 연동 값만 (임의 생성 금지)
 - **수심 표기는 30m로 통일** (코드베이스 일부 "50미터"는 구표기 — 30m가 정본)
 - 상세 → [`docs/brand/brand-direction-2026.md`](./docs/brand/brand-direction-2026.md) §6 (톤·금지목록)
 
 ---
 
-## 페이지 구조
+## 페이지 구조 (실제 렌더 기준 — `LandingPage.tsx`가 정본)
 
-| 메뉴명 | 섹션 ID | 타이틀 | 역할 |
+랜딩 = **7섹션**. 컴포넌트는 `src/components/sections/`, CSS는 `globals.css`의 `.s-*` 블록.
+
+| 메뉴명 | 섹션 ID | 컴포넌트 (CSS 접두어) | 역할 |
 |--------|---------|--------|------|
-| Home | void | 바다가 쓴 시간 | 히어로 — 열린 고리 (기준 시간 1년, 진행형). ⚠️ "두 개의 떼루아" 표기 폐기 |
-| *(메뉴 미노출)* | observation | — | 브랜드 스토리 · 해저 숙성 철학 |
-| Living Data | data-archive | living data. | 해양 데이터 실시간 측정 · AI 입수/인양 예측 |
-| Collection | archive | collection. | 6개 큐베 라인업 |
-| The Maker | the-maker | the maker. | 생산자 철학 · 피크 캐러셀 |
-| Ocean Cellar Privé | ocean-circle | Ocean Cellar Privé | 초대제 멤버십 |
-| Partnership | professionals | Partnership. | B2B 파트너 문의 |
+| Home | void | HeroSection (`.s-void`) | 히어로 — h1 단일 · ko 타이틀 `<picture>` 아트디렉션 |
+| The Living Record | data-archive | TheLivingRecordSection (`.s-living`) | 심해의 시간 · 관측일수 카운터 · 측정 로그 |
+| The First Record | the-first-record | TheFirstRecordSection (`.s-first`) | 첫 인양 서사 (2컷·헤드라인 J1950) |
+| Collection | archive | ArchiveSection (`.s-col`) | 6개 큐베 그리드 + 기록카드 쇼케이스 + 기프트 |
+| The Maker | the-maker | TheMakerSection (`.s-maker`) | Mignon Boulard · 캐러셀(translateX — 구조 변경 주의) |
+| Ocean Cellar Privé | ocean-circle | OceanCircleSection (`.s-prive--left`) | 초대제 멤버십 → `/invite` |
+| Partnership | professionals | ProfessionalsSection (`.s-prive--right`) | B2B → `/partner`·`/brand-book` |
+
+- 섹션 타이틀 시스템: Collection·Maker·Ocean·Partnership = **Cormorant 300·56px `<h2>`** / Living·First = 서사형(J1950 문장, `aria-label` 부여)
+- 다크→라이트→다크 테마 전환 = **의도된 서사 장치** (수면→심해→기록) — "통일" 명목으로 없애지 말 것
+- 서브페이지: `/invite`·`/partner`·`/brand-book`(폼 3종, `forms/Letter*` 셸 공유) · `/terms`·`/privacy`·`/cookies`(법적) · `/exit`(연령 게이트 이탈) · 각각 `/en`·`/fr` 변형
+- ⚠️ 구버전 문서(PLAN.html 등)의 observation·Living Data 섹션 표기는 폐기됨 — 이 표가 정본
 
 ---
 

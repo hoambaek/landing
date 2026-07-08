@@ -22,8 +22,8 @@ const NAV_COLS = [
   {
     head: "RECORD",
     items: [
-      { label: "The Living Record", anchor: "#data-archive" },
-      { label: "The First Record", anchor: "#the-first-record" },
+      { label: "Ocean Cellar™", anchor: "#data-archive" },
+      { label: "First Record", anchor: "#the-first-record" },
       { label: "The Maker", anchor: "#the-maker" },
       { label: "Journal", url: "https://blog.musedemaree.com" },
     ],

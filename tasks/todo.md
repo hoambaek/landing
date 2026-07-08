@@ -4,6 +4,12 @@
 
 ## 진행 중
 
+- [x] **CLAUDE.md 현행화 — 거짓 정보 제거·정본 승격** (2026-07-05)
+  - 정정: 런칭 7-8월→**12월 첫 인양** · 기술스택 표에서 GSAP/Three.js/Lenis/PostHog 삭제(전부 미사용, framer-motion도 import 0건)·실스택으로 교체 · 애니메이션 규칙 GSAP→**CSS+IntersectionObserver(ScrollReveal) 패턴** · 페이지 구조 표를 실제 7섹션(컴포넌트·CSS 접두어 포함)으로 교체(observation·Living Data 구표기 폐기)
+  - 수리: 깨진 href 4곳(`docs/spec.md`→`docs/tech/spec.md` 등)
+  - 승격: **개발 환경 섹션 신설**(pnpm 전용·포트 3600·Turbopack 캐시·backdrop-filter 인라인·커밋은 요청 시·에셋 revert 전 확인) · 표기 규칙(em-dash 금지·가운뎃점 1개·정밀수치 실측만) · 문서 맵에 감사 정본 2종 추가
+  - 검증: 상대 링크 12개 전수 실존 ✅
+
 - [x] **taste-skill(design-taste-frontend) anti-slop 감사 + 즉시개선** (2026-07-05)
   - 설치: `npx skills add Leonxlnx/taste-skill` (`.agents/skills/` 14종). audit-first 리디자인 프로토콜로 랜딩 대조
   - **삼분류 결과**: 대부분 tell이 아니라 의도적 헤리티지 보이스(Cormorant serif·"Written by the Sea" 모토·다크→라이트→다크 서사·큐베 N° 번호 = 전부 유지). 진짜 개선점만 실행
@@ -206,3 +212,19 @@
 - Observation Part A: 스크롤 중간 지점 텍스트 가독성 이슈 → 팩트별 대비색 자동 지정으로 해결
 - 카피 톤: "맛"이라는 단어는 판매 언어에 가까움 → 브랜드 기준서 위반
 - homepage-plan.html의 스펙(60m, 1.8°C)과 실제 스펙(20-40m, 6-12°C) 불일치 → 실제 기준 적용
+
+## The Method (OCEAN CELLAR™) 페이지 — 2026-07-08
+- [x] `/method` 라우트 신설 (page.tsx + MethodView.tsx + method.module.css, meetup 패턴)
+- [x] J1950 타이틀 11종 → PNG @3x (`public/text/method/`, Paper 원본에서 추출·투명 트리밍) — 데스크톱/모바일 아트디렉션 `<picture>`
+- [x] 차트 4종 인라인 SVG (숙성 타임라인 D/M · 풍미 레이더 D/M · 관측 스파크라인 8종 · 수렴 다이어그램) — UAPS 엔진 실측값(Atomes Crochus 배치)
+- [x] 사진 2종 (`public/images/method/`: measure-cage, archive-bottle) + 플레이스홀더 3곳(인양 풀블리드·NFC·초상)
+- [x] 검증: 빌드 29 정적 생성 ✓ · Playwright 1440/390 풀페이지 렌더 ✓ · dOnly/mOnly 캐스케이드 버그 수정(!important 유틸)
+- [x] 이미지 채우기 (Paper 원본에서 추출): retrieval-cage.webp(인양 풀블리드) · quote-tablet.webp(기록팀 태블릿, 초상 대체) · nfc-phone.webp(병+폰, object-position center 20%)
+- [x] Paper 파리티 수정: 소프트 CTA 삭제 · 히어로 서브텍스트 amber · verb index 가운데정렬 · ARCHIVE·WANDO 스탬프 삭제 · 귀속 "뮤즈드마레 기록팀/WANDO STATION" · LEARN 섹션(차트 480px 고정, 차트→제목 순서, 간격 36/12, 카피 폭 420/480) · 모바일 tlProduct 숨김
+- [x] 홈 진입 링크: Living Record 섹션 선언문 아래 amber 텍스트 링크 "바다는 어떻게 기록되는가 →" (`living.methodLink`, ko/en/fr 사전)
+- [x] 메뉴·푸터 라벨 정리: "The Living Record" → "Ocean Cellar™", "The First Record" → "First Record" (Header·LetterMenu·Footer 3곳, 별도 메뉴 항목은 추가하지 않음)
+- [x] /method에 사이트 공통 크롬 장착: hero 자체 헤더(THE METHOD·워드마크·REC) 제거 → LetterHeader(햄버거 메뉴) + Footer 재사용
+- [x] 메뉴 오버레이 vh 계수 재조정 (top 14vh·라벨 4.8vh·패딩 1.3vh) — 900px 높이에서 하단 문구와 겹침 해소
+- [x] en/fr 로케일: `/en/method` `/fr/method` 라우트 신설, 전체 카피 번역(`src/app/method/copy.ts` — ko/en/fr 단일 소스), ko=J1950 PNG·en/fr=Cormorant 텍스트 타이틀, SVG 차트 라벨·태그(폭 자동 계산)·aria 로케일 분기, 모바일 레이더는 축약 라벨(radarAxesShort), Living Record 진입 링크·CTA 로케일 라우팅, hreflang alternates + sitemap 등록. 빌드 31 페이지 ✓
+- [x] CH01 관측·LIVE 실데이터 연동 (`src/lib/ocean-observations.ts`, unstable_cache 1h): 수온·조위=KHOA survey 30일 이력+당일 실측, 염분·조류 유속=KHOA recent 당일 시간별(이력 서비스 없음), 수압·파고·파주기·해류=Open-Meteo 30일. 실패 시 정적 폴백. ⚠️ 배포 시 Vercel에 KHOA_API_KEY·KHOA_OBS_CODE 환경변수 추가 필요 (.env.local에는 복사됨)
+- [x] 관측 그리드 후속: 수온=estimateBottomTemperature 수심 30m 보정(data-log 로직 이식), 수압=표층기압+30m×0.0993atm 소수2자리(3.97), 8카드 1회 애니메이션(ObsGrid.tsx — 카운트업+패스 드로잉, SSR은 최종값, reduced-motion 스킵), 시계열 4포인트 미만이면 곡선만 폴백·수치는 실측

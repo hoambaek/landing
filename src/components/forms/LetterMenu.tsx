@@ -10,8 +10,8 @@ import type { Dictionary } from "@/i18n/types";
  * 라벨은 브랜드 고유 영문 명칭이라 전 로케일 공통, 앵커만 locale prefix. */
 const MAIN_LINKS = [
   { id: "void", anchor: "#void", label: "Home" },
-  { id: "data-archive", anchor: "#data-archive", label: "The Living Record" },
-  { id: "the-first-record", anchor: "#the-first-record", label: "The First Record" },
+  { id: "data-archive", anchor: "#data-archive", label: "Ocean Cellar™" },
+  { id: "the-first-record", anchor: "#the-first-record", label: "First Record" },
   { id: "archive", anchor: "#archive", label: "Collection" },
   { id: "the-maker", anchor: "#the-maker", label: "The Maker" },
   { id: "ocean-circle", anchor: "#ocean-circle", label: "Ocean Cellar Privé" },

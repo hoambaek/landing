@@ -11,8 +11,8 @@ import { computeMeasureDays } from "@/lib/measurement";
 /** 메뉴 오버레이 내비 — Paper 시안 7항목 (아카이브 넘버링). 라벨은 브랜드 고유 영문 명칭이라 전 로케일 공통 */
 const MAIN_LINKS = [
   { id: "void", href: "#void", label: "Home" },
-  { id: "data-archive", href: "#data-archive", label: "The Living Record" },
-  { id: "the-first-record", href: "#the-first-record", label: "The First Record" },
+  { id: "data-archive", href: "#data-archive", label: "Ocean Cellar™" },
+  { id: "the-first-record", href: "#the-first-record", label: "First Record" },
   { id: "archive", href: "#archive", label: "Collection" },
   { id: "the-maker", href: "#the-maker", label: "The Maker" },
   { id: "ocean-circle", href: "#ocean-circle", label: "Ocean Cellar Privé" },

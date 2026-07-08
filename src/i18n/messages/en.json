@@ -22,6 +22,7 @@
     "counterUnit": "days",
     "counterCaption": "The time spent recording this sea, measurement never stops.",
     "declaration": "This record travels with the bottle.",
+    "methodLink": "How the sea is recorded",
     "log": {
       "temp": "Temp 13.5°C",
       "current": "Current 2.46 m/s",

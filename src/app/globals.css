@@ -611,8 +611,9 @@ input:focus-visible,
 .menu-overlay__nav {
   position: absolute;
   left: 120px;
-  /* 뷰포트 높이에 비례 축소 — 짧은 창에서 하단 기록 바와 겹침 방지 */
-  top: clamp(96px, 20vh, 168px);
+  /* 뷰포트 높이에 비례 축소 — 짧은 창에서 하단 기록 바와 겹침 방지
+     (8항목 × [라벨 4.8vh×1.22 + 패딩 2×1.3vh] + top 14vh가 900px 높이에서도 하단 바 위에서 끝나는 계수) */
+  top: clamp(88px, 14vh, 168px);
   display: flex;
   flex-direction: column;
 }
@@ -621,7 +622,7 @@ input:focus-visible,
   display: flex;
   align-items: baseline;
   gap: 26px;
-  padding: clamp(6px, 1.55vh, 13px) 0;
+  padding: clamp(5px, 1.3vh, 13px) 0;
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.5s var(--ease-slow), transform 0.5s var(--ease-slow);
@@ -638,6 +639,7 @@ input:focus-visible,
 .menu-overlay.is-open .menu-overlay__link:nth-child(5) { transition-delay: 0.24s; }
 .menu-overlay.is-open .menu-overlay__link:nth-child(6) { transition-delay: 0.28s; }
 .menu-overlay.is-open .menu-overlay__link:nth-child(7) { transition-delay: 0.32s; }
+.menu-overlay.is-open .menu-overlay__link:nth-child(8) { transition-delay: 0.36s; }
 
 .menu-overlay__link-num {
   flex-shrink: 0;
@@ -653,7 +655,7 @@ input:focus-visible,
 
 .menu-overlay__link-label {
   font-family: var(--font-heading);
-  font-size: clamp(26px, 5.2vh, 46px);
+  font-size: clamp(24px, 4.8vh, 46px);
   font-weight: 300;
   line-height: 1.22;
   letter-spacing: 0;
@@ -1288,6 +1290,37 @@ input:focus-visible,
   color: rgba(241, 239, 235, 0.68);
 }
 
+/* OCEAN CELLAR™ /method 진입 — 선언 아래 amber 헤어라인 텍스트 링크 */
+.s-living__method-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  width: fit-content;
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  line-height: 20px;
+  color: var(--color-amber);
+  border-bottom: 0.5px solid rgba(204, 173, 123, 0.4);
+  padding-bottom: 3px;
+  transition: color 0.4s var(--ease-water), border-color 0.4s var(--ease-water);
+}
+
+.s-living__method-link:hover {
+  color: var(--color-amber-muted);
+  border-color: rgba(204, 173, 123, 0.8);
+}
+
+.s-living__method-arrow {
+  transition: transform 0.4s var(--ease-water);
+}
+
+.s-living__method-link:hover .s-living__method-arrow {
+  transform: translateX(3px);
+}
+
 /* ── The Living Record 모바일 ── */
 @media (max-width: 768px) {
   /* 모바일은 한 뷰포트 높이 (Paper 모바일 844) */
@@ -1377,6 +1410,12 @@ input:focus-visible,
 
   .s-living__declaration {
     margin-top: 18px;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .s-living__method-link {
+    margin-top: 12px;
     font-size: 12px;
     line-height: 18px;
   }

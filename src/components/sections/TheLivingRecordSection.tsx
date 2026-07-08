@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import type { Locale } from "@/i18n/config";
+import Link from "next/link";
+import { localePrefixMap, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { computeMeasureDays } from "@/lib/measurement";
 
@@ -92,6 +93,15 @@ function DaysCounter({
 
       {/* 제품 선언 — 데이터가 병과 함께 건네짐을 처음 명시 (북극성 §8) */}
       <p className="s-living__declaration">{dict.declaration}</p>
+
+      {/* OCEAN CELLAR™ 방법 페이지 진입 — 로케일별 라우트 (/method · /en/method · /fr/method) */}
+      <Link
+        href={locale === "ko" ? "/method" : `${localePrefixMap[locale]}/method`}
+        className="s-living__method-link"
+      >
+        <span>{dict.methodLink}</span>
+        <span className="s-living__method-arrow" aria-hidden="true">→</span>
+      </Link>
     </div>
   );
 }
