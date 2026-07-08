@@ -27,13 +27,14 @@ import {
  * 이메일 실패는 신청 성공을 막지 않는다.
  */
 
-export type InvitePayload = { name: string; email: string };
+export type InvitePayload = { name: string; email: string; referralSource?: string };
 export type PartnerPayload = {
   category: string;
   venue: string;
   name: string;
   email: string;
   message: string;
+  referralSource?: string;
 };
 export type BrandBookPayload = { name: string; affiliation: string; email: string };
 
@@ -172,19 +173,25 @@ export async function sendBrandBookDelivery(p: {
 }
 
 export async function submitInvite(p: InvitePayload): Promise<SubmitResult> {
+  const referral = p.referralSource?.trim() || null;
   return insertAndNotify(
     "invitations",
-    { name: p.name, email: p.email },
+    { name: p.name, email: p.email, referral_source: referral },
     {
       kind: "invite",
       applicantEmail: p.email,
       applicantName: p.name,
-      adminFields: { 성함: p.name, 이메일: p.email },
+      adminFields: {
+        성함: p.name,
+        이메일: p.email,
+        ...(referral ? { "알게 된 경로": referral } : {}),
+      },
     }
   );
 }
 
 export async function submitPartner(p: PartnerPayload): Promise<SubmitResult> {
+  const referral = p.referralSource?.trim() || null;
   return insertAndNotify(
     "partner_inquiries",
     {
@@ -193,6 +200,7 @@ export async function submitPartner(p: PartnerPayload): Promise<SubmitResult> {
       name: p.name,
       email: p.email,
       message: p.message,
+      referral_source: referral,
     },
     {
       kind: "partner",
@@ -204,6 +212,7 @@ export async function submitPartner(p: PartnerPayload): Promise<SubmitResult> {
         성함: p.name,
         이메일: p.email,
         문의: p.message,
+        ...(referral ? { "알게 된 경로": referral } : {}),
       },
     }
   );

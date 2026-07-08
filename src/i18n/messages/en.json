@@ -125,7 +125,8 @@
         "venue": "Venue name",
         "contact": "Contact person",
         "affiliation": "Affiliation · Company",
-        "message": "Tell us about your space and what you're looking for"
+        "message": "Tell us about your space and what you're looking for",
+        "referral": "How did you find us? (optional)"
       },
       "menu": {
         "open": "Open menu",
@@ -163,10 +164,22 @@
       "catLabel": "PARTNERSHIP TYPE",
       "catHint": "Choose the partnership type that suits the space you run.",
       "categories": {
-        "dining": { "label": "Dining · Bar list", "desc": "Wine list · by-the-glass listing" },
-        "event": { "label": "Private event · Pairing", "desc": "Sommelier · chef-accompanied dinners" },
-        "cellar": { "label": "Cellar · Collection", "desc": "Private cellar · membership bottles" },
-        "other": { "label": "Other proposals", "desc": "Retail, gifting, collaboration" }
+        "dining": {
+          "label": "Dining · Bar list",
+          "desc": "Wine list · by-the-glass listing"
+        },
+        "event": {
+          "label": "Private event · Pairing",
+          "desc": "Sommelier · chef-accompanied dinners"
+        },
+        "cellar": {
+          "label": "Cellar · Collection",
+          "desc": "Private cellar · membership bottles"
+        },
+        "other": {
+          "label": "Other proposals",
+          "desc": "Retail, gifting, collaboration"
+        }
       },
       "messageLabel": "MESSAGE (optional)",
       "submit": "Send inquiry",

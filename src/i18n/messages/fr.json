@@ -125,7 +125,8 @@
         "venue": "Nom de l'établissement",
         "contact": "Personne à contacter",
         "affiliation": "Affiliation · Société",
-        "message": "Parlez-nous de votre espace et de vos besoins"
+        "message": "Parlez-nous de votre espace et de vos besoins",
+        "referral": "Comment nous avez-vous connus ? (facultatif)"
       },
       "menu": {
         "open": "Ouvrir le menu",
@@ -163,10 +164,22 @@
       "catLabel": "PARTNERSHIP TYPE",
       "catHint": "Choisissez le type de partenariat adapté à votre établissement.",
       "categories": {
-        "dining": { "label": "Restaurant · Carte des vins", "desc": "Carte des vins · au verre" },
-        "event": { "label": "Événement privé · Accords", "desc": "Dîners avec sommelier ou chef" },
-        "cellar": { "label": "Cave · Collection", "desc": "Cave privée · bouteilles d'adhésion" },
-        "other": { "label": "Autres propositions", "desc": "Détail, cadeaux, collaboration" }
+        "dining": {
+          "label": "Restaurant · Carte des vins",
+          "desc": "Carte des vins · au verre"
+        },
+        "event": {
+          "label": "Événement privé · Accords",
+          "desc": "Dîners avec sommelier ou chef"
+        },
+        "cellar": {
+          "label": "Cave · Collection",
+          "desc": "Cave privée · bouteilles d'adhésion"
+        },
+        "other": {
+          "label": "Autres propositions",
+          "desc": "Détail, cadeaux, collaboration"
+        }
       },
       "messageLabel": "MESSAGE (facultatif)",
       "submit": "Envoyer la demande",

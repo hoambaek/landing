@@ -16,6 +16,7 @@ export default function InviteForm({
 }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [referral, setReferral] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState("");
 
@@ -28,7 +29,7 @@ export default function InviteForm({
     }
     setStatus("sending");
     try {
-      const res = await submitInvite({ name: name.trim(), email: email.trim() });
+      const res = await submitInvite({ name: name.trim(), email: email.trim(), referralSource: referral.trim() });
       if (res.ok) {
         setStatus("done");
       } else {
@@ -64,6 +65,7 @@ export default function InviteForm({
           <form className="s-letter__form" onSubmit={onSubmit} noValidate>
             <UnderlineField label="NAME" placeholder={common.placeholder.name} name="name" value={name} onChange={setName} required />
             <UnderlineField label="EMAIL" placeholder={common.placeholder.email} name="email" type="email" value={email} onChange={setEmail} required />
+            <UnderlineField label="REFERRAL" placeholder={common.placeholder.referral} name="referral" value={referral} onChange={setReferral} />
 
             <SubmitButton label={dict.submit} sendingLabel={common.sending} sending={status === "sending"} />
 

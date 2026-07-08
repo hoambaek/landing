@@ -21,6 +21,7 @@ export default function PartnerForm({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [referral, setReferral] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState("");
 
@@ -44,6 +45,7 @@ export default function PartnerForm({
         name: name.trim(),
         email: email.trim(),
         message: message.trim(),
+        referralSource: referral.trim(),
       });
       if (res.ok) {
         setStatus("done");
@@ -104,6 +106,7 @@ export default function PartnerForm({
             </div>
             <UnderlineField label="EMAIL" placeholder={common.placeholder.email} name="email" type="email" value={email} onChange={setEmail} required />
             <UnderlineField label={dict.messageLabel} placeholder={common.placeholder.message} name="message" multiline value={message} onChange={setMessage} />
+            <UnderlineField label="REFERRAL" placeholder={common.placeholder.referral} name="referral" value={referral} onChange={setReferral} />
 
             <SubmitButton label={dict.submit} sendingLabel={common.sending} sending={status === "sending"} />
 
