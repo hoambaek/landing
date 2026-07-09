@@ -121,6 +121,22 @@ export default function Header({
     return () => mq.removeEventListener("change", update);
   }, []);
 
+  /* 상태바 커버 핀 — iOS 26은 fixed를 상태바 뒤에 안 그리므로, 문서 레이어의
+     absolute 커버를 rAF로 scrollY만큼 밀어 시각적으로 고정한다 */
+  const stripRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!isMobile) return;
+    let raf = 0;
+    const loop = () => {
+      if (stripRef.current) {
+        stripRef.current.style.transform = `translate3d(0, ${window.scrollY}px, 0)`;
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [isMobile]);
+
   /* iOS 26 사파리는 상단 fixed 요소의 background·backdrop-filter를 직접 읽어
      상태바 틴트를 정하는데, fixed 요소 자체에 걸려 있으면 샘플링이 깨져
      상태바 영역이 원본 콘텐츠로 뚫린다. 처방: fixed 래퍼는 완전 투명으로 두고
@@ -147,7 +163,10 @@ export default function Header({
 
   return (
     <>
-      {/* ── Safe-area(노치) 차폐 — fixed 래퍼는 투명, 틴트는 absolute 자식 (iOS 26 샘플링 규칙) ── */}
+      {/* ── 상태바 커버(모바일 iOS) — 문서 레이어 absolute + rAF 핀 ── */}
+      <div className="header__strip-cover" ref={stripRef} aria-hidden="true" />
+
+      {/* ── Safe-area(노치) 차폐 — fixed 래퍼는 투명, 틴트는 absolute 자식 (데스크톱 전용) ── */}
       <div className="header__safe-blur" aria-hidden="true">
         <div className="header__safe-blur-fill" style={safeFillStyle} />
       </div>
