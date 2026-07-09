@@ -434,6 +434,9 @@ input:focus-visible,
   position: relative;
   display: flex;
   align-items: center;
+  /* 워드마크 PNG는 전각 대문자라 기하 중심에 두면 베이스라인이 낮게 읽힘 —
+     햄버거와 광학 중앙을 맞추기 위해 살짝 올림 (데스크톱·모바일 공통) */
+  transform: translateY(-1.5px);
 }
 
 .header__symbol {
@@ -3873,10 +3876,6 @@ input:focus-visible,
      fixed 래퍼는 투명 유지, 아이보리는 absolute 자식(.header__glass)에 —
      fixed 요소 본체에 배경이 있으면 iOS 26 상태바 틴트 샘플링이 흔들린다 */
 
-  /* 워드마크 광학 보정 — PNG 하단 여백 때문에 낮아 보여 살짝 올림 */
-  .header__logo {
-    transform: translateY(-1.5px);
-  }
 
   /* 아이보리 고정이므로 로고·햄버거는 항상 블랙 */
   .header .header__logo-img--white,
