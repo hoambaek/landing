@@ -3887,8 +3887,12 @@ input:focus-visible,
     padding-top: calc(24px + env(safe-area-inset-top));
   }
 
-  /* ── 모바일 헤더: 항상 아이보리 단색 (에르메스 방식) ── */
+  /* ── 모바일 헤더: 항상 아이보리 단색 (에르메스 방식) ──
+     모바일 셸(#scroll-root) 안의 fixed는 iOS가 absolute처럼 취급해
+     스크롤과 함께 사라지므로 sticky로 고정한다 (스크롤러 안에서의 정석) */
   .header {
+    position: sticky;
+    top: 0;
     background: var(--color-warm-ivory);
   }
 
@@ -3948,6 +3952,7 @@ input:focus-visible,
   .header__safe-blur {
     display: none;
   }
+
 
   .header__menu {
     right: 24px;
@@ -4139,6 +4144,14 @@ html {
      — 투명 루트는 흰색 폴백이므로 명시적 다크 배경 필수 */
   background-color: var(--color-void-bg);
 }
+
+/* 모바일: 안전영역 틴트가 루트 배경을 따르므로 헤더와 같은 아이보리로 */
+@media (max-width: 768px) {
+  html,
+  body {
+    background-color: var(--color-warm-ivory);
+  }
+}
 /* ══════════════════════════════════════════
    서브 페이지 — 편지형 폼 (Paper Page 1M8/1N0/1O7)
    ══════════════════════════════════════════ */
@@ -4260,6 +4273,38 @@ html {
 }
 
 .s-letter-page--brand .s-letter__menu span { background: #312E2A; }
+
+/* ── 모바일 서브페이지(method·폼) 헤더: 랜딩과 동일하게 sticky + 아이보리 + 블랙 로고 ──
+   (모바일 셸 안의 fixed는 iOS가 absolute처럼 취급해 스크롤과 함께 사라짐) */
+@media (max-width: 768px) {
+  .s-letter__header {
+    position: sticky;
+    top: 0;
+    background: var(--color-warm-ivory);
+  }
+
+  .s-letter__symbol .sym-white {
+    opacity: 0;
+  }
+
+  .s-letter__symbol .sym-black {
+    opacity: 1;
+  }
+
+  /* 워드마크는 화이트 PNG 하나뿐 — invert로 블랙 전환 */
+  .s-letter__wordmark img {
+    filter: invert(1);
+    opacity: 0.75;
+  }
+
+  .s-letter__menu span {
+    background: #312E2A;
+  }
+
+  .s-letter__safe {
+    display: none;
+  }
+}
 
 /* 스크롤 시 — 모든 테마 흰 로고/심볼/햄버거 (다크 헤더 위 가독) */
 .s-letter__header.is-scrolled .s-letter__symbol .sym-black { opacity: 0; }

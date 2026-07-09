@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { locales, localePrefixMap, type Locale } from "@/i18n/config";
@@ -30,6 +31,10 @@ export default function LetterMenu({
 }) {
   const base = localePrefixMap[locale];
   const [isOpen, setIsOpen] = useState(false);
+  /* 오버레이는 portal로 body 직속 — 모바일 셸(#scroll-root) 안의 fixed는
+     iOS가 absolute처럼 취급해 스크롤과 함께 사라지기 때문 */
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const menuBtnRef = useRef<HTMLButtonElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
@@ -99,7 +104,8 @@ export default function LetterMenu({
         <span />
       </button>
 
-      {/* ── 전체화면 메뉴 오버레이 ── */}
+      {/* ── 전체화면 메뉴 오버레이 — portal로 body 직속 렌더 ── */}
+      {mounted && createPortal(
       <div
         ref={overlayRef}
         className={`menu-overlay${isOpen ? " is-open" : ""}`}
@@ -150,7 +156,8 @@ export default function LetterMenu({
             ))}
           </div>
         </div>
-      </div>
+      </div>,
+      document.body)}
     </>
   );
 }
