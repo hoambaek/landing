@@ -303,7 +303,8 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
   const lp = t.ch01.livePrefix;
   const live = {
     temp: ocean?.seaTemp ? `${lp.temp} ${ocean.seaTemp.latest.toFixed(1)}°C` : `${lp.temp} 14.8°C`,
-    current: ocean?.oceanCurrent ? `${lp.current} ${ocean.oceanCurrent.latest.toFixed(1)} m/s` : `${lp.current} 1.2 m/s`,
+    // 해류: Open-Meteo가 자주 null이라 KHOA 조류(tidalCurrent) 실측을 다음 우선 (plan data-log와 동일 계단식)
+    current: `${lp.current} ${(ocean?.oceanCurrent?.latest ?? ocean?.tidalCurrent?.latest ?? 1.2).toFixed(1)} m/s`,
     wave: ocean?.waveHeight ? `${lp.wave} ${ocean.waveHeight.latest.toFixed(1)} m` : `${lp.wave} 0.6 m`,
     pressure: ocean?.pressure ? `${lp.pressure} ${ocean.pressure.latest.toFixed(2)} atm` : `${lp.pressure} 3.97 atm`,
     salinity: ocean?.salinity ? `${lp.salinity} ${ocean.salinity.latest.toFixed(1)} ‰` : `${lp.salinity} 31.1 ‰`,

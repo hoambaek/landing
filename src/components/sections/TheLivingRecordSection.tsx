@@ -111,9 +111,11 @@ function LogVals({
 function DaysCounter({
   locale,
   dict,
+  liveLog,
 }: {
   locale: Locale;
   dict: Dictionary["living"];
+  liveLog?: Dictionary["living"]["log"];
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [days, setDays] = useState(0);
@@ -182,7 +184,7 @@ function DaysCounter({
       {/* 지금 이 순간의 측정값 (카운팅 + 우측 라이브 인디케이터) */}
       <div className="s-living__log">
         <span className="s-living__log-rule" />
-        <LogVals locale={locale} log={dict.log} />
+        <LogVals locale={locale} log={liveLog ?? dict.log} />
       </div>
 
       {/* OCEAN CELLAR™ 방법 페이지 진입 — 브랜드 소개서와 동일한 다크 채움 버튼 */}
@@ -206,9 +208,12 @@ function DaysCounter({
 export default function TheLivingRecordSection({
   locale,
   dict,
+  liveLog,
 }: {
   locale: Locale;
   dict: Dictionary["living"];
+  /** 서버에서 주입한 실측 측정값(method와 동일 소스). 없으면 dict.log 고정값 */
+  liveLog?: Dictionary["living"]["log"];
 }) {
   const isKo = locale === "ko";
   /** 도입 카피 — ko는 PNG, en/fr은 텍스트 */
@@ -247,7 +252,7 @@ export default function TheLivingRecordSection({
         <div className="s-living__copy reveal">{copy}</div>
 
         {/* 771 카운터 + 측정값 */}
-        <DaysCounter locale={locale} dict={dict} />
+        <DaysCounter locale={locale} dict={dict} liveLog={liveLog} />
       </div>
     </section>
   );
