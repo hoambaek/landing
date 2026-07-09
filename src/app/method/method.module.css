@@ -165,6 +165,10 @@
   .verbCell { padding: 18px 4px 20px; gap: 6px; }
   .verbEn { font-size: 9px; letter-spacing: 0.16em; }
   .verbKo { font-size: 14px; }
+  /* 모바일은 배경 이미지가 조금 더 밝게 비치도록 스크림 완화 (하단은 verb index와 연결 위해 유지) */
+  .heroScrim {
+    background: linear-gradient(180deg, rgba(10, 9, 8, 0.62) 0%, rgba(10, 9, 8, 0.58) 55%, rgba(10, 9, 8, 0.9) 100%);
+  }
 }
 
 /* ═══ CH.01 기록한다 ═══ */
