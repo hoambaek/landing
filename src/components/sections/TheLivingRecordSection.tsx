@@ -7,6 +7,103 @@ import { localePrefixMap, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { computeMeasureDays } from "@/lib/measurement";
 
+/** 측정값 숫자 카운팅 — 뷰 진입 시 0→target, 800일 카운터와 동일한 2.0s ease-out. */
+function LogVals({
+  locale,
+  log,
+}: {
+  locale: Locale;
+  log: Dictionary["living"]["log"];
+}) {
+  const ref = useRef<HTMLUListElement>(null);
+  const [progress, setProgress] = useState(0);
+  const [stamp, setStamp] = useState(""); // 오늘 날짜 — 하이드레이션 불일치 방지 위해 클라이언트에서 기록
+
+  useEffect(() => {
+    const intl = { ko: "ko-KR", en: "en-US", fr: "fr-FR" }[locale];
+    setStamp(
+      new Intl.DateTimeFormat(intl, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }).format(new Date()),
+    );
+  }, [locale]);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let raf = 0;
+    let timer = 0;
+    let started = false;
+    const DELAY = 2000; // 800일 카운터(2.0s)가 끝난 뒤에 시작
+    const DURATION = 1500;
+
+    const run = () => {
+      if (reduce) {
+        setProgress(1);
+        return;
+      }
+      const t0 = performance.now();
+      const tick = (now: number) => {
+        const p = Math.min((now - t0) / DURATION, 1);
+        setProgress(1 - Math.pow(1 - p, 3)); // ease-out cubic
+        if (p < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !started) {
+          started = true;
+          if (reduce) {
+            run();
+          } else {
+            timer = window.setTimeout(run, DELAY);
+          }
+          io.disconnect();
+        }
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(el);
+
+    return () => {
+      io.disconnect();
+      clearTimeout(timer);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  /** "수온 13.5°C" 같은 문자열에서 숫자만 0→target으로 보간 (fr의 쉼표 소수점 유지) */
+  const render = (text: string) => {
+    const m = text.match(/-?\d+(?:[.,]\d+)?/);
+    if (!m || m.index === undefined) return text;
+    const raw = m[0];
+    const sep = raw.includes(",") ? "," : ".";
+    const decimals = raw.includes(sep) ? raw.split(sep)[1].length : 0;
+    const target = parseFloat(raw.replace(",", "."));
+    const num = (target * progress).toFixed(decimals).replace(".", sep);
+    return text.slice(0, m.index) + num + text.slice(m.index + raw.length);
+  };
+
+  return (
+    <>
+      {/* 오늘의 기록 스탬프 — 세리프 날짜 */}
+      <span className="s-living__log-time">{stamp}</span>
+      <ul className="s-living__log-vals" ref={ref}>
+        <li><span>{render(log.temp)}</span></li>
+        <li><span>{render(log.current)}</span></li>
+        <li><span>{render(log.depth)}</span></li>
+      </ul>
+    </>
+  );
+}
+
 /** 771 숫자 카운팅 — 뷰 진입 시 0→target, 2.0s ease-out. reduced-motion 즉시 표기. */
 function DaysCounter({
   locale,
@@ -79,29 +176,23 @@ function DaysCounter({
           <span className="s-living__counter-unit-text">{dict.counterUnit}</span>
         )}
       </div>
-      <p className="s-living__counter-caption">{dict.counterCaption}</p>
-
-      {/* 측정은 멈추지 않습니다 — 지금 이 순간의 측정값 */}
+      {/* 지금 이 순간의 측정값 (카운팅 + 우측 라이브 인디케이터) */}
       <div className="s-living__log">
         <span className="s-living__log-rule" />
-        <ul className="s-living__log-vals">
-          <li><span>{dict.log.temp}</span></li>
-          <li><span>{dict.log.current}</span></li>
-          <li><span>{dict.log.depth}</span></li>
-        </ul>
+        <LogVals locale={locale} log={dict.log} />
       </div>
 
-      {/* 제품 선언 — 데이터가 병과 함께 건네짐을 처음 명시 (북극성 §8) */}
-      <p className="s-living__declaration">{dict.declaration}</p>
-
-      {/* OCEAN CELLAR™ 방법 페이지 진입 — 로케일별 라우트 (/method · /en/method · /fr/method) */}
-      <Link
-        href={locale === "ko" ? "/method" : `${localePrefixMap[locale]}/method`}
-        className="s-living__method-link"
-      >
-        <span>{dict.methodLink}</span>
-        <span className="s-living__method-arrow" aria-hidden="true">→</span>
-      </Link>
+      {/* OCEAN CELLAR™ 방법 페이지 진입 — 로케일별 라우트, 우측 라이브 인디케이터 */}
+      <div className="s-living__method-row">
+        <Link
+          href={locale === "ko" ? "/method" : `${localePrefixMap[locale]}/method`}
+          className="s-living__method-link"
+        >
+          <span>{dict.methodLink}</span>
+          <span className="s-living__method-arrow" aria-hidden="true">→</span>
+        </Link>
+        <span className="s-living__live-dot" aria-hidden="true" />
+      </div>
     </div>
   );
 }

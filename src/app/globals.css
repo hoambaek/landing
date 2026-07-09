@@ -1204,19 +1204,6 @@ input:focus-visible,
   transform: translateY(7px);
 }
 
-.s-living__counter-caption {
-  font-family: var(--font-body);
-  font-weight: 300;
-  font-size: 15px;
-  letter-spacing: 0.04em;
-  line-height: 18px;
-  color: #C9C4BC;
-}
-
-.s-living__caption--mobile {
-  display: none;
-}
-
 /* 클로징 — 우하단 */
 .s-living__closing {
   position: absolute;
@@ -1247,7 +1234,19 @@ input:focus-visible,
   margin-bottom: 4px;
 }
 
-.s-living__log-time,
+/* 오늘의 기록 스탬프 — 세리프체 날짜 + 우측 라이브 인디케이터 */
+.s-living__log-time {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-serif-kr);
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  line-height: 18px;
+  color: #A8A29A;
+}
+
 .s-living__log-coord {
   font-family: var(--font-mono);
   font-weight: 300;
@@ -1272,31 +1271,48 @@ input:focus-visible,
 .s-living__log-vals span {
   font-family: var(--font-mono);
   font-weight: 300;
-  font-size: 12px;
+  font-size: 16px;
   letter-spacing: 0.12em;
-  line-height: 16px;
+  line-height: 22px;
   color: #C9C4BC;
+  font-variant-numeric: tabular-nums;
 }
 
-/* 제품 선언 — 데이터 클러스터와 분리된 조용한 한 줄 (각주 톤) */
-.s-living__declaration {
+/* 라이브 수신 인디케이터 — 날짜 스탬프 우측, 느린 점멸 */
+.s-living__live-dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #F3E7C9;
+  box-shadow: 0 0 12px 3px rgba(243, 231, 201, 0.65);
+  animation: living-live-pulse 3.2s ease-in-out infinite;
+}
+
+@keyframes living-live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.15; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .s-living__live-dot {
+    animation: none;
+  }
+}
+
+/* OCEAN CELLAR™ /method 진입 — 측정값 아래 amber 헤어라인 텍스트 링크 + 우측 라이브 인디케이터 */
+.s-living__method-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin-top: 26px;
-  max-width: 460px;
-  font-family: var(--font-body);
-  font-weight: 300;
-  font-size: 13px;
-  letter-spacing: 0.03em;
-  line-height: 20px;
-  color: rgba(241, 239, 235, 0.68);
 }
 
-/* OCEAN CELLAR™ /method 진입 — 선언 아래 amber 헤어라인 텍스트 링크 */
 .s-living__method-link {
   display: inline-flex;
   align-items: baseline;
   gap: 8px;
   width: fit-content;
-  margin-top: 16px;
   font-family: var(--font-body);
   font-weight: 300;
   font-size: 13px;
@@ -1371,20 +1387,6 @@ input:focus-visible,
     width: 35px;
   }
 
-  .s-living__counter-caption {
-    font-size: 12px;
-    letter-spacing: 0.03em;
-    line-height: 16px;
-  }
-
-  .s-living__caption--desktop {
-    display: none;
-  }
-
-  .s-living__caption--mobile {
-    display: inline;
-  }
-
   /* 모바일에선 클로징 문장 미노출 */
   .s-living__closing {
     display: none;
@@ -1395,28 +1397,30 @@ input:focus-visible,
     margin-top: 32px;
   }
 
+  /* 모바일은 좌측 정렬 클러스터 — 풀폭으로 벌어지지 않게 간격 축소 */
   .s-living__log-vals {
     flex-wrap: wrap;
-    gap: 8px 22px;
+    gap: 8px 12px;
   }
 
-  .s-living__log-time,
-  .s-living__log-coord,
   .s-living__log-vals span {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    line-height: 14px;
-  }
-
-  .s-living__declaration {
-    margin-top: 18px;
-    font-size: 12px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
     line-height: 18px;
   }
 
-  .s-living__method-link {
-    margin-top: 12px;
+  .s-living__log-time {
     font-size: 12px;
+    letter-spacing: 0.02em;
+    line-height: 16px;
+  }
+
+  .s-living__method-row {
+    margin-top: 18px;
+  }
+
+  .s-living__method-link {
+    font-size: 13px;
     line-height: 18px;
   }
 }
