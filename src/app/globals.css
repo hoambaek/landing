@@ -3895,6 +3895,11 @@ input:focus-visible,
     background: var(--color-warm-ivory);
   }
 
+  /* 워드마크 광학 보정 — PNG 하단 여백 때문에 낮아 보여 살짝 올림 */
+  .header__logo {
+    transform: translateY(-1.5px);
+  }
+
   /* 아이보리 고정이므로 로고·햄버거는 항상 블랙 */
   .header .header__logo-img--white,
   .header .header__symbol-img--white {
@@ -4282,7 +4287,7 @@ html {
   }
 
   .s-letter__wordmark {
-    top: 12px;
+    top: 10.5px; /* 12px에서 광학 보정 -1.5px (메인 헤더와 동일) */
     height: 18px;
   }
 
@@ -4648,9 +4653,9 @@ html {
   .s-letter__title { font-size: 40px; line-height: 48px; }
   .s-letter__form-row { flex-direction: column; gap: 36px; }
   .s-cat__grid { grid-template-columns: 1fr; }
-  .s-letter__brandmark-symbol { width: 240px; }
-  .s-letter__brandmark-word { width: 180px; }
-  .s-letter__brandmark { gap: 36px; margin-bottom: 56px; }
+  .s-letter__brandmark-symbol { width: 150px; }
+  .s-letter__brandmark-word { width: 128px; }
+  .s-letter__brandmark { gap: 28px; margin-bottom: 48px; }
 }
 
 /* ══════════════════════════════════════════
