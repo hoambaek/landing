@@ -189,6 +189,8 @@ function DaysCounter({
       <Link
         href={locale === "ko" ? "/method" : `${localePrefixMap[locale]}/method`}
         className="s-living__method-btn"
+        /* 블러는 인라인 — Lightning CSS가 스타일시트의 backdrop-filter를 제거함 */
+        style={{ backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }}
       >
         <span className="s-living__method-btn-label">{dict.methodLink}</span>
         <span className="s-living__method-btn-arrow" aria-hidden="true">›</span>
