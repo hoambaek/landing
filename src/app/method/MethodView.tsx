@@ -18,6 +18,21 @@ import s from "./method.module.css";
 
 const MARKER_LABELS = ["MEASURE", "PREDICT", "VERIFY", "LEARN"];
 
+/** 히어로 서브카피에서 시스템명(OCEAN CELLAR™)을 강조 스팬으로 감싼다.
+ *  ko는 "AI OCEAN CELLAR™", en/fr은 "OCEAN CELLAR™"가 대상. */
+function highlightBrand(text: string, brandClass: string) {
+  const phrase = text.includes("AI OCEAN CELLAR™") ? "AI OCEAN CELLAR™" : "OCEAN CELLAR™";
+  const idx = text.indexOf(phrase);
+  if (idx === -1) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <span className={brandClass}>{phrase}</span>
+      {text.slice(idx + phrase.length)}
+    </>
+  );
+}
+
 function ChapterMarker({ step, tone }: { step: number; tone: "dark" | "light" }) {
   return (
     <div className={s.marker} data-tone={tone}>
@@ -360,16 +375,9 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
             )}
           </h1>
           <p className={s.heroSub}>
-            {t.hero.sub[0]}<br className={s.mOnly} /> {t.hero.sub[1]}
+            {highlightBrand(t.hero.sub[0], s.heroBrand)}
+            <br className={s.mOnly} /> {t.hero.sub[1]}
           </p>
-        </div>
-        <div className={s.verbIndex}>
-          {t.verbs.map((v) => (
-            <div key={v.small} className={s.verbCell}>
-              <span className={s.verbEn}>{v.small}</span>
-              <span className={s.verbKo}>{v.big}</span>
-            </div>
-          ))}
         </div>
       </section>
 

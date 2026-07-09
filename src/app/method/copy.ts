@@ -8,7 +8,6 @@ import type { Locale } from "@/i18n/config";
 export interface MethodCopy {
   meta: { title: string; description: string };
   hero: { title: string; sub: [string, string] };
-  verbs: { small: string; big: string }[];
   ch01: {
     h2: string;
     p1: string;
@@ -91,12 +90,6 @@ const ko: MethodCopy = {
     title: "바다는 기록합니다. 우리는 그 기록을 읽는 법을 배우고 있습니다.",
     sub: ["해저 숙성을 예측하는 AI OCEAN CELLAR™가", "남해 수심 30m에서 일하는 방식입니다."],
   },
-  verbs: [
-    { small: "MEASURE", big: "기록한다" },
-    { small: "PREDICT", big: "예측한다" },
-    { small: "VERIFY", big: "검증받는다" },
-    { small: "LEARN", big: "보정한다" },
-  ],
   ch01: {
     h2: "바다가 쓰는 것을 기록합니다.",
     p1: "완도 해역, 국립해양조사원의 관측이 닿는 바다입니다. 그 실측을 월별 수온과 염분, 조류로 옮겨 적습니다. 가정이 아니라 실제 바다가 모델에 들어갑니다.",
@@ -190,14 +183,8 @@ const en: MethodCopy = {
   },
   hero: {
     title: "The sea keeps a record. We are learning to read it.",
-    sub: ["How OCEAN CELLAR™, the AI that predicts undersea aging,", "works 30 m below the sea off Namhae."],
+    sub: ["How AI OCEAN CELLAR™, which predicts undersea aging,", "works 30 m below the sea off Namhae."],
   },
-  verbs: [
-    { small: "MEASURE", big: "We measure" },
-    { small: "PREDICT", big: "We predict" },
-    { small: "VERIFY", big: "We are graded" },
-    { small: "LEARN", big: "We recalibrate" },
-  ],
   ch01: {
     h2: "We record what the sea writes.",
     p1: "The waters off Wando, within reach of the Korea Hydrographic and Oceanographic Agency's observations. We transcribe those measurements into monthly temperature, salinity, and currents. Not assumptions — the actual sea enters the model.",
@@ -291,14 +278,8 @@ const fr: MethodCopy = {
   },
   hero: {
     title: "La mer tient un relevé. Nous apprenons à le lire.",
-    sub: ["Comment OCEAN CELLAR™, l'IA qui prédit le vieillissement sous-marin,", "travaille à 30 m de profondeur au large de Namhae."],
+    sub: ["Comment AI OCEAN CELLAR™, qui prédit le vieillissement sous-marin,", "travaille à 30 m de profondeur au large de Namhae."],
   },
-  verbs: [
-    { small: "MEASURE", big: "Nous mesurons" },
-    { small: "PREDICT", big: "Nous prédisons" },
-    { small: "VERIFY", big: "Nous sommes notés" },
-    { small: "LEARN", big: "Nous recalibrons" },
-  ],
   ch01: {
     h2: "Nous consignons ce que la mer écrit.",
     p1: "Les eaux au large de Wando, couvertes par les observations de l'agence hydrographique et océanographique de Corée (KHOA). Nous transcrivons ces mesures en températures, salinités et courants mensuels. Pas d'hypothèses — c'est la mer réelle qui entre dans le modèle.",

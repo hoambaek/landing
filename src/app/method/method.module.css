@@ -101,14 +101,13 @@
   object-fit: cover;
   object-position: center;
 }
-/* 블랙 오버레이 — 이미지가 아주 연하게만 비치도록, 하단은 verb index 밴드와 자연 연결 */
+/* 블랙 오버레이 — 이미지가 아주 연하게만 비치도록, 하단은 다음 챕터와 자연 연결 */
 .heroScrim {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, rgba(10, 9, 8, 0.82) 0%, rgba(10, 9, 8, 0.78) 55%, rgba(10, 9, 8, 0.92) 100%);
 }
-.heroCopy,
-.verbIndex {
+.heroCopy {
   position: relative;
   z-index: 1;
 }
@@ -132,40 +131,18 @@
   max-width: 700px;
   word-break: keep-all;
 }
-.verbIndex {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border-top: 1px solid rgba(232, 229, 225, 0.14);
-}
-.verbCell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 10px;
-  padding: 28px 24px 32px;
-}
-.verbCell + .verbCell { border-left: 1px solid rgba(232, 229, 225, 0.14); }
-.verbEn {
+/* 시스템명 강조 — 세리프 산문 속에서 모노·굵기·밝은 색으로 도드라지게 */
+.heroBrand {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  color: rgba(204, 173, 123, 0.85);
-}
-.verbKo {
-  font-family: var(--font-serif-kr);
-  font-weight: 400;
-  font-size: 18px;
-  color: #e8e5e1;
+  font-weight: 500;
+  color: #f1efeb;
+  letter-spacing: 0.01em;
 }
 @media (max-width: 768px) {
   .heroCopy { padding: 0 24px; gap: 40px; }
   .heroTitleImg { width: 303px; }
   .heroSub { font-size: 14px; }
-  .verbCell { padding: 18px 4px 20px; gap: 6px; }
-  .verbEn { font-size: 9px; letter-spacing: 0.16em; }
-  .verbKo { font-size: 14px; }
-  /* 모바일은 배경 이미지가 조금 더 밝게 비치도록 스크림 완화 (하단은 verb index와 연결 위해 유지) */
+  /* 모바일은 배경 이미지가 조금 더 밝게 비치도록 스크림 완화 */
   .heroScrim {
     background: linear-gradient(180deg, rgba(10, 9, 8, 0.62) 0%, rgba(10, 9, 8, 0.58) 55%, rgba(10, 9, 8, 0.9) 100%);
   }
