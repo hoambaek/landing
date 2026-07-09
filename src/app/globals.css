@@ -2676,32 +2676,9 @@ input:focus-visible,
     width: 36px;
   }
 
-  /* 내비 — 세로 중앙 스택 */
+  /* 내비(COLLECTION·RECORD·RELATION) — 모바일 미노출 (2026-07-09 대표 확정) */
   .s-footer__nav {
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    padding: 8px 24px 48px;
-  }
-
-  .s-footer__nav-col {
-    align-items: center;
-    gap: 12px;
-  }
-
-  .s-footer__nav-head {
-    font-size: 10px;
-    letter-spacing: 0.24em;
-  }
-
-  .s-footer__nav-items {
-    align-items: center;
-    gap: 11px;
-  }
-
-  .s-footer__nav-item {
-    font-size: 14px;
-    line-height: 18px;
+    display: none;
   }
 
   /* 법인 — 중앙 정렬 */
