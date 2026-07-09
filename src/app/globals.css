@@ -1319,40 +1319,43 @@ input:focus-visible,
 }
 
 /* OCEAN CELLAR™ /method 진입 — 측정값 아래 amber 헤어라인 텍스트 링크 + 우측 라이브 인디케이터 */
-.s-living__method-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 26px;
-}
-
-.s-living__method-link {
+/* OCEAN CELLAR™ /method 진입 — 브랜드 소개서(.s-letter__submit)와 동일한 다크 채움 버튼 */
+.s-living__method-btn {
   display: inline-flex;
-  align-items: baseline;
-  gap: 8px;
+  align-items: center;
+  gap: 40px;
   width: fit-content;
+  margin-top: 26px;
+  padding: 18px 36px;
+  background: #312E2A;
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+
+.s-living__method-btn:hover {
+  opacity: 0.88;
+}
+
+.s-living__method-btn-label {
   font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  line-height: 18px;
+  color: #F2EFE9;
+}
+
+.s-living__method-btn-arrow {
+  font-family: var(--font-heading);
   font-weight: 300;
-  font-size: 13px;
-  letter-spacing: 0.03em;
-  line-height: 20px;
-  color: var(--color-amber);
-  border-bottom: 0.5px solid rgba(204, 173, 123, 0.4);
-  padding-bottom: 3px;
-  transition: color 0.4s var(--ease-water), border-color 0.4s var(--ease-water);
+  font-size: 18px;
+  line-height: 1;
+  color: #CCAD7B;
 }
 
-.s-living__method-link:hover {
-  color: var(--color-amber-muted);
-  border-color: rgba(204, 173, 123, 0.8);
-}
-
-.s-living__method-arrow {
-  transition: transform 0.4s var(--ease-water);
-}
-
-.s-living__method-link:hover .s-living__method-arrow {
-  transform: translateX(3px);
+/* 라이브 인디케이터 li — 측정값 왼쪽(수온 앞) */
+.s-living__log-live {
+  align-items: center;
 }
 
 /* ── The Living Record 모바일 ── */
@@ -1433,13 +1436,8 @@ input:focus-visible,
     line-height: 16px;
   }
 
-  .s-living__method-row {
+  .s-living__method-btn {
     margin-top: 76px;
-  }
-
-  .s-living__method-link {
-    font-size: 13px;
-    line-height: 18px;
   }
 }
 

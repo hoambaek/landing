@@ -96,6 +96,9 @@ function LogVals({
       {/* 오늘의 기록 스탬프 — 세리프 날짜 */}
       <span className="s-living__log-time">{stamp}</span>
       <ul className="s-living__log-vals" ref={ref}>
+        <li className="s-living__log-live" aria-hidden="true">
+          <span className="s-living__live-dot" />
+        </li>
         <li><span>{render(log.temp)}</span></li>
         <li><span>{render(log.current)}</span></li>
         <li><span>{render(log.depth)}</span></li>
@@ -182,17 +185,14 @@ function DaysCounter({
         <LogVals locale={locale} log={dict.log} />
       </div>
 
-      {/* OCEAN CELLAR™ 방법 페이지 진입 — 로케일별 라우트, 우측 라이브 인디케이터 */}
-      <div className="s-living__method-row">
-        <Link
-          href={locale === "ko" ? "/method" : `${localePrefixMap[locale]}/method`}
-          className="s-living__method-link"
-        >
-          <span>{dict.methodLink}</span>
-          <span className="s-living__method-arrow" aria-hidden="true">→</span>
-        </Link>
-        <span className="s-living__live-dot" aria-hidden="true" />
-      </div>
+      {/* OCEAN CELLAR™ 방법 페이지 진입 — 브랜드 소개서와 동일한 다크 채움 버튼 */}
+      <Link
+        href={locale === "ko" ? "/method" : `${localePrefixMap[locale]}/method`}
+        className="s-living__method-btn"
+      >
+        <span className="s-living__method-btn-label">{dict.methodLink}</span>
+        <span className="s-living__method-btn-arrow" aria-hidden="true">›</span>
+      </Link>
     </div>
   );
 }
