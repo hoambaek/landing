@@ -168,8 +168,8 @@ export default function RootLayout({
       >
         <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
         <JsonLd />
-        {/* 모바일 셸: body 대신 이 컨테이너가 스크롤 (데스크톱은 일반 흐름).
-            안전영역 틴트는 html 배경색(모바일 아이보리)이 담당 */}
+        {/* 일반 문서 스크롤. 안전영역 틴트는 html 배경색(모바일 아이보리)이 담당 —
+            단 전면 fixed+이미지 요소(그레인)가 있으면 샘플링이 깨지므로 모바일에서 그레인 제거 */}
         <div id="scroll-root">{children}</div>
         <AgeGate />
         <Analytics />
