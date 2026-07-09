@@ -2681,6 +2681,11 @@ input:focus-visible,
     display: none;
   }
 
+  /* 하단 안전영역(홈 인디케이터)까지 푸터 다크가 내려가게 */
+  .s-footer {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
   /* 법인 — 중앙 정렬 */
   .s-footer__legal {
     flex-direction: column;
@@ -4298,6 +4303,15 @@ html {
 .s-letter__header.is-scrolled .s-letter__symbol .sym-white { opacity: 1; }
 .s-letter__header.is-scrolled .s-letter__wordmark img { filter: brightness(0) invert(1); }
 .s-letter__header.is-scrolled .s-letter__menu span { background: #F1EFEB; }
+
+/* 모바일: 바가 항상 아이보리이므로 스크롤해도 로고·햄버거 블랙 유지
+   (위 데스크톱용 화이트 전환이 모바일 블록보다 뒤에 있어 재정의 필요) */
+@media (max-width: 768px) {
+  .s-letter__header.is-scrolled .s-letter__symbol .sym-black { opacity: 0.7; }
+  .s-letter__header.is-scrolled .s-letter__symbol .sym-white { opacity: 0; }
+  .s-letter__header.is-scrolled .s-letter__wordmark img { filter: brightness(0); opacity: 0.7; }
+  .s-letter__header.is-scrolled .s-letter__menu span { background: #312E2A; }
+}
 
 /* ── 상단 풀와이드 이미지 (21:9) ── */
 .s-letter__visual {
