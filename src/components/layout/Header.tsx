@@ -118,9 +118,16 @@ export default function Header({
     transition: "backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease",
   };
 
+  /* iOS는 상태바(safe area) 영역에 backdrop-filter를 그리지 않으므로,
+     히어로 상태에서도 투명으로 두면 메뉴바만 떠 보인다 — 항상 틴트로 차폐해
+     아래 프로스티드 바와 한 표면으로 이어지게 한다 (블러는 지원 시 보너스) */
   const safeBlurStyle: React.CSSProperties = {
-    backgroundColor: isScrolled ? "#0A0908" : "transparent",
-    transition: "background-color 0.5s ease",
+    background: isScrolled
+      ? "#0A0908"
+      : "linear-gradient(180deg, rgba(10, 9, 8, 0.62) 0%, rgba(10, 9, 8, 0.34) 70%, rgba(10, 9, 8, 0.22) 100%)",
+    backdropFilter: "blur(15px)",
+    WebkitBackdropFilter: "blur(15px)",
+    transition: "background 0.5s ease",
   };
 
   return (
