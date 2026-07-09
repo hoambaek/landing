@@ -122,7 +122,9 @@ export default function Footer({
       {/* 하단 */}
       <div className="s-footer__bottom">
         <p className="s-footer__warning">
-          알코올은 발암물질로 지나친 음주는 간암, 위암 등을 일으킵니다. 임신 중 음주는 기형아 출생 위험을 높입니다.
+          알코올은 발암물질로 지나친 음주는 간암, 위암 등을 일으킵니다.
+          <br />
+          임신 중 음주는 기형아 출생 위험을 높입니다.
         </p>
         <div className="s-footer__bar">
           <div className="s-footer__bar-left">
