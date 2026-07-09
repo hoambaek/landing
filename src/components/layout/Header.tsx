@@ -110,26 +110,38 @@ export default function Header({
   const headerColorClass = !isScrolled ? "" : isDark ? "" : " header--light";
   const heroInitClass = !isScrolled ? " header--hero-init" : "";
 
+  /* 모바일 여부 — 블러 인라인 스타일을 걸지 않기 위한 분기
+     (Lightning CSS가 스타일시트의 backdrop-filter를 변형해 CSS override 불가) */
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   /* iOS 26 사파리는 상단 fixed 요소의 background·backdrop-filter를 직접 읽어
      상태바 틴트를 정하는데, fixed 요소 자체에 걸려 있으면 샘플링이 깨져
      상태바 영역이 원본 콘텐츠로 뚫린다. 처방: fixed 래퍼는 완전 투명으로 두고
      시각 효과(블러·배경)는 전부 position:absolute 자식에게만 건다. */
-  const glassStyle: React.CSSProperties = {
-    backdropFilter: isScrolled ? "blur(16px)" : "none",
-    WebkitBackdropFilter: isScrolled ? "blur(16px)" : "none",
-    maskImage: isScrolled ? "linear-gradient(to bottom, black 0%, black 60%, transparent 100%)" : "none",
-    WebkitMaskImage: isScrolled ? "linear-gradient(to bottom, black 0%, black 60%, transparent 100%)" : "none",
-    transition: "backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease",
-  };
+  /* 모바일: 블러 미사용 — 단색 배경은 CSS(.header__glass 모바일 규칙)가 담당.
+     데스크톱: 스크롤 시 프로스티드 블러 + 하단 페이드 마스크 */
+  const glassStyle: React.CSSProperties = isMobile
+    ? {}
+    : {
+        backdropFilter: isScrolled ? "blur(16px)" : "none",
+        WebkitBackdropFilter: isScrolled ? "blur(16px)" : "none",
+        maskImage: isScrolled ? "linear-gradient(to bottom, black 0%, black 60%, transparent 100%)" : "none",
+        WebkitMaskImage: isScrolled ? "linear-gradient(to bottom, black 0%, black 60%, transparent 100%)" : "none",
+        transition: "backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease",
+      };
 
-  /* 상태바(safe area) 차폐 — 히어로 상태에서도 항상 틴트를 깔아
-     아래 프로스티드 바와 한 표면으로 잇는다 (역시 absolute 자식에만) */
+  /* 상태바(safe area) 차폐 — 데스크톱 전용(모바일은 단색 헤더가 y=0부터 덮음) */
   const safeFillStyle: React.CSSProperties = {
     background: isScrolled
       ? "#0A0908"
       : "linear-gradient(180deg, rgba(10, 9, 8, 0.62) 0%, rgba(10, 9, 8, 0.34) 70%, rgba(10, 9, 8, 0.22) 100%)",
-    backdropFilter: "blur(15px)",
-    WebkitBackdropFilter: "blur(15px)",
     transition: "background 0.5s ease",
   };
 

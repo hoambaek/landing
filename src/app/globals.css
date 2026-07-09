@@ -3882,6 +3882,23 @@ input:focus-visible,
     padding-top: calc(24px + env(safe-area-inset-top));
   }
 
+  /* 모바일은 블러 대신 단색 — iOS 블러 버그를 피하고 안전영역(y=0)부터
+     메뉴바 하단까지 한 면으로 잇는다. 색은 섹션 밝기 따라 다크/아이보리 전환.
+     (블러 인라인 스타일은 Header.tsx가 모바일에서 걸지 않음) */
+  .header__glass {
+    background: var(--color-void-bg);
+    transition: background 0.4s ease;
+  }
+
+  .header--light .header__glass {
+    background: var(--color-warm-ivory);
+  }
+
+  /* 단색 헤더가 safe area까지 덮으므로 별도 차폐 바는 불필요 */
+  .header__safe-blur {
+    display: none;
+  }
+
   .header__menu {
     right: 24px;
   }
