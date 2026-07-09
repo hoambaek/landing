@@ -92,6 +92,26 @@
   min-height: 100svh;
   background: linear-gradient(180deg, #191713 0%, #0a0908 78%);
 }
+.heroBg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.heroBgImg {
+  object-fit: cover;
+  object-position: center;
+}
+/* 블랙 오버레이 — 이미지가 아주 연하게만 비치도록, 하단은 verb index 밴드와 자연 연결 */
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 9, 8, 0.82) 0%, rgba(10, 9, 8, 0.78) 55%, rgba(10, 9, 8, 0.92) 100%);
+}
+.heroCopy,
+.verbIndex {
+  position: relative;
+  z-index: 1;
+}
 .heroCopy {
   flex: 1;
   display: flex;

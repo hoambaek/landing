@@ -323,6 +323,22 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
     <main className={s.page}>
       {/* ═══ S1. Hero ═══ */}
       <section className={s.hero}>
+        {/* 풀블리드 배경 — 심해 케이지 (Paper Hero BG), 블랙 오버레이로 아주 연하게 */}
+        <div className={s.heroBg} aria-hidden="true">
+          <picture>
+            <source media="(max-width: 768px)" srcSet="/images/method/hero-bg-m.webp" />
+            <Image
+              src="/images/method/hero-bg-d.webp"
+              alt=""
+              fill
+              sizes="100vw"
+              priority
+              unoptimized
+              className={s.heroBgImg}
+            />
+          </picture>
+          <span className={s.heroScrim} />
+        </div>
         <div className={s.heroCopy}>
           <h1 className={s.heroTitle}>
             {isKo ? (
