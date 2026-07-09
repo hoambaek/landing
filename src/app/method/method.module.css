@@ -131,13 +131,22 @@
   max-width: 700px;
   word-break: keep-all;
 }
-/* 시스템명 강조 — 한글 산세리프 속에서 Didot풍 고대비 세리프(Cormorant)로 장식적으로.
-   색은 주변과 동일(브론즈), 굵기만 대비 */
+/* 시스템명 강조 — 라인 테두리 태그. Didot풍 고대비 세리프(Cormorant) 유지,
+   색은 주변과 동일(브론즈), 얇은 보더로 시스템명을 '칩'처럼 도드라지게 */
 .heroBrand {
+  display: inline-block;
   font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 1.15em;
-  letter-spacing: 0.01em;
+  font-size: 1.08em;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  padding: 0.2em 0.5em;
+  margin: 0 0.12em;
+  border: 0.5px solid rgba(204, 173, 123, 0.55);
+  border-radius: 2px;
+  white-space: nowrap;
+  vertical-align: middle;
+  transform: translateY(-0.08em);
 }
 @media (max-width: 768px) {
   .heroCopy { padding: 0 24px; gap: 40px; }
