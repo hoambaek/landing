@@ -4262,13 +4262,13 @@ html {
   .s-letter__header {
     position: sticky;
     top: 0;
-    height: 58px;
+    height: 42px; /* 메인 .header 실측 높이(12px 패딩×2 + 워드마크 18px)와 동일 */
     background: var(--color-warm-ivory);
   }
 
   .s-letter__symbol {
     left: 24px;
-    top: 12px;
+    top: 4px;
     width: 41px;
     height: 34px;
   }
@@ -4282,7 +4282,7 @@ html {
   }
 
   .s-letter__wordmark {
-    top: 20px;
+    top: 12px;
     height: 18px;
   }
 
@@ -4295,7 +4295,7 @@ html {
 
   .s-letter__menu {
     right: 24px;
-    top: 21px;
+    top: 13px;
   }
 
   .s-letter__menu span {
