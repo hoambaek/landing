@@ -122,7 +122,7 @@
 .heroTitle { margin: 0; }
 .heroTitleImg { display: block; width: 678px; max-width: 100%; height: auto; }
 .heroSub {
-  font-family: var(--font-serif-kr);
+  font-family: var(--font-pretendard);
   font-weight: 300;
   font-size: 17px;
   line-height: 1.9;
@@ -131,11 +131,12 @@
   max-width: 700px;
   word-break: keep-all;
 }
-/* 시스템명 강조 — 세리프 산문 속에서 모노·굵기·밝은 색으로 도드라지게 */
+/* 시스템명 강조 — 한글 산세리프 속에서 Didot풍 고대비 세리프(Cormorant)로 장식적으로.
+   색은 주변과 동일(브론즈), 굵기만 대비 */
 .heroBrand {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  color: #f1efeb;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.15em;
   letter-spacing: 0.01em;
 }
 @media (max-width: 768px) {
