@@ -386,7 +386,9 @@ input:focus-visible,
 /* ══════════════════════════════════════════
    HEADER
    ══════════════════════════════════════════ */
-/* Safe-area(노치) 차폐 바 — 헤더보다 위(z 110), 합성 강제로 iOS 페인팅 누락 방지 */
+/* Safe-area(노치) 차폐 바 — 헤더보다 위(z 110). iOS 26 사파리가 상단 fixed 요소의
+   배경·블러를 샘플링해 상태바를 틴트하므로, fixed 래퍼는 완전 투명으로 유지하고
+   실제 틴트·블러는 absolute 자식(.header__safe-blur-fill)에만 건다 */
 .header__safe-blur {
   position: fixed;
   top: 0;
@@ -398,6 +400,19 @@ input:focus-visible,
   pointer-events: none;
   transform: translateZ(0);
   will-change: transform;
+}
+
+.header__safe-blur-fill {
+  position: absolute;
+  inset: 0;
+}
+
+/* 헤더 프로스티드 글래스 — fixed인 .header 대신 absolute 자식이 블러·마스크 담당 */
+.header__glass {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
 }
 
 .header {
@@ -4053,6 +4068,9 @@ input:focus-visible,
 /* 3-3: overscroll 방지 — 실수로 새로고침 방지 */
 html {
   overscroll-behavior: contain;
+  /* iOS 26 사파리는 theme-color를 무시하고 루트 배경색을 샘플링해 상태바를 틴트한다
+     — 투명 루트는 흰색 폴백이므로 명시적 다크 배경 필수 */
+  background-color: var(--color-void-bg);
 }
 /* ══════════════════════════════════════════
    서브 페이지 — 편지형 폼 (Paper Page 1M8/1N0/1O7)
