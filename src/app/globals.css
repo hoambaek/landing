@@ -415,8 +415,8 @@ input:focus-visible,
   pointer-events: none;
 }
 
-/* 상태바 커버 — 모바일 iOS 전용 (미디어쿼리에서 활성화) */
-.header__strip-cover {
+/* iOS 상태바 커버 — 모바일 iOS 전용 (미디어쿼리에서 활성화) */
+.ios-statusbar-cover {
   display: none;
 }
 
@@ -3887,11 +3887,7 @@ input:focus-visible,
     padding-top: calc(24px + env(safe-area-inset-top));
   }
 
-  /* ── 모바일 헤더: 항상 아이보리 단색 (에르메스 방식) ──
-     iOS 26 사파리는 fixed 요소를 상태바 뒤 영역에 그리지 않으므로,
-     상태바 커버(.header__strip-cover)는 fixed가 아닌 absolute(문서 레이어)로 두고
-     JS(rAF)가 scrollY만큼 translate해 시각적으로 고정한다. 문서 레이어는
-     상태바 뒤까지 정상적으로 그려지므로 안전영역이 같은 아이보리로 덮인다. */
+  /* ── 모바일 헤더: 항상 아이보리 단색 (에르메스 방식) ── */
   .header {
     background: var(--color-warm-ivory);
   }
@@ -3912,22 +3908,38 @@ input:focus-visible,
     opacity: 0.5;
   }
 
-  /* 상태바 커버 — 문서 레이어(absolute)라 상태바 뒤까지 페인트됨.
-     iOS 전용(@supports -webkit-touch-callout): 안드로이드는 상태바가 웹뷰 밖이라 불필요.
-     높이 100px = 최대 상태바(~62px)보다 크고 최소 헤더 하단(~126px)보다 작게 —
-     어느 기기에서도 헤더 아래로 삐져나오지 않는다 */
+  /* ── 모바일 앱 셸: 문서(body)는 스크롤하지 않고 #scroll-root가 스크롤 ──
+     iOS 26 사파리는 fixed·composited 레이어를 상태바 뒤에 그리지 않고
+     "스크롤되는 문서 원판"만 그 영역에 비춘다. 문서 스크롤을 없애면
+     문서 최상단의 정적 요소가 영구히 상태바 뒤에 남는다. */
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #scroll-root {
+    height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+  }
+
+  /* 상태바 커버 — 문서 최상단 정적 요소 (transform·will-change 금지: 합성되면 제외됨).
+     iOS 전용: 안드로이드는 상태바가 웹뷰 밖이라 불필요.
+     높이 80px = 최대 상태바(~62px)보다 크고 헤더 높이(82px+)보다 작게 */
   @supports (-webkit-touch-callout: none) {
-    .header__strip-cover {
+    .ios-statusbar-cover {
       display: block;
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      height: 100px;
+      height: 80px;
       background: var(--color-warm-ivory);
       z-index: 99;
       pointer-events: none;
-      will-change: transform;
     }
   }
 
