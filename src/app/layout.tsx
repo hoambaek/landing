@@ -168,10 +168,8 @@ export default function RootLayout({
       >
         <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
         <JsonLd />
-        {/* iOS 상태바 커버 — 문서가 스크롤하지 않는 모바일 셸에서 doc 최상단에 정적으로 남아
-            상태바 뒤를 헤더와 같은 아이보리로 채운다 (fixed·composited 레이어는 그 영역에 안 그려짐) */}
-        <div className="ios-statusbar-cover" aria-hidden="true" />
-        {/* 모바일 셸: body 대신 이 컨테이너가 스크롤 (데스크톱은 일반 흐름) */}
+        {/* 모바일 셸: body 대신 이 컨테이너가 스크롤 (데스크톱은 일반 흐름).
+            안전영역 틴트는 html 배경색(모바일 아이보리)이 담당 */}
         <div id="scroll-root">{children}</div>
         <AgeGate />
         <Analytics />

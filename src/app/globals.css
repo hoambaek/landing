@@ -415,10 +415,6 @@ input:focus-visible,
   pointer-events: none;
 }
 
-/* iOS 상태바 커버 — 모바일 iOS 전용 (미디어쿼리에서 활성화) */
-.ios-statusbar-cover {
-  display: none;
-}
 
 .header {
   position: fixed;
@@ -3882,9 +3878,10 @@ input:focus-visible,
     padding: 0 24px;
   }
 
+  /* 셸 구조에선 헤더가 상태바 아래(레이아웃 상단)에 앉으므로 env 보정 불필요.
+     안전영역 틴트 높이가 더해지는 만큼 바 자체는 슬림하게 */
   .header {
-    padding: 24px;
-    padding-top: calc(24px + env(safe-area-inset-top));
+    padding: 12px 24px;
   }
 
   /* ── 모바일 헤더: 항상 아이보리 단색 (에르메스 방식) ──
@@ -3930,22 +3927,6 @@ input:focus-visible,
     overscroll-behavior-y: none;
   }
 
-  /* 상태바 커버 — 문서 최상단 정적 요소 (transform·will-change 금지: 합성되면 제외됨).
-     iOS 전용: 안드로이드는 상태바가 웹뷰 밖이라 불필요.
-     높이 80px = 최대 상태바(~62px)보다 크고 헤더 높이(82px+)보다 작게 */
-  @supports (-webkit-touch-callout: none) {
-    .ios-statusbar-cover {
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 80px;
-      background: var(--color-warm-ivory);
-      z-index: 99;
-      pointer-events: none;
-    }
-  }
 
   /* 블러 글래스·safe-blur 바는 모바일 미사용 */
   .header__glass,
