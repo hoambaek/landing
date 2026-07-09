@@ -89,7 +89,7 @@ const ko: MethodCopy = {
   },
   hero: {
     title: "바다는 기록합니다. 우리는 그 기록을 읽는 법을 배우고 있습니다.",
-    sub: ["해저 숙성을 예측하는 AI, OCEAN CELLAR™가", "남해 수심 30m에서 일하는 방식입니다."],
+    sub: ["해저 숙성을 예측하는 AI OCEAN CELLAR™가", "남해 수심 30m에서 일하는 방식입니다."],
   },
   verbs: [
     { small: "MEASURE", big: "기록한다" },

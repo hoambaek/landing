@@ -799,14 +799,16 @@ input:focus-visible,
     height: 348px;
   }
 
+  /* 짧은 뷰포트(사파리 크롬 포함 ~670px)에서도 하단 블록과 안 겹치게
+     nav 시작점·항목 패딩·라벨 크기를 뷰포트 높이에 비례 축소 */
   .menu-overlay__nav {
     left: 24px;
-    top: 124px;
+    top: clamp(96px, 15vh, 124px);
   }
 
   .menu-overlay__link {
     gap: 18px;
-    padding: 11px 0;
+    padding: clamp(4px, 1.2vh, 11px) 0;
   }
 
   .menu-overlay__link-num {
@@ -817,8 +819,8 @@ input:focus-visible,
   }
 
   .menu-overlay__link-label {
-    font-size: 30px;
-    line-height: 38px;
+    font-size: clamp(26px, 4.2vh, 30px);
+    line-height: 1.25;
   }
 
   .menu-overlay__bottom {
@@ -1432,7 +1434,7 @@ input:focus-visible,
   }
 
   .s-living__method-row {
-    margin-top: 18px;
+    margin-top: 76px;
   }
 
   .s-living__method-link {
@@ -3965,11 +3967,8 @@ input:focus-visible,
     padding: 24px;
   }
 
-  .menu-overlay__link {
-    font-size: 1.5rem;
-    padding: 14px 0;
-    gap: 12px;
-  }
+  /* (중복 제거 — 메뉴 오버레이 모바일 스타일은 Paper 1L5 블록이 단일 소스.
+     여기 있던 padding 14px가 짧은 뷰포트 압축 규칙을 덮어써 하단과 겹쳤음) */
 
   .menu-overlay__footer {
     padding: 24px 24px 32px;
@@ -4255,13 +4254,23 @@ html {
 
 .s-letter-page--brand .s-letter__menu span { background: #312E2A; }
 
-/* ── 모바일 서브페이지(method·폼) 헤더: 랜딩과 동일하게 sticky + 아이보리 + 블랙 로고 ──
+/* ── 모바일 서브페이지(method·폼) 헤더: 랜딩 메인 헤더와 동일한 스펙 ──
+   sticky + 아이보리 + 블랙 로고, 높이 58px(12px 패딩 + 심볼 34px),
+   좌우 여백 24px, 워드마크 18px — .header 모바일과 1:1 정렬.
    (모바일 셸 안의 fixed는 iOS가 absolute처럼 취급해 스크롤과 함께 사라짐) */
 @media (max-width: 768px) {
   .s-letter__header {
     position: sticky;
     top: 0;
+    height: 58px;
     background: var(--color-warm-ivory);
+  }
+
+  .s-letter__symbol {
+    left: 24px;
+    top: 12px;
+    width: 41px;
+    height: 34px;
   }
 
   .s-letter__symbol .sym-white {
@@ -4269,17 +4278,29 @@ html {
   }
 
   .s-letter__symbol .sym-black {
-    opacity: 1;
+    opacity: 0.7;
   }
 
-  /* 워드마크는 화이트 PNG 하나뿐 — invert로 블랙 전환 */
+  .s-letter__wordmark {
+    top: 20px;
+    height: 18px;
+  }
+
+  /* 워드마크는 화이트 PNG 하나뿐 — 블랙으로 전환 (메인 로고와 동일 톤) */
   .s-letter__wordmark img {
-    filter: invert(1);
-    opacity: 0.75;
+    height: 18px;
+    filter: brightness(0);
+    opacity: 0.7;
+  }
+
+  .s-letter__menu {
+    right: 24px;
+    top: 21px;
   }
 
   .s-letter__menu span {
     background: #312E2A;
+    opacity: 0.5;
   }
 
   .s-letter__safe {

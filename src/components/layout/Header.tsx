@@ -42,6 +42,23 @@ export default function Header({
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
+  /* 로고 클릭: 이미 랜딩이면 최상단으로 스크롤 (셸: scroll-root / 데스크톱: window) */
+  const onLogoClick = useCallback(
+    (e: React.MouseEvent) => {
+      const homePath = homeHref === "" ? "/" : homeHref;
+      if (window.location.pathname === homePath) {
+        e.preventDefault();
+        const root = document.getElementById("scroll-root");
+        if (root && root.scrollHeight > root.clientHeight) {
+          root.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }
+    },
+    [homeHref],
+  );
+
   /* 측정 경과일 — Living Data 카운터와 동일 소스로 계산(숫자 단일 출처).
      하이드레이션 불일치 방지를 위해 마운트 후 채운다. 메뉴는 마운트 뒤 열리므로
      사용자에게 빈 값이 노출되지 않는다. */
@@ -162,7 +179,7 @@ export default function Header({
       {/* ── Header bar — 블러는 absolute 자식(.header__glass)이 담당 ── */}
       <header className={`header${headerColorClass}${heroInitClass}`}>
         <div className="header__glass" aria-hidden="true" style={glassStyle} />
-        <Link href={homeHref} className="header__symbol" aria-label={dict.aria.home}>
+        <Link href={homeHref} className="header__symbol" aria-label={dict.aria.home} onClick={onLogoClick}>
           <Image
             src="/images/logo/logo_trans_W.png"
             alt=""
@@ -178,7 +195,7 @@ export default function Header({
             className="header__symbol-img header__symbol-img--black"
           />
         </Link>
-        <Link href={homeHref} className="header__logo">
+        <Link href={homeHref} className="header__logo" onClick={onLogoClick}>
           <Image
             src="/images/logo/logo_text_trans_W.png"
             alt="MUSE DE MARÉE"
