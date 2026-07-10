@@ -64,7 +64,7 @@ export default function HeroSection({
       <div
         className="s-void__topblur"
         aria-hidden="true"
-        style={{ backdropFilter: "blur(15px)", WebkitBackdropFilter: "blur(15px)" }}
+        style={{ backdropFilter: "blur(28px)", WebkitBackdropFilter: "blur(28px)" }}
       />
 
       {/* 카피 — 단일 소스. ko 타이틀은 <picture>로 데스크톱(3행)/모바일(4행) 에셋 아트디렉션 */}
