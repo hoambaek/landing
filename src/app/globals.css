@@ -1067,15 +1067,18 @@ input:focus-visible,
     display: none;
   }
 
-  /* 배경 확대 + 위로 올림 (모바일) */
+  /* 배경 확대 + 위로 올림 (모바일) — translateY 음수로 위로 이동 */
   .s-void__bg-img {
-    object-position: center 38%;
-    transform: scale(1.28);
-    transform-origin: center 30%;
+    object-position: center;
+    transform: translateY(-7%) scale(1.28);
+    transform-origin: center;
   }
 
+  /* 상단 블러 — fixed 헤더(42px) 뒤가 아니라 보이는 히어로 시작점(헤더 아래)부터 100% */
   .s-void__topblur {
     display: block;
+    top: 42px;
+    height: calc(100% - 42px);
   }
 
   /* ko 타이틀·브랜드명 이미지 — 모바일 에셋 크기 (translateY 정렬은 데스크톱 전용이라 해제) */
@@ -1085,8 +1088,8 @@ input:focus-visible,
   .s-void__brand-name-img {
     width: 88px;
     transform: none;
-    /* PNG 워드마크 가독 — 라벨과 동일한 어두운 그림자 */
-    filter: drop-shadow(0 1px 10px rgba(10, 9, 8, 0.6));
+    /* PNG 워드마크 가독 — 라벨(text-shadow)과 동일 강도의 이중 그림자 */
+    filter: drop-shadow(0 1px 10px rgba(10, 9, 8, 0.8)) drop-shadow(0 0 3px rgba(10, 9, 8, 0.7));
   }
 
   /* 모바일 H1 — 21px/36px, 중앙 */
