@@ -4158,14 +4158,19 @@ html {
   transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
 }
 
-/* 스크롤 시 — 다크 반투명 + 블러 (메뉴바 불투명 효과) */
-.s-letter__header.is-scrolled {
-  background: rgba(10, 9, 8, 0.72);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+/* 데스크톱 프로스티드 글래스 — 메인 헤더(.header__glass)와 동일.
+   블러·마스크는 LetterHeader 인라인(scrolled일 때만). 어두운 틴트 없음 */
+.s-letter__glass {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
 }
 
-.s-letter__header > * { pointer-events: auto; }
+/* .s-letter__header > * 중 glass는 pointer-events 유지(none), 나머지 인터랙티브 */
+.s-letter__header > .s-letter__symbol,
+.s-letter__header > .s-letter__wordmark,
+.s-letter__header > button { pointer-events: auto; }
 
 .s-letter__symbol {
   position: absolute;
@@ -4299,10 +4304,17 @@ html {
 }
 
 /* 스크롤 시 — 모든 테마 흰 로고/심볼/햄버거 (다크 헤더 위 가독) */
-.s-letter__header.is-scrolled .s-letter__symbol .sym-black { opacity: 0; }
-.s-letter__header.is-scrolled .s-letter__symbol .sym-white { opacity: 1; }
-.s-letter__header.is-scrolled .s-letter__wordmark img { filter: brightness(0) invert(1); }
-.s-letter__header.is-scrolled .s-letter__menu span { background: #F1EFEB; }
+/* 데스크톱 로고 톤 — 틴트 없는 블러라 LetterHeader가 뒤 배경을 감지해 톤 클래스를 준다.
+   --ondark(다크 배경)=흰 로고 / --onlight(밝은 배경)=검은 로고. 모바일은 미적용(아이보리 단색) */
+.s-letter__header--ondark .s-letter__symbol .sym-black { opacity: 0; }
+.s-letter__header--ondark .s-letter__symbol .sym-white { opacity: 1; }
+.s-letter__header--ondark .s-letter__wordmark img { filter: brightness(0) invert(1); }
+.s-letter__header--ondark .s-letter__menu span { background: #F1EFEB; }
+
+.s-letter__header--onlight .s-letter__symbol .sym-black { opacity: 0.7; }
+.s-letter__header--onlight .s-letter__symbol .sym-white { opacity: 0; }
+.s-letter__header--onlight .s-letter__wordmark img { filter: brightness(0); opacity: 0.7; }
+.s-letter__header--onlight .s-letter__menu span { background: #312E2A; }
 
 /* 모바일: 바가 항상 아이보리이므로 스크롤해도 로고·햄버거 블랙 유지
    (위 데스크톱용 화이트 전환이 모바일 블록보다 뒤에 있어 재정의 필요) */
