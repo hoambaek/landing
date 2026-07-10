@@ -18,7 +18,7 @@ export default async function InviteLetter({ locale }: { locale: Locale }) {
       headerDict={dict.header}
       footerDict={dict.footer}
     >
-      <InviteForm dict={dict.forms.invite} common={dict.forms.common} />
+      <InviteForm dict={dict.forms.invite} common={dict.forms.common} locale={locale} />
     </LetterShell>
   );
 }

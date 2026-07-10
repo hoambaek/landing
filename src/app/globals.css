@@ -4441,19 +4441,75 @@ html {
   color: #6E675D;
 }
 
-.s-letter__body {
+/* ── 타이틀 텍스트 이미지 (J1950 → PNG, ko 전용) ── */
+.s-letter__title-img {
+  display: block;
+  margin: 0 auto;
+  height: 46px;
+  width: auto;
+}
+
+/* ── 혜택 블록 (신청하면 받는 것) ── */
+.s-benefits {
+  width: 100%;
+  max-width: 480px;
   margin-top: 36px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  text-align: left;
 }
 
-.s-letter__body p {
+.s-benefits__row {
+  display: flex;
+  gap: 18px;
+  padding: 18px 0;
+  border-top: 1px solid #E3DCCF;
+  align-items: flex-start;
+}
+
+.s-benefits__row:last-of-type { border-bottom: 1px solid #E3DCCF; }
+
+.s-benefits__idx {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  line-height: 22px;
+  color: #B89868;
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.s-benefits__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.s-benefits__title {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 22px;
+  letter-spacing: 0.01em;
+  color: #312E2A;
+}
+
+.s-benefits__desc {
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 15px;
-  line-height: 28px;
-  color: #55504A;
+  font-size: 13px;
+  line-height: 20px;
+  color: #6E675D;
+}
+
+.s-benefits__foot {
+  padding-top: 14px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 12.5px;
+  line-height: 18px;
+  color: #9B9388;
+  text-align: center;
 }
 
 /* ── 파트너십 유형 카테고리 카드 ── */
@@ -4493,6 +4549,7 @@ html {
 }
 
 .s-cat__card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 7px;
@@ -4505,6 +4562,28 @@ html {
 }
 
 .s-cat__card:hover { border-color: #B89868; }
+
+/* 선택 가능한 카드임을 바로 알리는 라디오 인디케이터 */
+.s-cat__radio {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 14px;
+  height: 14px;
+  border: 1.2px solid #C9C2B4;
+  border-radius: 50%;
+  transition: border-color 0.25s;
+}
+
+.s-cat__card.is-active .s-cat__radio { border-color: #B89868; }
+
+.s-cat__card.is-active .s-cat__radio::after {
+  content: "";
+  position: absolute;
+  inset: 2.5px;
+  border-radius: 50%;
+  background: #B89868;
+}
 
 .s-cat__card.is-active {
   border-color: #B89868;
@@ -4601,6 +4680,38 @@ html {
 
 .s-field:focus-within .s-field__rule { background: #B89868; }
 
+/* ── REFERRAL 셀렉트 (언더라인 결 유지 + 쉐브론) ── */
+.s-select {
+  position: relative;
+  width: 100%;
+}
+
+.s-select__input {
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+  padding-right: 28px;
+  cursor: pointer;
+}
+
+.s-select__input.is-empty { color: #9B9388; }
+
+.s-select__chevron {
+  position: absolute;
+  top: 5px;
+  right: 2px;
+  color: #9B9388;
+  pointer-events: none;
+}
+
+/* 펼쳐진 옵션 목록 — 브라우저가 허용하는 범위에서 본문 결에 맞춘다 (Chrome/Edge 적용, Safari는 시스템 UI) */
+.s-select__input option {
+  font-size: 14px;
+  font-weight: 400;
+  color: #312E2A;
+  background-color: #FBF8F1;
+}
+
 /* ── 제출 버튼 (박스형) ── */
 .s-letter__submit {
   display: inline-flex;
@@ -4676,6 +4787,8 @@ html {
   .s-letter__visual { aspect-ratio: 3 / 2; }
   .s-letter__panel { padding: 48px 24px 64px; }
   .s-letter__title { font-size: 40px; line-height: 48px; }
+  .s-letter__title-img { height: 34px; }
+  .s-benefits { margin-top: 28px; }
   .s-letter__form-row { flex-direction: column; gap: 36px; }
   .s-cat__grid { grid-template-columns: 1fr; }
   .s-letter__brandmark-symbol { width: 150px; }

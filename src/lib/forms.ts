@@ -211,7 +211,7 @@ export async function submitPartner(p: PartnerPayload): Promise<SubmitResult> {
         업장: p.venue,
         성함: p.name,
         이메일: p.email,
-        문의: p.message,
+        ...(p.message.trim() ? { 문의: p.message } : {}),
         ...(referral ? { "알게 된 경로": referral } : {}),
       },
     }

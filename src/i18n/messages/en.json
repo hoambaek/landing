@@ -123,7 +123,6 @@
         "venue": "Venue name",
         "contact": "Contact person",
         "affiliation": "Affiliation · Company",
-        "message": "Tell us about your space and what you're looking for",
         "referral": "How did you find us? (optional)"
       },
       "menu": {
@@ -131,7 +130,17 @@
         "label": "Navigation menu",
         "close": "Close",
         "home": "Go to home"
-      }
+      },
+      "referralOptions": [
+        "AI search (ChatGPT, Perplexity, etc.)",
+        "Search (Google, Naver)",
+        "Instagram",
+        "YouTube",
+        "Word of mouth",
+        "Press, media",
+        "At a hotel or restaurant",
+        "Other"
+      ]
     },
     "invite": {
       "metaTitle": "Request an Invitation | Ocean Cellar Privé | Muse de Marée",
@@ -140,11 +149,19 @@
       "title": "Request an Invitation",
       "sub": "You, among the first to be invited.",
       "imageAlt": "A bottle raised through a column of light",
-      "body1": "The first to meet the first bottle raised from the sea.",
-      "body2": "The schedule and site of each recovery, and the record of the time it spent in the deep.",
-      "body3": "Seats open only to the number of bottles raised.",
+      "benefits": [
+        {
+          "title": "First to know each release",
+          "desc": "When a new cuvée is released, members hear first."
+        },
+        {
+          "title": "Your bottle's record, for life",
+          "desc": "Revisit the record of its time in the deep, anytime."
+        }
+      ],
+      "scarcity": "Seats open only to the number of bottles prepared.",
       "submit": "Request an invitation",
-      "note": "Leave your details and we'll be the first to write when membership opens.",
+      "note": "Leave your details and we'll write to you first when membership opens.",
       "errValidation": "Please enter your name and a valid email address.",
       "successLine": "Your request has been received.",
       "successNote": "The invitation will arrive with news of the next recovery."
@@ -156,11 +173,18 @@
       "title": "Partnership Inquiry",
       "sub": "Bringing the sea's time to the table.",
       "imageAlt": "A gloved hand tagging a barnacled bottle",
-      "body1": "Every bottle carries the record of the time it spent in the deep.",
-      "body2": "Coordinates, depth, and the days of ageing become a story to share with your guests.",
-      "body3": "Fine dining, hotel bars, private cellars. We prepare a proposal suited to your space.",
+      "benefits": [
+        {
+          "title": "A deep-sea record in every bottle",
+          "desc": "Coordinates, depth, and time become a story to share with your guests."
+        },
+        {
+          "title": "A proposal suited to your space",
+          "desc": "Fine dining, hotel bars, private cellars. We prepare a proposal to match."
+        }
+      ],
       "catLabel": "PARTNERSHIP TYPE",
-      "catHint": "Choose the partnership type that suits the space you run.",
+      "catHint": "Choose one.",
       "categories": {
         "dining": {
           "label": "Dining · Bar list",
@@ -179,7 +203,6 @@
           "desc": "Retail, gifting, collaboration"
         }
       },
-      "messageLabel": "MESSAGE (optional)",
       "submit": "Send inquiry",
       "note": "We'll review your message and reply with a proposal within two business days.",
       "errCategory": "Please select a partnership type.",
@@ -193,12 +216,18 @@
       "title": "Brand Book",
       "sub": "Written by the sea.",
       "imageAlt": "A barnacled bottle on limestone after recovery",
-      "body1": "Champagne aged in Korea's deep sea, its beginning and its record.",
-      "body2": "The brand's philosophy, its way of measuring, the cuvée lineup, and partnership.",
-      "body3": "Told in a single book.",
+      "benefits": [
+        {
+          "title": "The brand in a single book",
+          "desc": "Its beginning and philosophy, way of measuring, cuvée lineup, and partnership."
+        },
+        {
+          "title": "Korean and English PDF",
+          "desc": "Sent to your email after review."
+        }
+      ],
       "submit": "Request the book",
-      "note1": "Leave your name, affiliation, and email, and we'll send the brand book (PDF) after review.",
-      "note2": "Available in Korean and English.",
+      "note": "Just your name, affiliation, and email.",
       "errValidation": "Please enter your name, affiliation, and a valid email address.",
       "successLine": "Your request has been received.",
       "successNote": "After review, we'll send the book to your email."

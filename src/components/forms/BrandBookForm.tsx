@@ -4,16 +4,20 @@ import { useState } from "react";
 import Image from "next/image";
 import UnderlineField from "./UnderlineField";
 import SubmitButton from "./SubmitButton";
+import BenefitList from "./BenefitList";
 import { submitBrandBook } from "@/lib/forms";
 import { isValidEmail } from "@/lib/validation";
 import type { Dictionary } from "@/i18n/types";
+import type { Locale } from "@/i18n/config";
 
 export default function BrandBookForm({
   dict,
   common,
+  locale,
 }: {
   dict: Dictionary["forms"]["brandBook"];
   common: Dictionary["forms"]["common"];
+  locale: Locale;
 }) {
   const [name, setName] = useState("");
   const [affiliation, setAffiliation] = useState("");
@@ -53,7 +57,20 @@ export default function BrandBookForm({
         <Image src="/images/logo/logo_trans.png" alt="" width={1000} height={829} className="s-letter__brandmark-symbol" />
         <Image src="/images/logo/logo_text_trans.png" alt="MUSE DE MARÉE" width={1000} height={152} className="s-letter__brandmark-word" />
       </div>
-      <h1 className="s-letter__title">{dict.title}</h1>
+      <h1 className="s-letter__title">
+        {locale === "ko" ? (
+          <Image
+            src="/text/letter/brandbook-title.png"
+            alt={dict.title}
+            width={923}
+            height={132}
+            unoptimized
+            className="s-letter__title-img"
+          />
+        ) : (
+          dict.title
+        )}
+      </h1>
       <p className="s-letter__sub">{dict.sub}</p>
 
       {status === "done" ? (
@@ -64,11 +81,7 @@ export default function BrandBookForm({
         </div>
       ) : (
         <>
-          <div className="s-letter__body">
-            <p>{dict.body1}</p>
-            <p>{dict.body2}</p>
-            <p>{dict.body3}</p>
-          </div>
+          <BenefitList items={dict.benefits} numbered />
 
           <form className="s-letter__form" onSubmit={onSubmit} noValidate>
             <div className="s-letter__form-row">
@@ -80,13 +93,7 @@ export default function BrandBookForm({
             <SubmitButton label={dict.submit} sendingLabel={common.sending} sending={status === "sending"} />
 
             <p className="s-letter__note">
-              {error || (
-                <>
-                  {dict.note1}
-                  <br />
-                  {dict.note2}
-                </>
-              )}
+              {error || dict.note}
             </p>
           </form>
         </>

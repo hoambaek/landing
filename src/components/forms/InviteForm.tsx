@@ -1,18 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import UnderlineField from "./UnderlineField";
+import SelectField from "./SelectField";
 import SubmitButton from "./SubmitButton";
+import BenefitList from "./BenefitList";
 import { submitInvite } from "@/lib/forms";
 import { isValidEmail } from "@/lib/validation";
 import type { Dictionary } from "@/i18n/types";
+import type { Locale } from "@/i18n/config";
 
 export default function InviteForm({
   dict,
   common,
+  locale,
 }: {
   dict: Dictionary["forms"]["invite"];
   common: Dictionary["forms"]["common"];
+  locale: Locale;
 }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -45,7 +51,20 @@ export default function InviteForm({
   return (
     <>
       <span className="s-letter__eyebrow">{dict.eyebrow}</span>
-      <h1 className="s-letter__title">{dict.title}</h1>
+      <h1 className="s-letter__title">
+        {locale === "ko" ? (
+          <Image
+            src="/text/letter/invite-title.png"
+            alt={dict.title}
+            width={632}
+            height={136}
+            unoptimized
+            className="s-letter__title-img"
+          />
+        ) : (
+          dict.title
+        )}
+      </h1>
       <p className="s-letter__sub">{dict.sub}</p>
 
       {status === "done" ? (
@@ -56,16 +75,12 @@ export default function InviteForm({
         </div>
       ) : (
         <>
-          <div className="s-letter__body">
-            <p>{dict.body1}</p>
-            <p>{dict.body2}</p>
-            <p>{dict.body3}</p>
-          </div>
+          <BenefitList items={dict.benefits} numbered footnote={dict.scarcity} />
 
           <form className="s-letter__form" onSubmit={onSubmit} noValidate>
             <UnderlineField label="NAME" placeholder={common.placeholder.name} name="name" value={name} onChange={setName} required />
             <UnderlineField label="EMAIL" placeholder={common.placeholder.email} name="email" type="email" value={email} onChange={setEmail} required />
-            <UnderlineField label="REFERRAL" placeholder={common.placeholder.referral} name="referral" value={referral} onChange={setReferral} />
+            <SelectField label="REFERRAL" placeholder={common.placeholder.referral} name="referral" options={common.referralOptions} value={referral} onChange={setReferral} />
 
             <SubmitButton label={dict.submit} sendingLabel={common.sending} sending={status === "sending"} />
 

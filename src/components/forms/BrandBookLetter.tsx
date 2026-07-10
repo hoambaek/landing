@@ -17,7 +17,7 @@ export default async function BrandBookLetter({ locale }: { locale: Locale }) {
       headerDict={dict.header}
       footerDict={dict.footer}
     >
-      <BrandBookForm dict={dict.forms.brandBook} common={dict.forms.common} />
+      <BrandBookForm dict={dict.forms.brandBook} common={dict.forms.common} locale={locale} />
     </LetterShell>
   );
 }

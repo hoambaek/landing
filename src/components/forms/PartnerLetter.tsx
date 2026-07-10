@@ -17,7 +17,7 @@ export default async function PartnerLetter({ locale }: { locale: Locale }) {
       headerDict={dict.header}
       footerDict={dict.footer}
     >
-      <PartnerForm dict={dict.forms.partner} common={dict.forms.common} />
+      <PartnerForm dict={dict.forms.partner} common={dict.forms.common} locale={locale} />
     </LetterShell>
   );
 }

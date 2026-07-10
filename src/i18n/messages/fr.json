@@ -123,7 +123,6 @@
         "venue": "Nom de l'établissement",
         "contact": "Personne à contacter",
         "affiliation": "Affiliation · Société",
-        "message": "Parlez-nous de votre espace et de vos besoins",
         "referral": "Comment nous avez-vous connus ? (facultatif)"
       },
       "menu": {
@@ -131,7 +130,17 @@
         "label": "Menu de navigation",
         "close": "Fermer",
         "home": "Aller à l'accueil"
-      }
+      },
+      "referralOptions": [
+        "Recherche IA (ChatGPT, Perplexity, etc.)",
+        "Recherche (Google, Naver)",
+        "Instagram",
+        "YouTube",
+        "Bouche-à-oreille",
+        "Presse, médias",
+        "Dans un hôtel ou un restaurant",
+        "Autre"
+      ]
     },
     "invite": {
       "metaTitle": "Demander une invitation | Ocean Cellar Privé | Muse de Marée",
@@ -140,9 +149,17 @@
       "title": "Demander une invitation",
       "sub": "Vous, parmi les premiers invités.",
       "imageAlt": "Une bouteille remontée dans une colonne de lumière",
-      "body1": "Les premiers à rencontrer la première bouteille remontée de la mer.",
-      "body2": "Le calendrier et le lieu de chaque remontée, et le relevé du temps passé dans les profondeurs.",
-      "body3": "Les places n'ouvrent qu'à hauteur des bouteilles remontées.",
+      "benefits": [
+        {
+          "title": "Chaque sortie, en premier",
+          "desc": "Quand une nouvelle cuvée paraît, les membres sont informés en premier."
+        },
+        {
+          "title": "Le relevé de votre bouteille, à vie",
+          "desc": "Consultez à tout moment le relevé du temps passé dans les profondeurs."
+        }
+      ],
+      "scarcity": "Les places n'ouvrent qu'à hauteur des bouteilles préparées.",
       "submit": "Demander une invitation",
       "note": "Laissez vos coordonnées : nous vous écrirons en premier à l'ouverture des adhésions.",
       "errValidation": "Veuillez saisir votre nom et une adresse e-mail valide.",
@@ -156,11 +173,18 @@
       "title": "Contact partenaire",
       "sub": "Poser le temps de la mer sur la table.",
       "imageAlt": "Une main gantée posant une étiquette sur une bouteille couverte de balanes",
-      "body1": "Chaque bouteille porte le relevé du temps passé dans les profondeurs.",
-      "body2": "Coordonnées, profondeur et jours de vieillissement deviennent une histoire à partager avec vos convives.",
-      "body3": "Haute gastronomie, bars d'hôtel, caves privées. Nous préparons une proposition à la hauteur de votre lieu.",
+      "benefits": [
+        {
+          "title": "Un relevé des profondeurs dans chaque bouteille",
+          "desc": "Coordonnées, profondeur et temps deviennent une histoire à partager avec vos convives."
+        },
+        {
+          "title": "Une proposition adaptée à votre lieu",
+          "desc": "Haute gastronomie, bars d'hôtel, caves privées. Nous préparons une proposition à la hauteur."
+        }
+      ],
       "catLabel": "PARTNERSHIP TYPE",
-      "catHint": "Choisissez le type de partenariat adapté à votre établissement.",
+      "catHint": "Choisissez-en un.",
       "categories": {
         "dining": {
           "label": "Restaurant · Carte des vins",
@@ -179,7 +203,6 @@
           "desc": "Détail, cadeaux, collaboration"
         }
       },
-      "messageLabel": "MESSAGE (facultatif)",
       "submit": "Envoyer la demande",
       "note": "Nous étudierons votre message et vous répondrons par une proposition sous deux jours ouvrés.",
       "errCategory": "Veuillez sélectionner un type de partenariat.",
@@ -193,12 +216,18 @@
       "title": "Dossier de marque",
       "sub": "Écrit par la mer.",
       "imageAlt": "Une bouteille couverte de balanes sur du calcaire après la remontée",
-      "body1": "Un champagne vieilli dans les profondeurs de la Corée, son commencement et son relevé.",
-      "body2": "La philosophie de la marque, sa façon de mesurer, la gamme de cuvées et le partenariat.",
-      "body3": "Réunis en un seul dossier.",
+      "benefits": [
+        {
+          "title": "La marque en un seul dossier",
+          "desc": "Son commencement et sa philosophie, sa façon de mesurer, la gamme de cuvées et le partenariat."
+        },
+        {
+          "title": "PDF en coréen et en anglais",
+          "desc": "Envoyé par e-mail après vérification."
+        }
+      ],
       "submit": "Demander le dossier",
-      "note1": "Laissez votre nom, votre affiliation et votre e-mail ; après vérification, nous vous enverrons le dossier de marque (PDF).",
-      "note2": "Disponible en coréen et en anglais.",
+      "note": "Il suffit de votre nom, de votre affiliation et de votre e-mail.",
       "errValidation": "Veuillez saisir votre nom, votre affiliation et une adresse e-mail valide.",
       "successLine": "Votre demande a bien été reçue.",
       "successNote": "Après vérification, nous vous enverrons le dossier par e-mail."
