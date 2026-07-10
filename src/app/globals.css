@@ -1054,7 +1054,7 @@ input:focus-visible,
   .s-void__content {
     left: 0;
     right: 0;
-    top: 20vh;
+    top: 16vh;
     transform: none;
     align-items: center;
     gap: 47px;
