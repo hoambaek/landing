@@ -990,6 +990,7 @@ input:focus-visible,
   letter-spacing: 0.06em;
   line-height: 22px;
   color: var(--color-amber);
+  text-shadow: 0 1px 10px rgba(10, 9, 8, 0.7), 0 0 2px rgba(10, 9, 8, 0.5);
 }
 
 .s-void__brand-name {
@@ -998,14 +999,16 @@ input:focus-visible,
   letter-spacing: 0.04em;
   line-height: 28px;
   color: var(--color-amber);
+  text-shadow: 0 1px 12px rgba(10, 9, 8, 0.6);
 }
 
-/* 브랜드명 텍스트 이미지 (J1950 → PNG) — baseline 정렬 */
+/* 브랜드명 텍스트 이미지 (J1950 → PNG) — baseline 정렬, 모바일과 동일한 가독 그림자 */
 .s-void__brand-name-img {
   display: inline-block;
   width: 107px;
   height: auto;
   vertical-align: baseline;
+  filter: drop-shadow(0 1px 10px rgba(10, 9, 8, 0.8)) drop-shadow(0 0 3px rgba(10, 9, 8, 0.7));
 }
 /* 이미지 박스 하단 여백만큼 내려 label '해저숙성 샴페인'과 글자 밑선 정렬 (데스크톱) */
 .s-void__brand-name-img {
@@ -2379,6 +2382,11 @@ input:focus-visible,
   .s-prive__media {
     display: flex;
     flex-direction: column;
+  }
+
+  /* 파트너십 — 원본 왼쪽의 병·테이블이 보이도록 (Paper 모바일 크롭 확정값) */
+  .s-prive--right .s-prive__img {
+    object-position: 6% center;
   }
 
   .s-prive__scrim--left,
@@ -4112,9 +4120,10 @@ input:focus-visible,
   }
 }
 
-/* 3-3: overscroll 방지 — 실수로 새로고침 방지 */
+/* 3-3: overscroll 방지 — 당김 새로고침만 세로축에서 차단.
+   가로축은 auto 유지 — 맥 트랙패드 두 손가락 스와이프(뒤로/앞으로)가 가로 오버스크롤이라 contain이면 죽는다 */
 html {
-  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
   /* iOS 26 사파리는 theme-color를 무시하고 루트 배경색을 샘플링해 상태바를 틴트한다
      — 투명 루트는 흰색 폴백이므로 명시적 다크 배경 필수 */
   background-color: var(--color-void-bg);
