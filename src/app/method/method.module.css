@@ -73,6 +73,7 @@
   color: rgba(49, 46, 42, 0.75);
   max-width: 760px;
   margin: 0;
+  white-space: pre-line; /* \n 줄바꿈 반영 */
 }
 .monoLabel { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.18em; }
 .monoDim { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; color: rgba(49, 46, 42, 0.45); }
@@ -342,6 +343,8 @@
 }
 
 /* ═══ CH.03 검증받는다 ═══ */
+/* 인양 이미지가 섹션 끝에 붙도록 하단 여백 제거(이미지 아래 블랙 공간 없앰) */
+.verifySection { padding-bottom: 0; }
 .verifyGrid { display: flex; align-items: flex-start; gap: 110px; }
 .verifyCopy { display: flex; flex-direction: column; gap: 28px; width: 560px; flex-shrink: 0; }
 .verifyCopy .h2 { margin-bottom: 12px; }

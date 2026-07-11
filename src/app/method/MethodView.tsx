@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
@@ -562,23 +561,6 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
           />
           <figcaption className={s.retrievalCap}>RETRIEVAL · 34°N · 126°E</figcaption>
         </figure>
-
-        {/* 검증의 다섯 원칙 */}
-        <div className={`${s.inner} ${s.principles}`}>
-          <span className={s.monoLabel}>{t.ch03.principlesLabel}</span>
-          <div className={s.principleRow}>
-            {t.ch03.principles.map((p, i) => (
-              <Fragment key={p}>
-                {i > 0 && <i />}
-                <span>{p}</span>
-              </Fragment>
-            ))}
-          </div>
-          <div className={s.principleGrid}>
-            <div><span>{t.ch03.principles[0]}</span><span>{t.ch03.principles[1]}</span><span>{t.ch03.principles[3]}</span></div>
-            <div><span>{t.ch03.principles[2]}</span><span>{t.ch03.principles[4]}</span></div>
-          </div>
-        </div>
 
       </section>
 

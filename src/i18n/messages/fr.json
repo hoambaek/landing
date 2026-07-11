@@ -92,10 +92,10 @@
   "oceanCellar": {
     "eyebrow": "membership",
     "title": "Ocean Cellar Privé",
-    "sub": "Les premiers à assister à chaque remontée",
+    "sub": "Les premiers à découvrir chaque sortie",
     "tags": {
-      "schedule": "Accès anticipé aux dates de remontée",
-      "attend": "Assister à la remontée",
+      "schedule": "Les sorties en avant-première",
+      "attend": "Seulement autant que de bouteilles préparées",
       "archive": "Le relevé de votre bouteille, à vie"
     },
     "link": "Demander une invitation"

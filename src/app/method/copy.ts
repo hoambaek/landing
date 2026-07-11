@@ -61,8 +61,6 @@ export interface MethodCopy {
     cardAxes: [string, string, string, string, string, string];
     sealed: string;
     retrievalAlt: string;
-    principlesLabel: string;
-    principles: [string, string, string, string, string];
   };
   ch04: {
     h2: string;
@@ -94,12 +92,12 @@ const ko: MethodCopy = {
   },
   hero: {
     title: "바다는 기록합니다. 우리는 그 기록을 읽는 법을 배우고 있습니다.",
-    sub: ["해저 숙성을 예측하는 AI OCEAN CELLAR™가", "남해 수심 30m에서 일하는 방식입니다."],
+    sub: ["해저 숙성을 예측하는 AI OCEAN CELLAR™가", "남해 수심 30m에서 하는 일입니다."],
   },
   ch01: {
     h2: "바다가 쓰는 것을 기록합니다.",
-    p1: "남해, 국립해양조사원의 관측이 닿는 바다입니다. 그 실측을 월별 수온과 염분, 조류로 옮겨 적습니다. 가정이 아니라 실제 바다가 모델에 들어갑니다.",
-    p2: "수심 30m. 병이 잠긴 자리의 조건은 계절마다 다르게 흐르고, 병이 잠들어 있는 동안에도 측정은 멈추지 않습니다.",
+    p1: "남해는 국립해양조사원이 직접 실측하는 바다입니다. 바다가 써 내려가는 수온과 염분, 조류를 매달 그대로 받아 적습니다. 지어낸 숫자가 아니라 실제 바다의 기록이, 그대로 예측의 바탕이 됩니다.",
+    p2: "병이 잠긴 곳은 수심 30m. 이 자리의 물은 계절마다 다르게 흐르고, 병이 바다에 머무는 내내 측정은 멈추지 않습니다.",
     photoAlt: "해저 모래 바닥 위 침지 케이지",
     obsLabel: "최근 30일의 관측",
     obsSource: "KHOA · OPEN-METEO · 남해",
@@ -109,7 +107,7 @@ const ko: MethodCopy = {
   },
   ch02: {
     h2: "시간이 지나갈 길을 예측합니다.",
-    lead: "숙성 시간을 따라 풍미가 어떻게 변해가는지 추적해 쌓은 테이스팅 기록 112,316건. 그 변화의 궤적으로 배운 모델이 여섯 개의 축으로 풍미를 읽습니다. 향이 열리는 속도와 기포가 남는 정도는 물리와 화학의 법칙으로 다듬습니다. 그렇게 36개월의 궤적 하나를 그립니다. 더 좋아지는 길이 아니라, 지상과는 다른 길입니다.",
+    lead: "풍미가 숙성 시간을 따라 어떻게 변하는지, 112,316건의 테이스팅으로 기록했습니다. 이 데이터로 배운 모델이 여섯 개의 축으로 풍미를 읽습니다. 향이 열리는 속도와 기포가 남는 정도는 물리와 화학의 법칙으로 다듬습니다. 그렇게 36개월의 변화를 하나의 곡선으로 그립니다. 더 좋아지는 길이 아니라, 지상과는 다른 길입니다.",
     tagPlan: { em: "계획", text: "12개월" },
     tagRec: { em: "추천", text: "12개월 · 84점" },
     tagPeak: { em: "PEAK", text: "14개월 · 87점" },
@@ -134,7 +132,7 @@ const ko: MethodCopy = {
   },
   ch03: {
     h2: "인양하는 날, 검증을 받습니다.",
-    p1: "지난 4년, 열 번이 넘도록 담그고 끌어올리기를 반복했습니다. 예측은 인양 전에 미리 적어 두고, 인양하는 날 지상에서 보관한 병과 나란히 비교 시음으로 실측과 맞춰봅니다.",
+    p1: "바다가 어떻게 숙성시킬지 미리 예측해, 인양하기 전에 적어 둡니다. 인양하는 날에는 지상에 똑같이 보관한 병과 나란히 두고, 비교 시음으로 예측과 실제를 맞춰봅니다.",
     p2: "맞았는지는 우리가 말하지 않습니다. 바다가 판정하고, 결과는 그대로 공개합니다.",
     nextRetrieval: "다음 인양 · 2026년 겨울",
     cardNo: "N° 2026-014",
@@ -153,8 +151,6 @@ const ko: MethodCopy = {
     cardAxes: ["과실향", "플로럴·미네랄", "효모·숙성향", "산도", "바디감", "여운"],
     sealed: "미공개",
     retrievalAlt: "수면 위로 끌어올려지는 숙성 케이지",
-    principlesLabel: "검증의 다섯 원칙",
-    principles: ["대조군", "비교 시음", "복수의 시음가", "반복", "물성 측정"],
   },
   ch04: {
     h2: "검증된 만큼, 다시 보정합니다.",
@@ -176,7 +172,7 @@ const ko: MethodCopy = {
   },
   archive: {
     h2: "이 기록은 매년 발표됩니다.",
-    lead: "입수 데이터, 바다의 조건, 검증의 결과까지. 마케팅이 아니라 기록의 문법으로, 날짜와 함께 남깁니다.",
+    lead: "입수한 데이터, 바다의 조건, 검증 결과까지 날짜와 함께 남깁니다.\n꾸미는 말이 아니라, 있었던 그대로의 기록입니다.",
     photoAlt: "수면 위로 올라온 따개비 붙은 병",
     rows: [
       { date: "2026 · 겨울", title: "다음 인양, 예측과 실측의 대조", status: "예정", accent: true },
@@ -204,8 +200,8 @@ const en: MethodCopy = {
   },
   ch01: {
     h2: "We record what the sea writes.",
-    p1: "The waters off Namhae, within reach of the Korea Hydrographic and Oceanographic Agency's observations. We transcribe those measurements into monthly temperature, salinity, and currents. Not assumptions — the actual sea enters the model.",
-    p2: "Thirty metres down. The conditions around the sleeping bottles shift with the seasons, and the measuring never stops.",
+    p1: "The waters off Namhae are measured directly by the Korea Hydrographic and Oceanographic Agency. Each month we take down the temperature, salinity, and currents the sea writes for itself. Not numbers we invented, but the sea's own record, becoming the ground our predictions stand on.",
+    p2: "The bottles rest thirty metres down. The water there flows differently with each season, and for as long as a bottle stays in the sea, the measuring never stops.",
     photoAlt: "An immersion cage on the sandy seabed",
     obsLabel: "Observations · last 30 days",
     obsSource: "KHOA · OPEN-METEO · NAMHAE WATERS",
@@ -215,7 +211,7 @@ const en: MethodCopy = {
   },
   ch02: {
     h2: "We predict the path time will take.",
-    lead: "112,316 tasting records tracing how flavour changes across aging time. A model trained on those trajectories reads flavour along six axes. The pace at which aromas open and the way bubbles persist are refined by the laws of physics and chemistry. The result is a single 36-month trajectory. Not a better path — a different one from land.",
+    lead: "We recorded how flavour changes over aging time across 112,316 tastings. A model trained on that data reads flavour along six axes. The pace at which aromas open and the way bubbles persist are refined by the laws of physics and chemistry. From it we draw a single 36-month curve. Not a better path, but a different one from land.",
     tagPlan: { em: "PLAN", text: "12 mo" },
     tagRec: { em: "ADVISED", text: "12 mo · 84" },
     tagPeak: { em: "PEAK", text: "14 mo · 87" },
@@ -240,7 +236,7 @@ const en: MethodCopy = {
   },
   ch03: {
     h2: "On retrieval day, we are put to the test.",
-    p1: "Over the past four years, we have immersed and retrieved more than ten times. Predictions are written down before each retrieval; on the day itself, we taste the sea-aged bottles side by side with their land-kept counterparts and check the record against reality.",
+    p1: "We predict how the sea will age each bottle and write it down before retrieval. On the day, we set it beside an identical bottle kept on land and check prediction against reality through a comparative tasting.",
     p2: "Whether we were right is not ours to say. The sea does the grading, and the results are published as they are.",
     nextRetrieval: "Next retrieval · Winter 2026",
     cardNo: "N° 2026-014",
@@ -259,8 +255,6 @@ const en: MethodCopy = {
     cardAxes: ["Fruit", "Floral · Mineral", "Yeast · Maturity", "Acidity", "Body", "Finish"],
     sealed: "Sealed",
     retrievalAlt: "An aging cage being raised through the surface",
-    principlesLabel: "Five principles of verification",
-    principles: ["Control group", "Comparative tasting", "Multiple tasters", "Repetition", "Physical measurement"],
   },
   ch04: {
     h2: "What is verified recalibrates the model.",
@@ -275,14 +269,14 @@ const en: MethodCopy = {
     certCopy: "Immersion coordinates, depth, the history of temperature. Hold your phone to the bottle and the time it lived through opens up. No two bottles are alike.",
   },
   quote: {
-    text: "“The day we head out to sea with our predictions written down feels like sitting an exam. Knowing the grading is not ours to do — that is the whole of this work.”",
+    text: "“Writing down our prediction and heading out to sea feels like sitting an exam. The grading is not ours to do. Accepting that is the whole of this work.”",
     portraitAlt: "Hands holding a tablet showing an ocean observation dashboard, on deck",
     attrName: "Muse de Marée Records Team",
     attrOrg: "NAMHAE STATION",
   },
   archive: {
     h2: "This record is published every year.",
-    lead: "Immersion data, the sea's conditions, the verification results. Written in the grammar of records, not marketing — and dated.",
+    lead: "Immersion data, the sea's conditions, the verification results — all kept with their dates. Not words meant to impress, but a record of what actually happened.",
     photoAlt: "A barnacle-covered bottle just raised from the sea",
     rows: [
       { date: "2026 · Winter", title: "Next retrieval — prediction meets measurement", status: "Upcoming", accent: true },
@@ -310,8 +304,8 @@ const fr: MethodCopy = {
   },
   ch01: {
     h2: "Nous consignons ce que la mer écrit.",
-    p1: "Les eaux au large de Namhae, couvertes par les observations de l'agence hydrographique et océanographique de Corée (KHOA). Nous transcrivons ces mesures en températures, salinités et courants mensuels. Pas d'hypothèses — c'est la mer réelle qui entre dans le modèle.",
-    p2: "Trente mètres de fond. Les conditions autour des bouteilles endormies changent au fil des saisons, et la mesure ne s'arrête jamais.",
+    p1: "Les eaux au large de Namhae sont mesurées directement par l'agence hydrographique et océanographique de Corée (KHOA). Chaque mois, nous relevons les températures, salinités et courants que la mer écrit d'elle-même. Non pas des chiffres inventés, mais le relevé même de la mer qui devient le socle de nos prévisions.",
+    p2: "Les bouteilles reposent à trente mètres de fond. L'eau y circule différemment à chaque saison, et tant qu'une bouteille demeure en mer, la mesure ne s'arrête jamais.",
     photoAlt: "Une cage d'immersion sur le fond sableux",
     obsLabel: "Observations · 30 derniers jours",
     obsSource: "KHOA · OPEN-METEO · EAUX DE NAMHAE",
@@ -321,7 +315,7 @@ const fr: MethodCopy = {
   },
   ch02: {
     h2: "Nous prédisons le chemin que prendra le temps.",
-    lead: "112 316 relevés de dégustation retraçant l'évolution des arômes au fil du vieillissement. Un modèle nourri de ces trajectoires lit le vin selon six axes. La vitesse d'ouverture des arômes et la tenue des bulles sont affinées par les lois de la physique et de la chimie. Il en résulte une trajectoire unique de 36 mois. Non pas meilleure — différente de la terre.",
+    lead: "Nous avons enregistré l'évolution des arômes au fil du vieillissement sur 112 316 dégustations. Un modèle entraîné sur ces données lit le vin selon six axes. La vitesse d'ouverture des arômes et la tenue des bulles sont affinées par les lois de la physique et de la chimie. Nous en traçons une seule courbe sur 36 mois. Non pas une meilleure voie, mais une voie différente de celle de la terre.",
     tagPlan: { em: "PRÉVU", text: "12 mois" },
     tagRec: { em: "CONSEILLÉ", text: "12 mois · 84" },
     tagPeak: { em: "PIC", text: "14 mois · 87" },
@@ -346,7 +340,7 @@ const fr: MethodCopy = {
   },
   ch03: {
     h2: "Le jour de la remontée, nous passons l'épreuve.",
-    p1: "Depuis quatre ans, nous avons immergé et remonté plus de dix fois. Les prévisions sont écrites avant chaque remontée ; le jour même, nous dégustons les bouteilles vieillies en mer côte à côte avec leurs jumelles gardées à terre, et confrontons le relevé au réel.",
+    p1: "Nous prédisons comment la mer fera vieillir chaque bouteille et l'écrivons avant la remontée. Le jour venu, nous la plaçons à côté d'une bouteille identique gardée à terre et confrontons la prévision au réel par une dégustation comparative.",
     p2: "Avoir eu raison ou tort, ce n'est pas à nous de le dire. La mer note, et les résultats sont publiés tels quels.",
     nextRetrieval: "Prochaine remontée · hiver 2026",
     cardNo: "N° 2026-014",
@@ -365,8 +359,6 @@ const fr: MethodCopy = {
     cardAxes: ["Fruité", "Floral · Minéral", "Levure · Évolution", "Acidité", "Corps", "Finale"],
     sealed: "Scellé",
     retrievalAlt: "Une cage de vieillissement remontée à la surface",
-    principlesLabel: "Cinq principes de vérification",
-    principles: ["Groupe témoin", "Dégustation comparative", "Plusieurs dégustateurs", "Répétition", "Mesures physiques"],
   },
   ch04: {
     h2: "Ce qui est vérifié recalibre le modèle.",
@@ -381,14 +373,14 @@ const fr: MethodCopy = {
     certCopy: "Coordonnées d'immersion, profondeur, historique des températures. Approchez votre téléphone de la bouteille : le temps qu'elle a vécu s'ouvre. Aucune bouteille ne ressemble à une autre.",
   },
   quote: {
-    text: "« Le jour où nous prenons la mer, prévisions déjà écrites, c'est comme aller passer un examen. Savoir que la notation ne nous appartient pas — c'est tout le métier. »",
+    text: "« Écrire notre prévision puis prendre la mer, c'est comme aller passer un examen. Ce n'est pas à nous de noter. Accepter cela, c'est tout le sens de ce travail. »",
     portraitAlt: "Des mains tenant une tablette affichant un tableau de bord d'observation marine, sur le pont",
     attrName: "Équipe des relevés Muse de Marée",
     attrOrg: "NAMHAE STATION",
   },
   archive: {
     h2: "Ce relevé est publié chaque année.",
-    lead: "Les données d'immersion, les conditions de la mer, les résultats de vérification. Dans la grammaire du relevé, non du marketing — et daté.",
+    lead: "Les données d'immersion, les conditions de la mer, les résultats de vérification, tout est consigné avec sa date. Non pas des mots pour séduire, mais le relevé de ce qui a réellement eu lieu.",
     photoAlt: "Une bouteille couverte de balanes tout juste remontée de la mer",
     rows: [
       { date: "2026 · Hiver", title: "Prochaine remontée — la prévision rencontre la mesure", status: "À venir", accent: true },
