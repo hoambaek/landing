@@ -105,7 +105,7 @@
 .heroScrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(10, 9, 8, 0.82) 0%, rgba(10, 9, 8, 0.78) 55%, rgba(10, 9, 8, 0.92) 100%);
+  background: linear-gradient(180deg, rgba(10, 9, 8, 1) 0%, rgba(10, 9, 8, 0.65) 50%, rgba(10, 9, 8, 0.4) 100%);
 }
 .heroCopy {
   position: relative;
@@ -255,12 +255,12 @@
   color: rgba(49, 46, 42, 0.7);
 }
 .lgItem i { display: block; width: 24px; flex-shrink: 0; }
-.swAmber { height: 2.5px; border-radius: 2px; background: #b89868; }
-.swSolid { height: 1.5px; background: rgba(74, 124, 89, 0.6); }
-.swDash { height: 0; border-top: 1.5px dashed rgba(74, 124, 89, 0.55); }
-.swRust { height: 1.5px; background: rgba(160, 82, 72, 0.55); }
-.swRustDash { height: 0; border-top: 1.5px dashed rgba(160, 82, 72, 0.5); }
-.swDashDark { height: 0; border-top: 1.5px dashed rgba(49, 46, 42, 0.5); }
+.swAmber { height: 2.8px; border-radius: 2px; background: #8a6a2e; }
+.swSolid { height: 1.5px; background: rgba(49, 46, 42, 0.68); }
+.swDash { height: 0; border-top: 1.5px dashed rgba(49, 46, 42, 0.55); }
+.swRust { height: 1.5px; background: rgba(150, 54, 42, 0.85); }
+.swRustDash { height: 0; border-top: 1.5px dashed rgba(150, 54, 42, 0.62); }
+.swDashDark { height: 0; border-top: 1.5px dashed rgba(49, 46, 42, 0.68); }
 .tlProduct {
   margin-left: auto;
   font-family: var(--font-serif-kr);
@@ -279,20 +279,39 @@
 .radarHead { display: flex; align-items: baseline; justify-content: space-between; }
 .radarRow { display: flex; align-items: flex-start; gap: 90px; }
 .radarChart { width: 620px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; }
-.radarLegend { display: flex; align-items: center; gap: 24px; }
+.radarLegend { display: flex; align-items: center; justify-content: center; gap: 24px; }
 .changeList { flex: 1; padding-top: 30px; }
 .changeRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 13px 4px;
-  border-bottom: 1px solid rgba(49, 46, 42, 0.1);
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(49, 46, 42, 0.08);
 }
 .changeRow:last-of-type { border-bottom: none; }
-.changeAxis { font-family: var(--font-serif-kr); font-weight: 300; font-size: 14px; color: rgba(49, 46, 42, 0.75); width: 130px; flex-shrink: 0; }
-.changeVals { font-family: var(--font-mono); font-size: 13px; color: rgba(49, 46, 42, 0.55); }
-.changeUp { font-family: var(--font-mono); font-size: 12px; color: #b89868; width: 56px; text-align: right; flex-shrink: 0; }
-.changeDown { font-family: var(--font-mono); font-size: 12px; color: rgba(49, 46, 42, 0.45); width: 56px; text-align: right; flex-shrink: 0; }
+.changeAxis { font-family: var(--font-serif-kr); font-weight: 300; font-size: 14px; color: #312e2a; }
+.changeAxisStrong { font-weight: 400; }
+.changeMeta { display: flex; align-items: center; gap: 14px; }
+.changeVals { font-family: var(--font-mono); font-size: 12.5px; color: rgba(49, 46, 42, 0.38); }
+.valUp { color: #8a6a2e; font-weight: 500; }
+.valDown { color: rgba(49, 46, 42, 0.7); }
+/* 상승/하락 텍스트 배지 (작은 변화) */
+.changeUp { font-family: var(--font-mono); font-size: 12px; color: #8a6a2e; width: 52px; text-align: right; flex-shrink: 0; }
+.changeDown { font-family: var(--font-mono); font-size: 12px; color: rgba(49, 46, 42, 0.5); width: 52px; text-align: right; flex-shrink: 0; }
+/* 큰 변화(|Δ|≥12) — 채운 브론즈 배지 */
+.changeBadge {
+  display: inline-flex;
+  justify-content: center;
+  width: 52px;
+  padding: 3px 0;
+  border-radius: 999px;
+  background: #8a6a2e;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #f5f1e8;
+  flex-shrink: 0;
+}
 .changeNote {
   font-family: var(--font-serif-kr);
   font-weight: 300;
@@ -340,68 +359,103 @@
   .nextRetrieval { font-size: 11px; }
 }
 
-.card {
-  width: 530px;
+/* 예측 기록서 — 아이폰 17 Pro 목업 (베젤 + Dynamic Island) */
+.phone {
+  width: 412px;
   flex-shrink: 0;
-  background: #f1efeb;
-  padding: 44px 48px 40px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  position: relative;
+  border-radius: 56px;
+  background: #0a0f1a;
+  border: 1px solid rgba(140, 150, 165, 0.28);
+  box-shadow: inset 0 0 0 6px #16181d, 0 30px 80px rgba(0, 0, 0, 0.55);
+  padding: 12px;
+  /* 아이폰 프레임+내용이 함께 바디감 부근에서 블러로 사라짐 (Paper 목업과 동일) */
+  -webkit-mask-image: linear-gradient(to bottom, #000 64%, transparent 90%);
+  mask-image: linear-gradient(to bottom, #000 64%, transparent 90%);
+}
+.phoneIsland {
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 112px;
+  height: 32px;
+  border-radius: 20px;
+  background: #000;
+  z-index: 3;
+}
+/* 화면(스크린) — 상단은 Dynamic Island 공간, 하단은 블러로 사라짐 */
+.card {
+  border-radius: 46px;
+  background: radial-gradient(120% 50% at 50% 0%, #101827 0%, #0a0f1a 55%), #0a0f1a;
+  padding: 74px 30px 48px;
+  overflow: hidden;
+  color: #e8e5e1;
 }
 .cardHead {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  padding-bottom: 18px;
-  border-bottom: 1px solid rgba(49, 46, 42, 0.2);
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.2em;
-  color: #312e2a;
+  letter-spacing: 0.24em;
+  color: #b7916e;
 }
-.cardNo { letter-spacing: 0.14em; color: rgba(49, 46, 42, 0.55); }
-.cardTitle { display: flex; flex-direction: column; gap: 6px; padding-top: 24px; }
-.cardTitle strong { font-family: var(--font-serif-kr); font-weight: 400; font-size: 16px; color: #312e2a; }
-.cardTitle span { font-family: var(--font-serif-kr); font-weight: 300; font-size: 13px; line-height: 1.7; color: rgba(49, 46, 42, 0.6); }
-.cardRows { padding-top: 26px; }
-.cardRow {
-  display: flex;
+.cardNo { letter-spacing: 0.12em; color: rgba(232, 229, 225, 0.45); }
+.cardTitle { display: flex; flex-direction: column; gap: 7px; padding-top: 18px; }
+.cardTitle strong { font-family: var(--font-serif-kr); font-weight: 500; font-size: 22px; color: #f2efe9; }
+.cardTitle strong em { font-family: var(--font-heading); font-style: italic; font-weight: 400; font-size: 22px; color: #b7916e; margin-left: 6px; }
+.cardTitle span { font-family: var(--font-serif-kr); font-weight: 300; font-size: 13px; line-height: 1.6; color: rgba(232, 229, 225, 0.55); }
+/* SEALED 배지 + 로고 */
+.cardBadgeRow { display: flex; align-items: center; justify-content: space-between; padding-top: 20px; }
+.cardBadge {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 11px 0;
-  border-bottom: 1px solid rgba(49, 46, 42, 0.1);
+  gap: 9px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(183, 145, 110, 0.55);
+  background: rgba(183, 145, 110, 0.08);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: #cfa87d;
 }
-.cardRow:last-child { border-bottom: none; }
-.cardAxis { font-family: var(--font-serif-kr); font-weight: 300; font-size: 13px; color: rgba(49, 46, 42, 0.7); width: 120px; flex-shrink: 0; }
-.cardBars { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.3em; color: rgba(49, 46, 42, 0.35); }
-.cardSealed { font-family: var(--font-mono); font-size: 11px; color: rgba(49, 46, 42, 0.4); width: 52px; text-align: right; flex-shrink: 0; }
-.cardGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 18px 0; }
-.cardCell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 10px;
-  border: 1px solid rgba(49, 46, 42, 0.12);
-  font-family: var(--font-serif-kr);
-  font-weight: 300;
-  font-size: 11px;
-  color: rgba(49, 46, 42, 0.7);
+.cardBadge i { width: 7px; height: 7px; border-radius: 50%; background: #b7916e; box-shadow: 0 0 10px 2px rgba(183, 145, 110, 0.55); flex-shrink: 0; }
+.cardMark { width: 54px; height: auto; opacity: 0.9; }
+/* BATCH 카드 · 잠긴 축 카드 공통 글래스 */
+.batchCard, .axesCard {
+  margin-top: 18px;
+  border: 1px solid rgba(232, 229, 225, 0.08);
+  background: rgba(232, 229, 225, 0.035);
+  border-radius: 18px;
+  padding: 20px 22px;
 }
-.cardBarsSm { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; color: rgba(49, 46, 42, 0.3); }
-.cardFoot { display: flex; align-items: flex-end; justify-content: space-between; padding-top: 30px; }
-.cardStamp { display: flex; flex-direction: column; gap: 6px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; color: rgba(49, 46, 42, 0.55); }
-.cardWordmark { margin-top: 12px; width: 132px; height: auto; }
-.cardSymbol { width: 78px; height: auto; flex-shrink: 0; }
+.batchLabel, .axesHead {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  color: rgba(232, 229, 225, 0.4);
+}
+.batchLabel { display: block; margin-bottom: 12px; }
+.batchRow { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; }
+.batchKey { font-family: var(--font-serif-kr); font-weight: 300; font-size: 13px; color: rgba(232, 229, 225, 0.55); }
+.batchVal { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.04em; color: #e8e5e1; }
+.axesHead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.axesLock { color: #cfa87d; flex-shrink: 0; }
+.axisRow { display: flex; align-items: center; gap: 14px; padding: 8px 0; }
+.axisName { width: 92px; flex-shrink: 0; font-family: var(--font-serif-kr); font-weight: 300; font-size: 13px; color: rgba(232, 229, 225, 0.6); }
+.axisBar { flex: 1; height: 5px; border-radius: 3px; background: rgba(232, 229, 225, 0.07); position: relative; overflow: hidden; }
+.axisBar i { position: absolute; left: 0; top: 0; bottom: 0; width: 62%; border-radius: 3px; background: linear-gradient(90deg, rgba(183, 145, 110, 0.85), rgba(183, 145, 110, 0.25)); filter: blur(4px); }
+.axisVal { width: 40px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: rgba(232, 229, 225, 0.32); flex-shrink: 0; }
 @media (max-width: 768px) {
-  .card { width: 100%; padding: 22px 22px 20px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45); }
-  .cardHead { padding-bottom: 12px; font-size: 10px; letter-spacing: 0.14em; }
-  .cardTitle { padding-top: 14px; gap: 3px; }
-  .cardTitle strong { font-size: 15px; }
-  .cardTitle span { font-size: 11px; }
-  .cardFoot { padding-top: 14px; border-top: 1px solid rgba(49, 46, 42, 0.12); }
-  .cardStamp { font-size: 9px; letter-spacing: 0.06em; gap: 8px; }
-  .cardWordmark { margin-top: 0; width: 96px; }
-  .cardSymbol { width: 44px; }
+  .phone { width: 100%; max-width: 360px; margin: 0 auto; border-radius: 48px; padding: 10px; box-shadow: inset 0 0 0 5px #16181d, 0 16px 40px rgba(0, 0, 0, 0.5); }
+  .phoneIsland { top: 22px; width: 100px; height: 28px; }
+  .card { border-radius: 40px; padding: 60px 20px 34px; }
+  .cardTitle strong, .cardTitle strong em { font-size: 19px; }
+  .cardTitle span { font-size: 12px; }
+  .batchCard, .axesCard { padding: 16px 18px; }
+  .axisName { width: 78px; font-size: 12px; }
 }
 
 .retrieval {

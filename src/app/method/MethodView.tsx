@@ -127,28 +127,29 @@ function estTagWidth(text: string): number {
 
 function TimelineChartDesktop({ t }: { t: MethodCopy["ch02"] }) {
   const tags: { cx: number; y: number; text: string; fill: string; stroke: string; color: string }[] = [
-    { cx: 333, y: 6, text: t.svgTagPlan, fill: "rgba(44,110,117,0.07)", stroke: "rgba(44,110,117,0.4)", color: "rgba(44,110,117,0.95)" },
-    { cx: 269, y: 60, text: t.svgTagRec, fill: "rgba(74,124,89,0.08)", stroke: "rgba(74,124,89,0.45)", color: "#4a7c59" },
-    { cx: 539, y: 8, text: t.svgTagPeak, fill: "rgba(204,173,123,0.12)", stroke: "rgba(184,152,104,0.55)", color: "#B89868" },
+    { cx: 333, y: 6, text: t.svgTagPlan, fill: "rgba(44,110,117,0.13)", stroke: "#2C6E75", color: "#2C6E75" },
+    { cx: 269, y: 60, text: t.svgTagRec, fill: "rgba(59,107,72,0.13)", stroke: "#3B6B48", color: "#3B6B48" },
+    { cx: 539, y: 8, text: t.svgTagPeak, fill: "rgba(138,106,46,0.13)", stroke: "#8A6A2E", color: "#8A6A2E" },
   ];
   return (
     <svg viewBox="-52 0 1266 412" className={s.tlSvg} role="img" aria-label={t.tlAria}>
       {TL_YLABELS.map(([y]) => (
-        <line key={y} x1="0" y1={y} x2="1200" y2={y} stroke={y === 345 ? "rgba(49,46,42,0.25)" : "rgba(49,46,42,0.06)"} strokeWidth="1" />
+        <line key={y} x1="0" y1={y} x2="1200" y2={y} stroke={y === 345 ? "rgba(49,46,42,0.30)" : "rgba(49,46,42,0.06)"} strokeWidth="1" />
       ))}
-      <polyline points={TL.texture} fill="none" stroke="rgba(49,46,42,0.4)" strokeWidth="1.2" />
-      <polyline points={TL.bubble} fill="none" stroke="rgba(49,46,42,0.45)" strokeWidth="1.2" strokeDasharray="7 5" />
-      <polyline points={TL.aroma} fill="none" stroke="rgba(160,82,72,0.45)" strokeWidth="1.2" />
-      <polyline points={TL.risk} fill="none" stroke="rgba(160,82,72,0.35)" strokeWidth="1.2" strokeDasharray="3 3" />
-      <polygon points={`0,345 ${TL.composite} 1200,345`} fill="rgba(184,152,104,0.10)" />
-      <polyline points={TL.composite} fill="none" stroke="#B89868" strokeWidth="2.5" />
+      {/* 배경과 분리되게 채움을 진하게, 데이터 라인은 채도·명도 up (굵기·점선은 유지) */}
+      <polygon points={`0,345 ${TL.composite} 1200,345`} fill="rgba(176,138,74,0.20)" />
+      <polyline points={TL.texture} fill="none" stroke="rgba(49,46,42,0.68)" strokeWidth="1.2" />
+      <polyline points={TL.bubble} fill="none" stroke="rgba(49,46,42,0.55)" strokeWidth="1.2" strokeDasharray="7 5" />
+      <polyline points={TL.aroma} fill="none" stroke="rgba(150,54,42,0.85)" strokeWidth="1.2" />
+      <polyline points={TL.risk} fill="none" stroke="rgba(150,54,42,0.62)" strokeWidth="1.2" strokeDasharray="3 3" />
+      <polyline points={TL.composite} fill="none" stroke="#8A6A2E" strokeWidth="2.8" />
       {/* 계획 12개월 · 피크 기준선 */}
-      <line x1="377" y1="34" x2="377" y2="345" stroke="rgba(44,110,117,0.5)" strokeWidth="1" strokeDasharray="4 4" />
-      <line x1="446" y1="34" x2="446" y2="345" stroke="rgba(184,152,104,0.5)" strokeWidth="1" strokeDasharray="2 3" />
-      <circle cx="377" cy="79" r="5" fill="#4a7c59" stroke="#ECEAE6" strokeWidth="1.5" />
-      <circle cx="446" cy="70" r="5.5" fill="#B89868" stroke="#ECEAE6" strokeWidth="2" />
+      <line x1="377" y1="34" x2="377" y2="345" stroke="rgba(44,110,117,0.62)" strokeWidth="1" strokeDasharray="4 4" />
+      <line x1="446" y1="34" x2="446" y2="345" stroke="rgba(138,106,46,0.60)" strokeWidth="1" strokeDasharray="2 3" />
+      <circle cx="377" cy="79" r="5" fill="#3B6B48" stroke="#ECEAE6" strokeWidth="1.5" />
+      <circle cx="446" cy="70" r="5.5" fill="#8A6A2E" stroke="#ECEAE6" strokeWidth="2" />
       {/* 태그 */}
-      <g fontFamily={MONO} fontSize="11" letterSpacing="0.04em">
+      <g fontFamily={MONO} fontSize="12" fontWeight="500" letterSpacing="0.04em">
         {tags.map((tag) => {
           const w = estTagWidth(tag.text);
           return (
@@ -168,8 +169,8 @@ function TimelineChartDesktop({ t }: { t: MethodCopy["ch02"] }) {
           <text key={tk} x={x} y="366">{tk}</text>
         ))}
         <text x="1152" y="366">{t.tlTick36}</text>
-        <text x="600" y="392" textAnchor="middle" letterSpacing="0.14em" fill="rgba(49,46,42,0.55)">{t.tlXAxis}</text>
-        <text x="-40" y="187" textAnchor="middle" letterSpacing="0.14em" fill="rgba(49,46,42,0.55)" transform="rotate(-90 -40 187)">{t.tlYAxis}</text>
+        <text x="600" y="392" textAnchor="middle" fontSize="11" fontWeight="500" letterSpacing="0.14em" fill="rgba(49,46,42,0.8)">{t.tlXAxis}</text>
+        <text x="-40" y="187" textAnchor="middle" fontSize="11" fontWeight="500" letterSpacing="0.14em" fill="rgba(49,46,42,0.8)" transform="rotate(-90 -40 187)">{t.tlYAxis}</text>
       </g>
     </svg>
   );
@@ -206,12 +207,12 @@ function TimelineChartMobile({ t }: { t: MethodCopy["ch02"] }) {
 
 /* ── CH.02 풍미 레이더 ── */
 const RADAR_CHANGES: { before: number; after: number }[] = [
-  { before: 78, after: 68 },
-  { before: 89, after: 93 },
+  { before: 78, after: 76 },
+  { before: 89, after: 97 },
   { before: 74, after: 91 },
-  { before: 92, after: 83 },
+  { before: 92, after: 90 },
   { before: 81, after: 94 },
-  { before: 86, after: 90 },
+  { before: 86, after: 98 },
 ];
 
 function RadarDesktop({ t }: { t: MethodCopy["ch02"] }) {
@@ -222,15 +223,15 @@ function RadarDesktop({ t }: { t: MethodCopy["ch02"] }) {
         <polygon points="310,172.5 342.5,191.25 342.5,228.75 310,247.5 277.5,228.75 277.5,191.25" stroke="rgba(49,46,42,0.08)" />
         <polygon points="310,135 374.9,172.5 374.9,247.5 310,285 245,247.5 245,172.5" stroke="rgba(49,46,42,0.08)" />
         <polygon points="310,97.5 407.4,153.75 407.4,266.25 310,322.5 212.6,266.25 212.6,153.75" stroke="rgba(49,46,42,0.08)" />
-        <polygon points="310,60 439.9,135 439.9,285 310,360 180.1,285 180.1,135" stroke="rgba(49,46,42,0.18)" />
+        <polygon points="310,60 439.9,135 439.9,285 310,360 180.1,285 180.1,135" stroke="rgba(49,46,42,0.22)" />
         {[[310, 60], [439.9, 135], [439.9, 285], [310, 360], [180.1, 285], [180.1, 135]].map(([x, y], i) => (
           <line key={i} x1="310" y1="210" x2={x} y2={y} stroke="rgba(49,46,42,0.08)" />
         ))}
       </g>
-      <polygon points="310,93 425.6,143.3 406.1,265.5 310,348 204.8,270.8 198.3,145.5" fill="rgba(49,46,42,0.04)" stroke="rgba(49,46,42,0.45)" strokeWidth="1.2" strokeDasharray="4 4" />
-      <polygon points="310,108 430.8,140.3 428.2,278.3 310,334.5 187.9,280.5 193.1,142.5" fill="rgba(184,152,104,0.14)" stroke="#B89868" strokeWidth="2" />
-      {[[310, 108], [430.8, 140.3], [428.2, 278.3], [310, 334.5], [187.9, 280.5], [193.1, 142.5]].map(([x, y], i) => (
-        <circle key={i} cx={x} cy={y} r="3.5" fill="#B89868" />
+      <polygon points="310,93 425.6,143.3 406.1,265.5 310,348 204.8,270.8 198.3,145.5" fill="rgba(49,46,42,0.05)" stroke="rgba(49,46,42,0.68)" strokeWidth="1.2" strokeDasharray="4 4" />
+      <polygon points="310,96 436,137.25 428.2,278.3 310,345 187.9,280.5 182.7,136.5" fill="rgba(176,138,74,0.20)" stroke="#8A6A2E" strokeWidth="2.2" />
+      {[[310, 96], [436, 137.25], [428.2, 278.3], [310, 345], [187.9, 280.5], [182.7, 136.5]].map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="3.5" fill="#8A6A2E" />
       ))}
       <g fontFamily={MONO} fontSize="11" letterSpacing="0.06em" fill="rgba(49,46,42,0.6)">
         <text x="310" y="44" textAnchor="middle">{a1}</text>
@@ -466,13 +467,18 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
             <div className={`${s.changeList} ${s.dOnly}`}>
               {RADAR_CHANGES.map((c, i) => {
                 const diff = c.after - c.before;
+                const up = diff > 0;
+                const strong = Math.abs(diff) >= 12;
+                const badge = strong ? s.changeBadge : up ? s.changeUp : s.changeDown;
                 return (
                   <div key={t.ch02.radarAxes[i]} className={s.changeRow}>
-                    <span className={s.changeAxis}>{t.ch02.radarAxes[i]}</span>
-                    <span className={s.changeVals}>{c.before} → {c.after}</span>
-                    <span className={diff > 0 ? s.changeUp : s.changeDown}>
-                      {diff > 0 ? "▲" : "▼"} {Math.abs(diff)}
-                    </span>
+                    <span className={`${s.changeAxis}${strong ? " " + s.changeAxisStrong : ""}`}>{t.ch02.radarAxes[i]}</span>
+                    <div className={s.changeMeta}>
+                      <span className={s.changeVals}>
+                        {c.before} → <span className={up ? s.valUp : s.valDown}>{c.after}</span>
+                      </span>
+                      <span className={badge}>{up ? "▲" : "▼"} {Math.abs(diff)}</span>
+                    </div>
                   </div>
                 );
               })}
@@ -497,43 +503,49 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
             <span className={s.nextRetrieval}>{t.ch03.nextRetrieval}</span>
           </div>
 
-          {/* 예측 기록서 */}
-          <div className={s.card}>
+          {/* 예측 기록서 — 아이폰 목업 (Dynamic Island + SEALED, 인양 시 공개) */}
+          <div className={s.phone}>
+            <span className={s.phoneIsland} aria-hidden="true" />
+            <div className={s.card}>
             <div className={s.cardHead}>
               <span>OCEAN CELLAR™</span>
-              <span className={s.cardNo}>No. 2026-014</span>
+              <span className={s.cardNo}>{t.ch03.cardNo}</span>
             </div>
             <div className={s.cardTitle}>
-              <strong>{t.ch03.cardTitle}</strong>
+              <strong>{t.ch03.cardTitle} <em>{t.ch03.cardTitleEn}</em></strong>
               <span>{t.ch03.cardSub}</span>
             </div>
-            {/* 데스크톱: 6행 */}
-            <div className={`${s.cardRows} ${s.dOnly}`}>
-              {t.ch03.cardAxes.map((a) => (
-                <div key={a} className={s.cardRow}>
-                  <span className={s.cardAxis}>{a}</span>
-                  <span className={s.cardBars}>▮▮▮▮▮▮▮▮</span>
-                  <span className={s.cardSealed}>{t.ch03.sealed}</span>
+            <div className={s.cardBadgeRow}>
+              <span className={s.cardBadge}><i />{t.ch03.cardSealedBadge}</span>
+              <Image src="/images/logo/logo_trans_W.png" alt="" width={54} height={46} unoptimized className={s.cardMark} />
+            </div>
+            {/* BATCH 카드 */}
+            <div className={s.batchCard}>
+              <span className={s.batchLabel}>{t.ch03.cardBatchLabel}</span>
+              {t.ch03.cardBatch.map(([k, v]) => (
+                <div key={k} className={s.batchRow}>
+                  <span className={s.batchKey}>{k}</span>
+                  <span className={s.batchVal}>{v}</span>
                 </div>
               ))}
             </div>
-            {/* 모바일: 2×3 그리드 */}
-            <div className={`${s.cardGrid} ${s.mOnly}`}>
-              {t.ch03.cardAxes.map((a) => (
-                <div key={a} className={s.cardCell}>
-                  <span>{a}</span>
-                  <span className={s.cardBarsSm}>▮▮▮▮</span>
-                </div>
-              ))}
-            </div>
-            <div className={s.cardFoot}>
-              <div className={s.cardStamp}>
-                <span className={s.dOnly}>RECORDED · 2026.03.14</span>
-                <span className={s.dOnly}>OPEN AT RETRIEVAL · 2026 WINTER</span>
-                <span className={s.mOnly}>RECORDED 2026.03.14 · OPEN 2026 WINTER</span>
-                <Image src="/images/logo/logo_text_trans.png" alt="Muse de Marée" width={132} height={20} unoptimized className={s.cardWordmark} />
+            {/* 풍미 예측 — 잠김 */}
+            <div className={s.axesCard}>
+              <div className={s.axesHead}>
+                <span>{t.ch03.cardAxesLabel}</span>
+                <svg className={s.axesLock} width="11" height="13" viewBox="0 0 11 13" fill="none" aria-hidden>
+                  <rect x="0.5" y="5" width="10" height="7.5" rx="1.5" stroke="currentColor" strokeWidth="1" />
+                  <path d="M2.8 5V3.6a2.7 2.7 0 0 1 5.4 0V5" stroke="currentColor" strokeWidth="1" />
+                </svg>
               </div>
-              <Image src="/images/logo/logo_trans.png" alt="" width={78} height={67} unoptimized className={s.cardSymbol} />
+              {t.ch03.cardAxes.map((a) => (
+                <div key={a} className={s.axisRow}>
+                  <span className={s.axisName}>{a}</span>
+                  <span className={s.axisBar}><i /></span>
+                  <span className={s.axisVal}>{t.ch03.sealed}</span>
+                </div>
+              ))}
+            </div>
             </div>
           </div>
         </div>

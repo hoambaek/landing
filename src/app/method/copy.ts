@@ -50,8 +50,14 @@ export interface MethodCopy {
     p1: string;
     p2: string;
     nextRetrieval: string;
+    cardNo: string;
     cardTitle: string;
+    cardTitleEn: string;
     cardSub: string;
+    cardSealedBadge: string;
+    cardBatchLabel: string;
+    cardBatch: [string, string][];
+    cardAxesLabel: string;
     cardAxes: [string, string, string, string, string, string];
     sealed: string;
     retrievalAlt: string;
@@ -131,8 +137,19 @@ const ko: MethodCopy = {
     p1: "지난 4년, 열 번이 넘도록 담그고 끌어올리기를 반복했습니다. 예측은 인양 전에 미리 적어 두고, 인양하는 날 지상에서 보관한 병과 나란히 비교 시음으로 실측과 맞춰봅니다.",
     p2: "맞았는지는 우리가 말하지 않습니다. 바다가 판정하고, 결과는 그대로 공개합니다.",
     nextRetrieval: "다음 인양 · 2026년 겨울",
+    cardNo: "N° 2026-014",
     cardTitle: "예측 기록서",
+    cardTitleEn: "Sealed Prediction",
     cardSub: "먼저 기록하고, 인양하는 날 공개합니다.",
+    cardSealedBadge: "SEALED · 인양 시 공개",
+    cardBatchLabel: "BATCH — ATOMES CROCHUS",
+    cardBatch: [
+      ["입수", "2026년 01월 · 겨울"],
+      ["좌표", "34°N · 126°E"],
+      ["수심", "30 m"],
+      ["인양 예정", "2026년 12월 · 겨울"],
+    ],
+    cardAxesLabel: "풍미 예측 — 6 AXES",
     cardAxes: ["과실향", "플로럴·미네랄", "효모·숙성향", "산도", "바디감", "여운"],
     sealed: "미공개",
     retrievalAlt: "수면 위로 끌어올려지는 숙성 케이지",
@@ -226,8 +243,19 @@ const en: MethodCopy = {
     p1: "Over the past four years, we have immersed and retrieved more than ten times. Predictions are written down before each retrieval; on the day itself, we taste the sea-aged bottles side by side with their land-kept counterparts and check the record against reality.",
     p2: "Whether we were right is not ours to say. The sea does the grading, and the results are published as they are.",
     nextRetrieval: "Next retrieval · Winter 2026",
+    cardNo: "N° 2026-014",
     cardTitle: "Prediction Record",
+    cardTitleEn: "Sealed Prediction",
     cardSub: "Written first, opened on retrieval day.",
+    cardSealedBadge: "SEALED · Opens at retrieval",
+    cardBatchLabel: "BATCH — ATOMES CROCHUS",
+    cardBatch: [
+      ["Immersed", "JAN 2026 · WINTER"],
+      ["Coordinates", "34°N · 126°E"],
+      ["Depth", "30 m"],
+      ["Retrieval", "DEC 2026 · WINTER"],
+    ],
+    cardAxesLabel: "FLAVOR PREDICTION — 6 AXES",
     cardAxes: ["Fruit", "Floral · Mineral", "Yeast · Maturity", "Acidity", "Body", "Finish"],
     sealed: "Sealed",
     retrievalAlt: "An aging cage being raised through the surface",
@@ -321,8 +349,19 @@ const fr: MethodCopy = {
     p1: "Depuis quatre ans, nous avons immergé et remonté plus de dix fois. Les prévisions sont écrites avant chaque remontée ; le jour même, nous dégustons les bouteilles vieillies en mer côte à côte avec leurs jumelles gardées à terre, et confrontons le relevé au réel.",
     p2: "Avoir eu raison ou tort, ce n'est pas à nous de le dire. La mer note, et les résultats sont publiés tels quels.",
     nextRetrieval: "Prochaine remontée · hiver 2026",
+    cardNo: "N° 2026-014",
     cardTitle: "Registre de prévision",
+    cardTitleEn: "Sealed Prediction",
     cardSub: "Écrit d'abord, ouvert le jour de la remontée.",
+    cardSealedBadge: "SEALED · Ouvert à la remontée",
+    cardBatchLabel: "BATCH — ATOMES CROCHUS",
+    cardBatch: [
+      ["Immersion", "JANV. 2026 · HIVER"],
+      ["Coordonnées", "34°N · 126°E"],
+      ["Profondeur", "30 m"],
+      ["Remontée", "DÉC. 2026 · HIVER"],
+    ],
+    cardAxesLabel: "PRÉVISION AROMATIQUE — 6 AXES",
     cardAxes: ["Fruité", "Floral · Minéral", "Levure · Évolution", "Acidité", "Corps", "Finale"],
     sealed: "Scellé",
     retrievalAlt: "Une cage de vieillissement remontée à la surface",
