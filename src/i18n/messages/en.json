@@ -6,7 +6,7 @@
     "bgAlt": "A bottle of champagne in a cage at 30 m depth off Namhae · Muse de Marée"
   },
   "header": {
-    "recLine": "Namhae 34.1434°N · Temp 13.5°C",
+    "recLine": "Namhae 34°N · Temp 13.5°C",
     "recDays": "Day {n} of measurement",
     "creed": "In every bottle, the record of its time at sea.",
     "aria": {
@@ -53,11 +53,13 @@
     "cert": {
       "showcaseAlt": "En Lieu Sûr, with its record card",
       "entry": "Immersed",
+      "entryValue": "JAN 2026 · WINTER",
       "coordinates": "Coordinates",
       "aging": "Undersea ageing",
-      "agingValue": "365 days",
+      "agingValue": "12 MONTHS · 4 SEASONS",
       "recovery": "Recovered",
-      "nfcText": "Hold your phone near the bottle,\nthe 365 days this bottle has lived"
+      "recoveryValue": "DEC 2026 · WINTER",
+      "nfcText": "Hold your phone close,\nand 12 months of undersea ageing records unfold"
     },
     "gift": {
       "eyebrow": "A Gift",

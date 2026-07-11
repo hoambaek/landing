@@ -49,19 +49,70 @@ export default function TheMakerSection({
 }) {
   const isKo = locale === "ko";
   const [index, setIndex] = useState(0);
+  const [drag, setDrag] = useState(0);
+  const [dragging, setDragging] = useState(false);
   const last = MAKERS.length - 1;
-  const touchX = useRef<number | null>(null);
+
+  const trackRef = useRef<HTMLDivElement>(null);
+  const startX = useRef(0);
+  const startY = useRef(0);
+  const startT = useRef(0);
+  const axis = useRef<null | "x" | "y">(null);
+  const activeId = useRef<number | null>(null);
 
   const go = (next: number) => setIndex(Math.max(0, Math.min(last, next)));
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchX.current = e.touches[0].clientX;
+  // 슬라이드 한 칸 이동 폭(px) = 슬라이드 폭 + gap. CSS와 자동 일치.
+  const slideStep = () => {
+    const track = trackRef.current;
+    if (!track) return window.innerWidth;
+    const slide = track.querySelector<HTMLElement>(".s-maker__slide");
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    return (slide?.offsetWidth ?? window.innerWidth) + gap;
   };
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (touchX.current === null) return;
-    const dx = e.changedTouches[0].clientX - touchX.current;
-    if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
-    touchX.current = null;
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    startX.current = e.clientX;
+    startY.current = e.clientY;
+    startT.current = e.timeStamp;
+    axis.current = null;
+    activeId.current = e.pointerId;
+    setDragging(true);
+  };
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (activeId.current !== e.pointerId) return;
+    const dx = e.clientX - startX.current;
+    const dy = e.clientY - startY.current;
+    // 첫 이동에서 방향 결정 — 세로가 크면 페이지 스크롤에 양보
+    if (axis.current === null) {
+      if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+      axis.current = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+      if (axis.current === "x") e.currentTarget.setPointerCapture(e.pointerId);
+    }
+    if (axis.current !== "x") return;
+    // 양끝에서는 고무줄 저항
+    const atEdge = (index === 0 && dx > 0) || (index === last && dx < 0);
+    setDrag(atEdge ? dx * 0.35 : dx);
+  };
+
+  const onPointerEnd = (e: React.PointerEvent) => {
+    if (activeId.current !== e.pointerId) return;
+    activeId.current = null;
+    setDragging(false);
+    setDrag(0);
+    if (axis.current !== "x") {
+      axis.current = null;
+      return;
+    }
+    const dx = e.clientX - startX.current;
+    const dt = e.timeStamp - startT.current || 1;
+    const velocity = Math.abs(dx / dt); // px/ms
+    // 20% 이상 끌었거나 빠르게 튕기면 넘김
+    const passed = Math.abs(dx) > slideStep() * 0.2 || velocity > 0.45;
+    if (passed) go(index + (dx < 0 ? 1 : -1));
+    axis.current = null;
   };
 
   return (
@@ -86,8 +137,18 @@ export default function TheMakerSection({
       </header>
 
       {/* 슬라이더 */}
-      <div className="s-maker__viewport" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-        <div className="s-maker__track" style={{ "--idx": index } as CSSProperties}>
+      <div
+        className="s-maker__viewport"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerEnd}
+        onPointerCancel={onPointerEnd}
+      >
+        <div
+          ref={trackRef}
+          className={`s-maker__track${dragging ? " s-maker__track--dragging" : ""}`}
+          style={{ "--idx": index, "--drag": `${drag}px` } as CSSProperties}
+        >
           {MAKERS.map((m, i) => (
             <article
               key={i}
@@ -99,6 +160,7 @@ export default function TheMakerSection({
                   src={m.image}
                   alt={m.revealed ? dict.imgAlt : ""}
                   fill
+                  draggable={false}
                   sizes="(max-width: 768px) 330px, 700px"
                   className="s-maker__img"
                 />
@@ -146,7 +208,6 @@ export default function TheMakerSection({
             <span className="s-maker__counter-cur">{String(index + 1).padStart(2, "0")}</span>
             <span className="s-maker__counter-total">/ {String(MAKERS.length).padStart(2, "0")}</span>
           </div>
-          <span className="s-maker__teaser">{dict.teaser}</span>
         </div>
         <div className="s-maker__arrows">
           <button

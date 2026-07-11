@@ -72,7 +72,7 @@
   --z-skip: 9999;
 
   /* 레이아웃 — 폭·거터 (2026-07-05 토큰화) */
-  --w-content: 1240px;      /* 큐베 그리드·쇼케이스·메이커 내부 콘텐츠 폭 */
+  --w-content: 1240px;      /* 퀴베 그리드·쇼케이스·메이커 내부 콘텐츠 폭 */
   --gutter-page: 80px;      /* 페이지 좌우 여백 데스크톱 (.container·히어로·리빙) */
   --gutter-limit: 48px;     /* 와이드 블록 리미터 max-width 여백 */
 }
@@ -86,7 +86,10 @@
     font-weight: 300;
     color: var(--color-earth-muted);
     background: var(--color-void-bg);
-    overflow-x: hidden;
+    /* clip = 가로 넘침만 잘라내되 스크롤 컨테이너를 만들지 않음.
+       hidden이면 body가 가로 스크롤 컨테이너가 되어 맥 트랙패드 두 손가락
+       좌우 스와이프(뒤/앞 내비게이션)가 여기서 소비돼 작동하지 않는다. */
+    overflow-x: clip;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -1812,7 +1815,7 @@ input:focus-visible,
 }
 
 
-/* 큐베 그리드 */
+/* 퀴베 그리드 */
 .s-col__grid {
   list-style: none;
   padding: 0;
@@ -2038,20 +2041,19 @@ input:focus-visible,
   color: #8C857A;
 }
 
-/* 하단 노트 */
-/* 기프트 브릿지 — 증서가 있는 선물 (showcase와 note 사이) */
-.s-col__gift {
+/* 클로징 — 선물 카피 + 기록 태그필 (Paper "Closing — Gift & Record") */
+.s-col__closing {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
   text-align: center;
-  padding: 0 24px 96px;
+  padding: 0 24px 110px;
 }
 
 .s-col__gift-head {
   max-width: 640px;
-  font-family: var(--font-heading);
+  font-family: var(--font-serif-kr), 'Noto Serif KR', serif;
   font-weight: 300;
   font-size: 30px;
   letter-spacing: 0.01em;
@@ -2071,19 +2073,25 @@ input:focus-visible,
   word-break: keep-all;
 }
 
-.s-col__note {
+.s-col__tags {
   display: flex;
-  align-items: center;
-  gap: 18px;
-  padding-bottom: 110px;
+  gap: 10px;
+  padding-top: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.s-col__note span {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.14em;
+.s-col__tag {
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(49, 46, 42, 0.16);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
   line-height: 16px;
-  color: #8C857A;
+  color: #55504A;
+  white-space: nowrap;
 }
 
 /* ── Collection 모바일 ── */
@@ -2169,11 +2177,12 @@ input:focus-visible,
     padding: 28px 24px 24px;
   }
 
-  .s-col__note {
-    gap: 12px;
-    padding: 0 24px 72px;
-    flex-wrap: wrap;
-    justify-content: center;
+  .s-col__closing {
+    padding: 0 24px 80px;
+  }
+
+  .s-col__tags {
+    gap: 8px;
   }
 }
 
@@ -2843,17 +2852,39 @@ input:focus-visible,
   width: 100%;
   height: 522px;
   overflow: clip;
+  cursor: grab;
+  /* 세로 스크롤은 브라우저에 양보, 가로 제스처만 JS가 처리 */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.s-maker__viewport:active {
+  cursor: grabbing;
 }
 
 .s-maker__track {
   --slide-w: min(1240px, calc(100vw - 200px));
+  --slide-gap: 28px;
   display: flex;
-  gap: 28px;
+  gap: var(--slide-gap);
   height: 520px;
   padding-left: calc((100% - var(--slide-w)) / 2);
-  transform: translateX(calc(-1 * var(--idx, 0) * (var(--slide-w) + 28px)));
+  transform: translateX(calc(-1 * var(--idx, 0) * (var(--slide-w) + var(--slide-gap)) + var(--drag, 0px)));
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
+}
+
+/* 드래그 중에는 손가락을 즉시 따라오도록 트랜지션 제거 */
+.s-maker__track--dragging {
+  transition: none;
+}
+
+/* 슬라이드 이미지 기본 드래그(고스트) 방지 */
+.s-maker__img,
+.s-maker__slide-img img {
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 .s-maker__slide {
@@ -3064,7 +3095,7 @@ input:focus-visible,
 
   .s-maker__track {
     --slide-w: min(330px, calc(100vw - 60px));
-    gap: 14px;
+    --slide-gap: 14px;
     height: 518px;
   }
 

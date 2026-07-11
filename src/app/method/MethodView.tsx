@@ -548,7 +548,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
             unoptimized
             className={s.coverImg}
           />
-          <figcaption className={s.retrievalCap}>RETRIEVAL · 34°47&apos;N 127°54&apos;E</figcaption>
+          <figcaption className={s.retrievalCap}>RETRIEVAL · 34°N · 126°E</figcaption>
         </figure>
 
         {/* 검증의 다섯 원칙 */}

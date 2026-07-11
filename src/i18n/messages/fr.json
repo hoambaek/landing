@@ -6,7 +6,7 @@
     "bgAlt": "Une bouteille de champagne dans une cage à 30 m de profondeur au large de Namhae · Muse de Marée"
   },
   "header": {
-    "recLine": "Namhae 34,1434°N · Temp. 13,5°C",
+    "recLine": "Namhae 34°N · Temp. 13,5°C",
     "recDays": "{n}e jour d'observation",
     "creed": "Dans chaque bouteille, le relevé de son temps en mer.",
     "aria": {
@@ -53,11 +53,13 @@
     "cert": {
       "showcaseAlt": "En Lieu Sûr, avec sa carte de relevé",
       "entry": "Immersion",
+      "entryValue": "JANV. 2026 · HIVER",
       "coordinates": "Coordonnées",
       "aging": "Vieillissement sous-marin",
-      "agingValue": "365 jours",
+      "agingValue": "12 MOIS · 4 SAISONS",
       "recovery": "Remontée",
-      "nfcText": "Approchez votre téléphone de la bouteille,\nles 365 jours que cette bouteille a vécus"
+      "recoveryValue": "DÉC. 2026 · HIVER",
+      "nfcText": "Approchez votre téléphone,\net 12 mois de relevés sous-marins se dévoilent"
     },
     "gift": {
       "eyebrow": "En cadeau",
