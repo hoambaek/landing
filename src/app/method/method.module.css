@@ -105,7 +105,7 @@
 .heroScrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(10, 9, 8, 1) 0%, rgba(10, 9, 8, 0.65) 50%, rgba(10, 9, 8, 0.4) 100%);
+  background: linear-gradient(180deg, rgba(10, 9, 8, 1) 0%, rgba(10, 9, 8, 0.9) 50%, rgba(10, 9, 8, 0.72) 100%);
 }
 .heroCopy {
   position: relative;

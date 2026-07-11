@@ -1,5 +1,5 @@
 import Footer from "@/components/layout/Footer";
-import LetterHeader from "@/components/forms/LetterHeader";
+import Header from "@/components/layout/Header";
 import LegalDoc from "./LegalDoc";
 import koDict from "@/i18n/messages/ko.json";
 import type { LegalDoc as LegalDocData } from "@/content/legal/types";
@@ -12,9 +12,9 @@ import type { LegalDoc as LegalDocData } from "@/content/legal/types";
 export default function LegalShell({ doc }: { doc: LegalDocData }) {
   return (
     <main className="s-letter-page s-letter-page--brand s-legal-page">
-      <LetterHeader locale="ko" dict={koDict.header} />
+      <Header locale="ko" dict={koDict.header} />
 
-      <div className="s-legal__panel">
+      <div className="s-legal__panel" data-tone="light">
         <div className="s-legal__col">
           <LegalDoc doc={doc} />
         </div>

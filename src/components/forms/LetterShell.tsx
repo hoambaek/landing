@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Footer from "@/components/layout/Footer";
-import LetterHeader from "./LetterHeader";
+import Header from "@/components/layout/Header";
 import { defaultLocale, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import koDict from "@/i18n/messages/ko.json";
@@ -28,18 +28,18 @@ export default function LetterShell({
 }) {
   return (
     <main className={`s-letter-page s-letter-page--${theme}`}>
-      {/* 헤더 — 심볼(좌) + 워드마크(중앙) + 햄버거(우), 스크롤 시 다크 배경+노치 차폐 */}
-      <LetterHeader locale={locale} dict={headerDict} />
+      {/* 헤더 — 메인과 동일한 공용 Header (섹션 tone 감지로 로고 색 전환) */}
+      <Header locale={locale} dict={headerDict} />
 
-      {/* 상단 풀와이드 이미지 */}
-      <aside className="s-letter__visual">
+      {/* 상단 풀와이드 이미지 — brand는 밝은 히어로, 그 외는 다크 */}
+      <aside className="s-letter__visual" data-tone={theme === "brand" ? "light" : "dark"}>
         <Image src={image} alt={imageAlt} fill sizes="100vw" priority unoptimized />
         {/* 파트너 — 헤더 가독용 스크림 (CSS에서 theme별 표시) */}
         <span className="s-letter__scrim" aria-hidden="true" />
       </aside>
 
-      {/* 중앙 편지 패널 */}
-      <div className="s-letter__panel">
+      {/* 중앙 편지 패널 — 밝은 아이보리 */}
+      <div className="s-letter__panel" data-tone="light">
         <div className="s-letter__col">{children}</div>
       </div>
 

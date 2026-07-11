@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import LetterHeader from "@/components/forms/LetterHeader";
+import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { localePrefixMap, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -336,10 +336,10 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
 
   return (
     <>
-    <LetterHeader locale={locale} dict={dict.header} />
+    <Header locale={locale} dict={dict.header} />
     <main className={s.page}>
       {/* ═══ S1. Hero ═══ */}
-      <section className={s.hero}>
+      <section className={s.hero} data-tone="dark">
         {/* 풀블리드 배경 — 심해 케이지 (Paper Hero BG), 블랙 오버레이로 아주 연하게 */}
         <div className={s.heroBg} aria-hidden="true">
           <picture>
@@ -383,7 +383,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
       </section>
 
       {/* ═══ S2. CH.01 기록한다 ═══ */}
-      <section className={`${s.chapter} ${s.dark}`}>
+      <section className={`${s.chapter} ${s.dark}`} data-tone="dark">
         <div className={s.inner}>
           <ChapterMarker step={1} tone="dark" />
           <h2 className={s.h2}>{h2({ src: "/text/method/h-measure.png", width: 533 }, t.ch01.h2)}</h2>
@@ -423,7 +423,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
       </section>
 
       {/* ═══ S3. CH.02 예측한다 ═══ */}
-      <section className={`${s.chapter} ${s.light}`}>
+      <section className={`${s.chapter} ${s.light}`} data-tone="light">
         <div className={s.inner}>
           <ChapterMarker step={2} tone="light" />
           <h2 className={s.h2}>{h2({ src: "/text/method/h-predict.png", width: 574 }, t.ch02.h2)}</h2>
@@ -493,7 +493,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
       </section>
 
       {/* ═══ S4. CH.03 검증받는다 ═══ */}
-      <section className={`${s.chapter} ${s.dark} ${s.verifySection}`}>
+      <section className={`${s.chapter} ${s.dark} ${s.verifySection}`} data-tone="dark">
         <div className={`${s.inner} ${s.verifyGrid}`}>
           <div className={s.verifyCopy}>
             <ChapterMarker step={3} tone="dark" />
@@ -583,7 +583,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
       </section>
 
       {/* ═══ S5. CH.04 보정한다 ═══ */}
-      <section className={`${s.chapter} ${s.light}`}>
+      <section className={`${s.chapter} ${s.light}`} data-tone="light">
         <div className={s.inner}>
           <ChapterMarker step={4} tone="light" />
           <h2 className={s.h2}>{h2({ src: "/text/method/h-learn.png", width: 546 }, t.ch04.h2)}</h2>
@@ -613,7 +613,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
       </section>
 
       {/* ═══ S6. 화자 ═══ */}
-      <section className={s.quoteSection}>
+      <section className={s.quoteSection} data-tone="light">
         <figure className={s.portrait}>
           <Image
             src="/images/method/quote-tablet.webp"
@@ -649,7 +649,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
       </section>
 
       {/* ═══ S7. Archive ═══ */}
-      <section className={`${s.chapter} ${s.light} ${s.archiveSection}`}>
+      <section className={`${s.chapter} ${s.light} ${s.archiveSection}`} data-tone="light">
         <div className={s.inner}>
           <span className={s.archiveEyebrow}>ARCHIVE</span>
           <h2 className={s.h2}>{h2({ src: "/text/method/h-archive.png", width: 492 }, t.archive.h2)}</h2>
@@ -677,7 +677,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
       </section>
 
       {/* ═══ S8. Closing ═══ */}
-      <section className={s.closing}>
+      <section className={s.closing} data-tone="dark">
         <h2 className={s.closingTitle}>
           {isKo ? (
             <picture>

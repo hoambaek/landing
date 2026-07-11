@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useHeaderScroll, useIndicatorScroll } from "@/hooks/useScrollSection";
 import { locales, localePrefixMap, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
@@ -33,6 +34,14 @@ export default function Header({
   dict: Dictionary["header"];
 }) {
   const homeHref = localePrefixMap[locale];
+  const homePath = homeHref === "" ? "/" : homeHref;
+  const pathname = usePathname();
+  const isHome = pathname === homePath;
+  /* 서브페이지에서 메뉴를 열면 앵커 링크는 홈으로 이동해야 한다(#void → /#void). */
+  const linkFor = useCallback(
+    (anchor: string) => (isHome ? anchor : `${homePath}${anchor}`),
+    [isHome, homePath],
+  );
   const [isOpen, setIsOpen] = useState(false);
   const { isDark, isScrolled } = useHeaderScroll();
   const { activeId } = useIndicatorScroll();
@@ -130,7 +139,9 @@ export default function Header({
     };
   }, [isOpen]);
 
-  const headerColorClass = !isScrolled ? "" : isDark ? "" : " header--light";
+  /* 로고 색은 배경 밝기(isDark)로만 결정 — 스크롤 전(상단)이라도 밝은 히어로/패널이면 검정.
+     (랜딩 다크 히어로는 isDark=true라 흰색 유지) */
+  const headerColorClass = isDark ? "" : " header--light";
   const heroInitClass = !isScrolled ? " header--hero-init" : "";
 
   /* 모바일 여부 — 블러 인라인 스타일을 걸지 않기 위한 분기
@@ -272,8 +283,8 @@ export default function Header({
           {MAIN_LINKS.map((link, i) => (
             <a
               key={link.href}
-              href={link.href}
-              className={`menu-overlay__link${activeId === link.id ? " is-active" : ""}`}
+              href={link.href.startsWith("#") ? linkFor(link.href) : link.href}
+              className={`menu-overlay__link${isHome && activeId === link.id ? " is-active" : ""}`}
               onClick={close}
             >
               <span className="menu-overlay__link-num">

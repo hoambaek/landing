@@ -186,7 +186,7 @@ const ko: MethodCopy = {
   },
   closing: {
     title: "우리는 예측을 마쳤습니다. 이제 바다가 답할 차례입니다.",
-    sub: ["인양 일정을 가장 먼저 받아보고, 그 현장을 지켜보는 자리입니다.", "자리는 끌어올린 수량만큼만 열립니다."],
+    sub: ["새 퀴베 출시를 가장 먼저 만나고, 심해에서 보낸 시간의 기록을 평생 열람하는 자리입니다.", "자리는 준비된 병의 수만큼만 열립니다."],
     cta: "초대 신청하기",
     secondary: "파인다이닝과 호텔 바를 위한 안내는 파트너 문의로.",
   },
@@ -292,7 +292,7 @@ const en: MethodCopy = {
   },
   closing: {
     title: "Our prediction is written. Now it is the sea's turn to answer.",
-    sub: ["Be the first to receive the retrieval schedule, and stand witness on the day.", "Seats open only as many as the bottles we raise."],
+    sub: ["Be the first to hear of a new cuvée's release, and keep the record of its time in the deep for life.", "Seats open only as many as the bottles prepared."],
     cta: "Request an invitation",
     secondary: "For fine dining and hotel bars, see partnership enquiries.",
   },
@@ -398,7 +398,7 @@ const fr: MethodCopy = {
   },
   closing: {
     title: "Notre prévision est écrite. À la mer de répondre, désormais.",
-    sub: ["Recevez le calendrier de remontée en premier et assistez au moment même.", "Les places s'ouvrent à la mesure des bouteilles remontées."],
+    sub: ["Découvrez en avant-première la sortie d'une nouvelle cuvée et gardez à vie le relevé de son temps dans les profondeurs.", "Les places s'ouvrent à la mesure des bouteilles préparées."],
     cta: "Demander une invitation",
     secondary: "Restaurants gastronomiques et bars d'hôtel : voir l'espace partenaires.",
   },

@@ -13,19 +13,29 @@ const callbacks = new Set<() => void>();
 
 function getSections(): HTMLElement[] {
   return Array.from(
-    document.querySelectorAll<HTMLElement>("section[id]"),
+    document.querySelectorAll<HTMLElement>("section[id], [data-tone]"),
   );
 }
 
 function findSectionAt(sects: HTMLElement[], y: number): string {
   let id = "void";
   for (const s of sects) {
-    if (s.offsetTop <= y) id = s.id;
+    if (s.offsetTop <= y && s.id) id = s.id;
   }
   return id;
 }
 
-/** 특정 Y 좌표가 어두운 영역인지 판별 */
+/** y 좌표 바로 위의 마지막 섹션 요소 */
+function sectionElAt(sects: HTMLElement[], y: number): HTMLElement | null {
+  let target: HTMLElement | null = null;
+  for (const s of sects) {
+    if (s.offsetTop <= y) target = s;
+  }
+  return target;
+}
+
+/** 특정 Y 좌표가 어두운 영역인지 판별.
+ *  섹션의 data-tone("light"|"dark")을 우선 사용하고, 없으면 랜딩 섹션 id 폴백. */
 function isDarkAtY(sects: HTMLElement[], y: number): boolean {
   // 푸터는 다크(void) → 헤더 흰색 로고
   const footer = document.querySelector<HTMLElement>(".s-footer");
@@ -34,12 +44,15 @@ function isDarkAtY(sects: HTMLElement[], y: number): boolean {
     if (y >= fTop) return true;
   }
 
-  const sectionId = findSectionAt(sects, y);
+  const target = sectionElAt(sects, y);
+  const tone = target?.dataset.tone;
+  if (tone === "light") return false;
+  if (tone === "dark") return true;
 
-  // 기본 어두운 섹션
+  // 폴백: 랜딩 섹션 id 화이트리스트
+  const sectionId = target?.id ?? "void";
   if (!LIGHT_SECTIONS.has(sectionId)) return true;
-
-  return false; // 밝은 섹션 텍스트 영역
+  return false;
 }
 
 function onScroll() {
