@@ -68,11 +68,21 @@ export interface MethodCopy {
     convAria: string;
     convStart: string;
     convEnd: string;
+    convLegendPred: string;
+    convLegendActual: string;
+    convFeedback: string;
     loopH3: string;
     loopCopy: string;
     nfcAlt: string;
     certH3: string;
     certCopy: string;
+    certPhone: {
+      aria: string;
+      graphTitle: string;
+      graphMeta: string;
+      seasons: [string, string, string, string];
+      rows: { label: string; value: string; accent?: boolean }[];
+    };
   };
   quote: { text: string; portraitAlt: string; attrName: string; attrOrg: string };
   archive: {
@@ -154,15 +164,29 @@ const ko: MethodCopy = {
   },
   ch04: {
     h2: "검증된 만큼, 다시 보정합니다.",
-    lead: "검증의 결과는 다시 모델로 돌아갑니다. 지난 4년의 검증이 지금의 예측을 만들었고, 인양이 거듭될수록 예측은 더 정밀해집니다. 그 기록은 시스템 안에만 머물지 않고, 병 하나하나에 증서로 남습니다.",
-    convAria: "열 번의 인양에서 예측과 실측의 차이가 좁아지는 수렴 다이어그램",
-    convStart: "1차 · 2022",
+    lead: "검증의 결과는 다시 모델로 돌아갑니다. 지난 3년의 검증이 지금의 예측을 만들었고, 인양이 거듭될수록 예측은 더 정밀해집니다. 그 기록은 시스템 안에만 머물지 않고, 병 하나하나에 증서로 남습니다.",
+    convAria: "열 번의 인양에서 예측과 실측의 차이가 좁아지고, 그 차이가 다시 보정계수로 되먹임되는 수렴 다이어그램",
+    convStart: "1차 · 2023",
     convEnd: "10차 · 2026",
+    convLegendPred: "예측",
+    convLegendActual: "실측",
+    convFeedback: "실측이 보정계수를 다시 쓴다",
     loopH3: "스스로 정밀해지는 설계",
-    loopCopy: "실측과 예측의 차이가 보정계수를 다시 씁니다. 데이터가 쌓이는 시간은 누구도 앞당길 수 없습니다. 그래서 이 기록은 해마다 단단해집니다.",
+    loopCopy: "바다로 나가기 전에 예측을 먼저 적어 둡니다. 인양하는 날, 그 예측을 실측과 나란히 놓습니다. 어긋난 만큼이 다음 예측을 고쳐 쓰고, 인양이 거듭될수록 둘은 점점 겹쳐집니다. 그래서 다음 병에 적는 예측은 해마다 더 정확해집니다.",
     nfcAlt: "따개비 붙은 병에 스마트폰을 가까이 대어 기록을 여는 손",
-    certH3: "병마다 발행되는 기록",
-    certCopy: "입수 좌표, 수심, 수온의 이력. 병에 가까이 대면 그 병이 살아낸 시간이 열립니다. 같은 병은 하나도 없습니다.",
+    certH3: "그 기록이 병마다 남습니다",
+    certCopy: "시스템 안에서 검증된 이력이 병을 나와 증서가 됩니다. 병에 가까이 대면 입수 좌표와 수심, 수온까지, 그 병이 살아낸 시간이 열립니다. 같은 병은 하나도 없습니다.",
+    certPhone: {
+      aria: "병에 폰을 대면 열리는 이 병의 기록 화면",
+      graphTitle: "이 병이 지나온 바다",
+      graphMeta: "46 MONTHS AT SEA",
+      seasons: ["2023 겨울", "여름", "겨울", "2026 겨울"],
+      rows: [
+        { label: "살아낸 시간", value: "46개월", accent: true },
+        { label: "지나온 계절", value: "겨울 4 · 여름 3" },
+        { label: "예측 검증", value: "대조 완료" },
+      ],
+    },
   },
   quote: {
     text: "예측을 적어 두고 바다로 나가는 날은 시험을 치르러 가는 기분입니다. 판정은 우리 몫이 아니라는 것, 그걸 아는 게 이 일의 전부입니다.",
@@ -177,7 +201,7 @@ const ko: MethodCopy = {
     rows: [
       { date: "2026 · 겨울", title: "다음 인양, 예측과 실측의 대조", status: "예정", accent: true },
       { date: "2025 ~ 2026", title: "남해 실측 해양 데이터, 월별 환경 모델", status: "기록 중", accent: false },
-      { date: "2022 ~ 2026", title: "열 번이 넘는 입수와 인양, 예측과 확인의 반복", status: "누적", accent: false },
+      { date: "2023 ~ 2026", title: "열 번이 넘는 입수와 인양, 예측과 확인의 반복", status: "누적", accent: false },
     ],
   },
   closing: {
@@ -258,15 +282,29 @@ const en: MethodCopy = {
   },
   ch04: {
     h2: "What is verified recalibrates the model.",
-    lead: "Every verification flows back into the model. Four years of checking built today's predictions, and each retrieval makes the next one sharper. The record does not stay inside the system — it stays with each bottle, as a certificate.",
-    convAria: "Convergence diagram: the gap between prediction and measurement narrows across ten retrievals",
-    convStart: "Run 1 · 2022",
+    lead: "Every verification flows back into the model. Three years of checking built today's predictions, and each retrieval makes the next one sharper. The record does not stay inside the system — it stays with each bottle, as a certificate.",
+    convAria: "Convergence diagram: the gap between prediction and measurement narrows across ten retrievals, and that gap feeds back into the correction coefficients",
+    convStart: "Run 1 · 2023",
     convEnd: "Run 10 · 2026",
+    convLegendPred: "Predicted",
+    convLegendActual: "Measured",
+    convFeedback: "The measurement rewrites the coefficients",
     loopH3: "A design that sharpens itself",
-    loopCopy: "The gap between prediction and measurement rewrites the correction coefficients. The time it takes for data to accumulate cannot be hurried — which is why this record grows firmer every year.",
+    loopCopy: "We write the prediction before heading out to sea. On the day of retrieval, we lay that prediction beside the measurement. The gap rewrites the next prediction, and with each retrieval the two draw closer. So the prediction we write on the next bottle grows more accurate every year.",
     nfcAlt: "A hand holding a phone to a barnacle-covered bottle to open its record",
-    certH3: "A record issued for every bottle",
-    certCopy: "Immersion coordinates, depth, the history of temperature. Hold your phone to the bottle and the time it lived through opens up. No two bottles are alike.",
+    certH3: "That record settles into each bottle",
+    certCopy: "The history verified inside the system leaves it to become a certificate in the bottle. Hold your phone close and the immersion coordinates, depth, and temperature open up, the time that bottle lived through. No two bottles are alike.",
+    certPhone: {
+      aria: "The bottle's record screen, opened by holding a phone to it",
+      graphTitle: "The sea this bottle passed through",
+      graphMeta: "46 MONTHS AT SEA",
+      seasons: ["2023 Winter", "Summer", "Winter", "2026 Winter"],
+      rows: [
+        { label: "Time at sea", value: "46 months", accent: true },
+        { label: "Seasons passed", value: "4 winters · 3 summers" },
+        { label: "Prediction check", value: "Verified" },
+      ],
+    },
   },
   quote: {
     text: "“Writing down our prediction and heading out to sea feels like sitting an exam. The grading is not ours to do. Accepting that is the whole of this work.”",
@@ -281,7 +319,7 @@ const en: MethodCopy = {
     rows: [
       { date: "2026 · Winter", title: "Next retrieval — prediction meets measurement", status: "Upcoming", accent: true },
       { date: "2025 ~ 2026", title: "Measured ocean data off Namhae, monthly environmental model", status: "Recording", accent: false },
-      { date: "2022 ~ 2026", title: "More than ten immersions and retrievals — prediction and confirmation, repeated", status: "Accumulated", accent: false },
+      { date: "2023 ~ 2026", title: "More than ten immersions and retrievals — prediction and confirmation, repeated", status: "Accumulated", accent: false },
     ],
   },
   closing: {
@@ -362,15 +400,29 @@ const fr: MethodCopy = {
   },
   ch04: {
     h2: "Ce qui est vérifié recalibre le modèle.",
-    lead: "Chaque vérification retourne au modèle. Quatre années d'épreuves ont construit les prévisions d'aujourd'hui, et chaque remontée affine la suivante. Ce relevé ne reste pas dans le système — il accompagne chaque bouteille, comme un certificat.",
-    convAria: "Diagramme de convergence : l'écart entre prévision et mesure se resserre au fil de dix remontées",
-    convStart: "1re · 2022",
+    lead: "Chaque vérification retourne au modèle. Trois années d'épreuves ont construit les prévisions d'aujourd'hui, et chaque remontée affine la suivante. Ce relevé ne reste pas dans le système — il accompagne chaque bouteille, comme un certificat.",
+    convAria: "Diagramme de convergence : l'écart entre prévision et mesure se resserre au fil de dix remontées, et cet écart se réinjecte dans les coefficients de correction",
+    convStart: "1re · 2023",
     convEnd: "10e · 2026",
+    convLegendPred: "Prévu",
+    convLegendActual: "Mesuré",
+    convFeedback: "La mesure réécrit les coefficients",
     loopH3: "Un système qui s'affine de lui-même",
-    loopCopy: "L'écart entre prévision et mesure réécrit les coefficients de correction. Le temps d'accumuler les données ne peut être devancé — c'est pourquoi ce relevé se consolide année après année.",
+    loopCopy: "Nous notons la prévision avant de prendre la mer. Le jour de la remontée, nous plaçons cette prévision à côté de la mesure. L'écart réécrit la prévision suivante, et à chaque remontée les deux se rapprochent. Ainsi la prévision inscrite sur la bouteille suivante gagne en justesse chaque année.",
     nfcAlt: "Une main approchant un téléphone d'une bouteille couverte de balanes pour ouvrir son relevé",
-    certH3: "Un relevé délivré pour chaque bouteille",
-    certCopy: "Coordonnées d'immersion, profondeur, historique des températures. Approchez votre téléphone de la bouteille : le temps qu'elle a vécu s'ouvre. Aucune bouteille ne ressemble à une autre.",
+    certH3: "Ce relevé se dépose dans chaque bouteille",
+    certCopy: "L'historique vérifié dans le système en sort pour devenir un certificat dans la bouteille. Approchez votre téléphone et les coordonnées d'immersion, la profondeur et la température s'ouvrent, le temps que cette bouteille a vécu. Aucune bouteille ne ressemble à une autre.",
+    certPhone: {
+      aria: "L'écran du relevé de la bouteille, ouvert en approchant un téléphone",
+      graphTitle: "La mer traversée par cette bouteille",
+      graphMeta: "46 MOIS EN MER",
+      seasons: ["2023 Hiver", "Été", "Hiver", "2026 Hiver"],
+      rows: [
+        { label: "Temps en mer", value: "46 mois", accent: true },
+        { label: "Saisons traversées", value: "4 hivers · 3 étés" },
+        { label: "Vérification", value: "Confirmée" },
+      ],
+    },
   },
   quote: {
     text: "« Écrire notre prévision puis prendre la mer, c'est comme aller passer un examen. Ce n'est pas à nous de noter. Accepter cela, c'est tout le sens de ce travail. »",
@@ -385,7 +437,7 @@ const fr: MethodCopy = {
     rows: [
       { date: "2026 · Hiver", title: "Prochaine remontée — la prévision rencontre la mesure", status: "À venir", accent: true },
       { date: "2025 ~ 2026", title: "Données marines mesurées au large de Namhae, modèle mensuel", status: "En cours", accent: false },
-      { date: "2022 ~ 2026", title: "Plus de dix immersions et remontées — prévision et confirmation, répétées", status: "Cumulé", accent: false },
+      { date: "2023 ~ 2026", title: "Plus de dix immersions et remontées — prévision et confirmation, répétées", status: "Cumulé", accent: false },
     ],
   },
   closing: {

@@ -276,33 +276,108 @@ function RadarMobile({ t }: { t: MethodCopy["ch02"] }) {
 
 /* ── CH.04 수렴 다이어그램 ── */
 const CONV_PAIRS: [number, number, number][] = [
-  // [x, 예측 y(○), 실측 y(●)]
-  [20, 66, 156], [68, 150, 78], [116, 82, 144], [164, 140, 90], [212, 94, 132],
-  [260, 126, 98], [308, 100, 122], [356, 119, 102], [404, 105, 116],
+  // [x, 예측 y(○), 실측 y(●)] — 중심선 114 기준, 간극 90→11로 수렴
+  [20, 70, 160], [68, 154, 82], [116, 86, 148], [164, 144, 94], [212, 98, 136],
+  [260, 130, 102], [308, 104, 126], [356, 123, 106], [404, 109, 120],
 ];
 
 function ConvergenceChart({ t }: { t: MethodCopy["ch04"] }) {
   return (
-    <svg viewBox="0 0 480 248" className={s.convSvg} role="img" aria-label={t.convAria}>
-      <path d="M 20 52 C 150 68, 290 88, 460 98 L 460 122 C 290 132, 150 152, 20 168 Z" fill="rgba(184,152,104,0.10)" />
-      <path d="M 20 52 C 150 68, 290 88, 460 98" fill="none" stroke="rgba(184,152,104,0.4)" strokeWidth="1" strokeDasharray="3 4" />
-      <path d="M 20 168 C 150 152, 290 132, 460 122" fill="none" stroke="rgba(184,152,104,0.4)" strokeWidth="1" strokeDasharray="3 4" />
-      <line x1="20" y1="110" x2="460" y2="110" stroke="rgba(49,46,42,0.18)" strokeWidth="1" strokeDasharray="2 3" />
-      {CONV_PAIRS.map(([x, py, ay]) => (
-        <g key={x}>
-          <line x1={x} y1={py} x2={x} y2={ay} stroke="rgba(49,46,42,0.25)" strokeWidth="1" />
-          <circle cx={x} cy={py} r="3.5" fill="#ECEAE6" stroke="rgba(49,46,42,0.55)" strokeWidth="1.2" />
-          <circle cx={x} cy={ay} r="3" fill="rgba(49,46,42,0.6)" />
-        </g>
-      ))}
-      <line x1="452" y1="107" x2="452" y2="113" stroke="rgba(184,152,104,0.8)" strokeWidth="1.2" />
-      <circle cx="452" cy="107" r="3.5" fill="#ECEAE6" stroke="#B89868" strokeWidth="1.4" />
-      <circle cx="452" cy="113" r="3" fill="#B89868" />
-      <g fontFamily={MONO} fontSize="11" letterSpacing="0.08em" fill="rgba(49,46,42,0.45)">
-        <text x="8" y="240">{t.convStart}</text>
-        <text x="476" y="240" textAnchor="end">{t.convEnd}</text>
+    <svg viewBox="0 0 480 280" className={s.convSvg} role="img" aria-label={t.convAria}>
+      {/* 범례 */}
+      <g transform="translate(20,20)">
+        <circle cx="6" cy="0" r="3.5" fill="#ECEAE6" stroke="rgba(49,46,42,0.55)" strokeWidth="1.2" />
+        <text x="16" y="4" fontSize="11" letterSpacing="0.02em" fill="rgba(49,46,42,0.55)">{t.convLegendPred}</text>
+        <circle cx="70" cy="0" r="3" fill="rgba(49,46,42,0.6)" />
+        <text x="80" y="4" fontSize="11" letterSpacing="0.02em" fill="rgba(49,46,42,0.55)">{t.convLegendActual}</text>
+      </g>
+
+      {/* 수렴 밴드 + 예측·실측 쌍 */}
+      <g transform="translate(0,-8)">
+        <path d="M 20 60 C 150 76, 290 96, 452 106 L 452 122 C 290 132, 150 152, 20 176 Z" fill="rgba(184,152,104,0.10)" />
+        <path d="M 20 60 C 150 76, 290 96, 452 106" fill="none" stroke="rgba(184,152,104,0.4)" strokeWidth="1" strokeDasharray="3 4" />
+        <path d="M 20 176 C 150 152, 290 132, 452 122" fill="none" stroke="rgba(184,152,104,0.4)" strokeWidth="1" strokeDasharray="3 4" />
+        <line x1="20" y1="114" x2="452" y2="114" stroke="rgba(49,46,42,0.18)" strokeWidth="1" strokeDasharray="2 3" />
+        {CONV_PAIRS.map(([x, py, ay]) => (
+          <g key={x}>
+            <line x1={x} y1={py} x2={x} y2={ay} stroke="rgba(49,46,42,0.25)" strokeWidth="1" />
+            <circle cx={x} cy={ay} r="3" fill="rgba(49,46,42,0.6)" />
+            <circle cx={x} cy={py} r="3.5" fill="#ECEAE6" stroke="rgba(49,46,42,0.55)" strokeWidth="1.2" />
+          </g>
+        ))}
+        {/* 10차 수렴점(강조) */}
+        <line x1="452" y1="110" x2="452" y2="118" stroke="rgba(184,152,104,0.8)" strokeWidth="1.2" />
+        <circle cx="452" cy="110" r="3.5" fill="#ECEAE6" stroke="#B89868" strokeWidth="1.4" />
+        <circle cx="452" cy="118" r="3" fill="#B89868" />
+      </g>
+
+      {/* 되먹임 고리 — 수렴점이 다시 첫 예측을 당긴다 */}
+      <defs>
+        <marker id="convArrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6" fill="none" stroke="#B89868" strokeWidth="1.3" />
+        </marker>
+      </defs>
+      <path d="M 452 118 C 452 210, 428 230, 240 230 C 58 230, 20 210, 20 78" fill="none" stroke="#B89868" strokeWidth="1.3" strokeDasharray="1 5" strokeLinecap="round" markerEnd="url(#convArrow)" />
+      <text x="240" y="225" textAnchor="middle" fontSize="11" letterSpacing="0.06em" fill="#9a7b4e">{t.convFeedback}</text>
+
+      {/* 축 라벨(라인 테두리 태그) */}
+      <g fontFamily={MONO} fontSize="11" letterSpacing="0.06em" fill="rgba(49,46,42,0.5)">
+        <rect x="20" y="248" width="90" height="22" rx="11" fill="none" stroke="rgba(49,46,42,0.28)" strokeWidth="1" />
+        <text x="65" y="263" textAnchor="middle">{t.convStart}</text>
+        <rect x="354" y="248" width="98" height="22" rx="11" fill="none" stroke="rgba(49,46,42,0.28)" strokeWidth="1" />
+        <text x="403" y="263" textAnchor="middle">{t.convEnd}</text>
       </g>
     </svg>
+  );
+}
+
+/** 인증 폰 목업 — 병에 폰을 대면 열리는 이력 화면(아이폰 상단 크롭). ch03 예측 기록서와 겹치지 않는 "살아낸 시간" 중심 */
+function CertPhoneMock({ t }: { t: MethodCopy["ch04"] }) {
+  const p = t.certPhone;
+  return (
+    <div className={s.certPhone} role="img" aria-label={p.aria}>
+      <div className={s.certPhoneFrame}>
+        <div className={s.certScreen}>
+          <div className={s.certLogo}>
+            <Image className={s.certSym} src="/images/logo/logo_trans_W.png" alt="" width={22} height={18} unoptimized />
+            <Image className={s.certTxt} src="/images/logo/logo_text_trans_W.png" alt="" width={72} height={11} unoptimized />
+          </div>
+          <div className={s.certRule} />
+          <div className={s.certGhead}>
+            <span className={s.certGheadT}>{p.graphTitle}</span>
+            <span className={s.certGheadN}>{p.graphMeta}</span>
+          </div>
+          <div className={s.certChart}>
+            <svg height="54" viewBox="0 0 256 54" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="certTherm" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stopColor="rgba(200,152,104,0.28)" />
+                  <stop offset="1" stopColor="rgba(200,152,104,0)" />
+                </linearGradient>
+              </defs>
+              <line x1="0" y1="27" x2="256" y2="27" stroke="rgba(236,234,230,0.08)" strokeWidth="1" strokeDasharray="2 4" />
+              <path d="M0 32 C 16 16, 32 13, 48 28 S 80 44, 96 32 S 128 11, 144 25 S 176 43, 192 31 S 224 13, 240 25 L 256 28 L 256 54 L 0 54 Z" fill="url(#certTherm)" />
+              <path d="M0 32 C 16 16, 32 13, 48 28 S 80 44, 96 32 S 128 11, 144 25 S 176 43, 192 31 S 224 13, 240 25 L 256 28" fill="none" stroke="#c8a878" strokeWidth="1.5" />
+              <circle cx="256" cy="28" r="2.6" fill="#c8a878" />
+            </svg>
+            <div className={s.certSeasons}>
+              {p.seasons.map((sea, i) => (
+                <span key={i}>{sea}</span>
+              ))}
+            </div>
+          </div>
+          <div className={s.certGrid}>
+            {p.rows.map((r, i) => (
+              <div className={s.certRow} key={i}>
+                <span className={s.certLab}>{r.label}</span>
+                <span className={r.accent ? `${s.certVal} ${s.certValGold}` : s.certVal}>{r.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className={s.certFade} />
+    </div>
   );
 }
 
@@ -578,16 +653,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
             <p className={s.blockCopy}>{t.ch04.loopCopy}</p>
           </div>
           <div className={s.learnBlock}>
-            <figure className={s.nfcPhoto}>
-              <Image
-                src="/images/method/nfc-phone.webp"
-                alt={t.ch04.nfcAlt}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                unoptimized
-                className={s.coverImg}
-              />
-            </figure>
+            <CertPhoneMock t={t.ch04} />
             <h3 className={s.h3}>{t.ch04.certH3}</h3>
             <p className={s.blockCopy}>{t.ch04.certCopy}</p>
           </div>

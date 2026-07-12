@@ -531,12 +531,45 @@
 .nfcPhoto {
   margin: 0;
   position: relative;
-  height: 252px;
+  height: 280px;
   overflow: hidden;
   background: rgba(49, 46, 42, 0.05);
 }
 /* Paper 크롭: center 20% (병 어깨·폰 화면 상단이 보이는 지점) */
 .nfcPhoto img { object-position: center 20%; }
+
+/* 인증 폰 목업 — 병에 폰을 대면 열리는 이력 화면(아이폰 상단 크롭) */
+.certPhone {
+  margin: 0 0 24px; width: 100%; height: 280px; overflow: hidden; position: relative;
+  display: flex; justify-content: center; align-items: flex-start; padding-top: 14px; box-sizing: border-box;
+}
+.certPhoneFrame {
+  width: 300px; height: 540px; flex-shrink: 0; padding: 9px; box-sizing: border-box;
+  background: linear-gradient(155deg, #26221d, #161311); border-radius: 46px;
+  box-shadow: 0 24px 50px -18px rgba(20, 16, 12, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+.certScreen {
+  width: 100%; height: 100%; box-sizing: border-box; overflow: hidden;
+  background: linear-gradient(180deg, #0c1015, #0a0d12); border-radius: 38px;
+  display: flex; flex-direction: column; gap: 12px; padding: 20px 22px;
+}
+.certLogo { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.certSym { height: 18px; width: auto; opacity: 0.92; }
+.certTxt { height: 11px; width: auto; opacity: 0.85; }
+.certRule { height: 1px; background: linear-gradient(90deg, transparent, rgba(200, 152, 104, 0.28), transparent); }
+.certGhead { display: flex; justify-content: space-between; align-items: baseline; }
+.certGheadT { font-family: var(--font-body); font-size: 11px; letter-spacing: 0.02em; color: rgba(236, 234, 230, 0.78); }
+.certGheadN { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: 0.16em; color: rgba(200, 152, 104, 0.6); }
+.certChart { display: flex; flex-direction: column; gap: 5px; }
+.certChart svg { display: block; width: 100%; }
+.certSeasons { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 7.5px; letter-spacing: 0.1em; color: rgba(236, 234, 230, 0.32); }
+.certGrid { display: flex; flex-direction: column; gap: 11px; }
+.certRow { display: flex; justify-content: space-between; align-items: baseline; }
+.certLab { font-family: var(--font-body); font-size: 11px; letter-spacing: 0.02em; color: rgba(236, 234, 230, 0.42); }
+.certVal { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.02em; color: rgba(236, 234, 230, 0.92); }
+.certValGold { color: #c8a878; }
+.certFade { position: absolute; left: 0; right: 0; bottom: 0; height: 30px; background: linear-gradient(180deg, transparent, #eceae6 92%); pointer-events: none; }
+
 @media (max-width: 768px) {
   .learnGrid { flex-direction: column; gap: 48px; padding-top: 40px; }
   .blockCopy { font-size: 13px; max-width: none; }
