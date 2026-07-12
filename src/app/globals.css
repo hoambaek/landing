@@ -5372,3 +5372,125 @@ html {
     }
   }
 }
+
+/* ═══════════ Method — 히어로 인트로 + 차트 드로잉 ═══════════
+   히어로: 랜딩과 동일 문법(void-* keyframes 재사용) — 배경 정착 후 상시 드리프트,
+   타이틀→서브카피 시차 등장. 차트: .reveal-draw.is-visible 시
+   실선은 선이 그려지듯(data-draw), 점선·채움·태그는 지연 페이드(data-fade),
+   수렴 다이어그램 쌍은 순차 등장(data-conv, 시차는 인라인 transition-delay) 후
+   10차 수렴점(data-conv-final)과 되먹임 고리가 마무리 */
+@media (prefers-reduced-motion: no-preference) {
+  [data-mh="bg"] {
+    animation:
+      void-settle 3s cubic-bezier(0.22, 1, 0.36, 1) both,
+      void-drift 44s ease-in-out 3s infinite alternate;
+  }
+
+  [data-mh="title"] {
+    animation: void-rise 1.1s var(--ease-gentle) 0.35s backwards;
+  }
+
+  [data-mh="sub"] {
+    animation: void-rise 1s var(--ease-gentle) 0.8s backwards;
+  }
+
+  .reveal-draw [data-draw] {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  .reveal-draw.is-visible [data-draw="line"] {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1.6s var(--ease-gentle) 0.2s;
+  }
+
+  .reveal-draw.is-visible [data-draw="main"] {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 2s var(--ease-gentle) 0.45s;
+  }
+
+  .reveal-draw [data-fade] {
+    opacity: 0;
+  }
+
+  .reveal-draw.is-visible [data-fade] {
+    opacity: 1;
+  }
+
+  .reveal-draw.is-visible [data-fade="1"] {
+    transition: opacity 0.9s ease 1.1s;
+  }
+
+  .reveal-draw.is-visible [data-fade="2"] {
+    transition: opacity 0.9s ease 1.6s;
+  }
+
+  .reveal-draw.is-visible [data-fade="3"] {
+    transition: opacity 1s ease 2.2s;
+  }
+
+  .reveal-draw [data-conv] {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .reveal-draw.is-visible [data-conv] {
+    opacity: 1;
+    transform: none;
+    /* 시차는 각 쌍의 인라인 transition-delay가 우선 적용됨 */
+    transition: opacity 0.6s ease, transform 0.6s var(--ease-gentle);
+  }
+
+  .reveal-draw [data-conv-final] {
+    opacity: 0;
+    transform: scale(0.5);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .reveal-draw.is-visible [data-conv-final] {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.5s ease 1.5s, transform 0.7s var(--ease-gentle) 1.5s;
+  }
+}
+
+/* ═══════════ Letter Pages — 초대·파트너·소개서 공용 인트로 ═══════════
+   상단 21:9 이미지가 살짝 확대된 채 자리 잡고(정착 후 상시 드리프트),
+   편지 칼럼의 직계 자식들이 위에서부터 시차 등장. 마크업 수정 없이
+   LetterShell 공용 구조(.s-letter__visual / .s-letter__col)에 적용.
+   이미지 애니메이션은 데스크톱 전용 — 모바일 brand 테마의 crop용
+   transform(scale 1.08)과 충돌 방지 */
+@media (prefers-reduced-motion: no-preference) and (min-width: 769px) {
+  .s-letter__visual img {
+    animation:
+      void-settle 2.8s cubic-bezier(0.22, 1, 0.36, 1) both,
+      void-drift 46s ease-in-out 2.8s infinite alternate;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .s-letter__col > * {
+    animation: void-rise 0.9s var(--ease-gentle) 0.85s backwards;
+  }
+
+  .s-letter__col > *:nth-child(1) {
+    animation-delay: 0.35s;
+  }
+
+  .s-letter__col > *:nth-child(2) {
+    animation-delay: 0.45s;
+  }
+
+  .s-letter__col > *:nth-child(3) {
+    animation-delay: 0.55s;
+  }
+
+  .s-letter__col > *:nth-child(4) {
+    animation-delay: 0.65s;
+  }
+
+  .s-letter__col > *:nth-child(5) {
+    animation-delay: 0.75s;
+  }
+}
