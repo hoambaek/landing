@@ -940,6 +940,24 @@ input:focus-visible,
   pointer-events: none;
 }
 
+/* Descent Veil — 수면→심해 하강 전환 막 (데스크톱 스크롤 연출 전용).
+   기본 opacity 0. DescentEffect(GSAP ScrollTrigger 스크럽)가 opacity를 올려
+   골든아워 수면이 심해(#0A0908, s-living과 동일 지반색)로 잠기게 한다.
+   모바일·reduced-motion에서는 GSAP matchMedia가 실행되지 않아 항상 투명 */
+.s-void__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(4, 11, 18, 0.62) 0%,
+    rgba(5, 14, 22, 0.88) 42%,
+    #0a0908 100%
+  );
+}
+
 /* 카피 컨테이너 — 단일 소스. 데스크톱 좌측 정렬(세로 중앙 약간 아래), 모바일은 @media에서 중앙 */
 .s-void__content {
   position: absolute;
@@ -5150,5 +5168,207 @@ html {
 
   .s-legal__row-label {
     width: auto;
+  }
+}
+
+/* ═══════════ Depth Gauge — 수심 게이지 레일 (하강 구간 전용) ═══════════
+   DescentEffect와 짝: 히어로 핀 시작~Living Record 끝 구간에서만 나타나
+   0m → 30m(케이지 계류 수심)를 카운트. 데스크톱 전용, DepthGauge.tsx가 제어 */
+.depth-gauge {
+  position: fixed;
+  right: 34px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--z-overlay);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.depth-gauge.is-visible {
+  opacity: 1;
+}
+
+@media (min-width: 769px) {
+  .depth-gauge {
+    display: flex;
+  }
+}
+
+.depth-gauge__label {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(232, 229, 225, 0.5);
+}
+
+.depth-gauge__track {
+  position: relative;
+  width: 1px;
+  height: 140px;
+  background: rgba(232, 229, 225, 0.18);
+}
+
+.depth-gauge__marker {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  margin-left: -2.5px;
+  border-radius: 50%;
+  background: var(--color-amber);
+}
+
+.depth-gauge__readout {
+  display: flex;
+  gap: 2px;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: rgba(232, 229, 225, 0.75);
+}
+
+.depth-gauge__unit {
+  color: rgba(232, 229, 225, 0.45);
+}
+
+/* ═══════════ Word Reveal — 타이틀 글자·단어 시차 리빌 ═══════════
+   WordReveal.tsx가 [data-word-reveal] 텍스트를 .wr-word span으로 분해,
+   뷰포트 진입 시 .wr-visible 부여. 시차는 span 인라인 transition-delay */
+[data-word-reveal] .wr-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.5em);
+  transition:
+    opacity 0.7s var(--ease-gentle),
+    transform 0.7s var(--ease-gentle);
+}
+
+[data-word-reveal].wr-visible .wr-word {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══════════ Mask Reveal — 인양 사진 클립 리빌 ═══════════
+   The First Record의 인양 컷: 아래에서 위로 드러나며(clip-path)
+   이미지는 반대로 살짝 내려앉아 "물 위로 올라오는" 결을 만든다.
+   ScrollReveal.tsx가 .reveal-mask에 .is-visible 부여 */
+/* 관찰은 클립되지 않는 부모(.reveal-mask-watch)가 담당 — clip-path로 가려진
+   요소는 IntersectionObserver 교차 영역이 0이라 스스로 트리거될 수 없다 */
+.reveal-mask {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1.6s var(--ease-gentle);
+}
+
+.reveal-mask .s-first__img {
+  transform: translateY(5%) scale(1.05);
+  transition: transform 1.6s var(--ease-gentle);
+}
+
+.reveal-mask-watch.is-visible .reveal-mask {
+  clip-path: inset(0 0 0 0);
+}
+
+.reveal-mask-watch.is-visible .reveal-mask .s-first__img {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-word-reveal] .wr-word {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .reveal-mask {
+    clip-path: none !important;
+    transition: none !important;
+  }
+
+  .reveal-mask .s-first__img {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ═══════════ Living Drift — 심해 배경 생명감 ═══════════
+   Living Record 배경의 아주 느린 스케일 드리프트(36초 왕복).
+   빛기둥·부유입자가 담긴 사진이 정지화면이 아니라 "살아있는 관측"으로 읽히게.
+   그 이상의 효과는 사진을 해치므로 금지 */
+@media (prefers-reduced-motion: no-preference) {
+  .s-living__bg-img {
+    animation: living-drift 36s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  @keyframes living-drift {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.055);
+    }
+  }
+}
+
+/* ═══════════ Hero Intro — 첫 접속 등장 연출 ═══════════
+   배경이 살짝 확대된 채 자리 잡고(2.6s), 이후 상시 미세 드리프트로 수면이
+   계속 살아있게. 카피는 헤드라인 → 브랜드 라인 → 서명 순서로 시차 등장.
+   keyframes는 from만 정의 — 종료 후 요소의 원래 스타일로 자연 복귀(fill 충돌 방지) */
+@media (prefers-reduced-motion: no-preference) {
+  .s-void__bg-img {
+    animation:
+      void-settle 2.6s cubic-bezier(0.22, 1, 0.36, 1) both,
+      void-drift 40s ease-in-out 2.6s infinite alternate;
+  }
+
+  .s-void__h1 {
+    animation: void-rise 1.1s var(--ease-gentle) 0.45s backwards;
+  }
+
+  .s-void__brand {
+    animation: void-rise 1s var(--ease-gentle) 0.85s backwards;
+  }
+
+  .s-void__signature {
+    animation: void-fade 1.4s ease 1.7s backwards;
+  }
+
+  @keyframes void-settle {
+    from {
+      transform: scale(1.07);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes void-drift {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.045);
+    }
+  }
+
+  @keyframes void-rise {
+    from {
+      opacity: 0;
+      transform: translateY(26px);
+    }
+  }
+
+  @keyframes void-fade {
+    from {
+      opacity: 0;
+    }
   }
 }

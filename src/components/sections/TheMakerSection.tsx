@@ -119,7 +119,7 @@ export default function TheMakerSection({
     <section id="the-maker" className="s-maker" aria-labelledby="maker-title">
       {/* 헤더 */}
       <header className="s-maker__header reveal">
-        <h2 id="maker-title" className="s-maker__title">{dict.title}</h2>
+        <h2 id="maker-title" className="s-maker__title" data-word-reveal="letters">{dict.title}</h2>
         <p className="s-maker__subtitle">
           {isKo ? (
             <Image
