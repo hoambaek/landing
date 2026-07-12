@@ -1915,6 +1915,39 @@ input:focus-visible,
   color: #8C857A;
 }
 
+/* ── 퀴베 카드 호버 — 시네마틱 줌(ken burns) affordance ──
+   병 이미지가 아주 느리게(1.3s) 확대되며 미묘하게 밝아진다. 이름은 정적.
+   움직임이 아닌 깊이감·몰입. Dom Pérignon·Ruinart 결.
+   hover 기기 + focus-within(키보드). */
+.s-col__card {
+  cursor: pointer;
+}
+.s-col__bottle-img,
+.s-col__outline-img {
+  transition: transform 1.8s cubic-bezier(0.4, 0, 0.2, 1), filter 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center center;
+  /* 첫 프레임에 미리 GPU 레이어로 승격 → 시작 순간 subpixel 점프(툭 움직임) 방지 */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+}
+@media (hover: hover) {
+  .s-col__card:hover .s-col__bottle-img,
+  .s-col__card:focus-within .s-col__bottle-img,
+  .s-col__card:hover .s-col__outline-img,
+  .s-col__card:focus-within .s-col__outline-img {
+    transform: scale(1.055) translateZ(0);
+    filter: brightness(1.05) saturate(1.03);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .s-col__bottle-img,
+  .s-col__outline-img {
+    transition: none;
+  }
+}
+
 /* 기록 카드 쇼케이스 */
 .s-col__showcase {
   display: flex;
