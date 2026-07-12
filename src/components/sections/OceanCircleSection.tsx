@@ -18,7 +18,7 @@ export default function OceanCircleSection({
         <div className="s-prive__scrim s-prive__scrim--left" aria-hidden="true" />
         <div className="s-prive__content">
           <span className="s-prive__eyebrow">{dict.eyebrow}</span>
-          <h2 id="ocean-circle-title" className="s-prive__title">{dict.title}</h2>
+          <h2 id="ocean-circle-title" className="s-prive__title" data-word-reveal="letters">{dict.title}</h2>
           <p className="s-prive__sub">{dict.sub}</p>
           <ul className="s-prive__tags">
             <li><span>{dict.tags.schedule}</span></li>

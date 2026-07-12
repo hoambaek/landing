@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
+import ScrollReveal from "@/components/ScrollReveal";
 import Footer from "@/components/layout/Footer";
 import { localePrefixMap, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -136,19 +137,21 @@ function TimelineChartDesktop({ t }: { t: MethodCopy["ch02"] }) {
         <line key={y} x1="0" y1={y} x2="1200" y2={y} stroke={y === 345 ? "rgba(49,46,42,0.30)" : "rgba(49,46,42,0.06)"} strokeWidth="1" />
       ))}
       {/* 배경과 분리되게 채움을 진하게, 데이터 라인은 채도·명도 up (굵기·점선은 유지) */}
-      <polygon points={`0,345 ${TL.composite} 1200,345`} fill="rgba(176,138,74,0.20)" />
-      <polyline points={TL.texture} fill="none" stroke="rgba(49,46,42,0.68)" strokeWidth="1.2" />
-      <polyline points={TL.bubble} fill="none" stroke="rgba(49,46,42,0.55)" strokeWidth="1.2" strokeDasharray="7 5" />
-      <polyline points={TL.aroma} fill="none" stroke="rgba(150,54,42,0.85)" strokeWidth="1.2" />
-      <polyline points={TL.risk} fill="none" stroke="rgba(150,54,42,0.62)" strokeWidth="1.2" strokeDasharray="3 3" />
-      <polyline points={TL.composite} fill="none" stroke="#8A6A2E" strokeWidth="2.8" />
+      <polygon points={`0,345 ${TL.composite} 1200,345`} fill="rgba(176,138,74,0.20)" data-fade="1" />
+      <polyline points={TL.texture} fill="none" stroke="rgba(49,46,42,0.68)" strokeWidth="1.2" pathLength={1} data-draw="line" />
+      <polyline points={TL.bubble} fill="none" stroke="rgba(49,46,42,0.55)" strokeWidth="1.2" strokeDasharray="7 5" data-fade="1" />
+      <polyline points={TL.aroma} fill="none" stroke="rgba(150,54,42,0.85)" strokeWidth="1.2" pathLength={1} data-draw="line" />
+      <polyline points={TL.risk} fill="none" stroke="rgba(150,54,42,0.62)" strokeWidth="1.2" strokeDasharray="3 3" data-fade="1" />
+      <polyline points={TL.composite} fill="none" stroke="#8A6A2E" strokeWidth="2.8" pathLength={1} data-draw="main" />
       {/* 계획 12개월 · 피크 기준선 */}
-      <line x1="377" y1="34" x2="377" y2="345" stroke="rgba(44,110,117,0.62)" strokeWidth="1" strokeDasharray="4 4" />
-      <line x1="446" y1="34" x2="446" y2="345" stroke="rgba(138,106,46,0.60)" strokeWidth="1" strokeDasharray="2 3" />
-      <circle cx="377" cy="79" r="5" fill="#3B6B48" stroke="#ECEAE6" strokeWidth="1.5" />
-      <circle cx="446" cy="70" r="5.5" fill="#8A6A2E" stroke="#ECEAE6" strokeWidth="2" />
+      <g data-fade="2">
+        <line x1="377" y1="34" x2="377" y2="345" stroke="rgba(44,110,117,0.62)" strokeWidth="1" strokeDasharray="4 4" />
+        <line x1="446" y1="34" x2="446" y2="345" stroke="rgba(138,106,46,0.60)" strokeWidth="1" strokeDasharray="2 3" />
+        <circle cx="377" cy="79" r="5" fill="#3B6B48" stroke="#ECEAE6" strokeWidth="1.5" />
+        <circle cx="446" cy="70" r="5.5" fill="#8A6A2E" stroke="#ECEAE6" strokeWidth="2" />
+      </g>
       {/* 태그 */}
-      <g fontFamily={MONO} fontSize="12" fontWeight="500" letterSpacing="0.04em">
+      <g fontFamily={MONO} fontSize="12" fontWeight="500" letterSpacing="0.04em" data-fade="2">
         {tags.map((tag) => {
           const w = estTagWidth(tag.text);
           return (
@@ -182,16 +185,18 @@ function TimelineChartMobile({ t }: { t: MethodCopy["ch02"] }) {
       <line x1="0" y1="27" x2="342" y2="27" stroke="rgba(49,46,42,0.06)" strokeWidth="1" />
       <line x1="0" y1="99" x2="342" y2="99" stroke="rgba(49,46,42,0.06)" strokeWidth="1" />
       <line x1="0" y1="172" x2="342" y2="172" stroke="rgba(49,46,42,0.25)" strokeWidth="1" />
-      <polyline points="0,140 25,124 49,106 80,84 107,53 122,46 137,41 152,39 166,39 176,34 342,34" fill="none" stroke="rgba(49,46,42,0.4)" strokeWidth="1" />
+      <polyline points="0,140 25,124 49,106 80,84 107,53 122,46 137,41 152,39 166,39 176,34 342,34" fill="none" stroke="rgba(49,46,42,0.4)" strokeWidth="1" pathLength={1} data-draw="line" />
       <polyline points="0,87 15,66 29,49 50,40 68,35 78,34 342,34" fill="none" stroke="rgba(49,46,42,0.45)" strokeWidth="1" strokeDasharray="5 4" />
-      <polyline points="0,65 55,68 107,70 145,74 176,78 215,83 230,79 244,73 270,82 293,91 322,96 342,89" fill="none" stroke="rgba(160,82,72,0.45)" strokeWidth="1" />
+      <polyline points="0,65 55,68 107,70 145,74 176,78 215,83 230,79 244,73 270,82 293,91 322,96 342,89" fill="none" stroke="rgba(160,82,72,0.45)" strokeWidth="1" pathLength={1} data-draw="line" />
       <polyline points="0,157 55,152 107,148 150,138 186,131 215,126 230,129 244,132 270,124 293,117 322,114 342,120" fill="none" stroke="rgba(160,82,72,0.35)" strokeWidth="1" strokeDasharray="5 4" />
-      <path d="M 0 94 C 20 80, 35 76, 49 73 C 70 64, 90 55, 107 50 C 114 48, 120 46, 127 45 C 140 44, 155 47, 166 49 C 180 52, 195 54, 205 55 C 220 53, 235 49, 244 48 C 258 50, 272 55, 283 58 C 300 61, 320 62, 342 59 L 342 172 L 0 172 Z" fill="rgba(184,152,104,0.10)" />
-      <path d="M 0 94 C 20 80, 35 76, 49 73 C 70 64, 90 55, 107 50 C 114 48, 120 46, 127 45 C 140 44, 155 47, 166 49 C 180 52, 195 54, 205 55 C 220 53, 235 49, 244 48 C 258 50, 272 55, 283 58 C 300 61, 320 62, 342 59" fill="none" stroke="#B89868" strokeWidth="2" />
-      <line x1="107" y1="14" x2="107" y2="172" stroke="rgba(44,110,117,0.5)" strokeWidth="1" strokeDasharray="3 3" />
-      <line x1="127" y1="14" x2="127" y2="172" stroke="rgba(184,152,104,0.5)" strokeWidth="1" strokeDasharray="2 3" />
-      <circle cx="107" cy="50" r="4" fill="#4a7c59" stroke="#ECEAE6" strokeWidth="1.2" />
-      <circle cx="127" cy="45" r="4.5" fill="#B89868" stroke="#ECEAE6" strokeWidth="1.5" />
+      <path d="M 0 94 C 20 80, 35 76, 49 73 C 70 64, 90 55, 107 50 C 114 48, 120 46, 127 45 C 140 44, 155 47, 166 49 C 180 52, 195 54, 205 55 C 220 53, 235 49, 244 48 C 258 50, 272 55, 283 58 C 300 61, 320 62, 342 59 L 342 172 L 0 172 Z" fill="rgba(184,152,104,0.10)" data-fade="1" />
+      <path d="M 0 94 C 20 80, 35 76, 49 73 C 70 64, 90 55, 107 50 C 114 48, 120 46, 127 45 C 140 44, 155 47, 166 49 C 180 52, 195 54, 205 55 C 220 53, 235 49, 244 48 C 258 50, 272 55, 283 58 C 300 61, 320 62, 342 59" fill="none" stroke="#B89868" strokeWidth="2" pathLength={1} data-draw="main" />
+      <g data-fade="2">
+        <line x1="107" y1="14" x2="107" y2="172" stroke="rgba(44,110,117,0.5)" strokeWidth="1" strokeDasharray="3 3" />
+        <line x1="127" y1="14" x2="127" y2="172" stroke="rgba(184,152,104,0.5)" strokeWidth="1" strokeDasharray="2 3" />
+        <circle cx="107" cy="50" r="4" fill="#4a7c59" stroke="#ECEAE6" strokeWidth="1.2" />
+        <circle cx="127" cy="45" r="4.5" fill="#B89868" stroke="#ECEAE6" strokeWidth="1.5" />
+      </g>
       <g fontFamily={MONO} fontSize="10" fill="rgba(49,46,42,0.45)">
         <text x="0" y="190">1</text>
         <text x="101" y="190">12</text>
@@ -298,17 +303,19 @@ function ConvergenceChart({ t }: { t: MethodCopy["ch04"] }) {
         <path d="M 20 60 C 150 76, 290 96, 452 106" fill="none" stroke="rgba(184,152,104,0.4)" strokeWidth="1" strokeDasharray="3 4" />
         <path d="M 20 176 C 150 152, 290 132, 452 122" fill="none" stroke="rgba(184,152,104,0.4)" strokeWidth="1" strokeDasharray="3 4" />
         <line x1="20" y1="114" x2="452" y2="114" stroke="rgba(49,46,42,0.18)" strokeWidth="1" strokeDasharray="2 3" />
-        {CONV_PAIRS.map(([x, py, ay]) => (
-          <g key={x}>
+        {CONV_PAIRS.map(([x, py, ay], i) => (
+          <g key={x} data-conv="1" style={{ transitionDelay: `${(i * 0.14).toFixed(2)}s` }}>
             <line x1={x} y1={py} x2={x} y2={ay} stroke="rgba(49,46,42,0.25)" strokeWidth="1" />
             <circle cx={x} cy={ay} r="3" fill="rgba(49,46,42,0.6)" />
             <circle cx={x} cy={py} r="3.5" fill="#ECEAE6" stroke="rgba(49,46,42,0.55)" strokeWidth="1.2" />
           </g>
         ))}
         {/* 10차 수렴점(강조) */}
-        <line x1="452" y1="110" x2="452" y2="118" stroke="rgba(184,152,104,0.8)" strokeWidth="1.2" />
-        <circle cx="452" cy="110" r="3.5" fill="#ECEAE6" stroke="#B89868" strokeWidth="1.4" />
-        <circle cx="452" cy="118" r="3" fill="#B89868" />
+        <g data-conv-final="1">
+          <line x1="452" y1="110" x2="452" y2="118" stroke="rgba(184,152,104,0.8)" strokeWidth="1.2" />
+          <circle cx="452" cy="110" r="3.5" fill="#ECEAE6" stroke="#B89868" strokeWidth="1.4" />
+          <circle cx="452" cy="118" r="3" fill="#B89868" />
+        </g>
       </g>
 
       {/* 되먹임 고리 — 수렴점이 다시 첫 예측을 당긴다 */}
@@ -317,8 +324,8 @@ function ConvergenceChart({ t }: { t: MethodCopy["ch04"] }) {
           <path d="M0,0 L6,3 L0,6" fill="none" stroke="#B89868" strokeWidth="1.3" />
         </marker>
       </defs>
-      <path d="M 452 118 C 452 210, 428 230, 240 230 C 58 230, 20 210, 20 78" fill="none" stroke="#B89868" strokeWidth="1.3" strokeDasharray="1 5" strokeLinecap="round" markerEnd="url(#convArrow)" />
-      <text x="240" y="225" textAnchor="middle" fontSize="11" letterSpacing="0.06em" fill="#9a7b4e">{t.convFeedback}</text>
+      <path d="M 452 118 C 452 210, 428 230, 240 230 C 58 230, 20 210, 20 78" fill="none" stroke="#B89868" strokeWidth="1.3" strokeDasharray="1 5" strokeLinecap="round" markerEnd="url(#convArrow)" data-fade="3" />
+      <text x="240" y="225" textAnchor="middle" fontSize="11" letterSpacing="0.06em" fill="#9a7b4e" data-fade="3">{t.convFeedback}</text>
 
       {/* 축 라벨(라인 테두리 태그) */}
       <g fontFamily={MONO} fontSize="11" letterSpacing="0.06em" fill="rgba(49,46,42,0.5)">
@@ -411,11 +418,12 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
   return (
     <>
     <Header locale={locale} dict={dict.header} />
+    <ScrollReveal />
     <main className={s.page}>
       {/* ═══ S1. Hero ═══ */}
       <section className={s.hero} data-tone="dark">
         {/* 풀블리드 배경 — 심해 케이지 (Paper Hero BG), 블랙 오버레이로 아주 연하게 */}
-        <div className={s.heroBg} aria-hidden="true">
+        <div className={s.heroBg} aria-hidden="true" data-mh="bg">
           <picture>
             <source media="(max-width: 768px)" srcSet="/images/method/hero-bg-m.webp" />
             <Image
@@ -431,7 +439,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
           <span className={s.heroScrim} />
         </div>
         <div className={s.heroCopy}>
-          <h1 className={s.heroTitle}>
+          <h1 className={s.heroTitle} data-mh="title">
             {isKo ? (
               <picture>
                 <source media="(max-width: 768px)" srcSet="/text/method/hero-m.png" />
@@ -449,7 +457,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
               <span className={s.heroTitleText}>{t.hero.title}</span>
             )}
           </h1>
-          <p className={s.heroSub}>
+          <p className={s.heroSub} data-mh="sub">
             {highlightBrand(t.hero.sub[0], s.heroBrand)}
             <br className={s.mOnly} /> {t.hero.sub[1]}
           </p>
@@ -458,12 +466,12 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
 
       {/* ═══ S2. CH.01 기록한다 ═══ */}
       <section className={`${s.chapter} ${s.dark}`} data-tone="dark">
-        <div className={s.inner}>
+        <div className={`${s.inner} reveal`}>
           <ChapterMarker step={1} tone="dark" />
           <h2 className={s.h2}>{h2({ src: "/text/method/h-measure.png", width: 533 }, t.ch01.h2)}</h2>
         </div>
         <div className={`${s.inner} ${s.measureBody}`}>
-          <figure className={s.measurePhoto}>
+          <figure className={`${s.measurePhoto} reveal`}>
             <Image
               src="/images/method/measure-cage.webp"
               alt={t.ch01.photoAlt}
@@ -473,12 +481,12 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
               className={s.photoFill}
             />
           </figure>
-          <div className={s.measureCopy}>
+          <div className={`${s.measureCopy} reveal reveal-delay-1`}>
             <p>{t.ch01.p1}</p>
             <p>{t.ch01.p2}</p>
           </div>
         </div>
-        <div className={`${s.inner} ${s.obsBlock}`}>
+        <div className={`${s.inner} ${s.obsBlock} reveal`}>
           <div className={s.obsHead}>
             <span className={s.monoLabel}>{t.ch01.obsLabel}</span>
             <span className={s.monoDim}>{t.ch01.obsSource}</span>
@@ -498,7 +506,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
 
       {/* ═══ S3. CH.02 예측한다 ═══ */}
       <section className={`${s.chapter} ${s.light}`} data-tone="light">
-        <div className={s.inner}>
+        <div className={`${s.inner} reveal`}>
           <ChapterMarker step={2} tone="light" />
           <h2 className={s.h2}>{h2({ src: "/text/method/h-predict.png", width: 574 }, t.ch02.h2)}</h2>
           <p className={s.lead}>{t.ch02.lead}</p>
@@ -509,11 +517,11 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
           <span className={s.tagGreen}><em>{t.ch02.tagRec.em}</em>{t.ch02.tagRec.text}</span>
           <span className={s.tagAmber}><em>{t.ch02.tagPeak.em}</em>{t.ch02.tagPeak.text}</span>
         </div>
-        <div className={`${s.inner} ${s.tlWrap}`}>
+        <div className={`${s.inner} ${s.tlWrap} reveal reveal-draw`}>
           <div className={s.dOnly}><TimelineChartDesktop t={t.ch02} /></div>
           <div className={s.mOnly}><TimelineChartMobile t={t.ch02} /></div>
         </div>
-        <div className={`${s.inner} ${s.tlLegend}`}>
+        <div className={`${s.inner} ${s.tlLegend} reveal reveal-delay-2`}>
           <span className={s.lgItem}><i className={s.swAmber} />{t.ch02.legend[0]}</span>
           <span className={s.lgItem}><i className={s.swSolid} />{t.ch02.legend[1]}</span>
           <span className={s.lgItem}><i className={s.swDash} />{t.ch02.legend[2]}</span>
@@ -523,7 +531,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
         </div>
 
         {/* 풍미 레이더 */}
-        <div className={`${s.inner} ${s.radarBlock}`}>
+        <div className={`${s.inner} ${s.radarBlock} reveal`}>
           <div className={s.radarRule} />
           <div className={s.radarHead}>
             <h3 className={s.h3}>{t.ch02.radarH3}</h3>
@@ -569,7 +577,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
       {/* ═══ S4. CH.03 검증받는다 ═══ */}
       <section className={`${s.chapter} ${s.dark} ${s.verifySection}`} data-tone="dark">
         <div className={`${s.inner} ${s.verifyGrid}`}>
-          <div className={s.verifyCopy}>
+          <div className={`${s.verifyCopy} reveal`}>
             <ChapterMarker step={3} tone="dark" />
             <h2 className={s.h2}>{h2({ src: "/text/method/h-verify.png", width: 545 }, t.ch03.h2)}</h2>
             <p>{t.ch03.p1}</p>
@@ -578,7 +586,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
           </div>
 
           {/* 예측 기록서 — 아이폰 목업 (Dynamic Island + SEALED, 인양 시 공개) */}
-          <div className={s.phone}>
+          <div className={`${s.phone} reveal reveal-delay-2`}>
             <span className={s.phoneIsland} aria-hidden="true" />
             <div className={s.card}>
             <div className={s.cardHead}>
@@ -625,7 +633,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
         </div>
 
         {/* 인양 풀블리드 */}
-        <figure className={s.retrieval}>
+        <figure className={`${s.retrieval} reveal`}>
           <Image
             src="/images/method/retrieval-cage.webp"
             alt={t.ch03.retrievalAlt}
@@ -641,18 +649,18 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
 
       {/* ═══ S5. CH.04 보정한다 ═══ */}
       <section className={`${s.chapter} ${s.light}`} data-tone="light">
-        <div className={s.inner}>
+        <div className={`${s.inner} reveal`}>
           <ChapterMarker step={4} tone="light" />
           <h2 className={s.h2}>{h2({ src: "/text/method/h-learn.png", width: 546 }, t.ch04.h2)}</h2>
           <p className={s.lead}>{t.ch04.lead}</p>
         </div>
         <div className={`${s.inner} ${s.learnGrid}`}>
-          <div className={s.learnBlock}>
+          <div className={`${s.learnBlock} reveal reveal-draw`}>
             <ConvergenceChart t={t.ch04} />
             <h3 className={s.h3}>{t.ch04.loopH3}</h3>
             <p className={s.blockCopy}>{t.ch04.loopCopy}</p>
           </div>
-          <div className={s.learnBlock}>
+          <div className={`${s.learnBlock} reveal reveal-delay-2`}>
             <CertPhoneMock t={t.ch04} />
             <h3 className={s.h3}>{t.ch04.certH3}</h3>
             <p className={s.blockCopy}>{t.ch04.certCopy}</p>
@@ -662,7 +670,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
 
       {/* ═══ S6. 화자 ═══ */}
       <section className={s.quoteSection} data-tone="light">
-        <figure className={s.portrait}>
+        <figure className={`${s.portrait} reveal`}>
           <Image
             src="/images/method/quote-tablet.webp"
             alt={t.quote.portraitAlt}
@@ -672,7 +680,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
             className={s.photoFill}
           />
         </figure>
-        <blockquote className={s.quote}>
+        <blockquote className={`${s.quote} reveal reveal-delay-1`}>
           {isKo ? (
             <picture>
               <source media="(max-width: 768px)" srcSet="/text/method/quote-m.png" />
@@ -689,7 +697,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
             <span className={s.quoteText}>{t.quote.text}</span>
           )}
         </blockquote>
-        <div className={s.attribution}>
+        <div className={`${s.attribution} reveal reveal-delay-2`}>
           <i />
           <span className={s.attrName}>{t.quote.attrName}</span>
           <span className={s.attrOrg}>{t.quote.attrOrg}</span>
@@ -698,7 +706,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
 
       {/* ═══ S7. Archive ═══ */}
       <section className={`${s.chapter} ${s.light} ${s.archiveSection}`} data-tone="light">
-        <div className={s.inner}>
+        <div className={`${s.inner} reveal`}>
           <span className={s.archiveEyebrow}>ARCHIVE</span>
           <h2 className={s.h2}>{h2({ src: "/text/method/h-archive.png", width: 492 }, t.archive.h2)}</h2>
           <p className={s.lead}>{t.archive.lead}</p>
@@ -726,7 +734,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
 
       {/* ═══ S8. Closing ═══ */}
       <section className={s.closing} data-tone="dark">
-        <h2 className={s.closingTitle}>
+        <h2 className={`${s.closingTitle} reveal`}>
           {isKo ? (
             <picture>
               <source media="(max-width: 768px)" srcSet="/text/method/closing-m.png" />
@@ -743,11 +751,11 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
             <span className={s.closingText}>{t.closing.title}</span>
           )}
         </h2>
-        <p className={s.closingSub}>
+        <p className={`${s.closingSub} reveal reveal-delay-1`}>
           {t.closing.sub[0]}<br />{t.closing.sub[1]}
         </p>
-        <Link href={href("/invite")} className={s.closingCta}>{t.closing.cta}</Link>
-        <Link href={href("/partner")} className={s.closingSecondary}>{t.closing.secondary}</Link>
+        <Link href={href("/invite")} className={`${s.closingCta} reveal reveal-delay-2`}>{t.closing.cta}</Link>
+        <Link href={href("/partner")} className={`${s.closingSecondary} reveal reveal-delay-3`}>{t.closing.secondary}</Link>
       </section>
     </main>
     <Footer locale={locale} dict={dict.footer} />

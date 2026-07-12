@@ -51,7 +51,7 @@ export default function ArchiveSection({
 
       {/* 인트로 */}
       <div className="s-col__intro reveal">
-        <h2 id="archive-title" className="s-col__title">{dict.title}</h2>
+        <h2 id="archive-title" className="s-col__title" data-word-reveal="letters">{dict.title}</h2>
         <p className="s-col__sub">
           {isKo ? (
             <Image

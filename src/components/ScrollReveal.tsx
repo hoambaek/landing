@@ -40,9 +40,25 @@ export default function ScrollReveal() {
       { threshold: 0.3 }
     );
 
+    // reveal-mask: 65% 노출 시 트리거 — 마스크 리빌은 아래→위로 풀리므로
+    // 이르게 시작하면 스윕이 폴드 아래(화면 밖)에서 끝나버려 체감이 안 된다
+    const maskObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            requestAnimationFrame(() => {
+              entry.target.classList.add("is-visible");
+            });
+          }
+        });
+      },
+      { threshold: 0.65 }
+    );
+
     const observeElements = () => {
       document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
       document.querySelectorAll(".reveal-scale").forEach((el) => scaleObserver.observe(el));
+      document.querySelectorAll(".reveal-mask-watch").forEach((el) => maskObserver.observe(el));
     };
 
     // 대기 중인 노드를 hydration 이후에 observe
@@ -87,6 +103,7 @@ export default function ScrollReveal() {
       clearTimeout(timer);
       observer.disconnect();
       scaleObserver.disconnect();
+      maskObserver.disconnect();
       mutation.disconnect();
     };
   }, []);

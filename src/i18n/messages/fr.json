@@ -41,12 +41,12 @@
     "sub": "Chaque cuvée est un relevé, veiller sur le temps que la mer a façonné.",
     "heroAlt": "La gamme de cuvées remontée au large de Namhae",
     "cuvees": {
-      "enLieuSur": "Un commencement, pour la première rencontre",
-      "enLieuSurMagnum": "Magnum 1500 ml · un vieillissement plus lent",
-      "elementDeSurprise": "BDB Non-dosé\nLa franchise du vieillissement sous-marin",
-      "editionZero": "La première archive, consignant le commencement",
-      "atomesCrochus1yr": "Cépage rare Petit Meslier\nUn relevé d'une année",
-      "atomesCrochus3yr": "Encore sous la mer\nen passe de devenir un relevé de mille jours",
+      "enLieuSur": "Une première rencontre avec le temps de la mer",
+      "enLieuSurMagnum": "Plus la bouteille est grande, plus elle vieillit lentement · 1500 ml",
+      "elementDeSurprise": "Chardonnay seul, sans dosage\nTel que la mer l'a façonné",
+      "editionZero": "La première bouteille, où tout a commencé",
+      "atomesCrochus1yr": "Petit Meslier, un cépage rare\nUne première année passée sous la mer",
+      "atomesCrochus3yr": "Encore en train de mûrir sous la mer\nUn relevé vers mille jours",
       "tag3yr": "3 ans",
       "soldOut": "· ÉPUISÉ"
     },

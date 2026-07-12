@@ -3,6 +3,9 @@ import Footer from "@/components/layout/Footer";
 import HtmlLang from "@/components/HtmlLang";
 // import SectionIndicator from "@/components/layout/SectionIndicator";
 import ScrollReveal from "@/components/ScrollReveal";
+import DescentEffect from "@/components/DescentEffect";
+import DepthGauge from "@/components/DepthGauge";
+import WordReveal from "@/components/WordReveal";
 import HeroSection from "@/components/sections/HeroSection";
 import TheLivingRecordSection from "@/components/sections/TheLivingRecordSection";
 import TheFirstRecordSection from "@/components/sections/TheFirstRecordSection";
@@ -42,6 +45,9 @@ export default async function LandingPage({ locale }: { locale: Locale }) {
       <Header locale={locale} dict={dict.header} />
       {/* <SectionIndicator /> */}
       <ScrollReveal />
+      <DescentEffect />
+      <DepthGauge />
+      <WordReveal />
       <main id="main-content">
         <HeroSection locale={locale} dict={dict.hero} />
         <TheLivingRecordSection locale={locale} dict={dict.living} liveLog={liveLog} />
