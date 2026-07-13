@@ -32,6 +32,11 @@ export default function DescentEffect() {
         const veil = hero.querySelector<HTMLElement>(".s-void__veil");
         if (!bg || !veil) return;
 
+        /* pinSpacer를 JSX에 미리 만든 #void-pin으로 지정 — GSAP이 pin-spacer를
+           동적으로 만들어 히어로를 감싸면(DOM 재삽입) 진행 중이던 CSS 인트로
+           애니메이션(void-settle 등)이 처음부터 재시작해 화면이 튄다 */
+        const pinSpacer = document.getElementById("void-pin") ?? undefined;
+
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: hero,
@@ -39,6 +44,7 @@ export default function DescentEffect() {
             end: "+=110%",
             scrub: 1,
             pin: true,
+            pinSpacer,
             anticipatePin: 1,
             invalidateOnRefresh: true,
           },

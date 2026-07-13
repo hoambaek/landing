@@ -35,7 +35,11 @@ export default function HeroSection({
     </p>
   );
 
+  /* #void-pin: DescentEffect ScrollTrigger의 pinSpacer로 미리 제공하는 래퍼.
+     GSAP이 런타임에 pin-spacer를 만들어 섹션을 감싸면(DOM 재삽입) 진행 중이던
+     CSS 인트로 애니메이션(void-settle 등)이 처음부터 재시작해 화면이 튄다. */
   return (
+    <div id="void-pin">
     <section id="void" className="s-void" aria-labelledby="void-title">
       {/* 배경 이미지 — 데스크톱 h3 / 모바일 h3_m2 */}
       <picture className="s-void__bg">
@@ -97,5 +101,6 @@ export default function HeroSection({
           데스크톱에서 DescentEffect(GSAP 스크럽)가 제어 */}
       <div className="s-void__veil" aria-hidden="true" />
     </section>
+    </div>
   );
 }
