@@ -713,18 +713,6 @@ input:focus-visible,
   gap: 18px;
 }
 
-/* 신조 — 브랜드 포지셔닝 상설 노출 (북극성 §3 축약) */
-.menu-overlay__creed {
-  max-width: 380px;
-  font-family: var(--font-body);
-  font-weight: 300;
-  font-size: 14px;
-  letter-spacing: 0.01em;
-  line-height: 22px;
-  color: rgba(49, 46, 42, 0.7);
-  word-break: keep-all;
-}
-
 .menu-overlay__rec {
   display: flex;
   align-items: baseline;
@@ -840,12 +828,6 @@ input:focus-visible,
 
   .menu-overlay__bottom-left {
     gap: 14px;
-  }
-
-  .menu-overlay__creed {
-    max-width: 300px;
-    font-size: 13px;
-    line-height: 20px;
   }
 
   .menu-overlay__rec {

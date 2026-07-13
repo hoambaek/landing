@@ -80,6 +80,26 @@ export default function Header({
     measureDays !== null ? String(measureDays) : "",
   );
 
+  /* 수온 — 랜딩 Living Record와 동일 소스(/api/ocean → getOceanObservations).
+     마운트 후 미리 받아 두어 메뉴를 열었을 때 값이 준비돼 있게 한다.
+     실패 시 사전의 고정값을 그대로 노출. */
+  const [liveTemp, setLiveTemp] = useState<number | null>(null);
+  useEffect(() => {
+    fetch("/api/ocean")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { seaTemp?: number | null } | null) => {
+        if (typeof d?.seaTemp === "number") setLiveTemp(d.seaTemp);
+      })
+      .catch(() => {});
+  }, []);
+  const recLine =
+    liveTemp !== null
+      ? dict.recLine.replace(
+          /[\d.,]+°C/,
+          `${locale === "fr" ? liveTemp.toFixed(1).replace(".", ",") : liveTemp.toFixed(1)}°C`,
+        )
+      : dict.recLine;
+
   const menuBtnRef = useRef<HTMLButtonElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
@@ -295,12 +315,11 @@ export default function Header({
           ))}
         </nav>
 
-        {/* 하단: 신조 + REC 관측 라인(좌) + 언어(우) */}
+        {/* 하단: REC 관측 라인(좌) + 언어(우) */}
         <div className="menu-overlay__bottom">
           <div className="menu-overlay__bottom-left">
-            <p className="menu-overlay__creed">{dict.creed}</p>
             <div className="menu-overlay__rec">
-              <span className="menu-overlay__rec-line">{dict.recLine}</span>
+              <span className="menu-overlay__rec-line">{recLine}</span>
               <span className="menu-overlay__rec-days">{recDays}</span>
             </div>
           </div>
