@@ -39,11 +39,21 @@ export function ApplicantEmail({ kind, name, mode = "send" }: ApplicantEmailProp
 
   return (
     <Html lang="ko">
-      <Head />
+      <Head>
+        {/* 모바일: 인라인 스타일보다 우선하도록 !important 필수 (지원 안 하는 클라이언트는 상향된 기본값으로 동작) */}
+        <style>{`
+          @media only screen and (max-width: 480px) {
+            .email-header { padding: 40px 0 34px !important; }
+            .email-content { padding: 40px 24px 44px !important; }
+            .email-title { font-size: 28px !important; line-height: 36px !important; }
+            .email-footer { padding: 36px 24px 40px !important; }
+          }
+        `}</style>
+      </Head>
       <Body style={styles.body}>
         <Container style={styles.card}>
           {/* ── 헤더 (로고 + 모토) ── */}
-          <Section style={styles.header}>
+          <Section className="email-header" style={styles.header}>
             <Img
               src={`${BASE_URL}/images/logo/logo_trans_W.png`}
               width="132"
@@ -61,9 +71,11 @@ export function ApplicantEmail({ kind, name, mode = "send" }: ApplicantEmailProp
           </Section>
 
           {/* ── 본문 ── */}
-          <Section style={styles.content}>
+          <Section className="email-content" style={styles.content}>
             <Text style={styles.eyebrow}>{t.eyebrow}</Text>
-            <Text style={styles.title}>{t.title}</Text>
+            <Text className="email-title" style={styles.title}>
+              {t.title}
+            </Text>
             <Text style={styles.hello}>{greeting}</Text>
             {t.body.map((line, i) => (
               <Text key={i} style={styles.para}>
@@ -81,7 +93,7 @@ export function ApplicantEmail({ kind, name, mode = "send" }: ApplicantEmailProp
           </Section>
 
           {/* ── 법적 푸터 (다크) ── */}
-          <Section style={styles.footer}>
+          <Section className="email-footer" style={styles.footer}>
             <Img
               src={`${BASE_URL}/images/logo/logo_text_trans_W.png`}
               width="112"
@@ -176,8 +188,10 @@ const styles = {
     fontFamily: sans,
   },
   card: {
-    width: "600px",
-    maxWidth: "100%",
+    // 고정 width 금지: max-width 미지원 클라이언트가 600px 폭을 유지한 채
+    // 전체를 축소 렌더링해 글자가 작아지는 원인이 됨 (fluid 방식)
+    width: "100%",
+    maxWidth: "600px",
     margin: "0 auto",
     backgroundColor: "#C4BFBB",
   },
@@ -202,7 +216,7 @@ const styles = {
   eyebrow: {
     margin: "0 0 18px",
     fontFamily: mono,
-    fontSize: "11px",
+    fontSize: "12px",
     letterSpacing: "0.22em",
     color: "#8C6B33",
   },
@@ -214,22 +228,24 @@ const styles = {
     lineHeight: "40px",
     letterSpacing: "-0.01em",
     color: "#312E2A",
+    wordBreak: "keep-all" as const,
   },
   hello: {
     margin: "0 0 18px",
     fontFamily: sans,
-    fontSize: "15px",
+    fontSize: "16px",
     fontWeight: 400,
-    lineHeight: "25px",
+    lineHeight: "26px",
     color: "#312E2A",
   },
   para: {
     margin: "0 0 14px",
     fontFamily: sans,
-    fontSize: "14px",
-    fontWeight: 300,
-    lineHeight: "26px",
+    fontSize: "16px",
+    fontWeight: 400,
+    lineHeight: "28px",
     color: "#4A453F",
+    wordBreak: "keep-all" as const,
   },
   rule: {
     width: "36px",
@@ -254,10 +270,10 @@ const styles = {
   fInfo: {
     margin: "0 0 5px",
     fontFamily: sans,
-    fontSize: "11px",
-    fontWeight: 300,
-    lineHeight: "17px",
-    color: "rgba(242,239,233,0.42)",
+    fontSize: "12px",
+    fontWeight: 400,
+    lineHeight: "19px",
+    color: "rgba(242,239,233,0.55)",
   },
   fRule: {
     width: "300px",
@@ -268,8 +284,8 @@ const styles = {
   fCopy: {
     margin: "0",
     fontFamily: mono,
-    fontSize: "10px",
+    fontSize: "11px",
     letterSpacing: "0.1em",
-    color: "rgba(242,239,233,0.3)",
+    color: "rgba(242,239,233,0.4)",
   },
 };
