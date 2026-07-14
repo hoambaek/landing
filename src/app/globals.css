@@ -4182,6 +4182,21 @@ input:focus-visible,
     transform: scale(0.98);
     transition: transform 0.1s ease;
   }
+
+  /* 버튼류 전반 — 탭하는 순간 눌림(축소+감광) 피드백 */
+  .s-letter__submit:active,
+  .age-gate__btn:active,
+  .header__menu:active,
+  .menu-overlay__close:active,
+  .s-maker__arrow:active,
+  .s-maker__dot:active,
+  .footer__lang:active,
+  .footer__legal a:active,
+  .footer__bar a:active {
+    opacity: 0.55;
+    transform: scale(0.97);
+    transition-duration: 0.05s;
+  }
 }
 
 /* 3-3: overscroll 방지 — 당김 새로고침만 세로축에서 차단.
