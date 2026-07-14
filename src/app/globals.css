@@ -2682,6 +2682,17 @@ input:focus-visible,
   color: rgba(232, 229, 225, 0.5);
 }
 
+.s-footer__social-link {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+.s-footer__social-link:hover {
+  color: rgba(232, 229, 225, 0.85);
+}
+
 .s-footer__bar-right {
   display: flex;
   align-items: center;

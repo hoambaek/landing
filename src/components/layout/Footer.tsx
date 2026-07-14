@@ -130,7 +130,15 @@ export default function Footer({
           <div className="s-footer__bar-left">
             <span className="s-footer__copyright">© 2026 Muse de Marée</span>
             <div className="s-footer__social">
-              <InstagramIcon />
+              <a
+                href="https://www.instagram.com/muse_de_maree/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="s-footer__social-link"
+              >
+                <InstagramIcon />
+              </a>
               <YoutubeIcon />
             </div>
           </div>
