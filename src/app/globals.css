@@ -4169,21 +4169,22 @@ input:focus-visible,
    MOBILE INTERACTION — Phase 3
    ══════════════════════════════════════════ */
 
-/* 3-1: 터치 피드백 — 탭 시 시각적 반응 */
+/* 3-1: 터치 피드백 — 누르면 서서히 스며들듯 옅어진다.
+   급격한 스냅은 깜박임으로 읽히므로 금지 — 들어가는 쪽에도 반드시 이징을 준다. */
 @media (hover: none) and (pointer: coarse) {
   .cta-link:active,
   .text-cta:active,
   .menu-overlay__link:active {
-    opacity: 0.6;
-    transition-duration: 0.05s;
+    opacity: 0.75;
+    transition-duration: 0.2s;
   }
 
   .s-maker__peek-slide:active {
-    transform: scale(0.98);
-    transition: transform 0.1s ease;
+    transform: scale(0.985);
+    transition: transform 0.2s ease;
   }
 
-  /* 버튼류 전반 — 탭하는 순간 눌림(축소+감광) 피드백 */
+  /* 버튼류 전반 — 탭하면 은은하게 눌림(미세 축소+감광) */
   .s-letter__submit:active,
   .age-gate__btn:active,
   .header__menu:active,
@@ -4193,9 +4194,9 @@ input:focus-visible,
   .footer__lang:active,
   .footer__legal a:active,
   .footer__bar a:active {
-    opacity: 0.55;
-    transform: scale(0.97);
-    transition-duration: 0.05s;
+    opacity: 0.75;
+    transform: scale(0.985);
+    transition-duration: 0.2s;
   }
 }
 
