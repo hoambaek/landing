@@ -135,8 +135,20 @@ async function fetchOpenMeteo() {
 
   const mTime = (marine.hourly?.time as string[]) ?? [];
   const wTime = (weather.hourly?.time as string[]) ?? [];
-  // 미래 예보 시간 제외 — "관측" 시계열이므로 현재 시각까지만
-  const now = new Date().toISOString().slice(0, 13);
+  // 미래 예보 시간 제외 — "관측" 시계열이므로 현재 시각까지만.
+  // 응답 시각이 timezone=Asia/Seoul 기준이므로 컷도 서울 시각이어야 한다.
+  // toISOString()은 UTC라 9시간 이전에서 잘려 최신 관측이 통째로 버려졌다.
+  const now = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    hour12: false,
+  })
+    .format(new Date())
+    .replace(" ", "T")
+    .slice(0, 13);
   const mCut = mTime.filter((t) => t.slice(0, 13) <= now).length;
   const wCut = wTime.filter((t) => t.slice(0, 13) <= now).length;
   const slice = (arr?: (number | null)[] | string[]) => (arr as (number | null)[] | undefined)?.slice(0, mCut) ?? [];
@@ -304,6 +316,6 @@ async function loadOceanObservations(): Promise<OceanObservations> {
   };
 }
 
-export const getOceanObservations = unstable_cache(loadOceanObservations, ["method-ocean-observations-v4"], {
+export const getOceanObservations = unstable_cache(loadOceanObservations, ["method-ocean-observations-v5"], {
   revalidate: 3600,
 });

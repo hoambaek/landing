@@ -33,9 +33,12 @@ export default async function LandingPage({ locale }: { locale: Locale }) {
      실측을 다음 우선순위로 사용(외해 조류가 숙성 환경 대표값). 둘 다 없을 때만 폴백. */
   const currentMs = ocean?.oceanCurrent?.latest ?? ocean?.tidalCurrent?.latest ?? 1.2;
   const setNum = (s: string, re: RegExp, v: string) => s.replace(re, v);
+  /* fr은 쉼표 소수점 — 사전 문자열("Temp. 13,5°C")도 치환값도 쉼표여야 한다.
+     정규식에 쉼표가 빠지면 "13,"을 남기고 뒷자리만 바뀐다(Temp. 13,15.9°C). */
+  const fmt = (n: number) => (locale === "fr" ? n.toFixed(1).replace(".", ",") : n.toFixed(1));
   const liveLog = {
-    temp: setNum(l.temp, /[\d.]+°C/, `${(ocean?.seaTemp?.latest ?? 14.8).toFixed(1)}°C`),
-    current: setNum(l.current, /[\d.]+ m\/s/, `${currentMs.toFixed(1)} m/s`),
+    temp: setNum(l.temp, /[\d.,]+°C/, `${fmt(ocean?.seaTemp?.latest ?? 14.8)}°C`),
+    current: setNum(l.current, /[\d.,]+ m\/s/, `${fmt(currentMs)} m/s`),
     depth: l.depth,
   };
 
