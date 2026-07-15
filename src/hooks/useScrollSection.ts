@@ -17,10 +17,17 @@ function getSections(): HTMLElement[] {
   );
 }
 
+/** 문서 최상단 기준 절대 Y.
+ *  offsetTop은 offsetParent 기준 상대값이라, transform이 걸린 조상
+ *  (예: .reveal의 translateY)이 있으면 0에 가까운 값이 나와 비교가 깨진다. */
+function docTop(el: HTMLElement): number {
+  return el.getBoundingClientRect().top + window.scrollY;
+}
+
 function findSectionAt(sects: HTMLElement[], y: number): string {
   let id = "void";
   for (const s of sects) {
-    if (s.offsetTop <= y && s.id) id = s.id;
+    if (docTop(s) <= y && s.id) id = s.id;
   }
   return id;
 }
@@ -29,7 +36,7 @@ function findSectionAt(sects: HTMLElement[], y: number): string {
 function sectionElAt(sects: HTMLElement[], y: number): HTMLElement | null {
   let target: HTMLElement | null = null;
   for (const s of sects) {
-    if (s.offsetTop <= y) target = s;
+    if (docTop(s) <= y) target = s;
   }
   return target;
 }

@@ -28,21 +28,23 @@
   .chapter { padding: 88px 0 72px; }
 }
 
-/* 챕터 마커 */
+/* 챕터 마커 — data-tone이 아닌 data-marker-tone을 쓴다.
+   data-tone은 헤더 톤 감지(useHeaderScroll)가 섹션을 찾는 표식이라
+   섹션이 아닌 요소에 달면 헤더 색 전환이 이 마커에 묶여버린다. */
 .marker { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
 .markerSegs { display: flex; gap: 6px; }
 .markerSeg { width: 26px; height: 2px; }
-.marker[data-tone="dark"] .markerSeg { background: rgba(232, 229, 225, 0.18); }
-.marker[data-tone="light"] .markerSeg { background: rgba(49, 46, 42, 0.15); }
-.marker[data-tone="dark"] .markerSeg[data-active="true"] { background: #ccad7b; }
-.marker[data-tone="light"] .markerSeg[data-active="true"] { background: #b89868; }
+.marker[data-marker-tone="dark"] .markerSeg { background: rgba(232, 229, 225, 0.18); }
+.marker[data-marker-tone="light"] .markerSeg { background: rgba(49, 46, 42, 0.15); }
+.marker[data-marker-tone="dark"] .markerSeg[data-active="true"] { background: #ccad7b; }
+.marker[data-marker-tone="light"] .markerSeg[data-active="true"] { background: #b89868; }
 .markerLabel {
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.22em;
 }
-.marker[data-tone="dark"] .markerLabel { color: #ccad7b; }
-.marker[data-tone="light"] .markerLabel { color: #b89868; }
+.marker[data-marker-tone="dark"] .markerLabel { color: #ccad7b; }
+.marker[data-marker-tone="light"] .markerLabel { color: #b89868; }
 @media (max-width: 768px) {
   .markerSeg { width: 18px; }
   .markerLabel { font-size: 10px; letter-spacing: 0.2em; }

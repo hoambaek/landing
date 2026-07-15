@@ -35,7 +35,7 @@ function highlightBrand(text: string, brandClass: string) {
 
 function ChapterMarker({ step, tone }: { step: number; tone: "dark" | "light" }) {
   return (
-    <div className={s.marker} data-tone={tone}>
+    <div className={s.marker} data-marker-tone={tone}>
       <div className={s.markerSegs}>
         {[1, 2, 3, 4].map((n) => (
           <span key={n} className={s.markerSeg} data-active={n === step} />
