@@ -203,15 +203,15 @@ const styles = {
     textAlign: "center" as const,
     borderBottom: "1px solid rgba(49,46,42,0.12)",
   },
+  // 로고에 opacity·그림자 등 효과 금지 — 배경(#C4BFBB)이 로고보다 어두워서
+  // 투과시키면 배경이 흰 획 안으로 비쳐 그림자처럼 보인다. 순백 그대로 둘 것.
   symbol: {
     display: "block",
     margin: "0 auto",
-    opacity: 0.95,
   },
   wordmark: {
     display: "block",
     margin: "18px auto 0",
-    opacity: 0.92,
   },
   content: {
     padding: "48px 56px 52px",
@@ -268,7 +268,6 @@ const styles = {
   fName: {
     display: "block",
     margin: "0 auto 12px",
-    opacity: 0.92,
   },
   fInfo: {
     margin: "0 0 5px",
