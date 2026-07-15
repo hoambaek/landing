@@ -6,8 +6,10 @@
  * 브랜드 약속상, 한 화면에서 다른 숫자가 나오면 안 된다.
  */
 
-/** 측정 시작일(입수일). 기준값 — 이 날짜로부터 경과일을 1-indexed로 센다. */
-export const MEASURE_START = Date.UTC(2024, 4, 1); // 2024-05-01
+/** 측정 시작일(첫 입수일). 기준값 — 이 날짜로부터 경과일을 1-indexed로 센다.
+ *  2023-02-11 = 첫 입수(2026-07-15 대표 확인). method 페이지의 "1차 · 2023",
+ *  시즌 축 "2023 겨울 → 2026 겨울"과 같은 기점이다. 월은 0-indexed(1 = 2월). */
+export const MEASURE_START = Date.UTC(2023, 1, 11); // 2023-02-11
 
 /** 오늘 기준 경과일 ("N일째" — 입수 당일이 1일째). */
 export function computeMeasureDays(): number {
