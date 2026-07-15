@@ -265,10 +265,11 @@ export default function Header({
         aria-label={dict.aria.menuLabel}
         aria-modal="true"
       >
-        {/* 심볼 워터마크 */}
+        {/* 심볼 워터마크 — 820px로 크게 쓰는 자리라 고해상도 소스(_lg, 1522px)를 쓴다.
+            기본 logo_trans_W(1000px)는 레티나에서 1.64배 업스케일돼 하프톤이 뭉개진다. */}
         <span className="menu-overlay__watermark" aria-hidden="true">
           <Image
-            src="/images/logo/logo_trans_W.png"
+            src="/images/logo/logo_trans_W_lg.png"
             alt=""
             width={820}
             height={680}
