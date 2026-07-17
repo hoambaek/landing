@@ -1,0 +1,358 @@
+/* /b 병 기록 페이지 — Paper v2 시안 1:1 (Abyssal Amber 토큰) */
+
+.page {
+  --b-void: #0a0908;
+  --b-blue1: #0a0d12;
+  --b-blue2: #0e1a2b;
+  --b-elev: #141110;
+  --b-ivory: #f1efeb;
+  --b-amber: #ccad7b;
+  --b-mono: var(--font-plex-mono), "IBM Plex Mono", monospace;
+  min-height: 100svh;
+  background: var(--b-void);
+  color: var(--b-ivory);
+  font-family: var(--font-body), sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.frame {
+  width: min(430px, 100vw);
+  overflow: hidden;
+}
+
+/* ── S1 히어로 ─────────────────────────────── */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100svh;
+  padding: max(20px, env(safe-area-inset-top)) 24px 32px;
+  background: linear-gradient(180deg, #0a0908 0%, #0a0d12 42%, #0e1a2b 100%);
+}
+
+.langWrap { position: relative; z-index: 20; }
+
+.langBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border: 0.5px solid rgba(241, 239, 235, 0.25);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(241, 239, 235, 0.85);
+  font-family: var(--b-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+}
+
+.flagImg { width: 17px; height: 12.75px; border-radius: 2px; border: 0.5px solid rgba(241, 239, 235, 0.2); display: block; }
+
+.langPanel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 188px;
+  background: var(--b-elev);
+  border: 0.5px solid rgba(241, 239, 235, 0.14);
+  border-radius: 14px;
+  padding: 6px 0;
+  overflow: hidden;
+}
+
+.langOpt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-top: 0.5px solid rgba(241, 239, 235, 0.06);
+  color: rgba(241, 239, 235, 0.75);
+  font-family: var(--font-body), sans-serif;
+  font-size: 11.5px;
+  cursor: pointer;
+  text-align: left;
+}
+.langOpt:first-child { border-top: none; }
+.langOpt .flagImg { width: 20px; height: 15px; border-radius: 2.5px; }
+.langOptCode { font-family: var(--b-mono); font-size: 10px; letter-spacing: 0.1em; color: rgba(241, 239, 235, 0.55); width: 24px; flex-shrink: 0; }
+.langOptActive, .langOptActive .langOptCode { color: var(--b-amber); }
+.langCheck { margin-left: auto; color: var(--b-amber); }
+
+.verified {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 18px;
+  font-family: var(--b-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: rgba(241, 239, 235, 0.78);
+}
+.liveDot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--b-amber);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+.serial {
+  font-family: var(--b-mono);
+  font-weight: 300;
+  font-size: 22px;
+  letter-spacing: 0.2em;
+  color: var(--b-amber);
+  white-space: nowrap;
+}
+
+.heroSpacerLg { flex-grow: 2; min-height: 24px; }
+.heroSpacerSm { flex-grow: 1; min-height: 16px; }
+
+.titleZone { margin-top: 16px; display: flex; flex-direction: column; align-items: center; }
+.titleImg { width: min(322px, 82vw); height: auto; }
+.titleText {
+  font-family: var(--font-heading), serif;
+  font-weight: 300;
+  font-size: 26px;
+  line-height: 1.35;
+  text-align: center;
+  letter-spacing: 0.01em;
+  max-width: 320px;
+}
+.subLabel {
+  margin-top: 14px;
+  font-family: var(--b-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: rgba(241, 239, 235, 0.72);
+}
+
+.heroCurveWrap { position: relative; width: 342px; max-width: 100%; margin-top: 0; }
+.heroCurve { display: block; width: 100%; height: auto; }
+/* 점선 패턴(2 5)을 지키면서 왼쪽→오른쪽 드로잉 — dashoffset 방식은 점선을 실선으로 덮어써서 clip-path 리빌 사용 */
+.drawPath {
+  clip-path: inset(0 100% 0 0);
+  animation: draw 1.6s cubic-bezier(0.23, 1, 0.32, 1) 0.6s forwards;
+}
+@keyframes draw { to { clip-path: inset(0 0 0 0); } }
+
+.tempChip {
+  position: absolute;
+  display: flex;
+  padding: 6px 10px;
+  border: 0.5px solid rgba(241, 239, 235, 0.25);
+  /* 곡선이 뒤로 지나가도 글자가 읽히게 — 어두운 반투명 + 백드롭 블러 */
+  background: rgba(10, 13, 18, 0.6);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  font-family: var(--b-mono);
+  font-size: 12px;
+  color: var(--b-ivory);
+  white-space: nowrap;
+  transform: translateX(-14px);
+}
+
+.heroAxis {
+  display: flex;
+  justify-content: space-between;
+  width: 342px;
+  max-width: 100%;
+  margin-top: 8px;
+  font-family: var(--b-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: rgba(241, 239, 235, 0.78);
+}
+
+/* ── S2 여정 ─────────────────────────────── */
+.journey {
+  padding: 40px 24px 56px;
+  background: var(--b-blue2);
+  display: flex;
+  justify-content: center;
+}
+.journeyStrip { position: relative; width: 342px; max-width: 100%; }
+.journeyLine {
+  position: absolute; left: 10px; right: 10px; top: 5px; height: 0.5px;
+  background: rgba(241, 239, 235, 0.18);
+}
+.stops { display: flex; justify-content: space-between; }
+.stop { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 74px; position: relative; }
+.stopDot { width: 9px; height: 9px; border-radius: 50%; border: 1px solid rgba(241, 239, 235, 0.45); background: var(--b-blue2); }
+.stopDotAmber { width: 9px; height: 9px; border-radius: 50%; background: var(--b-amber); border: none; }
+.stopName { font-size: 11px; font-weight: 400; color: rgba(241, 239, 235, 0.85); text-align: center; }
+.stopNameOn { color: var(--b-ivory); }
+.stopSub { font-family: var(--b-mono); font-size: 9.5px; font-weight: 500; letter-spacing: 0.06em; color: rgba(241, 239, 235, 0.68); text-align: center; white-space: nowrap; }
+.stopSubAmber { color: var(--b-amber); }
+.stopText { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+
+/* ── S3 여덟 줄기 ─────────────────────────── */
+.flowSection { background: linear-gradient(180deg, #0e1a2b 0%, #0a0d12 22%, #0a0d12 100%); overflow: hidden; }
+.flowScaler { transform-origin: top center; margin: 0 auto; width: 390px; }
+.flow { position: relative; width: 390px; height: 1380px; }
+.flowHead {
+  position: absolute; left: 24px; top: 28px;
+  font-family: var(--b-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.18em;
+  color: rgba(241, 239, 235, 0.72);
+}
+.flowSvg { position: absolute; left: 0; top: 90px; }
+.seasonLabel {
+  position: absolute; left: 24px;
+  font-family: var(--b-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(241, 239, 235, 0.68); white-space: nowrap;
+}
+.seasonLabelOn { color: rgba(241, 239, 235, 0.92); }
+.station {
+  position: absolute; right: 24px;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+}
+/* 금색 수온 줄기 선단이 지나는 동안 앰버로 점등, 지나가면 부드럽게 원래 색으로 */
+.stationLabel { font-family: var(--b-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; color: rgba(241, 239, 235, 0.72); white-space: nowrap; transition: color 0.6s cubic-bezier(0.25, 0.1, 0.25, 1); }
+.stationValue { font-family: var(--b-mono); font-weight: 300; font-size: 17px; color: var(--b-ivory); white-space: nowrap; transition: color 0.6s cubic-bezier(0.25, 0.1, 0.25, 1); }
+.stationLit .stationLabel, .stationLit .stationValue { color: var(--b-amber); }
+
+/* ── S4 수렴 ─────────────────────────────── */
+.converge {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 0 0 56px;
+  background: linear-gradient(180deg, #0a0d12 0%, #0a0d12 55%, #0a0908 100%);
+}
+.convergeSvg { display: block; width: min(390px, 100vw); height: auto; }
+.glowDot { animation: glow 3s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+@keyframes glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+.convergeText {
+  margin-top: 36px;
+  font-weight: 300; font-size: 14px; line-height: 24px;
+  color: rgba(241, 239, 235, 0.85);
+  text-align: center;
+  padding: 0 24px;
+}
+
+/* ── S5 개체 선언 ─────────────────────────── */
+.bottleSection {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 0 24px 64px;
+  background: var(--b-void);
+}
+.bottlePhoto { width: 342px; max-width: 100%; height: 274px; object-fit: cover; }
+.bottleSerial {
+  margin-top: 36px;
+  font-family: var(--b-mono); font-size: 12px; letter-spacing: 0.18em;
+  color: var(--b-amber);
+}
+.bottleName {
+  margin-top: 14px;
+  font-family: var(--font-heading), serif;
+  font-weight: 300; font-size: 36px; line-height: 42px; letter-spacing: 0.01em;
+  text-align: center;
+}
+.passport { display: flex; flex-direction: column; width: 270px; max-width: 100%; margin-top: 28px; }
+.passportRow {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 10px 0;
+  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
+}
+.passportRow:last-child { border-bottom: 0.5px solid rgba(241, 239, 235, 0.12); }
+.passportLabel { font-family: var(--b-mono); font-size: 9.5px; font-weight: 500; letter-spacing: 0.12em; color: rgba(241, 239, 235, 0.68); flex-shrink: 0; }
+.passportValue { font-family: var(--b-mono); font-size: 11px; color: rgba(241, 239, 235, 0.85); text-align: right; }
+
+/* ── S6 명부 + 푸터 ───────────────────────── */
+.registre {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 8px 24px 64px;
+  background: var(--b-void);
+}
+.gating {
+  font-weight: 300; font-size: 12px; line-height: 21px;
+  color: rgba(241, 239, 235, 0.6);
+  text-align: center;
+}
+.ctaBtn {
+  display: flex; align-items: center; justify-content: center;
+  width: 342px; max-width: 100%; height: 52px;
+  margin-top: 24px;
+  background: var(--b-amber);
+  color: var(--b-void);
+  font-size: 13px; font-weight: 400; letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.ctaBtn:active { opacity: 0.75; transform: scale(0.985); }
+.ctaSub {
+  margin-top: 12px;
+  font-family: var(--b-mono); font-size: 9.5px; font-weight: 500; letter-spacing: 0.12em;
+  color: rgba(241, 239, 235, 0.62);
+}
+
+.footer {
+  padding: 48px 24px 40px;
+  background: var(--b-void);
+  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
+}
+.footerLogo { width: 124px; height: auto; display: block; }
+.footerTagline { margin-top: 14px; font-weight: 300; font-size: 11px; line-height: 19px; color: rgba(241, 239, 235, 0.68); }
+.footerLinks { display: flex; flex-direction: column; gap: 14px; margin-top: 32px; }
+.footerLinkRow { display: flex; align-items: center; justify-content: space-between; text-decoration: none; }
+.footerLinkLabel { font-family: var(--b-mono); font-size: 9.5px; font-weight: 500; letter-spacing: 0.15em; color: rgba(241, 239, 235, 0.68); }
+.footerLinkUrl { font-family: var(--b-mono); font-size: 12px; letter-spacing: 0.05em; color: var(--b-amber); }
+.footerBase {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 40px; padding-top: 16px;
+  border-top: 0.5px solid rgba(241, 239, 235, 0.08);
+  font-family: var(--b-mono); font-size: 9px; letter-spacing: 0.08em;
+  color: rgba(241, 239, 235, 0.6);
+}
+
+/* S2 점 순차 점등 (stagger 0.15s) */
+.journeyStrip .stop {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.journeyStrip.revealIn .stop { opacity: 1; transform: none; }
+.journeyStrip.revealIn .stop:nth-child(2) { transition-delay: 0.15s; }
+.journeyStrip.revealIn .stop:nth-child(3) { transition-delay: 0.3s; }
+.journeyStrip.revealIn .stop:nth-child(4) { transition-delay: 0.45s; }
+
+/* S5 여권 순차 리빌 */
+.passport .passportRow {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.passport.revealIn .passportRow { opacity: 1; transform: none; }
+.passport.revealIn .passportRow:nth-child(2) { transition-delay: 0.12s; }
+.passport.revealIn .passportRow:nth-child(3) { transition-delay: 0.24s; }
+
+/* ── 리빌 + 모션 감축 ─────────────────────── */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }
+.revealIn { opacity: 1; transform: translateY(0); }
+
+.introFade { opacity: 0; animation: settle 1.6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; }
+.introFadeD1 { animation-delay: 0.2s; }
+.introFadeD2 { animation-delay: 0.5s; }
+.introFadeD3 { animation-delay: 0.8s; }
+@keyframes settle { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* 404 */
+.nfWrap { min-height: 100svh; display: flex; align-items: center; justify-content: center; background: var(--b-void); padding: 24px; }
+.nfBox { text-align: center; }
+.nfTitle { font-weight: 400; font-size: 16px; color: rgba(241, 239, 235, 0.85); }
+.nfBody { margin-top: 8px; font-weight: 300; font-size: 12px; color: rgba(241, 239, 235, 0.45); }
+
+@media (prefers-reduced-motion: reduce) {
+  .drawPath { animation: none; clip-path: none; }
+  .liveDot, .glowDot { animation: none; }
+  .introFade { animation: none; opacity: 1; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .journeyStrip .stop, .passport .passportRow { opacity: 1; transform: none; transition: none; }
+}

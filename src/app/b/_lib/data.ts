@@ -1,0 +1,181 @@
+import "server-only";
+import { supabaseAdmin } from "@/lib/supabase/admin";
+
+/**
+ * /b 병 기록 조회 — service_role 서버 전용.
+ * 공개 응답에 고객명·가격·메모는 절대 포함하지 않는다 (필드 필터링).
+ * UAPS 계수·예측값은 조회 자체를 하지 않는다 (게이팅).
+ */
+
+export interface BottleIdentity {
+  productId: string;
+  serial: number | null; // 병 번호 (없으면 미표기)
+  nfcCode: string;
+}
+
+export interface AgingWindow {
+  immersion: string | null; // YYYY-MM-DD
+  retrieval: string | null;
+  depth: number; // m
+  retrieved: boolean; // 인양 완료 여부 (오늘 기준)
+}
+
+export interface OceanAverages {
+  temp: number | null; // °C
+  salinity: number | null; // psu
+  tide: number | null; // cm
+  current: number | null; // m/s
+  pressure: number; // atm (수심 유도값)
+  tidal: number | null; // cm/s
+  wave: number | null; // m
+  period: number | null; // s
+}
+
+export interface BottleRecordData {
+  bottle: BottleIdentity;
+  aging: AgingWindow;
+  averages: OceanAverages;
+  monthlyTemps: (number | null)[]; // index 0 = 1월, 관측 없으면 null
+  currentMonthIndex: number; // 발광 포인트가 설 달 (0-based)
+  partial: boolean; // 인양 전(기록 진행 중)
+}
+
+interface OceanRow {
+  date: string;
+  sea_temperature_avg: number | null;
+  salinity: number | null;
+  tide_level_avg: number | null;
+  current_velocity_avg: number | null;
+  tidal_current_speed: number | null;
+  wave_height_avg: number | null;
+  wave_period_avg: number | null;
+}
+
+/**
+ * 표층 수온 → 40m 보정 (plan 앱 uaps-ocean-profile과 동일 모델).
+ * 대외 표기 정본: 수온 표시는 40m 보정값 유지 (케이지 수심 30m와 별개).
+ * 완도 해역 KODC/NIFS 관측 기반 월별 혼합비 + 심층 기저 수온 8.0°C.
+ */
+const MONTHLY_DEPTH_RATIO_40M: Record<number, number> = {
+  1: 0.92, 2: 0.92, 3: 0.88, 4: 0.8, 5: 0.7, 6: 0.58,
+  7: 0.5, 8: 0.5, 9: 0.5, 10: 0.55, 11: 0.72, 12: 0.85,
+};
+const DEEP_BASE_TEMP = 8.0;
+
+function bottomTemp40(sst: number | null, month: number): number | null {
+  if (sst === null || !Number.isFinite(sst)) return null;
+  const ratio = MONTHLY_DEPTH_RATIO_40M[month] ?? 0.75;
+  return Math.max(sst * ratio + DEEP_BASE_TEMP * (1 - ratio), 3.0);
+}
+
+function mean(values: (number | null)[]): number | null {
+  const nums = values.filter((v): v is number => v !== null && Number.isFinite(v));
+  if (nums.length === 0) return null;
+  return nums.reduce((a, b) => a + b, 0) / nums.length;
+}
+
+export async function fetchBottleRecord(code: string): Promise<BottleRecordData | null> {
+  if (!supabaseAdmin) return null;
+  if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return null;
+
+  // 1) 병 식별 — numbered_bottles 우선, bottle_units 차선. 민감 컬럼은 select하지 않는다.
+  let bottle: BottleIdentity | null = null;
+
+  const { data: nb } = await supabaseAdmin
+    .from("numbered_bottles")
+    .select("product_id, bottle_number, nfc_code")
+    .eq("nfc_code", code)
+    .maybeSingle();
+
+  if (nb) {
+    bottle = { productId: nb.product_id ?? "first_edition", serial: nb.bottle_number ?? null, nfcCode: nb.nfc_code };
+  } else {
+    const { data: bu } = await supabaseAdmin
+      .from("bottle_units")
+      .select("product_id, serial_number, nfc_code")
+      .eq("nfc_code", code)
+      .maybeSingle();
+    if (bu) {
+      bottle = { productId: bu.product_id, serial: bu.serial_number ?? null, nfcCode: bu.nfc_code };
+    }
+  }
+
+  if (!bottle) return null;
+
+  // 2) 숙성 창 — inventory_batches
+  const { data: batch } = await supabaseAdmin
+    .from("inventory_batches")
+    .select("immersion_date, retrieval_date, aging_depth")
+    .eq("product_id", bottle.productId)
+    .maybeSingle();
+
+  const today = new Date().toISOString().slice(0, 10);
+  const immersion: string | null = batch?.immersion_date ?? null;
+  const retrieval: string | null = batch?.retrieval_date ?? null;
+  const depth: number = batch?.aging_depth ?? 30;
+  // 배치 미등록 병은 NFC 발급(판매·증정) 시점상 이미 인양된 병으로 본다
+  const retrieved = immersion ? Boolean(retrieval && retrieval <= today) : true;
+
+  // 3) 해양 관측 — 입수~인양(또는 오늘) 창. 창이 없으면 관측소 전체 실측(기록의 존재를 보여주는 대표값).
+  const from = immersion ?? undefined;
+  const to = immersion ? (retrieved && retrieval ? retrieval : today) : undefined;
+
+  let query = supabaseAdmin
+    .from("ocean_data_daily")
+    .select(
+      "date, sea_temperature_avg, salinity, tide_level_avg, current_velocity_avg, tidal_current_speed, wave_height_avg, wave_period_avg"
+    )
+    .order("date", { ascending: true })
+    .limit(800);
+  if (from) query = query.gte("date", from);
+  if (to) query = query.lte("date", to);
+
+  const { data: oceanRows } = await query;
+  const rows: OceanRow[] = (oceanRows ?? []) as OceanRow[];
+
+  // 4) 집계 — 8지표 평균 + 월별 수온
+  const averages: OceanAverages = {
+    temp: round1(mean(rows.map((r) => bottomTemp40(r.sea_temperature_avg, Number(r.date.slice(5, 7)))))),
+    salinity: round1(mean(rows.map((r) => r.salinity))),
+    tide: round0(mean(rows.map((r) => r.tide_level_avg))),
+    // ocean_data_daily.current_velocity_avg는 Open-Meteo 기본 단위(km/h)로 수집됨 → m/s 변환
+    current: round2(divOrNull(mean(rows.map((r) => r.current_velocity_avg)), 3.6)),
+    pressure: round1(1 + depth / 10.33) ?? 3.9,
+    tidal: round0(mean(rows.map((r) => r.tidal_current_speed))),
+    wave: round1(mean(rows.map((r) => r.wave_height_avg))),
+    period: round1(mean(rows.map((r) => r.wave_period_avg))),
+  };
+
+  const byMonth: (number | null)[][] = Array.from({ length: 12 }, () => []);
+  for (const r of rows) {
+    const m = Number(r.date.slice(5, 7)) - 1;
+    if (m >= 0 && m < 12) byMonth[m].push(bottomTemp40(r.sea_temperature_avg, m + 1));
+  }
+  const monthlyTemps = byMonth.map((vals) => round1(mean(vals)));
+
+  const currentMonthIndex = immersion
+    ? Math.min(11, Math.max(0, Number((retrieved && retrieval ? retrieval : today).slice(5, 7)) - 1))
+    : new Date().getMonth();
+
+  return {
+    bottle,
+    aging: { immersion, retrieval, depth, retrieved },
+    averages,
+    monthlyTemps,
+    currentMonthIndex,
+    partial: Boolean(immersion) && !retrieved,
+  };
+}
+
+function divOrNull(v: number | null, by: number): number | null {
+  return v === null ? null : v / by;
+}
+function round0(v: number | null): number | null {
+  return v === null ? null : Math.round(v);
+}
+function round1(v: number | null): number | null {
+  return v === null ? null : Math.round(v * 10) / 10;
+}
+function round2(v: number | null): number | null {
+  return v === null ? null : Math.round(v * 100) / 100;
+}
