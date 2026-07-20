@@ -97,6 +97,12 @@
   align-items: center;
   gap: 8px;
 }
+/* SCROLL 제거 후 히어로 space-between 유지용 하단 스페이서 (영상/글리프 중앙 정렬) */
+.heroTail {
+  flex: 0 0 auto;
+  width: 1px;
+  height: 1px;
+}
 .scrollLabel {
   font-family: var(--e-mono);
   font-size: 9px;
@@ -175,6 +181,10 @@
   flex-shrink: 0;
   background: var(--e-amber);
 }
+.eyebrowIcon {
+  display: block;
+  flex-shrink: 0;
+}
 
 .thanksTitle {
   width: min(319px, 86vw);
@@ -191,44 +201,81 @@
   text-align: center;
 }
 
+/* 블루 스톤 플레이트 — 패티나 스톤 위 얇은 브라스 양각 넘버 (NAITO 스타일) */
+.serialPlate {
+  position: relative;
+  overflow: hidden;
+  width: min(300px, 86vw);
+  margin-top: 54px;
+  padding: 80px 20px;
+  display: flex;
+  justify-content: center;
+  background-image: url("/images/b-plaque-stone.webp");
+  background-size: cover;
+  background-position: center;
+  box-shadow:
+    0 22px 40px rgba(0, 0, 0, 0.55),
+    0 3px 8px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(190, 200, 216, 0.22),
+    inset 0 -2px 4px rgba(10, 16, 28, 0.5);
+}
 .serial {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: baseline;
   gap: 10px;
-  margin-top: 54px;
-  color: var(--e-amber);
+  white-space: nowrap;
 }
 .serialNo {
-  font-family: var(--e-mono);
+  flex-shrink: 0;
+  font-family: var(--font-josefin), sans-serif;
   font-weight: 300;
   font-size: 22px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
+  color: #c8a468;
+  text-shadow: 0 -1px 0 rgba(255, 238, 205, 0.5), 0 2px 4px rgba(0, 0, 0, 0.55);
 }
 .serialNum {
-  font-family: var(--e-mono);
-  font-size: 76px;
-  line-height: 74px;
-  letter-spacing: -0.01em;
+  flex-shrink: 0;
+  font-family: var(--font-josefin), sans-serif;
+  font-weight: 300;
+  font-size: 66px;
+  line-height: 62px;
+  letter-spacing: 0.06em;
+  color: #cba86c;
+  text-shadow: 0 -1.5px 0 rgba(255, 240, 208, 0.55), 0 3px 5px rgba(0, 0, 0, 0.6);
 }
 .serialTotal {
-  font-family: var(--e-mono);
+  flex-shrink: 0;
+  font-family: var(--font-josefin), sans-serif;
   font-weight: 300;
-  font-size: 28px;
-  letter-spacing: 0.04em;
-  opacity: 0.6;
+  font-size: 25px;
+  letter-spacing: 0.1em;
+  color: #a9884f;
+  text-shadow: 0 -1px 0 rgba(255, 238, 205, 0.4), 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.divider {
-  width: min(334px, 92%);
-  height: 0.5px;
-  margin-top: 72px;
-  background: rgba(241, 239, 235, 0.1);
+/* 등록 카드(명부) — 타이틀·안내·폼·입장하기를 하나의 패널로 묶는다 (NAITO 톤과 조응하는 웜 차콜) */
+.registerCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(334px, 100%);
+  margin-top: 54px;
+  padding: 34px 20px 30px;
+  background: linear-gradient(180deg, #15120d 0%, #0d0b09 100%);
+  border: 1px solid rgba(204, 173, 123, 0.2);
+  border-radius: 1px;
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(241, 239, 235, 0.05);
 }
 
 .registerTitle {
   width: min(272px, 78vw);
   height: auto;
-  margin-top: 44px;
+  margin-top: 0;
 }
 .registerSub {
   margin-top: 12px;
@@ -324,6 +371,75 @@
   font-family: var(--e-mono);
   font-size: 10px;
   letter-spacing: 0.1em;
+  color: rgba(241, 239, 235, 0.5);
+}
+
+/* ── 기록 예고 블록 — 입장 후 열리는 숙성 과정·데이터를 미리 알린다 ── */
+.recordPreview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(334px, 100%);
+  padding-top: 38px;
+}
+.previewConnector {
+  width: 1px;
+  height: 26px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, rgba(204, 173, 123, 0.55) 0%, rgba(204, 173, 123, 0) 100%);
+}
+.previewLead {
+  margin-top: 18px;
+  width: min(310px, 100%);
+  text-align: center;
+  white-space: pre-line;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: 13.5px;
+  line-height: 22px;
+  color: rgba(241, 239, 235, 0.82);
+}
+.previewItems {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+  width: min(292px, 100%);
+  margin-top: 26px;
+  padding: 0;
+  list-style: none;
+}
+.previewItem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.previewGlyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 28px;
+}
+.previewText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.previewLabel {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  color: rgba(241, 239, 235, 0.94);
+}
+.previewSub {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: 11.5px;
+  line-height: 16px;
+  letter-spacing: 0.01em;
   color: rgba(241, 239, 235, 0.5);
 }
 

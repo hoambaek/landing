@@ -14,6 +14,7 @@ import {
   Gowun_Batang,
   EB_Garamond,
   Mrs_Saint_Delafield,
+  Josefin_Sans,
 } from "next/font/google";
 import "./globals.css";
 
@@ -78,6 +79,14 @@ const mrsSaintDelafield = Mrs_Saint_Delafield({
   subsets: ["latin"],
   weight: ["400"],
   variable: "--font-delafield",
+  display: "swap",
+});
+
+// 입장 페이지 에디션 넘버(블루 스톤 플레이트) 전용 — 얇은 지오메트릭
+const josefinSans = Josefin_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400"],
+  variable: "--font-josefin",
   display: "swap",
 });
 
@@ -164,7 +173,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} antialiased`}
+        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} ${josefinSans.variable} antialiased`}
       >
         <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
         <JsonLd />

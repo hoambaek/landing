@@ -73,7 +73,10 @@ export default function AgeGate() {
   const locale = localeFromPath(pathname);
   const copy = ageGateCopy[locale];
   const isExitRoute = pathname === "/exit" || pathname.endsWith("/exit");
-  const open = !isExitRoute && !verified;
+  // NFC 병 경험(/b/[code])은 실물 병을 소지한 사용자가 태그로 진입하는 사적 화면 —
+  //  연령확인 게이트를 노출하지 않는다.
+  const isNfcRoute = pathname === "/b" || pathname.startsWith("/b/");
+  const open = !isExitRoute && !isNfcRoute && !verified;
 
   // 열림: 배경 스크롤 잠금 + 다이얼로그 패널에 포커스 이동
   // (버튼이 아닌 패널에 포커스 → 프로그램적 포커스로 버튼에 focus-visible 링이 생겨
