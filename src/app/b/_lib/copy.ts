@@ -45,8 +45,8 @@ export interface BottleCopy {
 export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
   ko: {
     verified: "NFC 인증 완료 · RECORD AUTHENTICATED",
-    titleText: "바다가 기억하는 일 년",
-    subLabel: "수온의 기록 · {year}",
+    titleText: "바다가 새긴 일 년",
+    subLabel: "남해 30m · 한 해의 기록",
     immersion: "입수",
     retrieval: "인양",
     planned: "예정",
@@ -73,8 +73,8 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
   },
   en: {
     verified: "RECORD AUTHENTICATED · NFC",
-    titleText: "A Year the Sea Remembers",
-    subLabel: "TEMPERATURE RECORD · {year}",
+    titleText: "A Year the Sea Inscribed",
+    subLabel: "NAMHAE 30M · A YEAR ON RECORD",
     immersion: "IMMERSION",
     retrieval: "RETRIEVAL",
     planned: "PLANNED",
@@ -101,8 +101,8 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
   },
   fr: {
     verified: "ENREGISTREMENT AUTHENTIFIÉ · NFC",
-    titleText: "Une année dont la mer se souvient",
-    subLabel: "RELEVÉ DE TEMPÉRATURE · {year}",
+    titleText: "Une année gravée par la mer",
+    subLabel: "NAMHAE 30M · UNE ANNÉE DE RELEVÉS",
     immersion: "IMMERSION",
     retrieval: "REMONTÉE",
     planned: "PRÉVUE",
@@ -129,8 +129,8 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
   },
   ja: {
     verified: "NFC認証済み · RECORD AUTHENTICATED",
-    titleText: "海が記憶する一年",
-    subLabel: "水温の記録 · {year}",
+    titleText: "海が刻んだ一年",
+    subLabel: "南海 30m · 一年の記録",
     immersion: "入水",
     retrieval: "引き揚げ",
     planned: "予定",
@@ -157,8 +157,8 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
   },
   zh: {
     verified: "NFC认证完成 · RECORD AUTHENTICATED",
-    titleText: "大海记得的一年",
-    subLabel: "水温记录 · {year}",
+    titleText: "大海刻下的一年",
+    subLabel: "南海 30m · 一年记录",
     immersion: "入水",
     retrieval: "打捞",
     planned: "预定",
@@ -205,3 +205,246 @@ export const PRODUCT_META: Record<string, ProductMeta> = {
 };
 
 export const MAISON_NAME = "Mignon-Boulard";
+
+/* ── 입장 페이지 카피 (5개 언어) ───────────────────────────── */
+export interface EntryCopy {
+  eyebrow: string;
+  thanksTitle: string; // \n = 줄바꿈
+  thanksSub: string;
+  registerTitle: string;
+  registerSub: string; // {serial} 치환
+  registerSubNoSerial: string;
+  nameLabel: string;
+  namePlaceholder: string;
+  emailLabel: string;
+  emailPlaceholder: string;
+  submit: string;
+  submitting: string;
+  note: string;
+  errName: string;
+  errEmail: string;
+  errGeneric: string;
+  scroll: string;
+}
+
+export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
+  ko: {
+    eyebrow: "NFC 인증 완료 · OCEAN CELLAR™",
+    thanksTitle: "사계절의 바다가\n이 병 하나에 담겼습니다",
+    thanksSub: "그 병이 지금 당신에게 왔습니다.",
+    registerTitle: "이 병을 당신의 이름으로",
+    registerSub: "N° {serial}의 주인으로, 이름을 남겨 두세요.",
+    registerSubNoSerial: "이 병의 주인으로, 이름을 남겨 두세요.",
+    nameLabel: "이름",
+    namePlaceholder: "이름을 입력하세요",
+    emailLabel: "이메일",
+    emailPlaceholder: "you@example.com",
+    submit: "입장하기",
+    submitting: "등록하는 중",
+    note: "이 병의 기록으로 들어갑니다",
+    errName: "이름을 입력해 주세요.",
+    errEmail: "이메일 주소를 확인해 주세요.",
+    errGeneric: "잠시 후 다시 시도해 주세요.",
+    scroll: "SCROLL",
+  },
+  en: {
+    eyebrow: "RECORD AUTHENTICATED · OCEAN CELLAR™",
+    thanksTitle: "Four seasons of the sea,\nheld in this one bottle",
+    thanksSub: "And that bottle is now yours.",
+    registerTitle: "Make this bottle yours",
+    registerSub: "Leave your name as the owner of N° {serial}.",
+    registerSubNoSerial: "Leave your name as this bottle's owner.",
+    nameLabel: "NAME",
+    namePlaceholder: "Enter your name",
+    emailLabel: "EMAIL",
+    emailPlaceholder: "you@example.com",
+    submit: "Enter",
+    submitting: "Registering",
+    note: "You are entering this bottle's record",
+    errName: "Please enter your name.",
+    errEmail: "Please check your email address.",
+    errGeneric: "Please try again in a moment.",
+    scroll: "SCROLL",
+  },
+  fr: {
+    eyebrow: "ENREGISTREMENT AUTHENTIFIÉ · OCEAN CELLAR™",
+    thanksTitle: "Quatre saisons de mer,\nrecueillies dans cette bouteille",
+    thanksSub: "Et cette bouteille est désormais la vôtre.",
+    registerTitle: "Faites de cette bouteille la vôtre",
+    registerSub: "Inscrivez votre nom comme propriétaire du N° {serial}.",
+    registerSubNoSerial: "Inscrivez votre nom comme propriétaire de cette bouteille.",
+    nameLabel: "NOM",
+    namePlaceholder: "Entrez votre nom",
+    emailLabel: "E-MAIL",
+    emailPlaceholder: "vous@exemple.com",
+    submit: "Entrer",
+    submitting: "Enregistrement",
+    note: "Vous entrez dans le relevé de cette bouteille",
+    errName: "Veuillez saisir votre nom.",
+    errEmail: "Veuillez vérifier votre adresse e-mail.",
+    errGeneric: "Veuillez réessayer dans un instant.",
+    scroll: "SCROLL",
+  },
+  ja: {
+    eyebrow: "NFC認証済み · OCEAN CELLAR™",
+    thanksTitle: "四季の海が\nこの一本に収められました",
+    thanksSub: "その一本が今、あなたのもとに届きました。",
+    registerTitle: "この一本をあなたの名前で",
+    registerSub: "N° {serial} の所有者として、名前を残してください。",
+    registerSubNoSerial: "この一本の所有者として、名前を残してください。",
+    nameLabel: "名前",
+    namePlaceholder: "お名前を入力してください",
+    emailLabel: "メール",
+    emailPlaceholder: "you@example.com",
+    submit: "入場する",
+    submitting: "登録中",
+    note: "この一本の記録へ入ります",
+    errName: "お名前を入力してください。",
+    errEmail: "メールアドレスをご確認ください。",
+    errGeneric: "しばらくしてからもう一度お試しください。",
+    scroll: "SCROLL",
+  },
+  zh: {
+    eyebrow: "NFC认证完成 · OCEAN CELLAR™",
+    thanksTitle: "四季的大海，\n都封存在这一瓶中",
+    thanksSub: "而这瓶酒此刻已来到你身边。",
+    registerTitle: "以你之名，留下这瓶",
+    registerSub: "作为 N° {serial} 的主人，留下你的名字。",
+    registerSubNoSerial: "作为此瓶的主人，留下你的名字。",
+    nameLabel: "姓名",
+    namePlaceholder: "请输入你的名字",
+    emailLabel: "邮箱",
+    emailPlaceholder: "you@example.com",
+    submit: "进入",
+    submitting: "登记中",
+    note: "正在进入这瓶酒的记录",
+    errName: "请输入你的名字。",
+    errEmail: "请检查你的邮箱地址。",
+    errGeneric: "请稍后再试。",
+    scroll: "SCROLL",
+  },
+};
+
+/* ── 기록 페이지 추가 카피 (표·뉴스레터, 5개 언어) ───────── */
+export interface RecordExtraCopy {
+  provHead: string;
+  seaHead: string;
+  provLabels: { maison: string; region: string; cepage: string; style: string; elevage: string };
+  seaLabels: { immersion: string; retrieval: string; duration: string; depth: string; location: string };
+  wando: string; // 완도 해역
+  newsletterLine: string;
+  newsletterCta: string;
+  newsletterPlaceholder: string;
+  newsletterConfirm: string;
+  newsletterDone: string;
+  newsletterErr: string;
+  brandPage: string;
+  blogPage: string;
+}
+
+export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
+  ko: {
+    provHead: "원산지 · 샹파뉴",
+    seaHead: "해저 숙성 · 남해",
+    provLabels: { maison: "메종", region: "지역", cepage: "품종", style: "스타일", elevage: "숙성" },
+    seaLabels: { immersion: "입수", retrieval: "인양", duration: "숙성 기간", depth: "숙성 수심", location: "숙성 위치" },
+    wando: "완도 해역",
+    newsletterLine: "다음 인양과 새 기록의 소식을 먼저 받아보세요.",
+    newsletterCta: "뉴스레터 구독",
+    newsletterPlaceholder: "you@example.com",
+    newsletterConfirm: "구독하기",
+    newsletterDone: "구독이 시작되었습니다. 감사합니다.",
+    newsletterErr: "이메일 주소를 확인해 주세요.",
+    brandPage: "브랜드 페이지",
+    blogPage: "블로그 페이지",
+  },
+  en: {
+    provHead: "ORIGIN · CHAMPAGNE",
+    seaHead: "SUBSEA AGING · NAMHAE",
+    provLabels: { maison: "MAISON", region: "REGION", cepage: "CÉPAGE", style: "STYLE", elevage: "ÉLEVAGE" },
+    seaLabels: { immersion: "IMMERSION", retrieval: "RETRIEVAL", duration: "AGING PERIOD", depth: "AGING DEPTH", location: "AGING SITE" },
+    wando: "Wando waters",
+    newsletterLine: "Be the first to hear of the next retrieval and new records.",
+    newsletterCta: "Subscribe to the newsletter",
+    newsletterPlaceholder: "you@example.com",
+    newsletterConfirm: "Subscribe",
+    newsletterDone: "You're subscribed. Thank you.",
+    newsletterErr: "Please check your email address.",
+    brandPage: "Brand page",
+    blogPage: "Journal",
+  },
+  fr: {
+    provHead: "ORIGINE · CHAMPAGNE",
+    seaHead: "VIEILLISSEMENT SOUS-MARIN · NAMHAE",
+    provLabels: { maison: "MAISON", region: "RÉGION", cepage: "CÉPAGE", style: "STYLE", elevage: "ÉLEVAGE" },
+    seaLabels: { immersion: "IMMERSION", retrieval: "REMONTÉE", duration: "DURÉE", depth: "PROFONDEUR", location: "LIEU" },
+    wando: "Eaux de Wando",
+    newsletterLine: "Soyez informé en premier de la prochaine remontée et des nouveaux relevés.",
+    newsletterCta: "S'abonner à la newsletter",
+    newsletterPlaceholder: "vous@exemple.com",
+    newsletterConfirm: "S'abonner",
+    newsletterDone: "Vous êtes abonné. Merci.",
+    newsletterErr: "Veuillez vérifier votre adresse e-mail.",
+    brandPage: "Page de marque",
+    blogPage: "Journal",
+  },
+  ja: {
+    provHead: "原産地 · シャンパーニュ",
+    seaHead: "海底熟成 · 南海",
+    provLabels: { maison: "メゾン", region: "地域", cepage: "品種", style: "スタイル", elevage: "熟成" },
+    seaLabels: { immersion: "入水", retrieval: "引き揚げ", duration: "熟成期間", depth: "熟成水深", location: "熟成地" },
+    wando: "莞島海域",
+    newsletterLine: "次の引き揚げと新しい記録を、いち早くお届けします。",
+    newsletterCta: "ニュースレターを購読",
+    newsletterPlaceholder: "you@example.com",
+    newsletterConfirm: "購読する",
+    newsletterDone: "購読を開始しました。ありがとうございます。",
+    newsletterErr: "メールアドレスをご確認ください。",
+    brandPage: "ブランドページ",
+    blogPage: "ジャーナル",
+  },
+  zh: {
+    provHead: "原产地 · 香槟区",
+    seaHead: "海底熟成 · 南海",
+    provLabels: { maison: "酒庄", region: "产区", cepage: "品种", style: "风格", elevage: "陈酿" },
+    seaLabels: { immersion: "入水", retrieval: "打捞", duration: "熟成周期", depth: "熟成水深", location: "熟成地点" },
+    wando: "莞岛海域",
+    newsletterLine: "第一时间获知下一次打捞与新的记录。",
+    newsletterCta: "订阅通讯",
+    newsletterPlaceholder: "you@example.com",
+    newsletterConfirm: "订阅",
+    newsletterDone: "订阅已开始，谢谢。",
+    newsletterErr: "请检查你的邮箱地址。",
+    brandPage: "品牌页面",
+    blogPage: "博客",
+  },
+};
+
+/** 원산지(프랑스) 확정 정보 — 제품별. proper noun은 로케일 공통, élevage만 로케일별. 추정 금지. */
+export interface ProvenanceData {
+  maison: string;
+  region: string;
+  cepage: string;
+  style: string;
+  elevage: Record<BottleLocale, string>;
+}
+
+const ATOMES_PROVENANCE: ProvenanceData = {
+  maison: "Champagne Mignon-Boulard",
+  region: "Venteuil · Vallée de la Marne",
+  cepage: "Chardonnay 70% · Petit Meslier 30%",
+  style: "Ultra-Brut",
+  elevage: {
+    ko: "오크통 7개월 · 코르크 5년",
+    en: "Oak barrel 7 mo · Cork 5 yr",
+    fr: "Fût de chêne 7 mois · Liège 5 ans",
+    ja: "オーク樽 7ヶ月 · コルク 5年",
+    zh: "橡木桶 7个月 · 软木塞 5年",
+  },
+};
+
+export const PROVENANCE: Record<string, ProvenanceData> = {
+  atomes_crochus_1y: ATOMES_PROVENANCE,
+  atomes_crochus_2y: ATOMES_PROVENANCE,
+  atomes_crochus: ATOMES_PROVENANCE,
+};

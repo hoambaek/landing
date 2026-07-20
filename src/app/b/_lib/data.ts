@@ -74,12 +74,13 @@ function mean(values: (number | null)[]): number | null {
   return nums.reduce((a, b) => a + b, 0) / nums.length;
 }
 
-export async function fetchBottleRecord(code: string): Promise<BottleRecordData | null> {
+/**
+ * 병 식별만 조회 (경량) — 입장 페이지용. 해양 집계 없이 N°·제품만 필요.
+ * numbered_bottles 우선, bottle_units 차선. 민감 컬럼은 select하지 않는다.
+ */
+export async function fetchBottleIdentity(code: string): Promise<BottleIdentity | null> {
   if (!supabaseAdmin) return null;
   if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return null;
-
-  // 1) 병 식별 — numbered_bottles 우선, bottle_units 차선. 민감 컬럼은 select하지 않는다.
-  let bottle: BottleIdentity | null = null;
 
   const { data: nb } = await supabaseAdmin
     .from("numbered_bottles")
@@ -88,18 +89,27 @@ export async function fetchBottleRecord(code: string): Promise<BottleRecordData 
     .maybeSingle();
 
   if (nb) {
-    bottle = { productId: nb.product_id ?? "first_edition", serial: nb.bottle_number ?? null, nfcCode: nb.nfc_code };
-  } else {
-    const { data: bu } = await supabaseAdmin
-      .from("bottle_units")
-      .select("product_id, serial_number, nfc_code")
-      .eq("nfc_code", code)
-      .maybeSingle();
-    if (bu) {
-      bottle = { productId: bu.product_id, serial: bu.serial_number ?? null, nfcCode: bu.nfc_code };
-    }
+    return { productId: nb.product_id ?? "first_edition", serial: nb.bottle_number ?? null, nfcCode: nb.nfc_code };
   }
 
+  const { data: bu } = await supabaseAdmin
+    .from("bottle_units")
+    .select("product_id, serial_number, nfc_code")
+    .eq("nfc_code", code)
+    .maybeSingle();
+  if (bu) {
+    return { productId: bu.product_id, serial: bu.serial_number ?? null, nfcCode: bu.nfc_code };
+  }
+
+  return null;
+}
+
+export async function fetchBottleRecord(code: string): Promise<BottleRecordData | null> {
+  if (!supabaseAdmin) return null;
+  if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return null;
+
+  // 1) 병 식별 — 경량 조회 재사용.
+  const bottle = await fetchBottleIdentity(code);
   if (!bottle) return null;
 
   // 2) 숙성 창 — inventory_batches

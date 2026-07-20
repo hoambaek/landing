@@ -1,22 +1,33 @@
 "use client";
 
 /**
- * /b 병 기록 페이지 — Paper v2 시안 + "Motion & Data Notes v2" 스펙 구현.
- * 표기 규칙: 입수·인양은 월·계절만(날짜·일수 금지). 용어는 "입수".
- * 모션: 인트로 정착 → S1 핀 스크럽(포인트 이동·칩 갱신) → S2 점 순차 점등 →
- *       S3 8줄기 스크럽 성장 + 연평균 카운트업 → S4 수렴 스크럽 → S5 N° 카운트업.
- * ⚠️ pin은 래퍼를 JSX에 사전 배치(pinSpacer)해 CSS 인트로 재시작을 막는다 (랜딩 DescentEffect 실증).
+ * /b 병 기록 페이지 — Paper "NFC 병 페이지 v2 — 여덟 줄기의 수렴" 시안 구현.
+ * S1 병사진 히어로 → S2 여정(depth profile) → S3 여덟 줄기 하강 → S4 수렴 →
+ * S5 개체 선언 + 원산지/해저 2개 표 → S6 뉴스레터 → 푸터(언어 선택 포함).
+ * 표기 규칙: 입수·인양은 월·계절만(날짜·일수 금지), 좌표는 도 단위. 용어는 "입수".
+ * 모션: S3 8줄기 스크럽 성장 + 연평균 카운트업, S4 수렴 스크럽, S5 N° 카운트업.
  */
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./bottle.module.css";
-import { BOTTLE_COPY, BOTTLE_LOCALES, MAISON_NAME, PRODUCT_META, type BottleLocale } from "../_lib/copy";
+import {
+  BOTTLE_COPY,
+  BOTTLE_LOCALES,
+  MAISON_NAME,
+  PRODUCT_META,
+  RECORD_EXTRA,
+  PROVENANCE,
+  type BottleLocale,
+} from "../_lib/copy";
 import type { BottleRecordData } from "../_lib/data";
+import { submitNewsletter } from "@/lib/forms";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type SeasonKey = "winter" | "spring" | "summer" | "autumn";
 
@@ -31,45 +42,6 @@ function monthIdxOf(date: string | null, fallback: number): number {
   if (!date) return fallback;
   const m = Number(date.slice(5, 7)) - 1;
   return m >= 0 && m < 12 ? m : fallback;
-}
-
-/* 히어로 곡선 스무딩 — Catmull-Rom을 베지에로 변환. 발광 포인트도 같은 식으로 곡선 위를 따라간다. */
-type CurvePt = { x: number; y: number };
-
-/* 지나온 구간 실선 리빌용 호길이 LUT 샘플 수 (세그먼트당) */
-const CURVE_SAMPLES = 20;
-
-function crControls(pts: CurvePt[], i: number): { c1: CurvePt; c2: CurvePt } {
-  const p0 = pts[Math.max(0, i - 1)];
-  const p1 = pts[i];
-  const p2 = pts[i + 1];
-  const p3 = pts[Math.min(pts.length - 1, i + 2)];
-  return {
-    c1: { x: p1.x + (p2.x - p0.x) / 6, y: p1.y + (p2.y - p0.y) / 6 },
-    c2: { x: p2.x - (p3.x - p1.x) / 6, y: p2.y - (p3.y - p1.y) / 6 },
-  };
-}
-
-function smoothPathD(pts: CurvePt[]): string {
-  if (pts.length < 2) return "";
-  let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
-  for (let i = 0; i < pts.length - 1; i += 1) {
-    const { c1, c2 } = crControls(pts, i);
-    d += ` C ${c1.x.toFixed(1)} ${c1.y.toFixed(1)}, ${c2.x.toFixed(1)} ${c2.y.toFixed(1)}, ${pts[i + 1].x.toFixed(1)} ${pts[i + 1].y.toFixed(1)}`;
-  }
-  return d;
-}
-
-function evalSmooth(pts: CurvePt[], i: number, f: number): CurvePt {
-  if (i >= pts.length - 1) return pts[pts.length - 1];
-  const p1 = pts[i];
-  const p2 = pts[i + 1];
-  const { c1, c2 } = crControls(pts, i);
-  const u = 1 - f;
-  return {
-    x: u * u * u * p1.x + 3 * u * u * f * c1.x + 3 * u * f * f * c2.x + f * f * f * p2.x,
-    y: u * u * u * p1.y + 3 * u * u * f * c1.y + 3 * u * f * f * c2.y + f * f * f * p2.y,
-  };
 }
 
 /* S3 여덟 줄기 — Paper 확정 지오메트리 (viewBox 390×1290, 시작 높이는 0~43px 안에서만 미세하게 다르게) */
@@ -102,34 +74,31 @@ const STATION_TOPS: Record<MetricKey, number> = {
   temp: 210, salinity: 350, tide: 490, current: 630, pressure: 780, tidal: 920, wave: 1060, period: 1200,
 };
 
-/* 스테이션 카운트업용 수치 분해 */
 interface StationValue { num: number | null; decimals: number; unit: string }
 
 export default function BottleRecord({ data }: { data: BottleRecordData }) {
   const [locale, setLocale] = useState<BottleLocale>("ko");
   const [langOpen, setLangOpen] = useState(false);
   const [flowScale, setFlowScale] = useState(1);
+  const [journeyScale, setJourneyScale] = useState(1);
+  const [nlOpen, setNlOpen] = useState(false);
+  const [nlEmail, setNlEmail] = useState("");
+  const [nlStatus, setNlStatus] = useState<"idle" | "submitting" | "done">("idle");
+  const [nlErr, setNlErr] = useState<string | null>(null);
 
   const rootRef = useRef<HTMLDivElement>(null);
-  const heroPinWrapRef = useRef<HTMLDivElement>(null); // pinSpacer 사전 배치 (CSS 인트로 재시작 방지)
-  const heroRef = useRef<HTMLElement>(null);
-  const heroSerialRef = useRef<HTMLDivElement>(null);
-  const pointRef = useRef<SVGGElement>(null);
-  const solidRef = useRef<SVGPathElement>(null);
-  const glowRef = useRef<SVGPathElement>(null);
-  const dropRef = useRef<SVGLineElement>(null);
-  const areaClipRef = useRef<SVGRectElement>(null);
-  const chipRef = useRef<HTMLDivElement>(null);
+  const journeySectionRef = useRef<HTMLElement>(null);
   const flowSectionRef = useRef<HTMLElement>(null);
   const flowSvgRef = useRef<SVGSVGElement>(null);
   const convergeSvgRef = useRef<SVGSVGElement>(null);
   const convergeDotRef = useRef<SVGGElement>(null);
   const bottleSerialRef = useRef<HTMLParagraphElement>(null);
-  const labelFnRef = useRef<(m: number, t: number | null) => string>(() => "");
 
   const copy = BOTTLE_COPY[locale];
+  const extra = RECORD_EXTRA[locale];
   const activeLocale = BOTTLE_LOCALES.find((l) => l.code === locale)!;
   const meta = PRODUCT_META[data.bottle.productId] ?? PRODUCT_META.atomes_crochus_1y;
+  const prov = PROVENANCE[data.bottle.productId];
 
   const immMonth = monthIdxOf(data.aging.immersion, 0);
   const retMonth = monthIdxOf(data.aging.retrieval, 11);
@@ -137,72 +106,60 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
 
   const monthSeason = (m: number) => `${copy.months[m]} ${copy.seasons[seasonOf(m)]}`;
 
-  /* 히어로 수온 곡선 좌표 */
-  const curve = useMemo(() => {
-    const temps = data.monthlyTemps;
-    const xs = temps.map((_, i) => 14 + (i * 314) / 11);
-    const known = temps.filter((t): t is number => t !== null);
-    const min = known.length ? Math.min(...known) - 0.8 : 6;
-    const max = known.length ? Math.max(...known) + 0.8 : 17;
-    const range = Math.max(max - min, 1);
-    const ys = temps.map((t) => (t === null ? null : 30 + ((max - t) / range) * 230));
+  const serialTotal = meta.quantity;
+  const serial = data.bottle.serial;
+  const serialLine = serial !== null ? `N° ${serial} / ${serialTotal}` : null;
 
-    const measured: { x: number; y: number; m: number; t: number }[] = [];
-    temps.forEach((t, i) => {
-      if (t !== null && ys[i] !== null) measured.push({ x: xs[i], y: ys[i] as number, m: i, t });
-    });
+  /* 숙성 기간(년) — 입수·인양 연도 차 */
+  const durationYears = useMemo(() => {
+    const i = data.aging.immersion;
+    const r = data.aging.retrieval;
+    if (i && r) return Math.max(1, Number(r.slice(0, 4)) - Number(i.slice(0, 4)));
+    return 1;
+  }, [data.aging.immersion, data.aging.retrieval]);
 
-    let cur = data.currentMonthIndex;
-    while (cur > 0 && temps[cur] === null) cur -= 1;
-    const curPt = measured.find((p) => p.m === cur) ?? measured[measured.length - 1] ?? { x: 14, y: 100, m: 0, t: 0 };
+  const fmtYears = (n: number) => {
+    if (locale === "en") return `${n} yr`;
+    if (locale === "fr") return `${n} an${n > 1 ? "s" : ""}`;
+    return `${n}${locale === "ja" || locale === "zh" ? "年" : "년"}`;
+  };
 
-    /* 곡선 파라미터 → 호길이 % LUT (pathLength=100 정규화 기준). 실선이 포인트 위치에서 정확히 끝나게 */
-    const cum: number[] = [0];
-    let total = 0;
-    if (measured.length > 1) {
-      let prev: CurvePt = measured[0];
-      for (let i = 0; i < measured.length - 1; i += 1) {
-        for (let s = 1; s <= CURVE_SAMPLES; s += 1) {
-          const q = evalSmooth(measured, i, s / CURVE_SAMPLES);
-          total += Math.hypot(q.x - prev.x, q.y - prev.y);
-          cum.push(total);
-          prev = q;
-        }
-      }
-    }
-    const pct = cum.map((v) => (total > 0 ? (v / total) * 100 : 0));
-    const curIdx = Math.max(0, measured.findIndex((p) => p.m === curPt.m));
-    const curPct = pct.length ? pct[Math.min(pct.length - 1, curIdx * CURVE_SAMPLES)] : 0;
+  const seaWhen = (date: string | null, fallback: number) => {
+    const m = monthIdxOf(date, fallback);
+    const y = date ? date.slice(0, 4) : year;
+    const mo = copy.months[m];
+    const se = copy.seasons[seasonOf(m)];
+    if (locale === "ko") return `${y}년 ${mo}, ${se}`;
+    if (locale === "ja" || locale === "zh") return `${y}年 ${mo}, ${se}`;
+    return `${mo} ${y} · ${se}`;
+  };
 
-    const pathD = smoothPathD(measured);
-    const first = measured[0];
-    const last = measured[measured.length - 1];
-    return {
-      pathD,
-      /* 지나온 구간 면적 채움용 닫힌 경로 (x 클립으로 포인트까지만 드러남) */
-      areaD: pathD && first && last ? `${pathD} L ${last.x.toFixed(1)} 290 L ${first.x.toFixed(1)} 290 Z` : "",
-      measured,
-      curIdx,
-      curPt,
-      pct,
-      curPct,
-    };
-  }, [data.monthlyTemps, data.currentMonthIndex]);
+  /* 원산지 표 행 — 확정 정보만. PROVENANCE 없으면 메타에서 가능한 항목만. */
+  const provRows: { label: string; value: string }[] = prov
+    ? [
+        { label: extra.provLabels.maison, value: prov.maison },
+        { label: extra.provLabels.region, value: prov.region },
+        { label: extra.provLabels.cepage, value: prov.cepage },
+        { label: extra.provLabels.style, value: prov.style },
+        { label: extra.provLabels.elevage, value: prov.elevage[locale] },
+      ]
+    : [
+        { label: extra.provLabels.maison, value: `Champagne ${MAISON_NAME}` },
+        ...(meta.cepage ? [{ label: extra.provLabels.cepage, value: meta.cepage }] : []),
+        ...(meta.style ? [{ label: extra.provLabels.style, value: meta.style }] : []),
+      ];
 
-  /* 칩 라벨 함수 — 로케일 바뀌어도 스크럽 트리거 재생성 없이 참조로 갱신 */
-  useEffect(() => {
-    labelFnRef.current = (m: number, t: number | null) =>
-      t !== null ? `${monthSeason(m)} · ${t.toFixed(1)}°C` : monthSeason(m);
-    // 현재 칩 텍스트도 즉시 갱신
-    if (chipRef.current) {
-      const mAttr = chipRef.current.dataset.month;
-      const tAttr = chipRef.current.dataset.temp;
-      if (mAttr !== undefined) {
-        chipRef.current.textContent = labelFnRef.current(Number(mAttr), tAttr ? Number(tAttr) : null);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locale]);
+  /* 해저 숙성 표 행 — 데이터 기반(입수·인양 계절, 수심). */
+  const seaRows: { label: string; value: string }[] = [
+    { label: extra.seaLabels.immersion, value: seaWhen(data.aging.immersion, immMonth) },
+    {
+      label: extra.seaLabels.retrieval,
+      value: seaWhen(data.aging.retrieval, retMonth) + (data.aging.retrieved ? "" : ` (${copy.planned})`),
+    },
+    { label: extra.seaLabels.duration, value: fmtYears(durationYears) },
+    { label: extra.seaLabels.depth, value: `${data.aging.depth} m` },
+    { label: extra.seaLabels.location, value: `${extra.wando} · 34°N 126°E` },
+  ];
 
   /* S3 스케일 (390px 고정 지오메트리 → 좁은 화면 축소) */
   useEffect(() => {
@@ -214,7 +171,20 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  /* IO 리빌 (컨테이너에 revealIn 부여 → 자식 stagger는 CSS가 담당) */
+  /* S2 여정 스케일 (342px 고정 지오메트리 → 좁은 화면 축소) */
+  useEffect(() => {
+    const el = journeySectionRef.current;
+    if (!el) return;
+    const update = () => {
+      const inner = el.clientWidth - 48; // 좌우 padding 24
+      setJourneyScale(Math.min(1, inner / 342));
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  /* IO 리빌 */
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
@@ -250,91 +220,37 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
 
   const fmtStation = (v: StationValue) => (v.num === null ? "—" : `${v.num.toFixed(v.decimals)}${v.unit}`);
 
-  const serialTotal = meta.quantity;
-  const serial = data.bottle.serial;
+  async function onSubscribe(e: FormEvent) {
+    e.preventDefault();
+    if (nlStatus === "submitting") return;
+    const em = nlEmail.trim();
+    if (!EMAIL_RE.test(em)) {
+      setNlErr(extra.newsletterErr);
+      return;
+    }
+    setNlErr(null);
+    setNlStatus("submitting");
+    try {
+      const res = await submitNewsletter({ email: em, locale, source: "bottle_record" });
+      if (res.ok) {
+        setNlStatus("done");
+      } else {
+        setNlErr(res.error ?? extra.newsletterErr);
+        setNlStatus("idle");
+      }
+    } catch {
+      setNlErr(extra.newsletterErr);
+      setNlStatus("idle");
+    }
+  }
 
-  /* ── GSAP 스크럽 모션 (Motion Spec v2) ───────────────────────────── */
+  /* ── GSAP 스크럽 모션 (S3 8줄기 · S4 수렴 · S5 N° 카운트업) ─────────── */
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
-      /* 인트로: 병 번호 카운트업 N° 0 → serial (mono · 0.8s) */
-      if (serial !== null && heroSerialRef.current) {
-        const obj = { v: 0 };
-        gsap.to(obj, {
-          v: serial,
-          duration: 0.8,
-          delay: 0.5,
-          ease: "power1.out",
-          onUpdate: () => {
-            if (heroSerialRef.current) heroSerialRef.current.textContent = `N° ${Math.round(obj.v)} / ${serialTotal}`;
-          },
-        });
-      }
-
-      /* S1 핀 스크럽: 발광 포인트가 곡선 위를 이동, 지나온 구간은 실선으로 채워지고 칩 갱신 */
-      if (heroRef.current && heroPinWrapRef.current && pointRef.current && curve.measured.length > 1) {
-        const pts = curve.measured;
-        const lut = curve.pct;
-        const pctAt = (p: number) => {
-          if (!lut.length) return 0;
-          const j = Math.max(0, Math.min(lut.length - 1, p * CURVE_SAMPLES));
-          const j0 = Math.floor(j);
-          const j1 = Math.min(lut.length - 1, j0 + 1);
-          return lut[j0] + (lut[j1] - lut[j0]) * (j - j0);
-        };
-        const state = { p: 0 };
-        const apply = (pFloat: number) => {
-          const i = Math.max(0, Math.min(pts.length - 1, pFloat));
-          const i0 = Math.floor(i);
-          const i1 = Math.min(pts.length - 1, i0 + 1);
-          const f = i - i0;
-          const pos = evalSmooth(pts, i0, f);
-          pointRef.current!.setAttribute("transform", `translate(${pos.x}, ${pos.y})`);
-          const reveal = `${100 - pctAt(i)}`;
-          if (solidRef.current) solidRef.current.style.strokeDashoffset = reveal;
-          if (glowRef.current) glowRef.current.style.strokeDashoffset = reveal;
-          if (areaClipRef.current) areaClipRef.current.setAttribute("width", `${pos.x}`);
-          if (dropRef.current) {
-            dropRef.current.setAttribute("x1", `${pos.x}`);
-            dropRef.current.setAttribute("x2", `${pos.x}`);
-            dropRef.current.setAttribute("y1", `${pos.y}`);
-          }
-          const near = f < 0.5 ? pts[i0] : pts[i1];
-          if (chipRef.current) {
-            const chip = chipRef.current;
-            chip.textContent = labelFnRef.current(near.m, near.t);
-            chip.dataset.month = String(near.m);
-            chip.dataset.temp = String(near.t);
-            /* 곡선 끝(11~12월)에서 칩이 프레임 밖으로 잘리지 않게 px로 클램프 */
-            const ww = chip.parentElement?.clientWidth ?? 342;
-            const cw = chip.offsetWidth;
-            const px = Math.max(0, Math.min(ww - cw, (pos.x / 342) * ww - 14));
-            chip.style.transform = "none";
-            chip.style.left = `${px}px`;
-            chip.style.top = `${Math.max(0, ((pos.y - 55) / 290) * 100)}%`;
-          }
-        };
-        apply(0);
-
-        // fromTo로 시작값(1월)을 명시 — 연 전체(입수→인양)를 스크럽으로 여행
-        gsap.fromTo(state, { p: 0 }, {
-          p: pts.length - 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: heroRef.current,
-            pin: heroRef.current,
-            pinSpacer: heroPinWrapRef.current, // 사전 배치 래퍼 — CSS 인트로 재시작 방지
-            start: "top top",
-            end: "+=120%",
-            scrub: 0.6,
-          },
-          onUpdate: () => apply(state.p),
-        });
-      }
-
-      /* S3: 8줄기 스크럽 성장 (stroke-dashoffset) + 금색 줄기 선단이 지나는 스테이션 앰버 점등 */
+      /* S3: 8줄기 스크럽 성장 + 금색 줄기 선단이 지나는 스테이션 앰버 점등 */
       if (flowSvgRef.current && flowSectionRef.current) {
         const paths = Array.from(flowSvgRef.current.querySelectorAll("path"));
         paths.forEach((p) => {
@@ -342,7 +258,7 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
           p.style.strokeDasharray = `${len}`;
           p.style.strokeDashoffset = `${len}`;
         });
-        const amberPath = paths[paths.length - 1]; // FLOW_PATHS 마지막이 수온(앰버)
+        const amberPath = paths[paths.length - 1];
         const amberLen = amberPath ? amberPath.getTotalLength() : 0;
         const stations = Array.from(flowSectionRef.current.querySelectorAll<HTMLElement>("[data-stop]"));
         gsap.to(paths, {
@@ -360,7 +276,7 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
             const off = parseFloat(amberPath.style.strokeDashoffset || `${amberLen}`);
             const drawn = Math.max(0, Math.min(amberLen, amberLen - off));
             const tip = amberPath.getPointAtLength(drawn);
-            const flowY = 90 + tip.y; // SVG는 flow 컨테이너 top 90px에서 시작
+            const flowY = 90 + tip.y;
             stations.forEach((el) => {
               const top = Number(el.dataset.stop);
               const lit = drawn > 1 && flowY >= top - 30 && flowY <= top + 110;
@@ -439,195 +355,79 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
 
     return () => ctx.revert();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [curve, serial, serialTotal]);
-
-  const serialLine = serial !== null ? `N° ${serial} / ${serialTotal}` : null;
-  const chipLabel = curve.curPt ? `${monthSeason(curve.curPt.m)} · ${curve.curPt.t.toFixed(1)}°C` : "";
+  }, [serial, serialTotal]);
 
   return (
     <main className={styles.page} ref={rootRef}>
       <div className={styles.frame}>
-        {/* ── S1 수온의 1년 (핀 래퍼 사전 배치) ── */}
-        <div ref={heroPinWrapRef}>
-          <section className={styles.hero} ref={heroRef}>
-            <div className={styles.langWrap}>
-              <button type="button" className={styles.langBtn} onClick={() => setLangOpen((v) => !v)} aria-expanded={langOpen} aria-label="Language">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={activeLocale.flag} alt="" className={styles.flagImg} />
-                <span>{activeLocale.short}</span>
-                <svg width="7" height="5" viewBox="0 0 7 5" aria-hidden>
-                  <polyline points="1,1 3.5,4 6,1" fill="none" stroke="rgba(241,239,235,0.55)" strokeWidth="1" />
-                </svg>
-              </button>
-              {langOpen && (
-                <div className={styles.langPanel} role="listbox">
-                  {BOTTLE_LOCALES.map((l) => (
-                    <button
-                      key={l.code}
-                      type="button"
-                      role="option"
-                      aria-selected={l.code === locale}
-                      className={`${styles.langOpt} ${l.code === locale ? styles.langOptActive : ""}`}
-                      onClick={() => {
-                        setLocale(l.code);
-                        setLangOpen(false);
-                      }}
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={l.flag} alt="" className={styles.flagImg} />
-                      <span className={styles.langOptCode}>{l.short}</span>
-                      <span>{l.native}</span>
-                      {l.code === locale && (
-                        <svg className={styles.langCheck} width="9" height="7" viewBox="0 0 9 7" aria-hidden>
-                          <polyline points="1,3.5 3.5,6 8,1" fill="none" stroke="currentColor" strokeWidth="1" />
-                        </svg>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className={`${styles.verified} ${styles.introFade}`}>
-              <span className={styles.liveDot} />
-              <span>{copy.verified}</span>
-            </div>
-
-            <div className={styles.heroSpacerLg} />
-
-            {serialLine && (
-              <div ref={heroSerialRef} className={`${styles.serial} ${styles.introFade} ${styles.introFadeD1}`}>
-                {serialLine}
-              </div>
-            )}
-
-            <div className={`${styles.titleZone} ${styles.introFade} ${styles.introFadeD2}`}>
+        {/* ── S1 병사진 히어로 ── */}
+        <section className={styles.hero}>
+          <Image
+            src="/images/b-hero-bottle.webp"
+            alt=""
+            fill
+            priority
+            sizes="430px"
+            className={styles.heroPhoto}
+          />
+          <div className={styles.heroScrim} />
+          <div className={`${styles.heroContent} ${styles.introFade} ${styles.introFadeD1}`}>
+            {serialLine && <div className={styles.serial}>{serialLine}</div>}
+            <div className={styles.titleZone}>
               {locale === "ko" ? (
-                <Image src="/images/b-title-ko-v2.png" alt={copy.titleText} width={317} height={32} className={styles.titleImg} priority />
+                <Image src="/images/b-title-ko-v3.png" alt={copy.titleText} width={254} height={33} className={styles.titleImg} priority />
               ) : (
                 <h1 className={styles.titleText}>{copy.titleText}</h1>
               )}
               <p className={styles.subLabel}>{copy.subLabel.replace("{year}", year)}</p>
             </div>
+          </div>
+        </section>
 
-            <div className={styles.heroSpacerSm} />
-
-            <div className={`${styles.heroCurveWrap} ${styles.introFade} ${styles.introFadeD3}`}>
-              <svg className={styles.heroCurve} viewBox="0 0 342 290" aria-hidden>
+        {/* ── S2 여정 (depth profile) ── */}
+        <section className={styles.journey} ref={journeySectionRef}>
+          <div
+            className={styles.journeyScaler}
+            style={{ transform: `scale(${journeyScale})`, height: 150 * journeyScale }}
+            data-reveal
+          >
+            <div className={styles.journeyInner}>
+              <svg className={styles.journeySvg} width="342" height="110" viewBox="0 0 342 110" aria-hidden>
                 <defs>
-                  <filter id="bCurveGlow" x="-30%" y="-30%" width="160%" height="160%">
-                    <feGaussianBlur stdDeviation="2.4" />
-                  </filter>
-                  <linearGradient id="bAreaGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#F1EFEB" stopOpacity="0.16" />
-                    <stop offset="55%" stopColor="#F1EFEB" stopOpacity="0.05" />
-                    <stop offset="100%" stopColor="#F1EFEB" stopOpacity="0" />
+                  <linearGradient id="bJourneyEmerge" gradientUnits="userSpaceOnUse" x1="333" y1="90" x2="333" y2="28">
+                    <stop offset="0" stopColor="#CCAD7B" stopOpacity="0.92" />
+                    <stop offset="1" stopColor="#CCAD7B" stopOpacity="0" />
                   </linearGradient>
-                  <clipPath id="bAreaClip">
-                    <rect ref={areaClipRef} x="0" y="0" width={curve.curPt.x} height="290" />
-                  </clipPath>
                 </defs>
-                {curve.pathD && (
-                  <path
-                    className={styles.drawPath}
-                    d={curve.pathD}
-                    fill="none"
-                    stroke="rgba(241,239,235,0.55)"
-                    strokeWidth="1.2"
-                    strokeDasharray="2 5"
-                  />
-                )}
-                {curve.areaD && <path d={curve.areaD} fill="url(#bAreaGrad)" clipPath="url(#bAreaClip)" />}
-                <line
-                  ref={dropRef}
-                  x1={curve.curPt.x}
-                  y1={curve.curPt.y}
-                  x2={curve.curPt.x}
-                  y2="290"
-                  stroke="rgba(241,239,235,0.22)"
-                  strokeWidth="0.6"
-                />
-                {/* 지나온 구간 — 점선 위에 실선(발광)이 포인트까지만 드러남 */}
-                {curve.pathD && (
-                  <>
-                    <path
-                      ref={glowRef}
-                      d={curve.pathD}
-                      pathLength={100}
-                      fill="none"
-                      stroke="rgba(241,239,235,0.5)"
-                      strokeWidth="3.2"
-                      filter="url(#bCurveGlow)"
-                      strokeDasharray="100"
-                      strokeDashoffset={100 - curve.curPct}
-                    />
-                    <path
-                      ref={solidRef}
-                      d={curve.pathD}
-                      pathLength={100}
-                      fill="none"
-                      stroke="rgba(241,239,235,0.95)"
-                      strokeWidth="1.6"
-                      strokeDasharray="100"
-                      strokeDashoffset={100 - curve.curPct}
-                    />
-                  </>
-                )}
-                <g ref={pointRef} transform={`translate(${curve.curPt.x}, ${curve.curPt.y})`}>
-                  <circle r="14" fill="rgba(241,239,235,0.06)" />
-                  <circle r="8" fill="rgba(241,239,235,0.16)" />
-                  <circle r="3.5" fill="#F1EFEB" className={styles.glowDot} />
-                </g>
+                <line x1="0" y1="24" x2="342" y2="24" stroke="#F1EFEB" strokeWidth="0.5" strokeDasharray="1 5" opacity="0.16" />
+                <line x1="0" y1="90" x2="342" y2="90" stroke="#CCAD7B" strokeWidth="0.5" strokeDasharray="1 5" opacity="0.22" />
+                <text x="0" y="14" fontSize="8" fontFamily="IBM Plex Mono, monospace" letterSpacing="1" fill="rgba(241,239,235,0.4)">0m</text>
+                <text x="0" y="105" fontSize="8" fontFamily="IBM Plex Mono, monospace" letterSpacing="1" fill="rgba(204,173,123,0.65)">30m</text>
+                <path d="M 37 24 L 126 24 C 166 24 182 90 216 90" fill="none" stroke="rgba(241,239,235,0.68)" strokeWidth="1.4" strokeLinecap="round" />
+                <path d="M 216 90 L 305 90" fill="none" stroke="#CCAD7B" strokeWidth="1.8" strokeLinecap="round" />
+                <path d="M 305 90 C 322 86 331 58 333 30" fill="none" stroke="url(#bJourneyEmerge)" strokeWidth="1.7" strokeLinecap="round" />
+                <circle cx="37" cy="24" r="5" fill="#0E1A2B" stroke="rgba(241,239,235,0.85)" strokeWidth="1.4" />
+                <circle cx="126" cy="24" r="5" fill="#0E1A2B" stroke="rgba(241,239,235,0.85)" strokeWidth="1.4" />
+                <circle cx="216" cy="90" r="9" fill="rgba(204,173,123,0.14)" />
+                <circle cx="216" cy="90" r="5.5" fill="#CCAD7B" />
+                <circle cx="305" cy="90" r="9" fill="rgba(204,173,123,0.14)" />
+                <circle cx="305" cy="90" r="5.5" fill="#CCAD7B" />
               </svg>
-              <div
-                ref={chipRef}
-                className={styles.tempChip}
-                data-month={curve.curPt.m}
-                data-temp={curve.curPt.t}
-                style={{ left: `${(curve.curPt.x / 342) * 100}%`, top: `${Math.max(0, ((curve.curPt.y - 55) / 290) * 100)}%` }}
-              >
-                {chipLabel}
+              <div className={styles.jStop} style={{ left: 0, top: 40 }}>
+                <span className={styles.jName}>{copy.journey.origin}</span>
+                <span className={styles.jSub}>{copy.journey.originSub}</span>
               </div>
-            </div>
-            <div className={styles.heroAxis}>
-              <span>{`${monthSeason(immMonth)} · ${copy.immersion}`}</span>
-              <span>{`${monthSeason(retMonth)} · ${copy.retrieval}${data.aging.retrieved ? "" : ` ${copy.planned}`}`}</span>
-            </div>
-          </section>
-        </div>
-
-        {/* ── S2 여정 (점 4개 순차 점등 stagger 0.15s — CSS) ── */}
-        <section className={styles.journey}>
-          <div className={styles.journeyStrip} data-reveal>
-            <div className={styles.journeyLine} />
-            <div className={styles.stops}>
-              <div className={styles.stop}>
-                <span className={styles.stopDot} />
-                <span className={styles.stopText}>
-                  <span className={styles.stopName}>{copy.journey.origin}</span>
-                  <span className={styles.stopSub}>{copy.journey.originSub}</span>
-                </span>
+              <div className={styles.jStop} style={{ left: 89, top: 40 }}>
+                <span className={styles.jName}>{copy.journey.aging}</span>
+                <span className={styles.jSub}>{copy.journey.agingSub}</span>
               </div>
-              <div className={styles.stop}>
-                <span className={styles.stopDot} />
-                <span className={styles.stopText}>
-                  <span className={styles.stopName}>{copy.journey.aging}</span>
-                  <span className={styles.stopSub}>{copy.journey.agingSub}</span>
-                </span>
+              <div className={styles.jStop} style={{ left: 179, top: 106 }}>
+                <span className={`${styles.jName} ${styles.jNameOn}`}>{copy.immersion}</span>
+                <span className={`${styles.jSub} ${styles.jSubAmber}`}>{monthSeason(immMonth)}</span>
               </div>
-              <div className={styles.stop}>
-                <span className={styles.stopDotAmber} />
-                <span className={styles.stopText}>
-                  <span className={`${styles.stopName} ${styles.stopNameOn}`}>{copy.immersion}</span>
-                  <span className={`${styles.stopSub} ${styles.stopSubAmber}`}>{monthSeason(immMonth)}</span>
-                </span>
-              </div>
-              <div className={styles.stop}>
-                <span className={styles.stopDotAmber} />
-                <span className={styles.stopText}>
-                  <span className={`${styles.stopName} ${styles.stopNameOn}`}>{copy.retrieval}</span>
-                  <span className={`${styles.stopSub} ${styles.stopSubAmber}`}>{monthSeason(retMonth)}</span>
-                </span>
+              <div className={styles.jStop} style={{ left: 268, top: 106 }}>
+                <span className={`${styles.jName} ${styles.jNameOn}`}>{copy.retrieval}</span>
+                <span className={`${styles.jSub} ${styles.jSubAmber}`}>{monthSeason(retMonth)}</span>
               </div>
             </div>
           </div>
@@ -645,7 +445,6 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
                 ))}
               </svg>
 
-              {/* 계절 눈금 (시문 삭제됨, 2026-07-17) */}
               <span className={`${styles.seasonLabel} ${styles.seasonLabelOn}`} style={{ top: 84 }}>{`${copy.months[0]} ${copy.seasons.winter}`}</span>
               <span className={styles.seasonLabel} style={{ top: 384 }}>{`${copy.months[3]} ${copy.seasons.spring}`}</span>
               <span className={styles.seasonLabel} style={{ top: 684 }}>{`${copy.months[6]} ${copy.seasons.summer}`}</span>
@@ -695,7 +494,7 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
           </p>
         </section>
 
-        {/* ── S5 개체 선언 (N° 카운트업 + 여권 순차 리빌) ── */}
+        {/* ── S5 개체 선언 + 원산지/해저 표 ── */}
         <section className={styles.bottleSection}>
           <div className={styles.reveal} data-reveal>
             <Image src={meta.image} alt={meta.name} width={342} height={274} className={styles.bottlePhoto} />
@@ -706,50 +505,131 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
             </p>
           )}
           <h2 className={styles.bottleName}>{meta.name}</h2>
-          <div className={styles.passport} data-reveal>
-            <div className={styles.passportRow}>
-              <span className={styles.passportLabel}>{copy.passport.maison}</span>
-              <span className={styles.passportValue}>{MAISON_NAME}</span>
+
+          <div className={styles.tables} data-reveal>
+            <div className={styles.tableCaption}>
+              <span className={styles.tableDot} />
+              <span>{extra.provHead}</span>
             </div>
-            {meta.cepage && (
-              <div className={styles.passportRow}>
-                <span className={styles.passportLabel}>{copy.passport.cepage}</span>
-                <span className={styles.passportValue}>{meta.cepage}</span>
+            {provRows.map((r, i) => (
+              <div key={`p-${i}`} className={`${styles.tableRow} ${i === provRows.length - 1 ? styles.tableRowLast : ""}`}>
+                <span className={styles.tableLabel}>{r.label}</span>
+                <span className={styles.tableValue}>{r.value}</span>
               </div>
-            )}
-            {meta.style && (
-              <div className={styles.passportRow}>
-                <span className={styles.passportLabel}>{copy.passport.style}</span>
-                <span className={styles.passportValue}>{meta.style}</span>
+            ))}
+
+            <div className={`${styles.tableCaption} ${styles.tableCaptionGap}`}>
+              <span className={styles.tableDot} />
+              <span>{extra.seaHead}</span>
+            </div>
+            {seaRows.map((r, i) => (
+              <div key={`s-${i}`} className={`${styles.tableRow} ${i === seaRows.length - 1 ? styles.tableRowLast : ""}`}>
+                <span className={styles.tableLabel}>{r.label}</span>
+                <span className={styles.tableValue}>{r.value}</span>
               </div>
-            )}
+            ))}
           </div>
         </section>
 
-        {/* ── S6 명부 ── */}
+        {/* ── S6 뉴스레터 ── */}
         <section className={styles.registre}>
-          <p className={`${styles.gating} ${styles.reveal}`} data-reveal>{copy.gating}</p>
-          <a href="https://musedemaree.com/#ocean-circle" className={styles.ctaBtn}>
-            {serial !== null ? copy.cta.replace("{serial}", String(serial)) : copy.ctaNoSerial}
-          </a>
-          <p className={styles.ctaSub}>{copy.ctaSub}</p>
-        </section>
+          <p className={`${styles.newsletterLine} ${styles.reveal}`} data-reveal>{extra.newsletterLine}</p>
 
-        {/* ── 푸터 ── */}
-        <footer className={styles.footer}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo/logo_text_trans_W.png" alt="Muse de Marée" className={styles.footerLogo} />
-          <p className={styles.footerTagline}>{copy.footerTagline}</p>
-          <div className={styles.footerLinks}>
-            <a href="https://musedemaree.com" className={styles.footerLinkRow}>
-              <span className={styles.footerLinkLabel}>HOME</span>
-              <span className={styles.footerLinkUrl}>musedemaree.com →</span>
+          {nlStatus === "done" ? (
+            <p className={styles.newsletterDone}>{extra.newsletterDone}</p>
+          ) : nlOpen ? (
+            <form className={styles.newsletterForm} onSubmit={onSubscribe} noValidate>
+              <input
+                type="email"
+                className={styles.newsletterInput}
+                placeholder={extra.newsletterPlaceholder}
+                value={nlEmail}
+                onChange={(e) => setNlEmail(e.target.value)}
+                autoComplete="email"
+                inputMode="email"
+                autoFocus
+              />
+              <button type="submit" className={styles.newsletterSubmit} disabled={nlStatus === "submitting"}>
+                {extra.newsletterConfirm}
+              </button>
+            </form>
+          ) : (
+            <button type="button" className={styles.ctaBtn} onClick={() => setNlOpen(true)}>
+              {extra.newsletterCta}
+            </button>
+          )}
+          {nlErr && <p className={styles.newsletterErr}>{nlErr}</p>}
+
+          <div className={styles.navBtns}>
+            <a href="https://musedemaree.com" className={styles.navBtn}>
+              <span>{extra.brandPage}</span>
+              <span className={styles.navArrow}>→</span>
             </a>
-            <a href="https://blog.musedemaree.com" className={styles.footerLinkRow}>
-              <span className={styles.footerLinkLabel}>JOURNAL</span>
-              <span className={styles.footerLinkUrl}>blog.musedemaree.com →</span>
+            <a href="https://blog.musedemaree.com" className={styles.navBtn}>
+              <span>{extra.blogPage}</span>
+              <span className={styles.navArrow}>→</span>
             </a>
           </div>
+        </section>
+
+        {/* ── 푸터 (언어 선택 포함) ── */}
+        <footer className={styles.footer}>
+          <div className={styles.footerHead}>
+            <div className={styles.footerBrand}>
+              <div className={styles.footerLogoRow}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/logo/logo_trans_W_lg.png" alt="" className={styles.footerSymbol} />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/logo/logo_text_trans_W.png" alt="Muse de Marée" className={styles.footerWordmark} />
+              </div>
+              <p className={styles.footerTagline}>{copy.footerTagline}</p>
+            </div>
+
+            <div className={styles.footerLang}>
+              <button
+                type="button"
+                className={styles.langBtn}
+                onClick={() => setLangOpen((v) => !v)}
+                aria-expanded={langOpen}
+                aria-label="Language"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={activeLocale.flag} alt="" className={styles.flagImg} />
+                <span>{activeLocale.short}</span>
+                <svg width="7" height="5" viewBox="0 0 7 5" aria-hidden>
+                  <polyline points="1,1 3.5,4 6,1" fill="none" stroke="rgba(241,239,235,0.55)" strokeWidth="1" />
+                </svg>
+              </button>
+              {langOpen && (
+                <div className={styles.langPanel} role="listbox">
+                  {BOTTLE_LOCALES.map((l) => (
+                    <button
+                      key={l.code}
+                      type="button"
+                      role="option"
+                      aria-selected={l.code === locale}
+                      className={`${styles.langOpt} ${l.code === locale ? styles.langOptActive : ""}`}
+                      onClick={() => {
+                        setLocale(l.code);
+                        setLangOpen(false);
+                      }}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={l.flag} alt="" className={styles.flagImg} />
+                      <span className={styles.langOptCode}>{l.short}</span>
+                      <span>{l.native}</span>
+                      {l.code === locale && (
+                        <svg className={styles.langCheck} width="9" height="7" viewBox="0 0 9 7" aria-hidden>
+                          <polyline points="1,3.5 3.5,6 8,1" fill="none" stroke="currentColor" strokeWidth="1" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className={styles.footerBase}>
             <span>© {year} MUSE DE MARÉE</span>
             <span>ORKNEY CORP. · KOREA</span>

@@ -9,7 +9,7 @@ import {
   Img,
 } from "@react-email/components";
 
-export type FormKind = "invite" | "partner" | "brandbook";
+export type FormKind = "invite" | "partner" | "brandbook" | "bottle" | "newsletter";
 
 /**
  * 브랜드 소개서는 2단계 발송:
@@ -127,6 +127,8 @@ const SUBJECT: Record<FormKind, string> = {
   invite: "초대 신청이 접수되었습니다 | Muse de Marée",
   partner: "파트너십 문의가 접수되었습니다 | Muse de Marée",
   brandbook: "바다의 시간을 한 권에 담았습니다 | Muse de Marée",
+  bottle: "이 병이 당신의 이름으로 남았습니다 | Muse de Marée",
+  newsletter: "뉴스레터 구독이 시작되었습니다 | Muse de Marée",
 };
 
 /** 브랜드 소개서 접수 확인(ack) 전용 제목·본문 */
@@ -172,6 +174,24 @@ const COPY: Record<
       "Muse de Marée 브랜드 소개서를 요청해 주셔서 감사합니다. 요청하신 소개서를 이 메일에 함께 보내드립니다.",
       "한국 심해에서 숙성하는 샴페인의 철학과 기록 방식, 퀴베 라인업과 파트너십 안내를 한 권에 담았습니다.",
       "함께할 자리에 대해 더 이야기 나누고 싶으시면, 언제든 이 메일로 회신해 주세요.",
+    ],
+  },
+  bottle: {
+    eyebrow: "OCEAN CELLAR™",
+    title: "이 병이 당신의 이름으로 남았습니다",
+    body: [
+      "Muse de Marée의 병 하나가 당신의 이름으로 등록되었습니다.",
+      "이 병이 남해 30m 바다에서 보낸 한 해의 기록은, 병에 담긴 태그로 언제든 다시 열어볼 수 있습니다.",
+      "다음 인양과 새 기록의 소식은 준비되는 대로 이 메일로 가장 먼저 전해 드리겠습니다.",
+    ],
+  },
+  newsletter: {
+    eyebrow: "JOURNAL",
+    title: "뉴스레터를 구독해 주셔서 감사합니다",
+    body: [
+      "Muse de Marée의 소식을 구독해 주셔서 감사합니다.",
+      "다음 인양과 새로운 기록, 바다의 시간에 관한 이야기를 계절에 맞춰 가끔 전해 드리겠습니다.",
+      "받은 편지함에서 곧 다시 인사드리겠습니다.",
     ],
   },
 };

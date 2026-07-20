@@ -37,6 +37,16 @@ export type PartnerPayload = {
   referralSource?: string;
 };
 export type BrandBookPayload = { name: string; affiliation: string; email: string };
+export type BottleRegistrationPayload = {
+  nfcCode: string;
+  productId?: string | null;
+  serial?: number | null;
+  name: string;
+  email: string;
+  locale?: string;
+  referralSource?: string;
+};
+export type NewsletterPayload = { email: string; locale?: string; source?: string };
 
 export type SubmitResult = { ok: boolean; error?: string };
 
@@ -252,4 +262,75 @@ export async function submitBrandBook(
       mode: "ack",
     }
   );
+}
+
+/**
+ * 병 소유자 등록(입장 페이지 명부) — NFC 태그로 열린 병을 신청자 이름으로 등록.
+ * bottle_registrations 저장 + 신청자·운영자 확인 메일.
+ */
+export async function submitBottleRegistration(
+  p: BottleRegistrationPayload
+): Promise<SubmitResult> {
+  const referral = p.referralSource?.trim() || null;
+  return insertAndNotify(
+    "bottle_registrations",
+    {
+      nfc_code: p.nfcCode,
+      product_id: p.productId ?? null,
+      serial: p.serial ?? null,
+      name: p.name,
+      email: p.email,
+      referral_source: referral,
+      locale: p.locale ?? null,
+    },
+    {
+      kind: "bottle",
+      applicantEmail: p.email,
+      applicantName: p.name,
+      adminFields: {
+        성함: p.name,
+        이메일: p.email,
+        "병 번호": p.serial != null ? `N° ${p.serial}` : "—",
+        코드: p.nfcCode,
+        제품: p.productId ?? "—",
+      },
+    }
+  );
+}
+
+/**
+ * 뉴스레터 구독 — 기록 페이지. 이메일은 소문자 정규화 후 저장,
+ * 이미 구독된 주소면 조용히 성공 처리(중복 메일 발송 안 함).
+ */
+export async function submitNewsletter(
+  p: NewsletterPayload
+): Promise<SubmitResult> {
+  if (!supabaseAdmin) {
+    return {
+      ok: false,
+      error: "지금은 구독을 받을 수 없습니다. 잠시 후 다시 시도해 주세요.",
+    };
+  }
+  const email = p.email.trim().toLowerCase();
+  const { error } = await supabaseAdmin
+    .from("newsletter_subscribers")
+    .insert({ email, locale: p.locale ?? null, source: p.source ?? "bottle_record" });
+
+  // 23505 = unique 위반(이미 구독). 사용자에겐 성공으로 처리하되 확인 메일은 재발송하지 않는다.
+  if (error && error.code !== "23505") {
+    console.error("[forms] newsletter insert error:", error.message);
+    return {
+      ok: false,
+      error: "전송 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+    };
+  }
+  if (!error) {
+    await sendEmails({
+      kind: "newsletter",
+      applicantEmail: email,
+      adminFields: { 이메일: email },
+      mode: "ack",
+    });
+  }
+  return { ok: true };
 }

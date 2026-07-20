@@ -1,0 +1,299 @@
+/* /b 입장 페이지 — Paper "입장 페이지 — 이름을 남기다" 시안 1:1 (다크·앰버) */
+
+.page {
+  --e-void: #0a0908;
+  --e-ivory: #f1efeb;
+  --e-amber: #ccad7b;
+  --e-mono: var(--font-plex-mono), "IBM Plex Mono", monospace;
+  position: relative;
+  min-height: 100svh;
+  background: var(--e-void);
+  color: var(--e-ivory);
+  font-family: var(--font-body), sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.frame {
+  width: min(430px, 100vw);
+  overflow: hidden;
+}
+
+/* ── 로고 인트로 (디졸브) ─────────────────────────── */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--e-void);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.introOut {
+  opacity: 0;
+  pointer-events: none;
+}
+.introLogo {
+  width: 108px;
+  height: auto;
+  opacity: 0;
+  transform: scale(0.94);
+  animation: introMark 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+@keyframes introMark {
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ── S1 히어로 (풀스크린 영상 placeholder) ─────────── */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(64px, calc(env(safe-area-inset-top) + 40px)) 24px 44px;
+  background: radial-gradient(circle at 50% 40%, #171310 0%, #0a0908 72%);
+  overflow: hidden;
+}
+.heroVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.heroLogo {
+  position: relative;
+  z-index: 2;
+  width: 80px;
+  height: auto;
+  opacity: 0.96;
+}
+.heroCenter {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.playGlyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  border: 0.5px solid rgba(241, 239, 235, 0.2);
+}
+.heroScroll {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.scrollLabel {
+  font-family: var(--e-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: rgba(241, 239, 235, 0.5);
+}
+.scrollLine {
+  width: 1px;
+  height: 30px;
+  background: linear-gradient(180deg, rgba(241, 239, 235, 0.8), transparent);
+}
+
+/* ── S2 감사 + 등록 ───────────────────────────────── */
+.register {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 28px 88px;
+  background: var(--e-void);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.9s cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.register.revealIn {
+  opacity: 1;
+  transform: none;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--e-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: rgba(241, 239, 235, 0.5);
+}
+.eyebrowDot {
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  background: var(--e-amber);
+}
+
+.thanksTitle {
+  width: min(319px, 86vw);
+  height: auto;
+  margin-top: 34px;
+}
+.thanksSub {
+  margin-top: 16px;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 23px;
+  color: rgba(241, 239, 235, 0.7);
+  text-align: center;
+}
+
+.serial {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 54px;
+  color: var(--e-amber);
+}
+.serialNo {
+  font-family: var(--e-mono);
+  font-weight: 300;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+}
+.serialNum {
+  font-family: var(--e-mono);
+  font-size: 76px;
+  line-height: 74px;
+  letter-spacing: -0.01em;
+}
+.serialTotal {
+  font-family: var(--e-mono);
+  font-weight: 300;
+  font-size: 28px;
+  letter-spacing: 0.04em;
+  opacity: 0.6;
+}
+
+.divider {
+  width: min(334px, 92%);
+  height: 0.5px;
+  margin-top: 72px;
+  background: rgba(241, 239, 235, 0.1);
+}
+
+.registerTitle {
+  width: min(272px, 78vw);
+  height: auto;
+  margin-top: 44px;
+}
+.registerSub {
+  margin-top: 12px;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 22px;
+  color: rgba(241, 239, 235, 0.6);
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: min(334px, 100%);
+  margin-top: 40px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+.field + .field {
+  margin-top: 28px;
+}
+.fieldLabel {
+  font-family: var(--e-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(241, 239, 235, 0.5);
+}
+.input {
+  width: 100%;
+  margin-top: 11px;
+  padding: 0 0 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 0.5px solid rgba(241, 239, 235, 0.2);
+  border-radius: 0;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--e-ivory);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.25s ease;
+}
+.input::placeholder {
+  color: rgba(241, 239, 235, 0.3);
+}
+.input:focus {
+  border-bottom-color: rgba(204, 173, 123, 0.65);
+}
+
+.error {
+  align-self: flex-start;
+  margin-top: 16px;
+  font-family: var(--e-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: #c98b83;
+}
+
+.submit {
+  width: 100%;
+  height: 54px;
+  margin-top: 46px;
+  background: var(--e-amber);
+  color: var(--e-void);
+  border: none;
+  border-radius: 0;
+  font-family: var(--font-body), sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.submit:active {
+  opacity: 0.8;
+  transform: scale(0.99);
+}
+.submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.note {
+  margin-top: 14px;
+  font-family: var(--e-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(241, 239, 235, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro { display: none; }
+  .introLogo { animation: none; opacity: 1; transform: none; }
+  .register { opacity: 1; transform: none; transition: none; }
+}

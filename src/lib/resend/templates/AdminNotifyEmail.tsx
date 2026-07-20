@@ -66,12 +66,16 @@ const KIND_LABEL: Record<FormKind, string> = {
   invite: "초대 신청",
   partner: "파트너 문의",
   brandbook: "브랜드 소개서 요청",
+  bottle: "병 소유자 등록",
+  newsletter: "뉴스레터 구독",
 };
 
 const TABLE_LABEL: Record<FormKind, string> = {
   invite: "invitations",
   partner: "partner_inquiries",
   brandbook: "brandbook_requests",
+  bottle: "bottle_registrations",
+  newsletter: "newsletter_subscribers",
 };
 
 const colors = {

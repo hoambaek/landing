@@ -10,7 +10,7 @@ const plexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: "Muse de Marée · Record",
-  description: "이 병이 지나온 바다 — 병 단위 숙성 기록",
+  description: "바다가 새긴 일 년 — 병 단위 해저 숙성 기록",
   robots: { index: false, follow: false },
 };
 
