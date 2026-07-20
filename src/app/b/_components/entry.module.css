@@ -107,6 +107,27 @@
   width: 1px;
   height: 30px;
   background: linear-gradient(180deg, rgba(241, 239, 235, 0.8), transparent);
+  transform-origin: top;
+  animation: scrollPulse 2.4s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.35; transform: scaleY(0.5); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* 히어로 인트로 정착 — 로고 디졸브가 걷히며 히어로 요소가 순차로 떠오른다 */
+.heroLogo,
+.heroCenter,
+.heroScroll {
+  opacity: 0;
+  animation: heroSettle 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+.heroLogo { animation-delay: 1.45s; }
+.heroCenter { animation-delay: 1.7s; }
+.heroScroll { animation-delay: 1.95s; }
+@keyframes heroSettle {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
 }
 
 /* ── S2 감사 + 등록 ───────────────────────────────── */
@@ -116,15 +137,28 @@
   align-items: center;
   padding: 80px 28px 88px;
   background: var(--e-void);
+}
+/* 등록 요소 계단식 등장 (위→아래 시차 리빌) */
+.register > * {
   opacity: 0;
   transform: translateY(16px);
-  transition: opacity 0.9s cubic-bezier(0.25, 0.1, 0.25, 1),
-    transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: opacity 0.85s cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 0.85s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
-.register.revealIn {
+.register.revealIn > * {
   opacity: 1;
   transform: none;
 }
+.register.revealIn > *:nth-child(1) { transition-delay: 0s; }
+.register.revealIn > *:nth-child(2) { transition-delay: 0.07s; }
+.register.revealIn > *:nth-child(3) { transition-delay: 0.14s; }
+.register.revealIn > *:nth-child(4) { transition-delay: 0.21s; }
+.register.revealIn > *:nth-child(5) { transition-delay: 0.28s; }
+.register.revealIn > *:nth-child(6) { transition-delay: 0.35s; }
+.register.revealIn > *:nth-child(7) { transition-delay: 0.42s; }
+.register.revealIn > *:nth-child(8) { transition-delay: 0.49s; }
+.register.revealIn > *:nth-child(9) { transition-delay: 0.56s; }
+.register.revealIn > *:nth-child(10) { transition-delay: 0.63s; }
 
 .eyebrow {
   display: flex;
@@ -237,8 +271,9 @@
   border-radius: 0;
   font-family: var(--font-body), sans-serif;
   font-weight: 300;
-  font-size: 14px;
-  line-height: 18px;
+  /* 16px 미만이면 iOS Safari가 포커스 시 화면을 확대함 — 16px로 방지 */
+  font-size: 16px;
+  line-height: 20px;
   color: var(--e-ivory);
   outline: none;
   -webkit-appearance: none;
@@ -295,5 +330,9 @@
 @media (prefers-reduced-motion: reduce) {
   .intro { display: none; }
   .introLogo { animation: none; opacity: 1; transform: none; }
-  .register { opacity: 1; transform: none; transition: none; }
+  .register > * { opacity: 1; transform: none; transition: none; }
+  .heroLogo,
+  .heroCenter,
+  .heroScroll { opacity: 1; animation: none; transform: none; }
+  .scrollLine { animation: none; }
 }

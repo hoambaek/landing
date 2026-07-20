@@ -384,8 +384,9 @@
   border-radius: 0;
   font-family: var(--font-body), sans-serif;
   font-weight: 300;
-  font-size: 14px;
-  line-height: 18px;
+  /* 16px 미만이면 iOS Safari가 포커스 시 화면을 확대함 — 16px로 방지 */
+  font-size: 16px;
+  line-height: 20px;
   color: var(--b-ivory);
   text-align: center;
   outline: none;

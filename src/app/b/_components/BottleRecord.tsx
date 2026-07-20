@@ -87,6 +87,7 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
   const [nlErr, setNlErr] = useState<string | null>(null);
 
   const rootRef = useRef<HTMLDivElement>(null);
+  const heroSerialRef = useRef<HTMLDivElement>(null);
   const journeySectionRef = useRef<HTMLElement>(null);
   const flowSectionRef = useRef<HTMLElement>(null);
   const flowSvgRef = useRef<SVGSVGElement>(null);
@@ -250,6 +251,41 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
+      /* 히어로 N° 카운트업 (0 → serial, 1.4s) */
+      if (serial !== null && heroSerialRef.current) {
+        heroSerialRef.current.textContent = `N° 0 / ${serialTotal}`;
+        const obj = { v: 0 };
+        gsap.to(obj, {
+          v: serial,
+          duration: 1.4,
+          delay: 0.6,
+          ease: "power2.out",
+          onUpdate: () => {
+            if (heroSerialRef.current) heroSerialRef.current.textContent = `N° ${Math.round(obj.v)} / ${serialTotal}`;
+          },
+        });
+      }
+
+      /* S2 여정 곡선 드로잉 — 뷰 진입 시 선이 그려지고 점이 순차 등장 */
+      if (journeySectionRef.current) {
+        const jsvg = journeySectionRef.current.querySelector("svg");
+        if (jsvg) {
+          const jpaths = Array.from(jsvg.querySelectorAll("path"));
+          jpaths.forEach((p) => {
+            const len = p.getTotalLength();
+            p.style.strokeDasharray = `${len}`;
+            p.style.strokeDashoffset = `${len}`;
+          });
+          const jcircles = Array.from(jsvg.querySelectorAll("circle"));
+          gsap.set(jcircles, { opacity: 0, transformOrigin: "center" });
+          const jtl = gsap.timeline({
+            scrollTrigger: { trigger: journeySectionRef.current, start: "top 78%", once: true },
+          });
+          jtl.to(jpaths, { strokeDashoffset: 0, duration: 1.0, ease: "power2.out", stagger: 0.14 });
+          jtl.to(jcircles, { opacity: 1, duration: 0.4, ease: "back.out(2)", stagger: 0.07 }, "-=0.55");
+        }
+      }
+
       /* S3: 8줄기 스크럽 성장 + 금색 줄기 선단이 지나는 스테이션 앰버 점등 */
       if (flowSvgRef.current && flowSectionRef.current) {
         const paths = Array.from(flowSvgRef.current.querySelectorAll("path"));
@@ -372,7 +408,11 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
           />
           <div className={styles.heroScrim} />
           <div className={`${styles.heroContent} ${styles.introFade} ${styles.introFadeD1}`}>
-            {serialLine && <div className={styles.serial}>{serialLine}</div>}
+            {serialLine && (
+              <div ref={heroSerialRef} className={styles.serial}>
+                {serialLine}
+              </div>
+            )}
             <div className={styles.titleZone}>
               {locale === "ko" ? (
                 <Image src="/images/b-title-ko-v3.png" alt={copy.titleText} width={254} height={33} className={styles.titleImg} priority />

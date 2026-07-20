@@ -38,7 +38,9 @@ export default function BottleEntry({
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [displaySerial, setDisplaySerial] = useState(0);
   const registerRef = useRef<HTMLElement>(null);
+  const countedRef = useRef(false);
 
   /* 로고 인트로 디졸브 — 마운트 후 정착, reduced-motion이면 즉시 해제 */
   useEffect(() => {
@@ -52,15 +54,36 @@ export default function BottleEntry({
     return () => clearTimeout(t);
   }, []);
 
-  /* 등록 섹션 스크롤 리빌 */
+  /* 등록 섹션 스크롤 리빌 + 큰 N° 카운트업 (0→serial, ease-out cubic 1.6s) */
   useEffect(() => {
     const el = registerRef.current;
     if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const startCount = () => {
+      if (countedRef.current || serial === null) return;
+      countedRef.current = true;
+      if (reduce) {
+        setDisplaySerial(serial);
+        return;
+      }
+      const dur = 1600;
+      const t0 = performance.now();
+      const tick = (now: number) => {
+        const p = Math.min(1, (now - t0) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        setDisplaySerial(Math.round(serial * eased));
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
             e.target.classList.add(styles.revealIn);
+            startCount();
             io.unobserve(e.target);
           }
         });
@@ -69,7 +92,7 @@ export default function BottleEntry({
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [serial]);
 
   const registerSub =
     serial !== null ? copy.registerSub.replace("{serial}", String(serial)) : copy.registerSubNoSerial;
@@ -171,7 +194,7 @@ export default function BottleEntry({
           {serial !== null && (
             <div className={styles.serial}>
               <span className={styles.serialNo}>N°</span>
-              <span className={styles.serialNum}>{serial}</span>
+              <span className={styles.serialNum}>{displaySerial}</span>
               <span className={styles.serialTotal}>/ {total}</span>
             </div>
           )}
