@@ -138,7 +138,7 @@ export default function BottleEntry({
       {/* ── 로고 인트로 (디졸브) ── */}
       <div className={`${styles.intro} ${introOut ? styles.introOut : ""}`} aria-hidden>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/logo/logo_trans_W_lg.png" alt="" className={styles.introLogo} />
+        <img src="/images/logo/logo_intro_W.png" alt="" className={styles.introLogo} />
       </div>
 
       <div className={styles.frame}>

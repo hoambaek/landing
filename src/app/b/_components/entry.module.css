@@ -36,7 +36,7 @@
   pointer-events: none;
 }
 .introLogo {
-  width: 108px;
+  width: min(196px, 56vw);
   height: auto;
   opacity: 0;
   transform: scale(0.94);
