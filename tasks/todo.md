@@ -228,3 +228,36 @@
 - [x] en/fr 로케일: `/en/method` `/fr/method` 라우트 신설, 전체 카피 번역(`src/app/method/copy.ts` — ko/en/fr 단일 소스), ko=J1950 PNG·en/fr=Cormorant 텍스트 타이틀, SVG 차트 라벨·태그(폭 자동 계산)·aria 로케일 분기, 모바일 레이더는 축약 라벨(radarAxesShort), Living Record 진입 링크·CTA 로케일 라우팅, hreflang alternates + sitemap 등록. 빌드 31 페이지 ✓
 - [x] CH01 관측·LIVE 실데이터 연동 (`src/lib/ocean-observations.ts`, unstable_cache 1h): 수온·조위=KHOA survey 30일 이력+당일 실측, 염분·조류 유속=KHOA recent 당일 시간별(이력 서비스 없음), 수압·파고·파주기·해류=Open-Meteo 30일. 실패 시 정적 폴백. ⚠️ 배포 시 Vercel에 KHOA_API_KEY·KHOA_OBS_CODE 환경변수 추가 필요 (.env.local에는 복사됨)
 - [x] 관측 그리드 후속: 수온=estimateBottomTemperature 수심 30m 보정(data-log 로직 이식), 수압=표층기압+30m×0.0993atm 소수2자리(3.97), 8카드 1회 애니메이션(ObsGrid.tsx — 카운트업+패스 드로잉, SSR은 최종값, reduced-motion 스킵), 시계열 4포인트 미만이면 곡선만 폴백·수치는 실측
+
+## NFC 병 페이지 v2 리디자인 (Paper 시안) — 2026-07-24 · phase-1 (프론트 4화면)
+범위: 사용자가 Paper에서 NFC 페이지를 새로 디자인 → 프론트 4화면만 우선 구현(인증서 04·소유관리 03A·PNG저장은 phase-2). 성공기준: Paper 시안 파리티 + 기존 데이터/GSAP 재사용 + 타입/린트 통과 + Playwright 검증.
+- [x] copy.ts ENTRY_COPY 전면 개편(5개국어): 필름·Bottle Identity·Provenance 3증거·Claim Ownership·각인공개 필드 신설. RECORD_EXTRA에 Eight Currents 인트로(ecEyebrow/ecTitle/ecBody/ecLegend) 추가. titleText/subLabel "일 년→사계절"
+- [x] 01 입장 개편(BottleEntry.tsx + entry.module.css): 필름 히어로(KO 언어칩·재생·"바다 아래의 시간이 깨어납니다") → Bottle Identity(productName·N° Cormorant 카운트업·에디션 본문) → Provenance(수심30m/12개월/8항목 3증거 표) → Claim Ownership("이름을 새기다"). 섹션 IO 리빌
+- [x] 02 각인완료(BottleInscription.tsx 신설): 등록 성공 시 상태 전환(라우트 아님, 소유자명 메모리 유지) → 각인 리빌 애니메이션(위→아래 stagger, CTA 2s 후) → "바다의 기록 보기" CTA로 /record. 실제 제출은 이메일 부작용 있어 초기상태 강제로 시각검증만
+- [x] 03 record 개편(BottleRecord.tsx + bottle.module.css): 히어로 상단 소유상태칩(YOUR OCEAN CELLAR RECORD·NFC VERIFIED 초록점) + 타이틀 "바다가 새긴 사계절"(J1950 PNG로 렌더) + 서브라벨 "남해 30m·사계절의 기록". Eight Currents 인트로 섹션(여정↔8줄기 사이) 신설, 옛 flowHead 제거, flow 배경 void 시작으로 이음새 보정. 8줄기·수렴·병·표·뉴스레터·푸터는 기존 유지
+- [x] J1950 타이틀 이미지: Paper export가 이 하네스에서 이미지 미반환 → ~/Library/Fonts/jj.ttf(설치됨) + Pillow로 "바다가 새긴 사계절" @3x 투명 PNG 로컬 렌더 → public/images/b-record-title-ko.png (글리프 8자 전수 확인)
+- [x] 언어선택(screen-4): entry 히어로 KO칩 → 기능형 드롭다운(BOTTLE_LOCALES 5개국 국기·코드·네이티브·활성 앰버체크), BottleEntry에 locale 상태 + ENTRY_COPY[locale] + 제출 locale 반영. record는 기존 푸터 드롭다운 유지
+- [x] 검증: tsc 0 · eslint 0 error(기존 warning 1) · Playwright 390×844 — 필름/Identity(N°15 카운트업·치환)/Provenance/Claim, 각인완료, record 히어로(J1950 이미지)·EC 인트로·병·표, 언어 KO→EN 전환 본문 변경 전수 확인
+- phase-2 대기: 04 디지털 인증서(소유자 데이터 노출 인증 모델 결정 필요) · 03A 소유정보관리·이전(재인증+감사로그) · 04A/B PNG 저장(html-to-image 등). 03의 "디지털 인증서 보기·인증서 저장·소유 정보 관리" CTA는 phase-2까지 비노출
+
+## NFC 병 페이지 v2 리디자인 — phase-2 (인증서·소유관리·PNG저장) — 2026-07-24
+결정: 소유자 이름=마스킹(공개 URL 프라이버시), PNG=html-to-image 추가, 소유권 이전=재인증 없이는 미구현(읽기전용). 성공기준: Paper 파리티 + 안전한 기본값 + tsc/eslint/build 통과 + Playwright 검증.
+- [x] data.ts fetchBottleOwner(code): bottle_registrations 최신 1행 조회, **서버에서 마스킹**(maskName "백호암"→"백••", maskEmail "hoambaek@gmail.com"→"ho•••@gmail.com")해서만 반환 — 원본 PII 클라이언트 미전달(게이팅 원칙)
+- [x] 04 디지털 인증서: 라우트 /b/[code]/certificate/page.tsx(서버 — certId "MDM-{연}-{병4자리}", node:crypto SHA-256 앞16 서명) + BottleCertificate.tsx + certificate.module.css. 로고 헤더·소유인증서 태그·N°·병·헌정·마스킹 소유자·✓씰·인증정보·원산지·해저숙성·디지털서명·저장/공유/뒤로·푸터(5개국어 언어선택). provRows/seaRows는 record 로직 재사용, 숙성기간은 개월 표기(12개월)
+- [x] 04A/B PNG 저장: 오프스크린 인증서 카드(printCard, 포트레이트)를 html-to-image toPng(pixelRatio 3)로 렌더 → 다운로드(파일명 certId.png). 공유=navigator.share(files) → 미지원 시 다운로드 폴백. 검증: MDM-2026-0015.png 다운로드·카드 디자인 확인(로고·태그·병·헌정·백••·N°15·certId)
+- [x] 03A 소유정보관리: 라우트 /b/[code]/owner/page.tsx + BottleOwnerManage.tsx + owner.module.css. 읽기전용 — 등록 소유자(마스킹)·"소유 등록 완료"(정직 라벨, "본인 인증 완료" 아님)·연결 병 카드(→인증서)·설정(이름수정/소식알림)·소유권 이전. 변경/이전 액션은 인증 없이 실행 안 함 → 탭 시 "본인 인증 기능 준비 중입니다." 표시
+- [x] 03 record에 Owner Services(Digital Passport) 섹션 추가: "디지털 인증서 보기"(→certificate)·"인증서 저장"(→certificate)·"소유 정보 관리"(→owner) 링크. phase-1에서 비노출했던 CTA 활성화. 링크는 data.bottle.nfcCode 사용. 기존 뉴스레터·푸터는 유지
+- [x] 카피: RECORD_EXTRA에 cert*(16)·own*(15)·passport*(5) 필드 5개국어 추가. certOwnerFallback "소유자 미등록"
+- [x] 검증: tsc 0 · eslint 0 error · **pnpm build 성공**(신규 2라우트 dynamic 등록) · Playwright — 인증서 전체(마스킹 백••·certId MDM-2026-0015·서명)·PNG 다운로드·03A(마스킹·준비중 안내)·record Passport 링크 확인
+- phase-3 대기: 소유자 인증(로그인/토큰) — 도입 시 이름 전체 노출 전환 + 이름·이메일 수정 + 소유권 이전(재인증+수락+감사로그+단일 트랜잭션) 실제 구현. 04A/04B 별도 화면(저장 확인·결과)은 인라인 처리로 대체함
+
+## NFC 병 페이지 v2 — phase-3 (소유자 인증 · 소유권 이전) — 2026-07-24
+결정: 이메일 OTP 6자리 인증 + 소유권 이전까지 전부. 성공기준: 세션 게이팅으로 안전한 변경/이전 + tsc/eslint/build 통과 + OTP 흐름 E2E 검증.
+- [x] DB(마이그레이션 bottle_owner_auth_and_transfer, marketing 프로젝트): bottle_owner_verifications(OTP)·bottle_ownership_audit(감사)·bottle_transfers(이전). 전부 RLS on(정책 없음=service_role 전용)
+- [x] env: BOTTLE_SESSION_SECRET(.env.local 추가, 64hex) — HMAC 서명 쿠키용. ⚠️ Vercel 등록 필요. 이전 링크용 NEXT_PUBLIC_SITE_URL도 미설정 시 musedemaree.com 폴백
+- [x] owner-auth.ts(server-only): HMAC 서명 세션 토큰(httpOnly 쿠키, /b/{code} 스코프, 30분) sign/verify/get/set/clear + genOtp + hashCode/hashToken(비밀키 해시, 평문 미저장)
+- [x] owner-actions.ts("use server"): requestOwnerOtp(등록 이메일로 6자리 발송, 10분 5회 레이트리밋)·verifyOwnerOtp(해시 timingSafe 비교, 5회 시도 제한, 성공 시 세션+감사)·signOutOwner·updateOwnerInfo(세션 재확인 후 최신 등록행 수정)·initiateTransfer(세션 게이팅, 토큰 이메일 발송, 기존 대기 취소)·acceptTransfer(토큰=이메일 통제 증명, 새 소유자 등록행 삽입=최신 소유자, 감사, 세션 이양)
+- [x] data.ts: maskName/maskEmail export + fetchBottleOwnerRaw(인증 시에만 원본 반환)
+- [x] UI: BottleOwnerManage 재작성(미인증=마스킹+"본인 인증하고 전체 보기" OTP 인라인 / 인증=전체 이름·이메일+수정 폼+이전 폼+인증 해제, window.confirm으로 이전 재확인). BottleCertificate=ownerNameFull prop으로 인증 시 언마스킹. certificate/owner page.tsx=getOwnerSession 읽어 authed·원본 전달. 신규 /b/[code]/transfer(BottleTransferAccept + transfer.module.css)=이메일 링크 수락 화면
+- [x] 검증: tsc 0 · eslint 0 · pnpm build 성공(신규 transfer 라우트) · **OTP E2E**: 요청→행 생성·이메일 발송 확인→DB 해시에서 코드 역산(031594)→UI 입력→verify→세션 발급→owner/cert 전체 이름 "백호암" 언마스킹 확인. 수정·이전 폼 렌더 확인(실제 데이터 변경·이전 발송은 미실행)
+- ⚠️ 알려진 한계: 소유권 모델=최신 bottle_registrations 행=현 소유자. 입장 페이지가 누구나 재등록 허용 → 재등록으로 소유자 덮어쓰기 가능(선행 이슈). OTP는 "인증 시점의 등록 이메일 통제"를 증명. 향후 하드닝=정규 소유자 테이블 + 입장 재등록 게이팅

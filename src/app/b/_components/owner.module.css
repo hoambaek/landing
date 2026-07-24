@@ -1,0 +1,399 @@
+/* /b 소유 정보 관리 — Paper "03A — 소유 정보 관리" 시안 (다크·앰버) */
+
+.page {
+  --o-void: #0a0908;
+  --o-elev: #0a0d12;
+  --o-ivory: #f1efeb;
+  --o-amber: #ccad7b;
+  --o-mono: var(--font-plex-mono), "IBM Plex Mono", monospace;
+  --o-serif: var(--font-heading), "Cormorant Garamond", serif;
+  --o-sans: var(--font-body), "Noto Sans KR", sans-serif;
+  min-height: 100svh;
+  background: var(--o-void);
+  color: var(--o-ivory);
+  font-family: var(--o-sans);
+  display: flex;
+  justify-content: center;
+}
+.frame {
+  width: min(430px, 100vw);
+  overflow: hidden;
+}
+
+/* ── 헤더 ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(20px, calc(env(safe-area-inset-top) + 8px)) 24px 18px;
+  border-bottom: 0.5px solid rgba(241, 239, 235, 0.14);
+}
+.back {
+  width: 28px;
+  flex-shrink: 0;
+  font-family: var(--o-sans);
+  font-size: 20px;
+  color: var(--o-ivory);
+  text-decoration: none;
+}
+.headerLogo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.headerSymbol { width: 32px; height: auto; opacity: 0.82; }
+.headerWordmark { width: 122px; height: auto; opacity: 0.9; }
+.headerSpacer { width: 28px; flex-shrink: 0; }
+
+/* ── 등록된 소유자 ── */
+.identity {
+  display: flex;
+  flex-direction: column;
+  padding: 42px 24px 34px;
+}
+.identityHead {
+  font-family: var(--o-sans);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--o-amber);
+}
+.identityName {
+  margin-top: 18px;
+  font-family: var(--o-sans);
+  font-weight: 300;
+  font-size: 26px;
+  line-height: 32px;
+  color: var(--o-ivory);
+}
+.identityEmail {
+  margin-top: 6px;
+  font-family: var(--o-sans);
+  font-size: 12px;
+  color: rgba(241, 239, 235, 0.46);
+}
+.identityStatus {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 18px;
+  font-family: var(--o-sans);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--o-amber);
+}
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--o-amber);
+}
+
+/* ── 연결된 병 ── */
+.linked {
+  padding: 0 24px 36px;
+}
+.linkedCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  background: var(--o-elev);
+  border: 0.5px solid rgba(204, 173, 123, 0.38);
+  text-decoration: none;
+}
+.linkedSerial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 68px;
+  flex-shrink: 0;
+  border: 0.5px solid rgba(204, 173, 123, 0.4);
+}
+.linkedSerialNo {
+  font-family: var(--o-mono);
+  font-size: 8px;
+  color: rgba(241, 239, 235, 0.48);
+}
+.linkedSerialNum {
+  font-family: var(--o-serif);
+  font-weight: 300;
+  font-size: 28px;
+  line-height: 30px;
+  color: var(--o-amber);
+}
+.linkedInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.linkedName {
+  font-family: var(--o-serif);
+  font-size: 20px;
+  color: var(--o-ivory);
+}
+.linkedSub {
+  font-family: var(--o-sans);
+  font-size: 11px;
+  color: rgba(241, 239, 235, 0.46);
+}
+.linkedArrow {
+  flex-shrink: 0;
+  font-family: var(--o-sans);
+  font-size: 16px;
+  color: var(--o-amber);
+}
+
+/* ── 설정 그룹 ── */
+.group {
+  padding: 30px 24px 8px;
+  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
+}
+.group + .group { border-top: none; }
+.groupHead {
+  font-family: var(--o-sans);
+  font-size: 13px;
+  color: var(--o-amber);
+}
+.settingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 17px 0;
+  background: transparent;
+  border: none;
+  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
+  cursor: pointer;
+  text-align: left;
+}
+.settingRow:first-of-type { margin-top: 14px; }
+.settingText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.settingTitle {
+  font-family: var(--o-sans);
+  font-size: 13px;
+  color: var(--o-ivory);
+}
+.settingSub {
+  font-family: var(--o-sans);
+  font-size: 10px;
+  color: rgba(241, 239, 235, 0.4);
+}
+.settingArrow {
+  flex-shrink: 0;
+  font-family: var(--o-sans);
+  font-size: 16px;
+  color: rgba(241, 239, 235, 0.5);
+}
+.toggle {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 38px;
+  height: 22px;
+  flex-shrink: 0;
+  padding: 3px;
+  border-radius: 11px;
+  background: var(--o-amber);
+}
+.toggleKnob {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--o-void);
+}
+
+/* ── 소유권 이전 ── */
+.transferCard {
+  display: flex;
+  flex-direction: column;
+  margin-top: 14px;
+  padding: 20px;
+  border: 0.5px solid rgba(241, 239, 235, 0.18);
+}
+.transferTitle {
+  font-family: var(--o-sans);
+  font-size: 15px;
+  color: var(--o-ivory);
+}
+.transferSub {
+  margin-top: 7px;
+  font-family: var(--o-sans);
+  font-size: 11px;
+  line-height: 18px;
+  color: rgba(241, 239, 235, 0.46);
+  word-break: keep-all;
+}
+.transferBtn {
+  height: 46px;
+  margin-top: 18px;
+  background: transparent;
+  border: 0.5px solid rgba(204, 173, 123, 0.58);
+  font-family: var(--o-sans);
+  font-size: 12px;
+  color: var(--o-amber);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.transferBtn:active { border-color: var(--o-amber); }
+
+.soonNote {
+  margin: 4px 24px 0;
+  font-family: var(--o-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--o-amber);
+  text-align: center;
+}
+
+/* ── 인증 / 수정 / 이전 패널 ── */
+.authCta {
+  align-self: flex-start;
+  margin-top: 18px;
+  padding: 10px 16px;
+  background: transparent;
+  border: 0.5px solid rgba(204, 173, 123, 0.6);
+  font-family: var(--o-sans);
+  font-size: 12px;
+  color: var(--o-amber);
+  cursor: pointer;
+}
+.textAction {
+  align-self: flex-start;
+  margin-top: 14px;
+  padding: 4px 0;
+  background: transparent;
+  border: none;
+  font-family: var(--o-sans);
+  font-size: 11px;
+  color: rgba(241, 239, 235, 0.5);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.authPanel {
+  width: 100%;
+  margin-top: 18px;
+  padding: 18px;
+  background: var(--o-elev);
+  border: 0.5px solid rgba(241, 239, 235, 0.16);
+}
+.authLead {
+  font-family: var(--o-sans);
+  font-size: 12px;
+  line-height: 19px;
+  color: rgba(241, 239, 235, 0.62);
+  word-break: keep-all;
+}
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin-top: 16px;
+}
+.panelField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.panelLabel {
+  font-family: var(--o-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgba(241, 239, 235, 0.46);
+}
+.panelInput {
+  width: 100%;
+  margin-top: 12px;
+  padding: 0 0 10px;
+  background: transparent;
+  border: none;
+  border-bottom: 0.5px solid rgba(241, 239, 235, 0.24);
+  border-radius: 0;
+  font-family: var(--o-sans);
+  font-weight: 300;
+  font-size: 16px;
+  color: var(--o-ivory);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.panelField .panelInput { margin-top: 0; }
+.panelInput::placeholder { color: rgba(241, 239, 235, 0.32); }
+.panelInput:focus { border-bottom-color: rgba(204, 173, 123, 0.65); }
+.panelBtn {
+  height: 46px;
+  padding: 0 22px;
+  background: var(--o-amber);
+  color: var(--o-void);
+  border: none;
+  font-family: var(--o-sans);
+  font-size: 13px;
+  cursor: pointer;
+}
+.panelBtn:disabled { opacity: 0.6; cursor: default; }
+.authPanel .panelBtn,
+.authPanel .panelInput { width: 100%; }
+.authPanel .panelBtn { margin-top: 14px; }
+.panelRow {
+  display: flex;
+  gap: 10px;
+}
+.panelRow .panelBtn { flex: 1; }
+.panelCancel {
+  flex: 1;
+  height: 46px;
+  background: transparent;
+  border: 0.5px solid rgba(241, 239, 235, 0.24);
+  font-family: var(--o-sans);
+  font-size: 13px;
+  color: rgba(241, 239, 235, 0.72);
+  cursor: pointer;
+}
+.panelErr {
+  font-family: var(--o-mono);
+  font-size: 10px;
+  color: #c98b83;
+}
+.transferSent {
+  margin-top: 18px;
+  font-family: var(--o-sans);
+  font-size: 12px;
+  line-height: 19px;
+  color: var(--o-amber);
+  word-break: keep-all;
+}
+
+/* ── 푸터 ── */
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 26px 24px 38px;
+  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
+}
+.footerLink {
+  font-family: var(--o-sans);
+  font-size: 11px;
+  color: rgba(241, 239, 235, 0.5);
+  text-decoration: none;
+}
+.footerMeta {
+  font-family: var(--o-sans);
+  font-weight: 300;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgba(241, 239, 235, 0.28);
+}

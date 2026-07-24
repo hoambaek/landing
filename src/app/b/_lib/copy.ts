@@ -45,8 +45,8 @@ export interface BottleCopy {
 export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
   ko: {
     verified: "NFC 인증 완료 · RECORD AUTHENTICATED",
-    titleText: "바다가 새긴 일 년",
-    subLabel: "남해 30m · 한 해의 기록",
+    titleText: "바다가 새긴 사계절",
+    subLabel: "남해 30m · 사계절의 기록",
     immersion: "입수",
     retrieval: "인양",
     planned: "예정",
@@ -73,8 +73,8 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
   },
   en: {
     verified: "RECORD AUTHENTICATED · NFC",
-    titleText: "A Year the Sea Inscribed",
-    subLabel: "NAMHAE 30M · A YEAR ON RECORD",
+    titleText: "Four Seasons the Sea Inscribed",
+    subLabel: "NAMHAE 30M · FOUR SEASONS ON RECORD",
     immersion: "IMMERSION",
     retrieval: "RETRIEVAL",
     planned: "PLANNED",
@@ -101,8 +101,8 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
   },
   fr: {
     verified: "ENREGISTREMENT AUTHENTIFIÉ · NFC",
-    titleText: "Une année gravée par la mer",
-    subLabel: "NAMHAE 30M · UNE ANNÉE DE RELEVÉS",
+    titleText: "Quatre saisons gravées par la mer",
+    subLabel: "NAMHAE 30M · QUATRE SAISONS DE RELEVÉS",
     immersion: "IMMERSION",
     retrieval: "REMONTÉE",
     planned: "PRÉVUE",
@@ -129,8 +129,8 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
   },
   ja: {
     verified: "NFC認証済み · RECORD AUTHENTICATED",
-    titleText: "海が刻んだ一年",
-    subLabel: "南海 30m · 一年の記録",
+    titleText: "海が刻んだ四季",
+    subLabel: "南海 30m · 四季の記録",
     immersion: "入水",
     retrieval: "引き揚げ",
     planned: "予定",
@@ -157,8 +157,8 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
   },
   zh: {
     verified: "NFC认证完成 · RECORD AUTHENTICATED",
-    titleText: "大海刻下的一年",
-    subLabel: "南海 30m · 一年记录",
+    titleText: "大海刻下的四季",
+    subLabel: "南海 30m · 四季记录",
     immersion: "入水",
     retrieval: "打捞",
     planned: "预定",
@@ -208,150 +208,258 @@ export const MAISON_NAME = "Mignon-Boulard";
 
 /* ── 입장 페이지 카피 (5개 언어) ───────────────────────────── */
 export interface EntryCopy {
-  eyebrow: string;
-  thanksTitle: string; // \n = 줄바꿈
-  thanksSub: string;
-  registerTitle: string;
-  registerSub: string; // {serial} 치환
-  registerSubNoSerial: string;
-  nameLabel: string;
+  /* 히어로 · 풀필름 */
+  filmCaption: string; // "바다 아래의 시간이 깨어납니다"
+  filmMeta: string; // "FULL FILM · 00:08"
+  /* 01 Bottle Identity */
+  identityEyebrow: string; // "NFC AUTHENTICATED"
+  identityTagline: string; // "OCEAN AGED · FOUR SEASONS"
+  identityBody: string; // {total}·{serial} 치환, \n = 줄바꿈
+  identityBodyNoSerial: string; // serial 미부여 시
+  /* 02 Provenance */
+  provEyebrow: string; // "PROVENANCE"
+  provTitle: string; // \n = 줄바꿈
+  provBody: string; // \n = 줄바꿈
+  fact1Label: string;
+  fact1Value: string;
+  fact1Sub: string;
+  fact2Label: string;
+  fact2Value: string;
+  fact2Sub: string;
+  fact3Label: string;
+  fact3Value: string;
+  fact3Sub: string;
+  provHint: string; // "전체 숙성 기록은 소유 등록 후 열립니다"
+  /* 03 Claim Ownership */
+  ownEyebrow: string; // "OWNERSHIP"
+  ownTitle: string; // \n = 줄바꿈
+  ownBody: string; // {serial} 치환, \n = 줄바꿈
+  ownBodyNoSerial: string;
+  nameLabel: string; // "이름 · NAME"
   namePlaceholder: string;
-  emailLabel: string;
+  emailLabel: string; // "이메일 · EMAIL"
   emailPlaceholder: string;
-  submit: string;
+  privacyNote: string;
+  submit: string; // "이름을 새기다"
   submitting: string;
-  previewLead: string; // \n = 줄바꿈
-  previewJourney: string;
-  previewJourneySub: string;
-  previewData: string;
-  previewDataSub: string;
-  note: string;
+  /* 각인 공개 (등록 완료 화면) */
+  inscribedEyebrow: string; // "등록 완료"
+  inscribedTitle: string; // \n = 줄바꿈
+  inscribedSub: string;
+  inscribedOwnerLabel: string; // "첫 소유자"
+  inscribedCta: string; // "바다의 기록 보기"
+  inscribedCtaSub: string;
+  /* 검증 */
   errName: string;
   errEmail: string;
   errGeneric: string;
-  scroll: string;
 }
 
 export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
   ko: {
-    eyebrow: "NFC 인증 완료 · OCEAN CELLAR™",
-    thanksTitle: "사계절의 바다가\n이 한 병에 담겼습니다",
-    thanksSub: "그 바다가 지금 당신에게 왔습니다.",
-    registerTitle: "당신의 이름으로 등록하세요",
-    registerSub: "N° {serial}의 소장자로, 이 한 병의 기록에 남습니다.",
-    registerSubNoSerial: "이 한 병의 소장자로, 기록에 남습니다.",
-    nameLabel: "이름",
-    namePlaceholder: "이름을 입력하세요",
-    emailLabel: "이메일",
-    emailPlaceholder: "you@example.com",
-    submit: "입장하기",
-    submitting: "등록하는 중",
-    previewLead: "입장하시면, 이 한 병이\n바다 아래에서 보낸 사계절이 펼쳐집니다.",
-    previewJourney: "해저 숙성 여정",
-    previewJourneySub: "남해 30m 아래에서 보낸 사계절",
-    previewData: "바다가 남긴 실측 데이터",
-    previewDataSub: "수온·염분부터 파고까지, 여덟 줄기의 관측",
-    note: "이 한 병의 기록으로 들어갑니다",
+    filmCaption: "바다 아래의 시간이 깨어납니다",
+    filmMeta: "FULL FILM · 00:08",
+    identityEyebrow: "NFC AUTHENTICATED",
+    identityTagline: "OCEAN AGED · FOUR SEASONS",
+    identityBody: "오직 {total}병만 존재하는 첫 번째 해저 숙성 에디션.\n당신이 태그한 병은 그중 {serial}번째 기록입니다.",
+    identityBodyNoSerial: "오직 {total}병만 존재하는 첫 번째 해저 숙성 에디션.\n당신이 태그한 병이 그 기록의 일부입니다.",
+    provEyebrow: "PROVENANCE",
+    provTitle: "바다가 남긴\n세 가지 증거",
+    provBody: "이 병이 지나온 시간은 감상이 아니라\n실제 관측 기록으로 보존되어 있습니다.",
+    fact1Label: "숙성 수심",
+    fact1Value: "30m",
+    fact1Sub: "남해 해저",
+    fact2Label: "숙성 기간",
+    fact2Value: "12개월",
+    fact2Sub: "사계절의 변화",
+    fact3Label: "해양 관측",
+    fact3Value: "8개 항목",
+    fact3Sub: "실제 측정 데이터",
+    provHint: "전체 숙성 기록은 소유 등록 후 열립니다",
+    ownEyebrow: "OWNERSHIP",
+    ownTitle: "이 병의 기록에\n당신의 이름을 남기세요.",
+    ownBody: "N° {serial}의 첫 소유자로 기록되며,\n바다 아래에서 보낸 모든 시간이 열립니다.",
+    ownBodyNoSerial: "이 병의 첫 소유자로 기록되며,\n바다 아래에서 보낸 모든 시간이 열립니다.",
+    nameLabel: "이름 · NAME",
+    namePlaceholder: "인증서에 남길 이름",
+    emailLabel: "이메일 · EMAIL",
+    emailPlaceholder: "디지털 인증서를 받을 주소",
+    privacyNote: "이름과 이메일은 소유 기록 및 디지털 인증서 발급에만 사용됩니다.",
+    submit: "이름을 새기다",
+    submitting: "새기는 중",
+    inscribedEyebrow: "등록 완료",
+    inscribedTitle: "당신의 이름이\n바다의 기록에 남았습니다.",
+    inscribedSub: "소유 인증이 완료되었습니다.",
+    inscribedOwnerLabel: "첫 소유자",
+    inscribedCta: "바다의 기록 보기",
+    inscribedCtaSub: "바다가 남긴 사계절의 기록을 확인합니다.",
     errName: "이름을 입력해 주세요.",
     errEmail: "이메일 주소를 확인해 주세요.",
     errGeneric: "잠시 후 다시 시도해 주세요.",
-    scroll: "SCROLL",
   },
   en: {
-    eyebrow: "RECORD AUTHENTICATED · OCEAN CELLAR™",
-    thanksTitle: "Four seasons of the sea,\nheld in this one bottle",
-    thanksSub: "And that bottle is now yours.",
-    registerTitle: "Register in your name",
-    registerSub: "Recorded in this bottle's ledger as the keeper of N° {serial}.",
-    registerSubNoSerial: "Recorded in this bottle's ledger as its keeper.",
+    filmCaption: "The time beneath the sea awakens",
+    filmMeta: "FULL FILM · 00:08",
+    identityEyebrow: "NFC AUTHENTICATED",
+    identityTagline: "OCEAN AGED · FOUR SEASONS",
+    identityBody: "The first ocean-aged edition, only {total} bottles in existence.\nThe bottle you tapped is record N° {serial} of them.",
+    identityBodyNoSerial: "The first ocean-aged edition, only {total} bottles in existence.\nThe bottle you tapped is part of that record.",
+    provEyebrow: "PROVENANCE",
+    provTitle: "Three proofs\nthe sea left behind",
+    provBody: "The time this bottle passed through is not sentiment\nbut real observation, kept on record.",
+    fact1Label: "Cellaring depth",
+    fact1Value: "30m",
+    fact1Sub: "South Sea bed",
+    fact2Label: "Cellaring period",
+    fact2Value: "12 months",
+    fact2Sub: "Four seasons of change",
+    fact3Label: "Ocean readings",
+    fact3Value: "8 measures",
+    fact3Sub: "Real measured data",
+    provHint: "The full cellaring record opens after ownership is registered",
+    ownEyebrow: "OWNERSHIP",
+    ownTitle: "Leave your name\non this bottle's record.",
+    ownBody: "Recorded as the first owner of N° {serial},\nand every hour spent beneath the sea opens to you.",
+    ownBodyNoSerial: "Recorded as this bottle's first owner,\nand every hour spent beneath the sea opens to you.",
     nameLabel: "NAME",
-    namePlaceholder: "Enter your name",
+    namePlaceholder: "Name for the certificate",
     emailLabel: "EMAIL",
-    emailPlaceholder: "you@example.com",
-    submit: "Enter",
-    submitting: "Registering",
-    previewLead: "Enter, and the four seasons this bottle\nspent beneath the sea unfold.",
-    previewJourney: "The cellaring journey",
-    previewJourneySub: "Four seasons, 30 m below the South Sea",
-    previewData: "What the sea recorded",
-    previewDataSub: "From temperature to wave height, eight measured streams",
-    note: "You are entering this bottle's record",
+    emailPlaceholder: "Address to receive the certificate",
+    privacyNote: "Your name and email are used only for the ownership record and issuing the digital certificate.",
+    submit: "Inscribe your name",
+    submitting: "Inscribing",
+    inscribedEyebrow: "REGISTERED",
+    inscribedTitle: "Your name now stays\non the record of the sea.",
+    inscribedSub: "Ownership has been verified.",
+    inscribedOwnerLabel: "First owner",
+    inscribedCta: "View the sea's record",
+    inscribedCtaSub: "See the four seasons the sea left behind.",
     errName: "Please enter your name.",
     errEmail: "Please check your email address.",
     errGeneric: "Please try again in a moment.",
-    scroll: "SCROLL",
   },
   fr: {
-    eyebrow: "ENREGISTREMENT AUTHENTIFIÉ · OCEAN CELLAR™",
-    thanksTitle: "Quatre saisons de mer,\nrecueillies dans cette bouteille",
-    thanksSub: "Et cette bouteille est désormais la vôtre.",
-    registerTitle: "Enregistrez à votre nom",
-    registerSub: "Inscrit au registre de cette bouteille comme gardien du N° {serial}.",
-    registerSubNoSerial: "Inscrit au registre de cette bouteille comme son gardien.",
+    filmCaption: "Le temps sous la mer s'éveille",
+    filmMeta: "FULL FILM · 00:08",
+    identityEyebrow: "NFC AUTHENTICATED",
+    identityTagline: "OCEAN AGED · FOUR SEASONS",
+    identityBody: "La première édition élevée en mer, seulement {total} bouteilles existantes.\nLa bouteille que vous avez scannée en est le relevé N° {serial}.",
+    identityBodyNoSerial: "La première édition élevée en mer, seulement {total} bouteilles existantes.\nLa bouteille que vous avez scannée fait partie de ce relevé.",
+    provEyebrow: "PROVENANCE",
+    provTitle: "Trois preuves\nlaissées par la mer",
+    provBody: "Le temps traversé par cette bouteille n'est pas un sentiment\nmais une observation réelle, conservée au relevé.",
+    fact1Label: "Profondeur d'élevage",
+    fact1Value: "30m",
+    fact1Sub: "Fond de la mer du Sud",
+    fact2Label: "Durée d'élevage",
+    fact2Value: "12 mois",
+    fact2Sub: "Le cycle des saisons",
+    fact3Label: "Relevés marins",
+    fact3Value: "8 mesures",
+    fact3Sub: "Données réellement mesurées",
+    provHint: "Le relevé complet s'ouvre après l'enregistrement de la propriété",
+    ownEyebrow: "OWNERSHIP",
+    ownTitle: "Laissez votre nom\nau relevé de cette bouteille.",
+    ownBody: "Inscrit comme premier propriétaire du N° {serial},\net chaque heure passée sous la mer s'ouvre à vous.",
+    ownBodyNoSerial: "Inscrit comme premier propriétaire de cette bouteille,\net chaque heure passée sous la mer s'ouvre à vous.",
     nameLabel: "NOM",
-    namePlaceholder: "Entrez votre nom",
+    namePlaceholder: "Nom pour le certificat",
     emailLabel: "E-MAIL",
-    emailPlaceholder: "vous@exemple.com",
-    submit: "Entrer",
-    submitting: "Enregistrement",
-    previewLead: "Entrez, et les quatre saisons passées\nsous la mer se dévoilent.",
-    previewJourney: "Le parcours d'élevage",
-    previewJourneySub: "Quatre saisons, à 30 m sous la mer du Sud",
-    previewData: "Ce que la mer a consigné",
-    previewDataSub: "De la température à la houle, huit mesures",
-    note: "Vous entrez dans le relevé de cette bouteille",
+    emailPlaceholder: "Adresse pour recevoir le certificat",
+    privacyNote: "Votre nom et votre e-mail servent uniquement au relevé de propriété et à l'émission du certificat numérique.",
+    submit: "Inscrire votre nom",
+    submitting: "Inscription",
+    inscribedEyebrow: "ENREGISTRÉ",
+    inscribedTitle: "Votre nom demeure désormais\nau relevé de la mer.",
+    inscribedSub: "La propriété a été authentifiée.",
+    inscribedOwnerLabel: "Premier propriétaire",
+    inscribedCta: "Voir le relevé de la mer",
+    inscribedCtaSub: "Découvrez les quatre saisons laissées par la mer.",
     errName: "Veuillez saisir votre nom.",
     errEmail: "Veuillez vérifier votre adresse e-mail.",
     errGeneric: "Veuillez réessayer dans un instant.",
-    scroll: "SCROLL",
   },
   ja: {
-    eyebrow: "NFC認証済み · OCEAN CELLAR™",
-    thanksTitle: "四季の海が\nこの一本に収められました",
-    thanksSub: "その一本が今、あなたのもとに届きました。",
-    registerTitle: "あなたの名前で登録する",
-    registerSub: "N° {serial} の所蔵者として、この一本の記録に名を残します。",
-    registerSubNoSerial: "この一本の所蔵者として、記録に名を残します。",
-    nameLabel: "名前",
-    namePlaceholder: "お名前を入力してください",
-    emailLabel: "メール",
-    emailPlaceholder: "you@example.com",
-    submit: "入場する",
-    submitting: "登録中",
-    previewLead: "入場すると、この一本が海の底で\n過ごした四季が開きます。",
-    previewJourney: "熟成の航跡",
-    previewJourneySub: "南海の水深30m、四季のあいだ",
-    previewData: "海が残した実測データ",
-    previewDataSub: "水温から波高まで、八つの観測",
-    note: "この一本の記録へ入ります",
+    filmCaption: "海の底の時間が目を覚まします",
+    filmMeta: "FULL FILM · 00:08",
+    identityEyebrow: "NFC AUTHENTICATED",
+    identityTagline: "OCEAN AGED · FOUR SEASONS",
+    identityBody: "わずか{total}本のみ存在する、最初の海底熟成エディション。\nあなたがタグした一本は、その{serial}番目の記録です。",
+    identityBodyNoSerial: "わずか{total}本のみ存在する、最初の海底熟成エディション。\nあなたがタグした一本は、その記録の一部です。",
+    provEyebrow: "PROVENANCE",
+    provTitle: "海が残した\n三つの証",
+    provBody: "この一本が辿った時間は感傷ではなく\n実際の観測記録として保存されています。",
+    fact1Label: "熟成水深",
+    fact1Value: "30m",
+    fact1Sub: "南海の海底",
+    fact2Label: "熟成期間",
+    fact2Value: "12か月",
+    fact2Sub: "四季の移ろい",
+    fact3Label: "海洋観測",
+    fact3Value: "8項目",
+    fact3Sub: "実測データ",
+    provHint: "全熟成記録は所有登録の後に開きます",
+    ownEyebrow: "OWNERSHIP",
+    ownTitle: "この一本の記録に\nあなたの名を残してください。",
+    ownBody: "N° {serial} の最初の所有者として記録され、\n海の底で過ごしたすべての時間が開きます。",
+    ownBodyNoSerial: "この一本の最初の所有者として記録され、\n海の底で過ごしたすべての時間が開きます。",
+    nameLabel: "名前 · NAME",
+    namePlaceholder: "証明書に残す名前",
+    emailLabel: "メール · EMAIL",
+    emailPlaceholder: "デジタル証明書を受け取る宛先",
+    privacyNote: "お名前とメールは所有記録およびデジタル証明書の発行にのみ使用されます。",
+    submit: "名を刻む",
+    submitting: "刻んでいます",
+    inscribedEyebrow: "登録完了",
+    inscribedTitle: "あなたの名が\n海の記録に残りました。",
+    inscribedSub: "所有認証が完了しました。",
+    inscribedOwnerLabel: "最初の所有者",
+    inscribedCta: "海の記録を見る",
+    inscribedCtaSub: "海が残した四季の記録を確認します。",
     errName: "お名前を入力してください。",
     errEmail: "メールアドレスをご確認ください。",
     errGeneric: "しばらくしてからもう一度お試しください。",
-    scroll: "SCROLL",
   },
   zh: {
-    eyebrow: "NFC认证完成 · OCEAN CELLAR™",
-    thanksTitle: "四季的大海，\n都封存在这一瓶中",
-    thanksSub: "而这瓶酒此刻已来到你身边。",
-    registerTitle: "以你之名登记",
-    registerSub: "作为 N° {serial} 的藏家，留名于这一瓶的记录。",
-    registerSubNoSerial: "作为此瓶的藏家，留名于其记录。",
-    nameLabel: "姓名",
-    namePlaceholder: "请输入你的名字",
-    emailLabel: "邮箱",
-    emailPlaceholder: "you@example.com",
-    submit: "进入",
-    submitting: "登记中",
-    previewLead: "进入后，这一瓶在海底\n度过的四季将徐徐展开。",
-    previewJourney: "海底熟成之旅",
-    previewJourneySub: "南海30米之下的四季",
-    previewData: "大海留下的实测数据",
-    previewDataSub: "从水温到浪高，八条观测记录",
-    note: "正在进入这瓶酒的记录",
+    filmCaption: "海底的时间正在苏醒",
+    filmMeta: "FULL FILM · 00:08",
+    identityEyebrow: "NFC AUTHENTICATED",
+    identityTagline: "OCEAN AGED · FOUR SEASONS",
+    identityBody: "仅存 {total} 瓶的首个海底熟成版本。\n你所轻触的这一瓶，是其中第 {serial} 号记录。",
+    identityBodyNoSerial: "仅存 {total} 瓶的首个海底熟成版本。\n你所轻触的这一瓶，是这份记录的一部分。",
+    provEyebrow: "PROVENANCE",
+    provTitle: "大海留下的\n三重凭证",
+    provBody: "这一瓶走过的时间并非感怀，\n而是以真实观测记录保存下来。",
+    fact1Label: "熟成水深",
+    fact1Value: "30m",
+    fact1Sub: "南海海底",
+    fact2Label: "熟成时长",
+    fact2Value: "12个月",
+    fact2Sub: "四季更替",
+    fact3Label: "海洋观测",
+    fact3Value: "8个项目",
+    fact3Sub: "真实测量数据",
+    provHint: "完整熟成记录将在登记所有权后开启",
+    ownEyebrow: "OWNERSHIP",
+    ownTitle: "在这一瓶的记录上\n留下你的名字。",
+    ownBody: "作为 N° {serial} 的首位所有者被记录，\n它在海底度过的所有时间将向你开启。",
+    ownBodyNoSerial: "作为此瓶的首位所有者被记录，\n它在海底度过的所有时间将向你开启。",
+    nameLabel: "姓名 · NAME",
+    namePlaceholder: "留在证书上的名字",
+    emailLabel: "邮箱 · EMAIL",
+    emailPlaceholder: "接收数字证书的地址",
+    privacyNote: "你的姓名与邮箱仅用于所有权记录及数字证书的签发。",
+    submit: "刻下你的名字",
+    submitting: "刻写中",
+    inscribedEyebrow: "登记完成",
+    inscribedTitle: "你的名字\n已留在大海的记录中。",
+    inscribedSub: "所有权认证已完成。",
+    inscribedOwnerLabel: "首位所有者",
+    inscribedCta: "查看大海的记录",
+    inscribedCtaSub: "查看大海留下的四季记录。",
     errName: "请输入你的名字。",
     errEmail: "请检查你的邮箱地址。",
     errGeneric: "请稍后再试。",
-    scroll: "SCROLL",
   },
 };
 
@@ -370,6 +478,49 @@ export interface RecordExtraCopy {
   newsletterErr: string;
   brandPage: string;
   blogPage: string;
+  /* Eight Currents 인트로 (기록 8줄기 섹션 도입부) */
+  ecEyebrow: string;
+  ecTitle: string; // \n = 줄바꿈
+  ecBody: string; // \n = 줄바꿈
+  ecLegend: string;
+  /* 디지털 인증서 (04) */
+  certTag: string; // "소유 인증서"
+  certDedication: string; // \n = 줄바꿈
+  certVerifiedShort: string; // "NFC 인증 완료"
+  certSeal: string; // 진위 확인 문구
+  certAuthHead: string; // "인증 정보"
+  certIdLabel: string; // "인증서 ID"
+  certStatusLabel: string; // "인증 상태"
+  certSignHead: string; // "디지털 서명"
+  certSave: string; // "인증서 저장"
+  certShare: string; // "공유하기"
+  certBack: string; // "바다의 기록으로 돌아가기"
+  certOwnerFallback: string; // 소유자 미등록 표기
+  certSaving: string; // 저장 진행 중
+  certSaved: string; // 저장 완료 안내
+  certSaveDone: string; // "완료"
+  certShareText: string; // 공유 텍스트
+  /* 소유 관리 (03A) */
+  ownHead: string; // "등록된 소유자"
+  ownVerified: string; // "소유 등록 완료"
+  ownLinkedSub: string; // "해저 숙성 · 남해 · 12개월"
+  ownAccountHead: string; // "소유자 정보"
+  ownEditName: string; // "이름과 이메일 수정"
+  ownEditNameSub: string;
+  ownNotify: string; // "소식 알림"
+  ownNotifySub: string;
+  ownRightsHead: string; // "소유권"
+  ownTransfer: string; // "소유권 이전"
+  ownTransferSub: string;
+  ownTransferCta: string; // "본인 인증 후 이전하기"
+  ownSoon: string; // 준비 중 안내
+  ownBackRecord: string; // "바다의 기록으로 돌아가기"
+  /* Owner Services (기록 페이지 하단 · Digital Passport) */
+  passportTitle: string; // \n = 줄바꿈
+  passportBody: string; // \n = 줄바꿈
+  passportCta: string; // "디지털 인증서 보기"
+  passportSave: string; // "인증서 저장"
+  passportManage: string; // "소유 정보 관리"
 }
 
 export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
@@ -387,6 +538,45 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     newsletterErr: "이메일 주소를 확인해 주세요.",
     brandPage: "브랜드 페이지",
     blogPage: "블로그 페이지",
+    ecEyebrow: "EIGHT CURRENTS",
+    ecTitle: "여덟 개의 관측이\n한 병의 시간을 그립니다.",
+    ecBody: "수온·염분·조위·해류·수압·조류·파고·파주기의\n사계절 변화를 하나의 흐름으로 기록했습니다.",
+    ecLegend: "금빛 선 · 수온",
+    certTag: "소유 인증서",
+    certDedication: "이 병과 바다의 기록을\n당신의 이름으로 남깁니다",
+    certVerifiedShort: "NFC 인증 완료",
+    certSeal: "NFC 원본 태그와 등록 기록이 일치합니다.",
+    certAuthHead: "인증 정보",
+    certIdLabel: "인증서 ID",
+    certStatusLabel: "인증 상태",
+    certSignHead: "디지털 서명",
+    certSave: "인증서 저장",
+    certShare: "공유하기",
+    certBack: "바다의 기록으로 돌아가기",
+    certOwnerFallback: "소유자 미등록",
+    certSaving: "이미지 만드는 중",
+    certSaved: "사진 보관함에 저장됨",
+    certSaveDone: "완료",
+    certShareText: "뮤즈드마레 소유 인증서",
+    ownHead: "등록된 소유자",
+    ownVerified: "소유 등록 완료",
+    ownLinkedSub: "해저 숙성 · 남해 · 12개월",
+    ownAccountHead: "소유자 정보",
+    ownEditName: "이름과 이메일 수정",
+    ownEditNameSub: "인증서와 소유 기록에 반영됩니다.",
+    ownNotify: "소식 알림",
+    ownNotifySub: "다음 인양과 새 기록을 알려드립니다.",
+    ownRightsHead: "소유권",
+    ownTransfer: "소유권 이전",
+    ownTransferSub: "새 소유자에게 병과 디지털 인증서의 소유 기록을 이전합니다. 이전 후에는 되돌릴 수 없습니다.",
+    ownTransferCta: "본인 인증 후 이전하기",
+    ownSoon: "본인 인증 기능 준비 중입니다.",
+    ownBackRecord: "바다의 기록으로 돌아가기",
+    passportTitle: "이 병의 디지털 인증서를\n확인하세요.",
+    passportBody: "소유 정보와 해저 숙성 기록이\n공식 인증서에 담겨 있습니다.",
+    passportCta: "디지털 인증서 보기",
+    passportSave: "인증서 저장",
+    passportManage: "소유 정보 관리",
   },
   en: {
     provHead: "ORIGIN · CHAMPAGNE",
@@ -402,6 +592,45 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     newsletterErr: "Please check your email address.",
     brandPage: "Brand page",
     blogPage: "Journal",
+    ecEyebrow: "EIGHT CURRENTS",
+    ecTitle: "Eight readings\ndraw the time of one bottle.",
+    ecBody: "Temperature, salinity, tide, current, pressure, flow, wave height and period —\nfour seasons of change kept as one continuous stream.",
+    ecLegend: "Golden line · temperature",
+    certTag: "CERTIFICATE OF OWNERSHIP",
+    certDedication: "This bottle and the sea's record,\nkept in your name",
+    certVerifiedShort: "NFC VERIFIED",
+    certSeal: "The original NFC tag matches the registration record.",
+    certAuthHead: "Certification",
+    certIdLabel: "Certificate ID",
+    certStatusLabel: "Status",
+    certSignHead: "Digital signature",
+    certSave: "Save certificate",
+    certShare: "Share",
+    certBack: "Back to the sea's record",
+    certOwnerFallback: "Owner not registered",
+    certSaving: "Rendering image",
+    certSaved: "Saved to your photos",
+    certSaveDone: "Done",
+    certShareText: "Muse de Marée certificate of ownership",
+    ownHead: "Registered owner",
+    ownVerified: "Ownership registered",
+    ownLinkedSub: "Subsea aging · Namhae · 12 months",
+    ownAccountHead: "Owner details",
+    ownEditName: "Edit name & email",
+    ownEditNameSub: "Reflected in the certificate and ownership record.",
+    ownNotify: "News alerts",
+    ownNotifySub: "We'll tell you of the next retrieval and new records.",
+    ownRightsHead: "Ownership",
+    ownTransfer: "Transfer ownership",
+    ownTransferSub: "Transfer the bottle and its digital certificate to a new owner. This cannot be undone.",
+    ownTransferCta: "Verify identity to transfer",
+    ownSoon: "Identity verification is coming soon.",
+    ownBackRecord: "Back to the sea's record",
+    passportTitle: "View this bottle's\ndigital certificate.",
+    passportBody: "Ownership and the subsea aging record\nare held in the official certificate.",
+    passportCta: "View digital certificate",
+    passportSave: "Save certificate",
+    passportManage: "Manage ownership",
   },
   fr: {
     provHead: "ORIGINE · CHAMPAGNE",
@@ -417,6 +646,45 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     newsletterErr: "Veuillez vérifier votre adresse e-mail.",
     brandPage: "Page de marque",
     blogPage: "Journal",
+    ecEyebrow: "EIGHT CURRENTS",
+    ecTitle: "Huit relevés\ndessinent le temps d'une bouteille.",
+    ecBody: "Température, salinité, marée, courant, pression, flux, hauteur et période de houle —\nquatre saisons de variations en un seul flux continu.",
+    ecLegend: "Ligne dorée · température",
+    certTag: "CERTIFICAT DE PROPRIÉTÉ",
+    certDedication: "Cette bouteille et le relevé de la mer,\nà votre nom",
+    certVerifiedShort: "NFC VÉRIFIÉ",
+    certSeal: "Le tag NFC d'origine correspond au relevé d'enregistrement.",
+    certAuthHead: "Certification",
+    certIdLabel: "ID du certificat",
+    certStatusLabel: "Statut",
+    certSignHead: "Signature numérique",
+    certSave: "Enregistrer le certificat",
+    certShare: "Partager",
+    certBack: "Retour au relevé de la mer",
+    certOwnerFallback: "Propriétaire non enregistré",
+    certSaving: "Rendu de l'image",
+    certSaved: "Enregistré dans vos photos",
+    certSaveDone: "Terminé",
+    certShareText: "Certificat de propriété Muse de Marée",
+    ownHead: "Propriétaire enregistré",
+    ownVerified: "Propriété enregistrée",
+    ownLinkedSub: "Vieillissement sous-marin · Namhae · 12 mois",
+    ownAccountHead: "Détails du propriétaire",
+    ownEditName: "Modifier nom et e-mail",
+    ownEditNameSub: "Reporté sur le certificat et le relevé de propriété.",
+    ownNotify: "Alertes actualités",
+    ownNotifySub: "Nous vous informerons de la prochaine remontée et des nouveaux relevés.",
+    ownRightsHead: "Propriété",
+    ownTransfer: "Transfert de propriété",
+    ownTransferSub: "Transférez la bouteille et son certificat numérique à un nouveau propriétaire. Irréversible.",
+    ownTransferCta: "Vérifier l'identité pour transférer",
+    ownSoon: "La vérification d'identité arrive bientôt.",
+    ownBackRecord: "Retour au relevé de la mer",
+    passportTitle: "Consultez le certificat\nnumérique de cette bouteille.",
+    passportBody: "La propriété et le relevé de vieillissement sous-marin\nfigurent dans le certificat officiel.",
+    passportCta: "Voir le certificat numérique",
+    passportSave: "Enregistrer le certificat",
+    passportManage: "Gérer la propriété",
   },
   ja: {
     provHead: "原産地 · シャンパーニュ",
@@ -432,6 +700,45 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     newsletterErr: "メールアドレスをご確認ください。",
     brandPage: "ブランドページ",
     blogPage: "ジャーナル",
+    ecEyebrow: "EIGHT CURRENTS",
+    ecTitle: "八つの観測が\n一本の時間を描きます。",
+    ecBody: "水温・塩分・潮位・海流・水圧・潮流・波高・波周期の\n四季の変化を一つの流れとして記録しました。",
+    ecLegend: "金色の線 · 水温",
+    certTag: "所有証明書",
+    certDedication: "この一本と海の記録を\nあなたの名前で残します",
+    certVerifiedShort: "NFC認証済み",
+    certSeal: "NFCの原本タグと登録記録が一致します。",
+    certAuthHead: "認証情報",
+    certIdLabel: "証明書ID",
+    certStatusLabel: "認証状態",
+    certSignHead: "デジタル署名",
+    certSave: "証明書を保存",
+    certShare: "共有する",
+    certBack: "海の記録へ戻る",
+    certOwnerFallback: "所有者未登録",
+    certSaving: "画像を作成中",
+    certSaved: "写真に保存しました",
+    certSaveDone: "完了",
+    certShareText: "ミューズ・ド・マレ 所有証明書",
+    ownHead: "登録された所有者",
+    ownVerified: "所有登録完了",
+    ownLinkedSub: "海底熟成 · 南海 · 12か月",
+    ownAccountHead: "所有者情報",
+    ownEditName: "名前とメールを編集",
+    ownEditNameSub: "証明書と所有記録に反映されます。",
+    ownNotify: "お知らせ",
+    ownNotifySub: "次の引き揚げと新しい記録をお知らせします。",
+    ownRightsHead: "所有権",
+    ownTransfer: "所有権の移転",
+    ownTransferSub: "新しい所有者へ一本とデジタル証明書の所有記録を移転します。移転後は取り消せません。",
+    ownTransferCta: "本人認証して移転する",
+    ownSoon: "本人認証機能は準備中です。",
+    ownBackRecord: "海の記録へ戻る",
+    passportTitle: "この一本のデジタル証明書を\nご確認ください。",
+    passportBody: "所有情報と海底熟成の記録が\n公式証明書に収められています。",
+    passportCta: "デジタル証明書を見る",
+    passportSave: "証明書を保存",
+    passportManage: "所有情報の管理",
   },
   zh: {
     provHead: "原产地 · 香槟区",
@@ -447,6 +754,45 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     newsletterErr: "请检查你的邮箱地址。",
     brandPage: "品牌页面",
     blogPage: "博客",
+    ecEyebrow: "EIGHT CURRENTS",
+    ecTitle: "八项观测\n描绘一瓶的时间。",
+    ecBody: "水温·盐度·潮位·海流·水压·潮流·浪高·波周期的\n四季变化，汇成一条连续的流。",
+    ecLegend: "金色线 · 水温",
+    certTag: "所有权证书",
+    certDedication: "将这一瓶与大海的记录\n以你之名留存",
+    certVerifiedShort: "NFC认证完成",
+    certSeal: "NFC原始标签与登记记录一致。",
+    certAuthHead: "认证信息",
+    certIdLabel: "证书编号",
+    certStatusLabel: "认证状态",
+    certSignHead: "数字签名",
+    certSave: "保存证书",
+    certShare: "分享",
+    certBack: "返回大海的记录",
+    certOwnerFallback: "所有者未登记",
+    certSaving: "正在生成图片",
+    certSaved: "已保存到相册",
+    certSaveDone: "完成",
+    certShareText: "缪斯德玛雷 所有权证书",
+    ownHead: "已登记所有者",
+    ownVerified: "所有权登记完成",
+    ownLinkedSub: "海底熟成 · 南海 · 12个月",
+    ownAccountHead: "所有者信息",
+    ownEditName: "修改姓名与邮箱",
+    ownEditNameSub: "将同步至证书与所有权记录。",
+    ownNotify: "消息提醒",
+    ownNotifySub: "我们会通知你下一次打捞与新的记录。",
+    ownRightsHead: "所有权",
+    ownTransfer: "所有权转让",
+    ownTransferSub: "将这一瓶及其数字证书的所有权记录转让给新所有者。转让后不可撤销。",
+    ownTransferCta: "完成本人认证后转让",
+    ownSoon: "本人认证功能筹备中。",
+    ownBackRecord: "返回大海的记录",
+    passportTitle: "查看这一瓶的\n数字证书。",
+    passportBody: "所有权信息与海底熟成记录\n都收录在官方证书中。",
+    passportCta: "查看数字证书",
+    passportSave: "保存证书",
+    passportManage: "管理所有权",
   },
 };
 

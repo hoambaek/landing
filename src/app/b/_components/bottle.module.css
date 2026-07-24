@@ -60,6 +60,44 @@
   align-items: center;
 }
 
+/* 히어로 상단 소유 상태 오버레이 */
+.heroStatus {
+  position: absolute;
+  z-index: 3;
+  top: max(24px, calc(env(safe-area-inset-top) + 6px));
+  left: 24px;
+  right: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.heroStatusId {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.heroStatusLabel {
+  font-family: var(--b-mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: var(--b-amber);
+}
+.heroVerified {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--b-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: rgba(241, 239, 235, 0.58);
+}
+.heroVerifiedDot {
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  background: #6e7f63;
+}
+
 .serial {
   font-family: var(--b-mono);
   font-weight: 300;
@@ -76,7 +114,7 @@
   align-items: center;
 }
 .titleImg {
-  width: min(254px, 68vw);
+  width: min(266px, 74vw);
   height: auto;
 }
 .titleText {
@@ -146,8 +184,129 @@
 }
 
 /* ── S3 여덟 줄기 ─────────────────────────── */
+/* ── Eight Currents 인트로 ───────────────────── */
+.ecIntro {
+  padding: 68px 24px 54px;
+  background: var(--b-void);
+  border-top: 0.5px solid rgba(241, 239, 235, 0.1);
+  word-break: keep-all;
+}
+.ecEyebrow {
+  display: block;
+  font-family: var(--b-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--b-amber);
+}
+.ecTitle {
+  margin-top: 18px;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: 25px;
+  line-height: 38px;
+  letter-spacing: -0.02em;
+  color: var(--b-ivory);
+  white-space: pre-line;
+}
+.ecBody {
+  margin-top: 16px;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: 12.5px;
+  line-height: 22px;
+  color: rgba(241, 239, 235, 0.56);
+  white-space: pre-line;
+}
+.ecLegend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+}
+.ecLegendLine {
+  width: 36px;
+  height: 1px;
+  flex-shrink: 0;
+  background: var(--b-amber);
+}
+.ecLegendText {
+  font-family: var(--b-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: rgba(241, 239, 235, 0.48);
+}
+
+/* ── Owner Services · Digital Passport ── */
+.passport {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 24px 52px;
+  background: var(--b-void);
+  border-top: 0.5px solid rgba(241, 239, 235, 0.1);
+  text-align: center;
+  word-break: keep-all;
+}
+.passportEyebrow {
+  font-family: var(--b-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--b-amber);
+}
+.passportTitle {
+  margin-top: 18px;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 30px;
+  color: var(--b-ivory);
+  white-space: pre-line;
+}
+.passportBody {
+  margin-top: 12px;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: 11.5px;
+  line-height: 19px;
+  color: rgba(241, 239, 235, 0.46);
+  white-space: pre-line;
+}
+.passportCta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(342px, 100%);
+  height: 54px;
+  margin-top: 32px;
+  background: var(--b-amber);
+  color: var(--b-void);
+  font-family: var(--font-body), sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+.passportRow {
+  display: flex;
+  gap: 12px;
+  width: min(342px, 100%);
+  margin-top: 14px;
+}
+.passportSub {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  border: 0.5px solid rgba(241, 239, 235, 0.24);
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  color: rgba(241, 239, 235, 0.78);
+  text-decoration: none;
+}
+
 .flowSection {
-  background: linear-gradient(180deg, #0e1a2b 0%, #0a0d12 22%, #0a0d12 100%);
+  background: linear-gradient(180deg, #0a0908 0%, #0a0d12 24%, #0a0d12 100%);
   overflow: hidden;
 }
 .flowScaler {

@@ -104,6 +104,78 @@ export async function fetchBottleIdentity(code: string): Promise<BottleIdentity 
   return null;
 }
 
+/* ── 소유자 조회 (인증서·소유 관리용) ──────────────────────────
+ * /b/[code]는 NFC 태그로 열리는 공개 URL이므로 이름·이메일은 서버에서 마스킹해
+ * 원본 PII가 클라이언트로 넘어가지 않게 한다. 전체 노출은 소유자 인증(로그인) 도입 후.
+ */
+export interface BottleOwner {
+  nameMasked: string;
+  emailMasked: string;
+  registeredAt: string | null; // YYYY-MM-DD
+}
+
+export function maskName(name: string): string {
+  const n = name.trim();
+  if (!n) return "";
+  const first = Array.from(n)[0];
+  return `${first}••`;
+}
+
+export function maskEmail(email: string): string {
+  const e = email.trim();
+  const at = e.indexOf("@");
+  if (at < 1) return "•••";
+  const local = e.slice(0, at);
+  const domain = e.slice(at + 1);
+  const head = local.slice(0, Math.min(2, local.length));
+  return `${head}•••@${domain}`;
+}
+
+export async function fetchBottleOwner(code: string): Promise<BottleOwner | null> {
+  if (!supabaseAdmin) return null;
+  if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return null;
+
+  const { data } = await supabaseAdmin
+    .from("bottle_registrations")
+    .select("name, email, created_at")
+    .eq("nfc_code", code)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!data || !data.name) return null;
+  return {
+    nameMasked: maskName(data.name),
+    emailMasked: data.email ? maskEmail(data.email) : "",
+    registeredAt: data.created_at ? String(data.created_at).slice(0, 10) : null,
+  };
+}
+
+/** 원본 소유자 정보 — 소유자 인증 완료 시에만 호출한다(마스킹 없음). */
+export interface BottleOwnerRaw {
+  name: string;
+  email: string;
+  registeredAt: string | null;
+}
+
+export async function fetchBottleOwnerRaw(code: string): Promise<BottleOwnerRaw | null> {
+  if (!supabaseAdmin) return null;
+  if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return null;
+  const { data } = await supabaseAdmin
+    .from("bottle_registrations")
+    .select("name, email, created_at")
+    .eq("nfc_code", code)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (!data || !data.name) return null;
+  return {
+    name: data.name,
+    email: data.email ?? "",
+    registeredAt: data.created_at ? String(data.created_at).slice(0, 10) : null,
+  };
+}
+
 export async function fetchBottleRecord(code: string): Promise<BottleRecordData | null> {
   if (!supabaseAdmin) return null;
   if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return null;

@@ -1,0 +1,525 @@
+/* /b 디지털 인증서 — Paper "04 — 디지털 인증서" 시안 (다크·앰버) */
+
+.page {
+  --c-void: #0a0908;
+  --c-elev: #0a0d12;
+  --c-ivory: #f1efeb;
+  --c-amber: #ccad7b;
+  --c-mono: var(--font-plex-mono), "IBM Plex Mono", monospace;
+  --c-serif: var(--font-heading), "Cormorant Garamond", serif;
+  --c-serif-kr: var(--font-serif-kr), "Noto Serif KR", serif;
+  --c-sans: var(--font-body), "Noto Sans KR", sans-serif;
+  min-height: 100svh;
+  background: var(--c-void);
+  color: var(--c-ivory);
+  font-family: var(--c-sans);
+  display: flex;
+  justify-content: center;
+}
+.frame {
+  width: min(430px, 100vw);
+  overflow: hidden;
+}
+
+/* ── 헤더 ── */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: max(30px, calc(env(safe-area-inset-top) + 14px)) 24px 28px;
+  border-bottom: 0.5px solid rgba(241, 239, 235, 0.14);
+}
+.headerLogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.headerSymbol {
+  width: 108px;
+  height: auto;
+  opacity: 0.95;
+}
+.headerWordmark {
+  width: 96px;
+  height: auto;
+  opacity: 0.9;
+}
+.certTag {
+  margin-top: 28px;
+  padding: 7px 16px;
+  border: 0.5px solid rgba(204, 173, 123, 0.62);
+  font-family: var(--c-sans);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--c-amber);
+  white-space: nowrap;
+}
+
+/* ── 정체성 ── */
+.identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 24px 22px;
+  text-align: center;
+}
+.edition {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.edNo,
+.edTotal {
+  flex-shrink: 0;
+  font-family: var(--c-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: rgba(204, 173, 123, 0.72);
+}
+.edTotal { letter-spacing: 0.18em; }
+.edNum {
+  flex-shrink: 0;
+  font-family: var(--c-serif);
+  font-weight: 300;
+  font-size: 38px;
+  line-height: 40px;
+  color: var(--c-amber);
+}
+.verifiedShort {
+  margin-top: 5px;
+  font-family: var(--c-sans);
+  font-weight: 300;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: rgba(241, 239, 235, 0.42);
+}
+.bottleWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 260px;
+  margin-top: 18px;
+}
+.bottleImg {
+  width: auto;
+  height: 256px;
+  object-fit: contain;
+}
+.dedication {
+  margin-top: 22px;
+  font-family: var(--c-serif-kr);
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 20px;
+  color: rgba(241, 239, 235, 0.58);
+  white-space: pre-line;
+}
+.ownerName {
+  margin-top: 10px;
+  font-family: var(--c-serif-kr);
+  font-size: 25px;
+  line-height: 30px;
+  color: var(--c-ivory);
+}
+.ownerRule {
+  width: 34px;
+  height: 1px;
+  margin-top: 14px;
+  background: var(--c-amber);
+}
+
+/* ── 진위 씰 ── */
+.seal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 24px;
+  text-align: center;
+}
+.sealMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(204, 173, 123, 0.7);
+  font-family: var(--c-sans);
+  font-weight: 300;
+  font-size: 12px;
+  color: var(--c-amber);
+}
+.sealText {
+  margin-top: 14px;
+  font-family: var(--c-sans);
+  font-weight: 300;
+  font-size: 11px;
+  line-height: 17px;
+  color: rgba(241, 239, 235, 0.52);
+  word-break: keep-all;
+}
+
+/* ── 정보 블록 ── */
+.block {
+  padding: 42px 24px 30px;
+  background: var(--c-void);
+}
+.blockElev {
+  background: var(--c-elev);
+  padding: 28px 24px 34px;
+}
+.blockHead {
+  font-family: var(--c-sans);
+  font-size: 13px;
+  color: var(--c-amber);
+}
+.blockHeadAmber {
+  font-family: var(--c-sans);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--c-amber);
+}
+.rows {
+  margin-top: 16px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 0.5px solid rgba(241, 239, 235, 0.13);
+}
+.rowLabel {
+  flex-shrink: 0;
+  font-family: var(--c-sans);
+  font-size: 11px;
+  color: rgba(241, 239, 235, 0.44);
+}
+.rowValue,
+.rowValueMono {
+  text-align: right;
+  font-size: 11px;
+  color: var(--c-ivory);
+}
+.rowValue { font-family: var(--c-sans); }
+.rowValueMono { font-family: var(--c-mono); }
+.rowValueAmber {
+  font-family: var(--c-sans);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--c-amber);
+}
+
+/* ── 디지털 서명 ── */
+.signature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 42px 24px;
+}
+.signBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 16px;
+  border: 0.5px solid rgba(241, 239, 235, 0.16);
+  font-family: var(--c-mono);
+  font-size: 9px;
+  line-height: 16px;
+  color: rgba(241, 239, 235, 0.46);
+  text-align: center;
+}
+.signIssuer {
+  letter-spacing: 0.04em;
+}
+
+/* ── 액션 ── */
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 24px 44px;
+}
+.saveBtn {
+  width: 100%;
+  height: 54px;
+  background: var(--c-amber);
+  color: var(--c-void);
+  border: none;
+  font-family: var(--c-sans);
+  font-size: 13px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.saveBtn:active { opacity: 0.8; transform: scale(0.985); }
+.saveBtn:disabled { opacity: 0.6; cursor: default; }
+.shareBtn {
+  width: 100%;
+  height: 48px;
+  margin-top: 12px;
+  background: transparent;
+  color: var(--c-ivory);
+  border: 0.5px solid rgba(241, 239, 235, 0.3);
+  font-family: var(--c-sans);
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.shareBtn:active { border-color: rgba(204, 173, 123, 0.6); }
+.saveNote {
+  margin-top: 14px;
+  font-family: var(--c-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--c-amber);
+}
+.backLink {
+  margin-top: 22px;
+  font-family: var(--c-sans);
+  font-size: 11px;
+  color: rgba(241, 239, 235, 0.4);
+  text-decoration: none;
+}
+
+/* ── 푸터 ── */
+.footer {
+  padding: 48px 24px 32px;
+  background: var(--c-void);
+  border-top: 0.5px solid rgba(241, 239, 235, 0.1);
+}
+.footerTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.footerLogo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.footerSymbol { width: 34px; height: auto; opacity: 0.82; }
+.footerWordmark { width: 128px; height: auto; opacity: 0.9; }
+.footerTagline {
+  margin-top: 16px;
+  font-family: var(--c-sans);
+  font-weight: 300;
+  font-size: 11px;
+  line-height: 19px;
+  color: rgba(241, 239, 235, 0.56);
+}
+.footerCols {
+  display: flex;
+  gap: 12px;
+  margin-top: 30px;
+}
+.footerCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-decoration: none;
+}
+.footerColHead {
+  font-family: var(--c-mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: rgba(241, 239, 235, 0.36);
+}
+.footerColRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--c-sans);
+  font-weight: 300;
+  font-size: 12px;
+  color: rgba(241, 239, 235, 0.8);
+}
+.footerArrow {
+  font-family: var(--c-mono);
+  color: var(--c-amber);
+}
+.footerColUrl {
+  font-family: var(--c-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.03em;
+  color: rgba(241, 239, 235, 0.28);
+}
+.footerBase {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 0.5px solid rgba(241, 239, 235, 0.1);
+  font-family: var(--c-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: rgba(241, 239, 235, 0.36);
+}
+
+/* ── 언어 선택 (푸터) ── */
+.langSelect {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.langChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  background: transparent;
+  border: 0.5px solid rgba(241, 239, 235, 0.25);
+  font-family: var(--c-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgba(241, 239, 235, 0.85);
+  cursor: pointer;
+}
+.langFlag {
+  width: 15px;
+  height: auto;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.langPanel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  min-width: 150px;
+  padding: 6px;
+  background: rgba(15, 13, 11, 0.98);
+  border: 0.5px solid rgba(241, 239, 235, 0.14);
+  border-radius: 4px;
+  box-shadow: 0 -14px 40px rgba(0, 0, 0, 0.55);
+}
+.langOpt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: left;
+}
+.langOpt:active { background: rgba(241, 239, 235, 0.06); }
+.langOptCode {
+  width: 22px;
+  flex-shrink: 0;
+  font-family: var(--c-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(241, 239, 235, 0.5);
+}
+.langOptNative {
+  flex: 1;
+  font-family: var(--c-sans);
+  font-weight: 300;
+  font-size: 12.5px;
+  color: rgba(241, 239, 235, 0.9);
+}
+.langOptActive .langOptCode,
+.langOptActive .langOptNative { color: var(--c-amber); }
+
+/* ── 저장용 인증서 카드 (오프스크린) ── */
+.printArea {
+  position: absolute;
+  left: -99999px;
+  top: 0;
+  pointer-events: none;
+}
+.printCard {
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 36px 48px;
+  background: radial-gradient(circle at 50% 22%, #15110d 0%, #0a0908 68%);
+  text-align: center;
+}
+.printLogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.printSymbol { width: 96px; height: auto; }
+.printWordmark { width: 96px; height: auto; opacity: 0.92; }
+.printTag {
+  margin-top: 22px;
+  padding: 7px 16px;
+  border: 0.5px solid rgba(204, 173, 123, 0.6);
+  font-family: var(--c-sans);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--c-amber);
+  white-space: nowrap;
+}
+.printBottle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  margin-top: 34px;
+}
+.printBottleImg { width: auto; height: 296px; object-fit: contain; }
+.printDedication {
+  margin-top: 30px;
+  font-family: var(--c-serif-kr);
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 22px;
+  color: rgba(241, 239, 235, 0.6);
+  white-space: pre-line;
+}
+.printOwner {
+  margin-top: 12px;
+  font-family: var(--c-serif-kr);
+  font-size: 28px;
+  line-height: 34px;
+  color: var(--c-ivory);
+}
+.printRule {
+  width: 36px;
+  height: 1px;
+  margin-top: 20px;
+  background: var(--c-amber);
+}
+.printEdition {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 30px;
+}
+.printEdNo,
+.printEdTotal {
+  font-family: var(--c-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgba(204, 173, 123, 0.72);
+}
+.printEdNum {
+  font-family: var(--c-serif);
+  font-weight: 300;
+  font-size: 34px;
+  line-height: 36px;
+  color: var(--c-amber);
+}
+.printCertId {
+  margin-top: 16px;
+  font-family: var(--c-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(241, 239, 235, 0.5);
+}

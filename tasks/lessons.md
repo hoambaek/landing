@@ -102,3 +102,30 @@
 - **감지 신호**: 다크 모달/오버레이에 blur·shadow·card box를 쓰고 싶을 때 → 멈추고 Paper Components 가이드 확인. 브랜드 자체 UI 문법(헤어라인 언더라인 링크·직각 hairline 보더)을 먼저 볼 것
 - **방지 규칙**: ① UI 디자인 전 Paper "MDM 디자인 가이드" 페이지(특히 Components DO/DON'T)를 get_screenshot으로 먼저 확인 ② 로고는 반드시 이미지 에셋(합본=logo_all_W_KR.png, 심볼=logo_trans_W.png, 텍스트=logo_text_trans_W.png), 텍스트로 대체 금지 ③ Paper 로컬이미지 삽입은 paper-asset:// 실패 시 기존 노드 x-paper-clone
 - **검증**: Paper에서 아트보드 디자인 → get_computed_styles로 값 이식 → 코드 반영 후 Playwright 대조. CSS 새 규칙은 Turbopack HMR이 부분 누락 → `rm -rf .next` 후 재시작으로 확정 검증(getComputedStyle로 확인)
+
+## Paper MCP 스크린샷·export가 이 하네스에서 이미지 바이트를 반환하지 않음 (2026-07-24)
+- **실패 모드**: `mcp__paper__get_screenshot`은 "completed with no output", `mcp__paper__export`는 `"exports": []`만 반환 — 실제 이미지 데이터가 대화로 전달되지 않음.
+- **감지 신호**: Paper 스크린샷/export 호출 결과에 이미지가 안 보임.
+- **방지/대안**:
+  1. 디자인 시각 검증은 **Playwright 스크린샷 → Read(png)** 로 한다(dev 서버 실렌더). Paper는 구조 파악용으로 `get_jsx`/`get_tree_summary`(정확한 CSS 값·카피)만 쓴다.
+  2. 디자인의 폰트-이미지 에셋(예: J1950 한글 타이틀)이 필요하면 Paper export 대신 **로컬 폰트로 직접 렌더**한다. J1950 M 폰트는 이 Mac에 설치돼 있음: `~/Library/Fonts/jj.ttf` ("J1950년 M_TT", PS명 J1950M-KSCpc-EUC-H). Pillow로 @3x 투명 PNG 렌더 → `getbbox()` 타이트 크롭. 렌더 전 `fontTools`로 글리프 존재(cmap) 확인.
+- **관련**: 랜딩·/method의 J1950 한글 타이틀도 전부 PNG(라이브 텍스트 아님) — 이 프로젝트에서 J1950은 항상 이미지로 간다.
+
+## /b NFC 라우트는 GSAP 사용이 정상 (2026-07-24)
+- CLAUDE.md의 "GSAP 미사용"은 **메인 랜딩** 한정. `/b`(BottleRecord)는 이미 GSAP+ScrollTrigger로 8줄기 스크럽·카운트업 구현 중 → 이 라우트의 새 스크롤 모션은 기존 GSAP 패턴을 확장하면 된다(라이브러리 도입 승인 불필요).
+
+## 인증서 PNG 저장 = html-to-image + 오프스크린 카드 (2026-07-24)
+- 인증서를 고해상 PNG로 저장할 땐 스크롤 페이지 전체가 아니라 **별도의 포트레이트 "저장용 카드"**를 오프스크린(`position:absolute; left:-99999px`)으로 두고 `toPng(node, { pixelRatio: 3, backgroundColor })`로 렌더한다. 병 이미지는 same-origin(`/images/...`) 직접 `<img>`(next/Image 아님)라 CORS 타인트 없음.
+- 공유: `navigator.canShare({files})` 지원 시 `navigator.share({files})`, 아니면 다운로드 폴백.
+- 좁은 pill에 한글(예: "소유 인증서")이 줄바꿈될 수 있음 → 태그류엔 `white-space: nowrap` 필수.
+
+## /b 공개 URL의 PII는 서버에서 마스킹 (2026-07-24)
+- /b/[code]는 NFC 태그로 열리는 **공개 URL** — 소유자 이름/이메일 원본을 클라이언트로 보내지 말 것. `data.ts`에서 마스킹(`백••`, `ho•••@gmail.com`)한 값만 반환한다(data.ts 상단 게이팅 원칙과 일치).
+- 인증 없는 상태에서 "본인 인증 완료" 같은 문구를 쓰지 말 것(거짓 표시) → "소유 등록 완료"처럼 실제 상태만. 소유권 이전·정보 수정 등 변경 액션은 소유자 인증 도입 전까지 실행하지 말고 "준비 중"으로 둔다.
+
+## /b 소유자 인증 = 이메일 OTP + HMAC 서명 쿠키 (2026-07-24, phase-3)
+- 세션은 DB 테이블 없이 **HMAC 서명 토큰(httpOnly 쿠키, /b/{code} 스코프, 30분)**. `BOTTLE_SESSION_SECRET` env 필요(.env.local + Vercel). OTP·토큰은 `sha256(secret|nfc|code)`로 해시 저장, 평문 미저장, 비교는 timingSafeEqual.
+- 쿠키 `cookies().set/delete`는 **서버 액션/라우트 핸들러에서만** 가능(서버 컴포넌트 page에선 읽기 getOwnerSession만). 그래서 verify/signout은 액션, page는 세션 읽어 authed·원본 전달.
+- 변경/이전 액션은 클라이언트 신뢰 금지 — 서버 액션 내부에서 getOwnerSession으로 **재확인 후에만** 실행.
+- OTP E2E 테스트 시 인박스 없이 검증: DB에서 code_hash 조회 → 비밀키로 6자리 브루트포스(1M SHA-256, 즉시). 단 `. ./.env.local` source가 값 로드에 실패할 수 있으니 파일에서 직접 파싱해 secret을 읽을 것(길이 검증).
+- 소유권 이전은 되돌릴 수 없음: 새 소유자가 이메일 토큰 링크로 수락(토큰 소유=이메일 통제 증명) → 새 등록행 삽입=최신 소유자 + 감사 로그. Supabase JS는 멀티스테이트먼트 트랜잭션이 없어 순차 처리(삽입 성공 후 상태 갱신).

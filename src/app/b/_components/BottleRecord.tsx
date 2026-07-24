@@ -10,6 +10,7 @@
 
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./bottle.module.css";
@@ -407,6 +408,17 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
             className={styles.heroPhoto}
           />
           <div className={styles.heroScrim} />
+
+          <div className={`${styles.heroStatus} ${styles.introFade} ${styles.introFadeD1}`}>
+            <div className={styles.heroStatusId}>
+              <span className={styles.heroStatusLabel}>YOUR OCEAN CELLAR RECORD</span>
+            </div>
+            <div className={styles.heroVerified}>
+              <span className={styles.heroVerifiedDot} aria-hidden />
+              <span>NFC VERIFIED</span>
+            </div>
+          </div>
+
           <div className={`${styles.heroContent} ${styles.introFade} ${styles.introFadeD1}`}>
             {serialLine && (
               <div ref={heroSerialRef} className={styles.serial}>
@@ -415,7 +427,7 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
             )}
             <div className={styles.titleZone}>
               {locale === "ko" ? (
-                <Image src="/images/b-title-ko-v3.png" alt={copy.titleText} width={254} height={33} className={styles.titleImg} priority />
+                <Image src="/images/b-record-title-ko.png" alt={copy.titleText} width={266} height={32} className={styles.titleImg} priority />
               ) : (
                 <h1 className={styles.titleText}>{copy.titleText}</h1>
               )}
@@ -473,12 +485,23 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
           </div>
         </section>
 
+        {/* ── Eight Currents 인트로 ── */}
+        <section className={styles.ecIntro}>
+          <div className={styles.reveal} data-reveal>
+            <span className={styles.ecEyebrow}>{extra.ecEyebrow}</span>
+            <h2 className={styles.ecTitle}>{extra.ecTitle}</h2>
+            <p className={styles.ecBody}>{extra.ecBody}</p>
+            <div className={styles.ecLegend}>
+              <span className={styles.ecLegendLine} aria-hidden />
+              <span className={styles.ecLegendText}>{extra.ecLegend}</span>
+            </div>
+          </div>
+        </section>
+
         {/* ── S3 여덟 줄기의 하강 (스크럽 성장) ── */}
         <section className={styles.flowSection} ref={flowSectionRef}>
           <div className={styles.flowScaler} style={{ transform: `scale(${flowScale})`, height: 1380 * flowScale }}>
             <div className={styles.flow}>
-              <span className={styles.flowHead}>{data.partial ? copy.obsHeadPartial : copy.obsHead}</span>
-
               <svg ref={flowSvgRef} className={styles.flowSvg} width="390" height="1290" viewBox="0 0 390 1290" aria-hidden>
                 {FLOW_PATHS.map((p, i) => (
                   <path key={i} d={p.d} fill="none" stroke={p.stroke} strokeWidth={p.width} opacity={p.amber ? 0.95 : 1} />
@@ -568,6 +591,24 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
                 <span className={styles.tableValue}>{r.value}</span>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* ── Owner Services · Digital Passport ── */}
+        <section className={styles.passport}>
+          <span className={styles.passportEyebrow}>DIGITAL PASSPORT</span>
+          <h2 className={`${styles.passportTitle} ${styles.reveal}`} data-reveal>{extra.passportTitle}</h2>
+          <p className={styles.passportBody}>{extra.passportBody}</p>
+          <Link href={`/b/${data.bottle.nfcCode}/certificate`} className={styles.passportCta}>
+            {extra.passportCta}  →
+          </Link>
+          <div className={styles.passportRow}>
+            <Link href={`/b/${data.bottle.nfcCode}/certificate`} className={styles.passportSub}>
+              {extra.passportSave}
+            </Link>
+            <Link href={`/b/${data.bottle.nfcCode}/owner`} className={styles.passportSub}>
+              {extra.passportManage}
+            </Link>
           </div>
         </section>
 
