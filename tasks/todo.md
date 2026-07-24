@@ -261,3 +261,9 @@
 - [x] UI: BottleOwnerManage 재작성(미인증=마스킹+"본인 인증하고 전체 보기" OTP 인라인 / 인증=전체 이름·이메일+수정 폼+이전 폼+인증 해제, window.confirm으로 이전 재확인). BottleCertificate=ownerNameFull prop으로 인증 시 언마스킹. certificate/owner page.tsx=getOwnerSession 읽어 authed·원본 전달. 신규 /b/[code]/transfer(BottleTransferAccept + transfer.module.css)=이메일 링크 수락 화면
 - [x] 검증: tsc 0 · eslint 0 · pnpm build 성공(신규 transfer 라우트) · **OTP E2E**: 요청→행 생성·이메일 발송 확인→DB 해시에서 코드 역산(031594)→UI 입력→verify→세션 발급→owner/cert 전체 이름 "백호암" 언마스킹 확인. 수정·이전 폼 렌더 확인(실제 데이터 변경·이전 발송은 미실행)
 - ⚠️ 알려진 한계: 소유권 모델=최신 bottle_registrations 행=현 소유자. 입장 페이지가 누구나 재등록 허용 → 재등록으로 소유자 덮어쓰기 가능(선행 이슈). OTP는 "인증 시점의 등록 이메일 통제"를 증명. 향후 하드닝=정규 소유자 테이블 + 입장 재등록 게이팅
+
+## NFC 재등록 구멍 차단 — 2026-07-24 (phase-3 후속)
+- 입장 페이지(/b/[code]): 이미 등록된 토큰이면 isBottleRegistered 체크 후 redirect(/record). 미등록 토큰만 등록 폼 노출
+- submitBottleRegistration: 이미 등록된 nfc_code면 서버에서 거부("이미 등록된 병입니다"). 폼 우회 직접 호출 대비 defense-in-depth. 소유권 이전(acceptTransfer)은 별도 경로라 영향 없음
+- 결과: 소유자 변경은 소유권 이전(재인증)으로만 가능 → phase-3의 "누구나 재등록 덮어쓰기" 한계 해소
+- 검증: 등록 7Fz44v6c→/record 리다이렉트 확인, 미등록 Ypv7eDfD→입장 폼 확인, tsc 0

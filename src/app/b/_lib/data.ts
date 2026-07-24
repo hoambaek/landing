@@ -131,6 +131,19 @@ export function maskEmail(email: string): string {
   return `${head}•••@${domain}`;
 }
 
+/** 이미 소유 등록된 병인지 여부 — 입장 페이지 재등록 차단용(경량). */
+export async function isBottleRegistered(code: string): Promise<boolean> {
+  if (!supabaseAdmin) return false;
+  if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return false;
+  const { data } = await supabaseAdmin
+    .from("bottle_registrations")
+    .select("id")
+    .eq("nfc_code", code)
+    .limit(1)
+    .maybeSingle();
+  return !!data;
+}
+
 export async function fetchBottleOwner(code: string): Promise<BottleOwner | null> {
   if (!supabaseAdmin) return null;
   if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return null;

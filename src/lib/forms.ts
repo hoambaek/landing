@@ -271,6 +271,19 @@ export async function submitBrandBook(
 export async function submitBottleRegistration(
   p: BottleRegistrationPayload
 ): Promise<SubmitResult> {
+  // 이미 등록된 병은 재등록 불가(소유자 덮어쓰기 방지). 소유자 변경은 소유권 이전으로만.
+  if (supabaseAdmin) {
+    const { data: existing } = await supabaseAdmin
+      .from("bottle_registrations")
+      .select("id")
+      .eq("nfc_code", p.nfcCode)
+      .limit(1)
+      .maybeSingle();
+    if (existing) {
+      return { ok: false, error: "이미 등록된 병입니다. 소유권 이전으로만 소유자를 변경할 수 있습니다." };
+    }
+  }
+
   const referral = p.referralSource?.trim() || null;
   return insertAndNotify(
     "bottle_registrations",
