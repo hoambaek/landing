@@ -76,6 +76,24 @@ export function hashCode(nfc: string, code: string): string {
   return createHash("sha256").update(`${SECRET}|${nfc}|${code}`).digest("hex");
 }
 
-export function hashToken(token: string): string {
-  return createHash("sha256").update(`${SECRET}|${token}`).digest("hex");
+/**
+ * 인증서 서명 — 발행자만 만들 수 있는 값.
+ *
+ * 이전에는 공개 필드(코드·병번호·제품)만 SHA-256으로 해싱해 표시했다. 입력이 전부
+ * 화면에 있는 값이라 누구나 같은 값을 계산할 수 있었고, 그건 서명이 아니라 지문이다.
+ * 비밀키를 넣은 HMAC으로 바꿔 "발행자만 만들 수 있다"는 성질을 실제로 갖게 한다.
+ *
+ * 세션·OTP와 같은 키를 쓰므로 용도 구분자(도메인 분리)를 앞에 붙인다.
+ * 이게 없으면 한 용도의 서명이 다른 용도에서 통용될 여지가 생긴다.
+ *
+ * SECRET 미설정(로컬·미배포)이면 null. 호출부가 서명 블록 자체를 숨긴다.
+ * 없는 보증을 있는 것처럼 보이느니 안 보이는 편이 낫다.
+ */
+export function signCertificate(code: string, serial: number | null, productId: string): string | null {
+  if (!SECRET) return null;
+  const hex = createHmac("sha256", SECRET)
+    .update(`mdm-cert-v1|${code}|${serial ?? "-"}|${productId}`)
+    .digest("hex")
+    .toUpperCase();
+  return hex.slice(0, 16).replace(/(.{4})(.{4})(.{4})(.{4})/, "$1 $2 $3 $4");
 }

@@ -8,6 +8,9 @@
   --b-ivory: #f1efeb;
   --b-amber: #ccad7b;
   --b-mono: var(--font-plex-mono), "IBM Plex Mono", monospace;
+  /* 모션 곡선 — 브라우저 기본 ease(0.25,0.1,0.25,1)는 "무보정" 느낌을 준다.
+     expo-out 계열은 빠르게 도착해 길게 안착해서 무게감이 생긴다. */
+  --b-out: cubic-bezier(0.16, 1, 0.3, 1);
   min-height: 100svh;
   background: var(--b-void);
   color: var(--b-ivory);
@@ -77,11 +80,19 @@
   flex-direction: column;
   gap: 6px;
 }
-.heroStatusLabel {
+.heroStatusOwner {
   font-family: var(--b-mono);
   font-size: 8px;
-  letter-spacing: 0.15em;
-  color: var(--b-amber);
+  letter-spacing: 0.12em;
+  /* 병목 밝은 구간과 겹치는 위치 — 시안 62%로는 판독이 안 돼 밝기를 올리고 void 그림자를 깐다 */
+  color: rgba(241, 239, 235, 0.92);
+  text-shadow: 0 1px 2px rgba(10, 9, 8, 0.95), 0 0 8px rgba(10, 9, 8, 0.9), 0 0 18px rgba(10, 9, 8, 0.7);
+}
+/* 소유자 이름 — Plex Mono에 한글 글리프가 없어 본문 폰트로 폴백된다.
+   크기·자간은 OWNED BY와 같게 두고 굵기만 올려 얇은 획이 사진 위에서 뭉개지는 것만 막는다. */
+.heroOwnerName {
+  font-family: var(--font-pretendard), var(--font-body), sans-serif;
+  font-weight: 500;
 }
 .heroVerified {
   display: flex;
@@ -92,11 +103,11 @@
   letter-spacing: 0.12em;
   color: rgba(241, 239, 235, 0.58);
 }
-.heroVerifiedDot {
-  width: 5px;
-  height: 5px;
+.heroVerifiedLock {
   flex-shrink: 0;
-  background: #6e7f63;
+  color: var(--b-amber);
+  /* 사진 위라 자물쇠도 라벨과 같은 그림자를 받아야 한다 */
+  filter: drop-shadow(0 1px 2px rgba(10, 9, 8, 0.95));
 }
 
 .serial {
@@ -140,7 +151,7 @@
 .journey {
   display: flex;
   justify-content: center;
-  padding: 44px 24px 52px;
+  padding: 40px 24px 56px;
   background: var(--b-void);
   overflow: hidden;
 }
@@ -242,7 +253,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60px 24px 52px;
+  padding: 64px 24px 58px;
   background: var(--b-void);
   border-top: 0.5px solid rgba(241, 239, 235, 0.1);
   text-align: center;
@@ -306,8 +317,9 @@
   text-decoration: none;
 }
 
+/* Paper 67X-0 — 상단 심해 블루에서 시작해 22%에서 blue1로 가라앉는다 */
 .flowSection {
-  background: var(--b-void);
+  background: linear-gradient(180deg, var(--b-blue2) 0%, var(--b-blue1) 22%, var(--b-blue1) 100%);
   overflow: hidden;
 }
 .flowScaler {
@@ -318,7 +330,7 @@
 .flow {
   position: relative;
   width: 390px;
-  height: 1380px;
+  height: 1296px;
 }
 .flowHead {
   position: absolute;
@@ -333,14 +345,13 @@
 .flowSvg {
   position: absolute;
   left: 0;
-  top: 90px;
+  top: 6px;
 }
 .seasonLabel {
   position: absolute;
   left: 24px;
   font-family: var(--b-mono);
-  font-size: 10px;
-  font-weight: 500;
+  font-size: 9px;
   letter-spacing: 0.1em;
   color: rgba(241, 239, 235, 0.68);
   white-space: nowrap;
@@ -348,34 +359,61 @@
 .seasonLabelOn {
   color: rgba(241, 239, 235, 0.92);
 }
+/* 스테이션 = 라벨 + 값을 담는 라운드 태그.
+   여백·라운드는 상시 유지하고 배경만 켜서 점등 시 글자가 밀리지 않게 한다. */
 .station {
   position: absolute;
   right: 24px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  gap: 3px;
+  padding: 9px 15px 10px;
+  margin-right: -15px;
+  border-radius: 18px;
+  background: transparent;
+  /* 소등은 길게(0.9s) — 지나간 자리에 잔상이 남는다 */
+  transition: background-color 0.9s var(--b-out), box-shadow 0.9s var(--b-out),
+    transform 0.9s var(--b-out);
 }
 .stationLabel {
   font-family: var(--b-mono);
-  font-size: 10px;
+  /* 한글은 Plex Mono에 글리프가 없어 Noto Sans KR로 폴백된다 — 400은 9px에서 너무 얇다 */
   font-weight: 500;
+  font-size: 9px;
   letter-spacing: 0.12em;
   color: rgba(241, 239, 235, 0.72);
   white-space: nowrap;
-  transition: color 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: color 0.9s var(--b-out);
 }
 .stationValue {
   font-family: var(--b-mono);
   font-weight: 300;
   font-size: 17px;
+  line-height: 1.15;
   color: var(--b-ivory);
   white-space: nowrap;
-  transition: color 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: color 0.9s var(--b-out);
+}
+/* 점등 — 앰버 태그를 채우고 글자는 void로 비운다(녹아웃).
+   라벨은 같은 void를 옅게 써서 값에 종속시키고, 태그는 그림자로 심해 위에 띄운다.
+   켜짐 0.34s / 꺼짐 0.9s 비대칭 — 필라멘트처럼 빠르게 붙고 천천히 식는다. */
+.stationLit {
+  background: var(--b-amber);
+  box-shadow: 0 8px 28px rgba(204, 173, 123, 0.34), 0 1px 0 rgba(255, 255, 255, 0.22) inset;
+  transform: translateY(-2px);
+  transition-duration: 0.34s;
 }
 .stationLit .stationLabel,
 .stationLit .stationValue {
-  color: var(--b-amber);
+  transition-duration: 0.34s;
+}
+.stationLit .stationLabel {
+  color: rgba(10, 9, 8, 0.58);
+}
+.stationLit .stationValue {
+  color: var(--b-void);
+  font-weight: 400;
 }
 
 /* ── S4 수렴 ─────────────────────────────── */
@@ -384,22 +422,26 @@
   flex-direction: column;
   align-items: center;
   padding: 0 0 56px;
-  background: var(--b-void);
+  /* Paper 69N-0 — S3의 blue1을 이어받아 55%부터 void로 가라앉는다 */
+  background: linear-gradient(180deg, var(--b-blue1) 0%, var(--b-blue1) 55%, var(--b-void) 100%);
 }
 .convergeSvg {
   display: block;
   width: min(390px, 100vw);
   height: auto;
 }
+/* 무한 루프는 기본 금지지만, 이 점은 "기록이 계속된다"를 뜻하므로 근거가 있다.
+   다만 45% 스윙은 깜빡임으로 읽힌다 — 호흡에 가깝게 진폭을 눌렀다. */
 .glowDot {
-  animation: glow 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: glow 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 @keyframes glow {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.55; }
+  50% { opacity: 0.82; }
 }
 .convergeText {
-  margin-top: 36px;
+  /* SVG 하단에 점 아래 여백 29px가 이미 들어 있다 — 그만큼 빼서 점에 붙인다 */
+  margin-top: 8px;
   font-weight: 300;
   font-size: 14px;
   line-height: 24px;
@@ -443,7 +485,7 @@
   display: flex;
   flex-direction: column;
   width: min(342px, 100%);
-  margin-top: 30px;
+  margin-top: 28px;
 }
 .tableCaption {
   display: flex;
@@ -471,9 +513,6 @@
   gap: 16px;
   padding: 10px 0;
   border-top: 0.5px solid rgba(241, 239, 235, 0.12);
-}
-.tableRowLast {
-  border-bottom: 0.5px solid rgba(241, 239, 235, 0.12);
 }
 .tableLabel {
   flex-shrink: 0;
@@ -626,9 +665,9 @@
 
 /* ── 푸터 (언어 선택 포함) ─────────────────── */
 .footer {
-  padding: 48px 24px 40px;
+  padding: 48px 24px max(30px, env(safe-area-inset-bottom));
   background: var(--b-void);
-  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
+  border-top: 0.5px solid rgba(241, 239, 235, 0.1);
 }
 .footerHead {
   display: flex;
@@ -644,54 +683,63 @@
 .footerLogoRow {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 .footerSymbol {
-  width: 27px;
-  height: auto;
+  width: 34px;
+  height: 28px;
+  object-fit: contain;
+  opacity: 0.82;
   display: block;
 }
 .footerWordmark {
-  width: 124px;
-  height: auto;
+  width: 132px;
+  height: 20px;
+  object-fit: contain;
+  opacity: 0.9;
+  transform: translateY(-2px);
   display: block;
 }
 .footerTagline {
-  margin-top: 14px;
+  margin-top: 16px;
   font-family: var(--font-body), sans-serif;
   font-weight: 300;
   font-size: 11px;
   line-height: 19px;
-  color: rgba(241, 239, 235, 0.72);
+  color: rgba(241, 239, 235, 0.56);
 }
 .footerLang {
   position: relative;
   flex-shrink: 0;
+  /* 저작권은 대문자뿐이라 시각적 밑선 = 베이스라인인데, 필의 밑선은 테두리다.
+     상자끼리 붙이면(flex-end) 필이 3px 밑으로 흘러내려 보인다. 그만큼 올린다. */
+  margin-bottom: 3px;
 }
 .footerBase {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 32px;
-  padding-top: 16px;
-  border-top: 0.5px solid rgba(241, 239, 235, 0.08);
-  font-family: var(--b-mono);
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  color: rgba(241, 239, 235, 0.6);
-}
-
-/* 컴팩트 푸터 상단(로고 + 언어) · BRAND/JOURNAL 2열 */
-.footerTop {
-  display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
+  margin-top: 34px;
+  padding-top: 16px;
+  border-top: 0.5px solid rgba(241, 239, 235, 0.1);
+  font-family: var(--b-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: rgba(241, 239, 235, 0.36);
 }
+/* 저작권 2줄 — 언어 버튼과 같은 줄에 놓기 위해 세로로 쌓는다 */
+.footerLegal {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* BRAND/JOURNAL 2열 */
 .footerCols {
   display: flex;
   gap: 12px;
-  margin-top: 30px;
+  margin-top: 32px;
 }
 .footerCol {
   flex: 1;
@@ -706,24 +754,26 @@
   letter-spacing: 0.15em;
   color: rgba(241, 239, 235, 0.36);
 }
+/* space-between으로 벌리면 화살표가 링크에서 떨어져 별개 요소로 읽힌다 */
 .footerColRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 6px;
   font-family: var(--font-body), sans-serif;
   font-weight: 300;
   font-size: 12px;
   color: rgba(241, 239, 235, 0.8);
 }
+/* 셰브론 SVG — 글자 >는 폰트마다 굵기·수직정렬이 흔들리고 수식 기호로 읽힌다.
+   1px 획으로 그려 페이지의 0.5~1px 헤어라인 언어에 맞춘다. */
 .footerArrow {
-  font-family: var(--b-mono);
+  flex-shrink: 0;
   color: var(--b-amber);
-}
-.footerColUrl {
-  font-family: var(--b-mono);
-  font-size: 7.5px;
-  letter-spacing: 0.03em;
-  color: rgba(241, 239, 235, 0.28);
+  /* 셰브론 상자 중심은 줄상자 기준이라, 글자의 실제 잉크 중심보다 위에 앉는다.
+     캔버스 actualBoundingBox로 재보니 폰트·크기별로 0.47~0.63px 위였다.
+     0.5px면 전부 ±0.2px 안에 들고, DPR 2에서 정확히 1픽셀이라 획도 안 흐려진다.
+     (1px은 과해서 반대로 내려가 보였다) */
+  transform: translateY(0.5px);
 }
 
 /* Digital Passport 하단 뉴스레터 — 텍스트 링크 → 인라인 폼 */
@@ -742,12 +792,17 @@
   cursor: pointer;
 }
 .passportNewsArrow {
-  font-family: var(--b-mono);
+  flex-shrink: 0;
+  transform: translateY(0.5px);
 }
 .passportNewsForm {
   display: flex;
   width: min(342px, 100%);
   margin-top: 28px;
+  animation: formOpen 0.4s var(--b-out) forwards;
+}
+.passportNewsDone {
+  animation: formOpen 0.5s var(--b-out) forwards;
 }
 .passportNewsInput {
   flex: 1;
@@ -805,14 +860,19 @@
   letter-spacing: 0.14em;
   cursor: pointer;
 }
-.flagImg {
-  width: 17px;
-  height: 12.75px;
-  border-radius: 2px;
-  border: 0.5px solid rgba(241, 239, 235, 0.2);
-  display: block;
+/* 상태 전환 — 패널이 툭 나타나면 어디서 왔는지 알 수 없다.
+   버튼(하단 우측)에서 자라 올라오도록 origin을 묶는다. */
+@keyframes panelRise {
+  from { opacity: 0; transform: translateY(6px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes formOpen {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .langPanel {
+  transform-origin: bottom right;
+  animation: panelRise 0.34s var(--b-out) forwards;
   position: absolute;
   bottom: calc(100% + 8px);
   right: 0;
@@ -842,11 +902,6 @@
 .langOpt:first-child {
   border-top: none;
 }
-.langOpt .flagImg {
-  width: 20px;
-  height: 15px;
-  border-radius: 2.5px;
-}
 .langOptCode {
   font-family: var(--b-mono);
   font-size: 10px;
@@ -864,11 +919,49 @@
   color: var(--b-amber);
 }
 
+/* ── 촉각 피드백 ───────────────────────────
+   NFC로 열리는 모바일 페이지 = 전부 탭. 눌렀을 때 반응이 없으면 죽은 버튼으로 읽힌다.
+   hover는 터치에서 잔류하므로 pointer:fine에서만 건다. */
+.passportCta,
+.passportSub,
+.passportNews,
+.footerCol,
+.langBtn,
+.langOpt,
+.passportNewsSubmit {
+  transition: transform 0.45s var(--b-out), border-color 0.45s var(--b-out),
+    background-color 0.45s var(--b-out), opacity 0.45s var(--b-out);
+}
+.passportCta:active,
+.passportNewsSubmit:active {
+  transform: scale(0.985);
+  opacity: 0.92;
+  transition-duration: 0.08s;
+}
+.passportSub:active,
+.langBtn:active,
+.passportNews:active {
+  transform: translateY(0.5px);
+  border-color: rgba(204, 173, 123, 0.55);
+  transition-duration: 0.08s;
+}
+.footerCol:active,
+.langOpt:active {
+  opacity: 0.6;
+  transition-duration: 0.08s;
+}
+@media (hover: hover) and (pointer: fine) {
+  .passportCta:hover { opacity: 0.9; }
+  .passportSub:hover { border-color: rgba(204, 173, 123, 0.5); }
+  .langOpt:hover { background: rgba(241, 239, 235, 0.05); }
+  .footerCol:hover { opacity: 0.78; }
+}
+
 /* ── 리빌 + 인트로 + 모션 감축 ─────────────── */
 .reveal {
   opacity: 0;
   transform: translateY(14px);
-  transition: opacity 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: opacity 0.9s var(--b-out), transform 0.9s var(--b-out);
 }
 .revealIn {
   opacity: 1;
@@ -877,25 +970,43 @@
 
 .introFade {
   opacity: 0;
-  animation: settle 1.6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  animation: settle 1.6s var(--b-out) forwards;
 }
+/* 히어로 등장 순서 — 주인공(N°·타이틀)이 먼저 앉고, 상태 라벨이 뒤따른다.
+   같은 delay로 동시에 뜨면 무엇을 봐야 할지 지시하지 못한다. */
 .introFadeD1 {
   animation-delay: 0.3s;
+}
+.introFadeD2 {
+  animation-delay: 0.85s;
 }
 @keyframes settle {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* 표·여정 리빌 (data-reveal) */
-.tables,
+/* 여정 리빌 (data-reveal) */
 .journeyScaler {
   opacity: 0;
   transform: translateY(14px);
-  transition: opacity 0.9s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: opacity 0.9s var(--b-out), transform 0.9s var(--b-out);
 }
-.tables.revealIn,
 .journeyScaler.revealIn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 표 리빌 — 컨테이너를 통째로 띄우지 않고 행 단위로 순차 기입한다.
+   기록이 한 줄씩 적히는 서사와 맞고, 통짜 페이드보다 위계가 생긴다. */
+.tables .tableCaption,
+.tables .tableRow {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.7s var(--b-out), transform 0.7s var(--b-out);
+  transition-delay: calc(var(--i, 0) * 55ms);
+}
+.tables.revealIn .tableCaption,
+.tables.revealIn .tableRow {
   opacity: 1;
   transform: translateY(0);
 }
@@ -927,6 +1038,19 @@
 @media (prefers-reduced-motion: reduce) {
   .glowDot { animation: none; }
   .introFade { animation: none; opacity: 1; }
+  .langPanel,
+  .passportNewsForm,
+  .passportNewsDone { animation: none; opacity: 1; transform: none; }
+  .tables .tableCaption,
+  .tables .tableRow { opacity: 1; transform: none; transition: none; transition-delay: 0s; }
+  .station { transition: none; }
+  .passportCta,
+  .passportSub,
+  .passportNews,
+  .footerCol,
+  .langBtn,
+  .langOpt,
+  .passportNewsSubmit { transition: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .tables,
   .journeyScaler { opacity: 1; transform: none; transition: none; }

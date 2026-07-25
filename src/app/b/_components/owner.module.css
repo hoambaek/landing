@@ -7,6 +7,7 @@
   --o-amber: #ccad7b;
   --o-mono: var(--font-plex-mono), "IBM Plex Mono", monospace;
   --o-serif: var(--font-heading), "Cormorant Garamond", serif;
+  --o-serif-kr: var(--font-serif-kr), "Noto Serif KR", serif;
   --o-sans: var(--font-body), "Noto Sans KR", sans-serif;
   min-height: 100svh;
   background: var(--o-void);
@@ -17,15 +18,25 @@
 }
 .frame {
   width: min(430px, 100vw);
-  overflow: hidden;
+  /* overflow: hidden은 스크롤 컨테이너를 만들어 헤더의 sticky를 무력화한다.
+     clip은 컨테이너를 만들지 않으면서 가로 넘침만 자른다. */
+  overflow-x: clip;
+  /* 푸터를 걷어내 마지막 섹션이 화면 끝에 붙는다 — 홈 인디케이터 영역을 비운다 */
+  padding-bottom: max(40px, calc(env(safe-area-inset-bottom) + 26px));
 }
 
-/* ── 헤더 ── */
+/* ── 헤더 ──
+   푸터를 걷어내 이 백버튼이 유일한 출구가 됐다. 작은 화면(375×667)에서는
+   페이지가 172px 스크롤돼 static이면 출구를 잃는다. 고정한다. */
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: max(20px, calc(env(safe-area-inset-top) + 8px)) 24px 18px;
+  background: var(--o-void);
   border-bottom: 0.5px solid rgba(241, 239, 235, 0.14);
 }
 .back {
@@ -45,107 +56,208 @@
 .headerWordmark { width: 122px; height: auto; opacity: 0.9; }
 .headerSpacer { width: 28px; flex-shrink: 0; }
 
-/* ── 등록된 소유자 ── */
+/* ── 등록된 소유자 ─────────────────────────────────
+   전부 왼쪽 정렬 텍스트 4줄이라 크기만 다를 뿐 형태가 같았고, 그래서 폼 출력값처럼 읽혔다.
+   위에서 앰버가 스미는 면 + 인장 획 + 세리프 이름으로 "각인된 이름"의 결을 준다. */
 .identity {
   display: flex;
   flex-direction: column;
-  padding: 42px 24px 34px;
+  align-items: flex-start;
+  padding: 34px 24px 34px;
+  background: radial-gradient(150% 100% at 50% -20%, rgba(204, 173, 123, 0.08) 0%, rgba(204, 173, 123, 0) 62%);
+}
+/* 인장 획 — 소유한 병 카드의 짧은 획과 같은 장치 */
+.identityRule {
+  width: 40px;
+  height: 1px;
+  background: var(--o-amber);
+  opacity: 0.5;
 }
 .identityHead {
+  margin-top: 16px;
   font-family: var(--o-sans);
   font-size: 9px;
   letter-spacing: 0.18em;
   color: var(--o-amber);
 }
+/* 인증서의 소유자 이름(.ownerName)과 같은 세리프 — 두 화면에서 같은 이름으로 읽혀야 한다 */
 .identityName {
-  margin-top: 18px;
-  font-family: var(--o-sans);
-  font-weight: 300;
-  font-size: 26px;
-  line-height: 32px;
+  margin-top: 16px;
+  font-family: var(--o-serif-kr);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 38px;
+  letter-spacing: 0.02em;
   color: var(--o-ivory);
 }
 .identityEmail {
-  margin-top: 6px;
-  font-family: var(--o-sans);
-  font-size: 12px;
-  color: rgba(241, 239, 235, 0.46);
+  margin-top: 8px;
+  font-family: var(--o-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: rgba(241, 239, 235, 0.42);
 }
+/* 미인증 — "소유 등록 완료"는 사실 진술이다. 테두리를 두르면 바로 아래 인증 CTA와
+   같은 상자가 되어 눌리는 것처럼 보인다. 작은 사각 마크만 달고 흘려 둔다.
+   (원형 점은 이 페이지의 유일한 곡선이라 도형 언어가 깨져 사각으로 바꿨다) */
 .identityStatus {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 7px;
-  margin-top: 18px;
+  gap: 8px;
+  margin-top: 20px;
   font-family: var(--o-sans);
   font-size: 9px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
+  color: rgba(241, 239, 235, 0.5);
+}
+.identityStatus::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  flex-shrink: 0;
+  background: rgba(241, 239, 235, 0.38);
+}
+/* 인증됨 — 증명을 마친 상태라 배지로 세운다. 아래는 밑줄 텍스트 링크뿐이라 혼동 없다 */
+.identityStatusOn {
+  padding: 6px 11px 7px;
+  border: 0.5px solid rgba(204, 173, 123, 0.5);
   color: var(--o-amber);
 }
-.statusDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
+.identityStatusOn::before {
+  display: none;
+}
+/* nudge 없음 — 자물쇠 잉크가 viewBox 안에서 이미 아래로 치우쳐 있다(.eyebrowLock 주석 참고) */
+.statusLock {
   flex-shrink: 0;
-  background: var(--o-amber);
 }
 
-/* ── 연결된 병 ── */
+/* ── 소유한 병 ─────────────────────────────────────
+   소장품 카드. 평평한 elev 한 겹에 숫자 상자만 얹으면 설정 행과 구분이 안 된다.
+   상단에서 앰버 기운이 스미고 아래로 void에 가라앉는 그라디언트 + 앰버 헤어라인으로
+   "케이스 안에 놓인 한 병"의 결을 만든다. */
+/* 제목을 단 섹션이 됐으니 설정 그룹과 같은 틀(윗선 + 여백)을 쓴다 */
 .linked {
-  padding: 0 24px 36px;
+  padding: 30px 24px 34px;
+  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
 }
 .linkedCard {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 18px;
-  background: var(--o-elev);
-  border: 0.5px solid rgba(204, 173, 123, 0.38);
+  align-items: stretch;
+  gap: 18px;
+  margin-top: 16px;
+  padding: 20px;
+  background:
+    radial-gradient(120% 80% at 22% 0%, rgba(204, 173, 123, 0.09) 0%, rgba(204, 173, 123, 0) 62%),
+    linear-gradient(180deg, var(--o-elev) 0%, #0c0a09 100%);
+  border: 0.5px solid rgba(204, 173, 123, 0.34);
   text-decoration: none;
 }
-.linkedSerial {
+.linkedCard:active {
+  border-color: rgba(204, 173, 123, 0.62);
+  transform: scale(0.995);
+}
+
+/* 병을 놓는 자리 — 인증서의 도판 액자(.plateFrame)와 같은 언어 */
+.linkedPlate {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 54px;
-  height: 68px;
+  width: 108px;
   flex-shrink: 0;
-  border: 0.5px solid rgba(204, 173, 123, 0.4);
+  padding: 14px 0;
+  background: rgba(10, 9, 8, 0.55);
+  border: 0.5px solid rgba(204, 173, 123, 0.26);
 }
-.linkedSerialNo {
-  font-family: var(--o-mono);
-  font-size: 8px;
-  color: rgba(241, 239, 235, 0.48);
+.linkedBottle {
+  width: 72px;
+  height: 148px;
+  object-fit: contain;
 }
-.linkedSerialNum {
-  font-family: var(--o-serif);
-  font-weight: 300;
-  font-size: 28px;
-  line-height: 30px;
-  color: var(--o-amber);
-}
+
 .linkedInfo {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  justify-content: center;
+}
+/* 에디션 — 소장의 핵심. 번호만 세리프로 키우고 나머지는 모노로 눌러 숫자를 세운다 */
+.linkedEdition {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.linkedEdNo {
+  font-family: var(--o-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgba(204, 173, 123, 0.72);
+}
+.linkedEdNum {
+  font-family: var(--o-serif);
+  font-weight: 300;
+  font-size: 30px;
+  line-height: 32px;
+  letter-spacing: 0.01em;
+  color: var(--o-amber);
+}
+.linkedEdTotal {
+  font-family: var(--o-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: rgba(241, 239, 235, 0.36);
 }
 .linkedName {
+  margin-top: 6px;
   font-family: var(--o-serif);
-  font-size: 20px;
+  font-weight: 300;
+  font-size: 21px;
+  line-height: 26px;
   color: var(--o-ivory);
 }
-.linkedSub {
-  font-family: var(--o-sans);
-  font-size: 11px;
-  color: rgba(241, 239, 235, 0.46);
+/* 제품 정체와 바다 기록을 가르는 짧은 획. 구분선이 아니라 인장에 가깝게 */
+/* 가장 긴 조합이 "Petit Meslier · Ultra-Brut"이고 정보칸에 딱 맞았다.
+   폰트 로딩·로케일이 조금만 달라져도 넘치므로 한 단계 줄이고 말줄임을 안전장치로 둔다. */
+.linkedTrait {
+  margin-top: 7px;
+  font-family: var(--o-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.05em;
+  color: rgba(241, 239, 235, 0.44);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.linkedArrow {
-  flex-shrink: 0;
+.linkedRule {
+  width: 26px;
+  height: 1px;
+  margin-top: 15px;
+  background: var(--o-amber);
+  opacity: 0.45;
+}
+/* 바다 기록 — 라벨 위, 값 아래. 입장 페이지의 증거 블록과 같은 조판 */
+.linkedFacts {
+  display: flex;
+  gap: 22px;
+  margin-top: 12px;
+}
+.linkedFact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+/* 라벨이 한글이라 모노는 폴백되어 뭉갠다 — 본문 폰트로 두고 자간으로 라벨 성격을 준다 */
+.linkedFactLabel {
   font-family: var(--o-sans);
-  font-size: 16px;
-  color: var(--o-amber);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: rgba(241, 239, 235, 0.5);
+}
+.linkedFactValue {
+  font-family: var(--o-sans);
+  font-weight: 300;
+  font-size: 13px;
+  color: rgba(241, 239, 235, 0.82);
 }
 
 /* ── 설정 그룹 ── */
@@ -174,7 +286,11 @@
   text-align: left;
 }
 .settingRow:first-of-type { margin-top: 14px; }
+/* min-width:auto(플렉스 기본)면 긴 로케일에서 줄지 못해 행이 넘친다.
+   실측: fr "Reporté sur le certificat et le relevé de propriété."에서 342 → 352 */
 .settingText {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -189,74 +305,64 @@
   font-size: 10px;
   color: rgba(241, 239, 235, 0.4);
 }
+/* 열린 행에서 90° 회전한다. `›` 글리프는 라인박스가 회전하며 행 밖으로 새어
+   가로 넘침을 만들었다(5×24 → 24×5, 이후에도 4px 잔여). SVG는 크기가 정확해
+   그 문제가 없고, /b의 다른 셰브론과 모양도 하나로 맞는다. */
 .settingArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
-  font-family: var(--o-sans);
-  font-size: 16px;
   color: rgba(241, 239, 235, 0.5);
 }
-.toggle {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  width: 38px;
-  height: 22px;
-  flex-shrink: 0;
-  padding: 3px;
-  border-radius: 11px;
-  background: var(--o-amber);
-}
-.toggleKnob {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--o-void);
-}
 
-/* ── 소유권 이전 ── */
-.transferCard {
+/* 언어 목록 — 기록·인증서 푸터의 선택 패널과 같은 조판(코드 · 언어명 · 앰버 체크).
+   설정 화면이라 리스트를 펼쳐 두고 고르게 한다(드롭다운보다 탭 대상이 크다). */
+.langList {
   display: flex;
   flex-direction: column;
-  margin-top: 14px;
-  padding: 20px;
-  border: 0.5px solid rgba(241, 239, 235, 0.18);
+  padding: 6px;
 }
-.transferTitle {
-  font-family: var(--o-sans);
-  font-size: 15px;
-  color: var(--o-ivory);
-}
-.transferSub {
-  margin-top: 7px;
-  font-family: var(--o-sans);
-  font-size: 11px;
-  line-height: 18px;
-  color: rgba(241, 239, 235, 0.46);
-  word-break: keep-all;
-}
-.transferBtn {
-  height: 46px;
-  margin-top: 18px;
+.langOpt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 10px;
   background: transparent;
-  border: 0.5px solid rgba(204, 173, 123, 0.58);
-  font-family: var(--o-sans);
-  font-size: 12px;
-  color: var(--o-amber);
+  border: none;
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  text-align: left;
 }
-.transferBtn:active { border-color: var(--o-amber); }
-
-.soonNote {
-  margin: 4px 24px 0;
+.langOpt:active { background: rgba(241, 239, 235, 0.06); }
+.langOptCode {
+  width: 24px;
+  flex-shrink: 0;
   font-family: var(--o-mono);
   font-size: 10px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
+  color: rgba(241, 239, 235, 0.5);
+}
+.langOptNative {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--o-sans);
+  font-weight: 300;
+  font-size: 13px;
+  color: rgba(241, 239, 235, 0.88);
+}
+.langOptActive .langOptCode,
+.langOptActive .langOptNative {
   color: var(--o-amber);
-  text-align: center;
+}
+.langCheck {
+  flex-shrink: 0;
+  color: var(--o-amber);
 }
 
-/* ── 인증 / 수정 / 이전 패널 ── */
+/* ── 인증 / 수정 패널 ── */
 .authCta {
   align-self: flex-start;
   margin-top: 18px;
@@ -301,6 +407,32 @@
   gap: 16px;
   width: 100%;
   margin-top: 16px;
+}
+
+/* 행에서 펼쳐진 면(이름 수정·언어).
+   배경 없이 그냥 이어 붙이면 입력칸 밑줄이 행 구분선과 똑같이 읽혀서
+   어디부터 어디까지가 편집 영역인지 사라진다. 인증 패널(.authPanel)과 같은
+   처리를 써서 "행에서 열린 면"이라는 언어를 하나로 맞춘다. */
+.rowPanel {
+  margin: 6px 0 20px;
+  padding: 18px;
+  background: var(--o-elev);
+  border: 0.5px solid rgba(241, 239, 235, 0.16);
+}
+/* 열린 행 — 어느 행에서 나온 면인지 표시 */
+.settingRowOpen .settingTitle,
+.settingRowOpen .settingArrow {
+  color: var(--o-amber);
+}
+.settingRowOpen .settingArrow {
+  transform: rotate(90deg);
+}
+.settingArrow {
+  display: inline-block;
+  transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1), color 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .settingArrow { transition: none; }
 }
 .panelField {
   display: flex;
@@ -350,7 +482,12 @@
   display: flex;
   gap: 10px;
 }
-.panelRow .panelBtn { flex: 1; }
+/* 크롬은 flex-basis:0을 콘텐츠 박스로 잡아서 좌우 패딩이 그 위에 더해진다.
+   그대로 두면 취소 126 / 저장 169로 반반이 안 된다. 폭은 flex가 정하니 패딩을 뺀다. */
+.panelRow .panelBtn {
+  flex: 1;
+  padding: 0;
+}
 .panelCancel {
   flex: 1;
   height: 46px;
@@ -361,39 +498,42 @@
   color: rgba(241, 239, 235, 0.72);
   cursor: pointer;
 }
+/* 이 패널이 고치는 건 이름 하나다. 크기로 그걸 말한다.
+   위 아이덴티티 헤드라인(26px)보다 한 단계 작게 둬서 "그걸 고치는 중"으로 읽히되
+   화면 주인 자리를 뺏지 않게 한다. */
+.panelInputLead {
+  padding-bottom: 13px;
+  border-bottom-color: rgba(241, 239, 235, 0.32);
+  font-size: 22px;
+  line-height: 30px;
+}
+
+/* 읽기 전용 값 — 입력칸과 같은 자리에 오지만 밑줄을 빼서 '못 고친다'가 보이게.
+   이름의 절반 크기로 내려 편집 대상이 아님을 크기로 먼저 알린다. */
+.panelReadonly {
+  gap: 5px;
+  margin-top: 4px;
+}
+.panelLabelMuted {
+  color: rgba(241, 239, 235, 0.3);
+}
+.panelStatic {
+  font-family: var(--o-sans);
+  font-weight: 300;
+  font-size: 12px;
+  color: rgba(241, 239, 235, 0.5);
+}
+.panelNote {
+  margin-top: 6px;
+  font-family: var(--o-sans);
+  font-size: 10px;
+  line-height: 16px;
+  color: rgba(241, 239, 235, 0.34);
+  word-break: keep-all;
+}
 .panelErr {
   font-family: var(--o-mono);
   font-size: 10px;
   color: #c98b83;
 }
-.transferSent {
-  margin-top: 18px;
-  font-family: var(--o-sans);
-  font-size: 12px;
-  line-height: 19px;
-  color: var(--o-amber);
-  word-break: keep-all;
-}
 
-/* ── 푸터 ── */
-.footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  padding: 26px 24px 38px;
-  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
-}
-.footerLink {
-  font-family: var(--o-sans);
-  font-size: 11px;
-  color: rgba(241, 239, 235, 0.5);
-  text-decoration: none;
-}
-.footerMeta {
-  font-family: var(--o-sans);
-  font-weight: 300;
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  color: rgba(241, 239, 235, 0.28);
-}

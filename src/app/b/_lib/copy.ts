@@ -6,12 +6,13 @@
 
 export type BottleLocale = "ko" | "en" | "fr" | "ja" | "zh";
 
-export const BOTTLE_LOCALES: { code: BottleLocale; short: string; native: string; flag: string }[] = [
-  { code: "ko", short: "KO", native: "한국어", flag: "/flags/kr.svg" },
-  { code: "en", short: "EN", native: "English", flag: "/flags/us.svg" },
-  { code: "fr", short: "FR", native: "Français", flag: "/flags/fr.svg" },
-  { code: "ja", short: "JA", native: "日本語", flag: "/flags/jp.svg" },
-  { code: "zh", short: "ZH", native: "中文", flag: "/flags/cn.svg" },
+/* 국기 이미지는 전 화면에서 걷어냈다(코드 + 언어명만) — flag 필드도 함께 제거 */
+export const BOTTLE_LOCALES: { code: BottleLocale; short: string; native: string }[] = [
+  { code: "ko", short: "KO", native: "한국어" },
+  { code: "en", short: "EN", native: "English" },
+  { code: "fr", short: "FR", native: "Français" },
+  { code: "ja", short: "JA", native: "日本語" },
+  { code: "zh", short: "ZH", native: "中文" },
 ];
 
 type MetricKey = "temp" | "salinity" | "tide" | "current" | "pressure" | "tidal" | "wave" | "period";
@@ -60,14 +61,14 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
       pressure: "수압", tidal: "조류 유속", wave: "파고", period: "파주기",
     },
     metricsShort: { temp: "수온", salinity: "염분", tide: "조위", current: "해류", pressure: "수압", tidal: "조류", wave: "파고", period: "파주기" },
-    converged: "1년의 바다가 이 병에 담겼습니다.",
-    converging: "바다가 지금도 이 병에 담기고 있습니다.",
+    converged: "1년의 바다가 한 병에 담겼습니다.",
+    converging: "바다가 지금도 한 병에 담기고 있습니다.",
     passport: { maison: "MAISON", cepage: "CÉPAGE", style: "STYLE" },
-    gating: "이 병의 기록 전문은 인양 참관 초대와 함께 공개됩니다.",
+    gating: "기록 전문은 인양 참관 초대와 함께 공개됩니다.",
     cta: "N° {serial}의 주인으로 이름을 남기다",
-    ctaNoSerial: "이 병의 주인으로 이름을 남기다",
+    ctaNoSerial: "첫 주인으로 이름을 남기다",
     ctaSub: "REGISTRE · OCEAN CELLAR™",
-    footerTagline: "바다의 시간을 기록하는 디지털 아카이브.",
+    footerTagline: "바다의 시간을 기록합니다.",
     notFoundTitle: "병 정보를 찾을 수 없습니다",
     notFoundBody: "유효하지 않은 코드이거나 아직 등록되지 않은 병입니다.",
   },
@@ -95,7 +96,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     cta: "Sign the Registre as owner of N° {serial}",
     ctaNoSerial: "Sign the Registre as this bottle's owner",
     ctaSub: "REGISTRE · OCEAN CELLAR™",
-    footerTagline: "A digital archive of the sea's time.",
+    footerTagline: "We record the time of the sea.",
     notFoundTitle: "Bottle not found",
     notFoundBody: "This code is invalid or not yet registered.",
   },
@@ -123,7 +124,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     cta: "Inscrire votre nom au Registre du N° {serial}",
     ctaNoSerial: "Inscrire votre nom au Registre",
     ctaSub: "REGISTRE · OCEAN CELLAR™",
-    footerTagline: "Une archive numérique du temps de la mer.",
+    footerTagline: "Nous enregistrons le temps de la mer.",
     notFoundTitle: "Bouteille introuvable",
     notFoundBody: "Ce code est invalide ou n'est pas encore enregistré.",
   },
@@ -151,7 +152,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     cta: "N° {serial} の所有者として名を残す",
     ctaNoSerial: "この一本の所有者として名を残す",
     ctaSub: "REGISTRE · OCEAN CELLAR™",
-    footerTagline: "海の時間を記録するデジタルアーカイブ。",
+    footerTagline: "海の時間を記録します。",
     notFoundTitle: "ボトルが見つかりません",
     notFoundBody: "コードが無効か、まだ登録されていません。",
   },
@@ -179,7 +180,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     cta: "以您之名登记 N° {serial}",
     ctaNoSerial: "以您之名登记此瓶",
     ctaSub: "REGISTRE · OCEAN CELLAR™",
-    footerTagline: "记录大海时间的数字档案。",
+    footerTagline: "记录大海的时间。",
     notFoundTitle: "未找到该瓶信息",
     notFoundBody: "代码无效或尚未登记。",
   },
@@ -190,6 +191,8 @@ export interface ProductMeta {
   name: string;
   quantity: number;
   image: string;
+  /** 인증서 도판용 세로 컷아웃. 없으면 image로 폴백(가로 제품컷이라 프레임 안에서 눕는다). */
+  imagePortrait?: string;
   cepage?: string;
   style?: string;
 }
@@ -199,12 +202,15 @@ export const PRODUCT_META: Record<string, ProductMeta> = {
   en_lieu_sur_brut: { name: "En Lieu Sûr", quantity: 200, image: "/images/01-2.webp", style: "Brut" },
   en_lieu_sur_magnum: { name: "En Lieu Sûr Magnum", quantity: 24, image: "/images/02-2.webp", style: "Brut" },
   element_de_surprise: { name: "Élément de Surprise", quantity: 110, image: "/images/03-2.webp", cepage: "Chardonnay", style: "Non-dosé" },
-  atomes_crochus_1y: { name: "Atomes Crochus", quantity: 100, image: "/images/05-2.webp", cepage: "Petit Meslier", style: "Ultra-Brut" },
-  atomes_crochus_2y: { name: "Atomes Crochus", quantity: 40, image: "/images/06.webp", cepage: "Petit Meslier", style: "Ultra-Brut" },
-  atomes_crochus: { name: "Atomes Crochus", quantity: 100, image: "/images/05-2.webp", cepage: "Petit Meslier", style: "Ultra-Brut" },
+  atomes_crochus_1y: { name: "Atomes Crochus", quantity: 100, image: "/images/05-2.webp", imagePortrait: "/images/b-cert-bottle.webp", cepage: "Petit Meslier", style: "Ultra-Brut" },
+  atomes_crochus_2y: { name: "Atomes Crochus", quantity: 40, image: "/images/06.webp", imagePortrait: "/images/b-cert-bottle.webp", cepage: "Petit Meslier", style: "Ultra-Brut" },
+  atomes_crochus: { name: "Atomes Crochus", quantity: 100, image: "/images/05-2.webp", imagePortrait: "/images/b-cert-bottle.webp", cepage: "Petit Meslier", style: "Ultra-Brut" },
 };
 
 export const MAISON_NAME = "Mignon-Boulard";
+
+/** 소유 정보 변경 문의처 — 이메일은 셀프 수정 경로가 없다 */
+export const OWNER_CONTACT_EMAIL = "info@musedemaree.com";
 
 /* ── 입장 페이지 카피 (5개 언어) ───────────────────────────── */
 export interface EntryCopy {
@@ -232,9 +238,14 @@ export interface EntryCopy {
   provHint: string; // "전체 숙성 기록은 소유 등록 후 열립니다"
   /* 03 Claim Ownership */
   ownEyebrow: string; // "OWNERSHIP"
-  ownTitle: string; // \n = 줄바꿈
+  ownTitle: string; // {serial} 치환, \n = 줄바꿈
+  ownTitleNoSerial: string; // 병 번호 미부여 시
   ownBody: string; // {serial} 치환, \n = 줄바꿈
   ownBodyNoSerial: string;
+  /* 이미 등록된 병 — 폼 대신 소유자와 기록 입구를 보여준다 */
+  claimedTitle: string;
+  claimedBody: string;
+  claimedCta: string;
   nameLabel: string; // "이름 · NAME"
   namePlaceholder: string;
   emailLabel: string; // "이메일 · EMAIL"
@@ -265,7 +276,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     identityBodyNoSerial: "오직 {total}병만 존재하는 첫 번째 해저 숙성 에디션.\n당신이 태그한 병이 그 기록의 일부입니다.",
     provEyebrow: "PROVENANCE",
     provTitle: "바다가 남긴\n세 가지 증거",
-    provBody: "이 병이 지나온 시간은 감상이 아니라\n실제 관측 기록으로 보존되어 있습니다.",
+    provBody: "지나온 시간은\n실제 관측 기록으로 남아 있습니다.",
     fact1Label: "숙성 수심",
     fact1Value: "30m",
     fact1Sub: "남해 해저",
@@ -277,14 +288,19 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     fact3Sub: "실제 측정 데이터",
     provHint: "전체 숙성 기록은 소유 등록 후 열립니다",
     ownEyebrow: "OWNERSHIP",
-    ownTitle: "이 병의 기록에\n당신의 이름을 남기세요.",
+    ownTitle: "N° {serial}의 기록에\n당신의 이름을 남기세요.",
+    ownTitleNoSerial: "기록에\n당신의 이름을 남기세요.",
     ownBody: "N° {serial}의 첫 소유자로 기록되며,\n바다 아래에서 보낸 모든 시간이 열립니다.",
-    ownBodyNoSerial: "이 병의 첫 소유자로 기록되며,\n바다 아래에서 보낸 모든 시간이 열립니다.",
+    ownBodyNoSerial: "첫 소유자로 기록되며,\n바다 아래에서 보낸 모든 시간이 열립니다.",
+    claimedTitle: "이름이 새겨진 병입니다.",
+    claimedBody: "기록은 누구에게나 열려 있습니다.",
+    claimedCta: "바다의 기록 보기",
     nameLabel: "이름 · NAME",
     namePlaceholder: "인증서에 남길 이름",
     emailLabel: "이메일 · EMAIL",
     emailPlaceholder: "디지털 인증서를 받을 주소",
-    privacyNote: "이름과 이메일은 소유 기록 및 디지털 인증서 발급에만 사용됩니다.",
+    privacyNote:
+      "인증서에 새겨진 이름은 병을 태그하는 누구에게나 보입니다.\n이메일은 공개하지 않고 인증서 발급에만 씁니다.",
     submit: "이름을 새기다",
     submitting: "새기는 중",
     inscribedEyebrow: "등록 완료",
@@ -319,13 +335,18 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     provHint: "The full cellaring record opens after ownership is registered",
     ownEyebrow: "OWNERSHIP",
     ownTitle: "Leave your name\non this bottle's record.",
+    ownTitleNoSerial: "Leave your name\non this bottle's record.",
     ownBody: "Recorded as the first owner of N° {serial},\nand every hour spent beneath the sea opens to you.",
     ownBodyNoSerial: "Recorded as this bottle's first owner,\nand every hour spent beneath the sea opens to you.",
+    claimedTitle: "This bottle already bears a name.",
+    claimedBody: "The record stays open to everyone.",
+    claimedCta: "View the sea's record",
     nameLabel: "NAME",
     namePlaceholder: "Name for the certificate",
     emailLabel: "EMAIL",
     emailPlaceholder: "Address to receive the certificate",
-    privacyNote: "Your name and email are used only for the ownership record and issuing the digital certificate.",
+    privacyNote:
+      "The name on the certificate is visible to anyone who taps the bottle.\nYour email stays private and is used only to issue the certificate.",
     submit: "Inscribe your name",
     submitting: "Inscribing",
     inscribedEyebrow: "REGISTERED",
@@ -360,13 +381,18 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     provHint: "Le relevé complet s'ouvre après l'enregistrement de la propriété",
     ownEyebrow: "OWNERSHIP",
     ownTitle: "Laissez votre nom\nau relevé de cette bouteille.",
+    ownTitleNoSerial: "Laissez votre nom\nau relevé de cette bouteille.",
     ownBody: "Inscrit comme premier propriétaire du N° {serial},\net chaque heure passée sous la mer s'ouvre à vous.",
     ownBodyNoSerial: "Inscrit comme premier propriétaire de cette bouteille,\net chaque heure passée sous la mer s'ouvre à vous.",
+    claimedTitle: "Cette bouteille porte déjà un nom.",
+    claimedBody: "Le relevé reste ouvert à tous.",
+    claimedCta: "Voir le relevé de la mer",
     nameLabel: "NOM",
     namePlaceholder: "Nom pour le certificat",
     emailLabel: "E-MAIL",
     emailPlaceholder: "Adresse pour recevoir le certificat",
-    privacyNote: "Votre nom et votre e-mail servent uniquement au relevé de propriété et à l'émission du certificat numérique.",
+    privacyNote:
+      "Le nom gravé sur le certificat est visible par toute personne qui scanne la bouteille.\nVotre e-mail reste privé et sert uniquement à émettre le certificat.",
     submit: "Inscrire votre nom",
     submitting: "Inscription",
     inscribedEyebrow: "ENREGISTRÉ",
@@ -401,13 +427,18 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     provHint: "全熟成記録は所有登録の後に開きます",
     ownEyebrow: "OWNERSHIP",
     ownTitle: "この一本の記録に\nあなたの名を残してください。",
+    ownTitleNoSerial: "この一本の記録に\nあなたの名を残してください。",
     ownBody: "N° {serial} の最初の所有者として記録され、\n海の底で過ごしたすべての時間が開きます。",
     ownBodyNoSerial: "この一本の最初の所有者として記録され、\n海の底で過ごしたすべての時間が開きます。",
+    claimedTitle: "すでに名が刻まれた一本です。",
+    claimedBody: "記録は誰にでも開かれています。",
+    claimedCta: "海の記録を見る",
     nameLabel: "名前 · NAME",
     namePlaceholder: "証明書に残す名前",
     emailLabel: "メール · EMAIL",
     emailPlaceholder: "デジタル証明書を受け取る宛先",
-    privacyNote: "お名前とメールは所有記録およびデジタル証明書の発行にのみ使用されます。",
+    privacyNote:
+      "証明書に刻まれたお名前は、ボトルをタグした方に表示されます。\nメールアドレスは公開せず、証明書の発行にのみ使用します。",
     submit: "名を刻む",
     submitting: "刻んでいます",
     inscribedEyebrow: "登録完了",
@@ -442,13 +473,18 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     provHint: "完整熟成记录将在登记所有权后开启",
     ownEyebrow: "OWNERSHIP",
     ownTitle: "在这一瓶的记录上\n留下你的名字。",
+    ownTitleNoSerial: "在这一瓶的记录上\n留下你的名字。",
     ownBody: "作为 N° {serial} 的首位所有者被记录，\n它在海底度过的所有时间将向你开启。",
     ownBodyNoSerial: "作为此瓶的首位所有者被记录，\n它在海底度过的所有时间将向你开启。",
+    claimedTitle: "这一瓶已刻上名字。",
+    claimedBody: "记录向所有人开放。",
+    claimedCta: "查看大海的记录",
     nameLabel: "姓名 · NAME",
     namePlaceholder: "留在证书上的名字",
     emailLabel: "邮箱 · EMAIL",
     emailPlaceholder: "接收数字证书的地址",
-    privacyNote: "你的姓名与邮箱仅用于所有权记录及数字证书的签发。",
+    privacyNote:
+      "刻在证书上的姓名，轻触酒瓶的人都能看到。\n邮箱不公开，仅用于签发证书。",
     submit: "刻下你的名字",
     submitting: "刻写中",
     inscribedEyebrow: "登记完成",
@@ -468,8 +504,21 @@ export interface RecordExtraCopy {
   provHead: string;
   seaHead: string;
   provLabels: { maison: string; region: string; cepage: string; style: string; elevage: string };
-  seaLabels: { immersion: string; retrieval: string; duration: string; depth: string; location: string };
+  seaLabels: {
+    immersion: string;
+    retrieval: string;
+    duration: string;
+    depth: string;
+    location: string;
+    environment: string; // 기록 페이지 표 — "숙성 환경"
+    coords: string; // 기록 페이지 표 — "위치"
+  };
   wando: string; // 완도 해역
+  /* 기록 페이지 (Paper 03) 전용 — 히어로 소유자 라벨 · 스테이션 집계 접미 · 표 값 포맷 */
+  ownedBy: string; // 히어로 mono 라벨 (뒤에 소유자 이름)
+  metricAgg: { avg: string; max: string; depth: string }; // {n}=관측 개월, {d}=수심
+  durationFmt: string; // {y}=연도, {m1}·{m2}=시작·종료 월, {n}=개월 수
+  envFmt: string; // {site}=해역, {d}=수심(m)
   newsletterLine: string;
   newsletterCta: string;
   newsletterPlaceholder: string;
@@ -503,23 +552,38 @@ export interface RecordExtraCopy {
   /* 소유 관리 (03A) */
   ownHead: string; // "등록된 소유자"
   ownVerified: string; // "소유 등록 완료"
-  ownLinkedSub: string; // "해저 숙성 · 남해 · 12개월"
+  ownBottleHead: string; // "소유한 병"
   ownAccountHead: string; // "소유자 정보"
-  ownEditName: string; // "이름과 이메일 수정"
+  ownEditName: string; // "이름 수정"
   ownEditNameSub: string;
-  ownNotify: string; // "소식 알림"
-  ownNotifySub: string;
-  ownRightsHead: string; // "소유권"
-  ownTransfer: string; // "소유권 이전"
-  ownTransferSub: string;
-  ownTransferCta: string; // "본인 인증 후 이전하기"
-  ownSoon: string; // 준비 중 안내
-  ownBackRecord: string; // "바다의 기록으로 돌아가기"
+  ownLanguage: string; // 설정 행 "언어"
+  /* 소유 관리 — 인증·수정 UI (하드코딩이던 문자열을 로케일로 뺐다) */
+  ownAuthed: string; // "본인 인증됨"
+  ownSignOut: string; // "인증 해제"
+  ownAuthOpen: string; // "본인 인증하고 전체 보기"
+  ownOtpLead: string;
+  ownOtpSend: string;
+  ownOtpSending: string;
+  ownOtpSent: string; // {email} 치환
+  ownOtpPlaceholder: string;
+  ownOtpVerify: string;
+  ownOtpVerifying: string;
+  ownOtpResend: string;
+  ownFieldName: string;
+  ownFieldEmail: string;
+  ownEmailLocked: string; // 이메일이 읽기 전용인 이유
+  ownEmailLockedTo: string; // {email} 치환 — 문의처
+  ownCancel: string;
+  ownSave: string;
+  ownSaving: string;
+  ownErrGeneric: string;
+  ownErrCode: string;
+  ownErrSave: string;
+  ownMonths: string; // {n} 치환 — "12개월"
   /* Owner Services (기록 페이지 하단 · Digital Passport) */
   passportTitle: string; // \n = 줄바꿈
   passportBody: string; // \n = 줄바꿈
   passportCta: string; // "디지털 인증서 보기"
-  passportSave: string; // "인증서 저장"
   passportManage: string; // "소유 정보 관리"
   passportNews: string; // "다음 인양과 새 기록의 소식 받기"
 }
@@ -529,8 +593,15 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     provHead: "원산지 · 샹파뉴",
     seaHead: "해저 숙성 · 남해",
     provLabels: { maison: "메종", region: "지역", cepage: "품종", style: "스타일", elevage: "숙성" },
-    seaLabels: { immersion: "입수", retrieval: "인양", duration: "숙성 기간", depth: "숙성 수심", location: "숙성 위치" },
+    seaLabels: {
+      immersion: "입수", retrieval: "인양", duration: "숙성 기간", depth: "숙성 수심", location: "숙성 위치",
+      environment: "숙성 환경", coords: "위치",
+    },
     wando: "완도 해역",
+    ownedBy: "OWNED BY",
+    metricAgg: { avg: "{n}개월 평균", max: "{n}개월 최고", depth: "수심 {d}M" },
+    durationFmt: "{y}년 {m1}–{m2} · {n}개월",
+    envFmt: "{site} · 수심 {d}m",
     newsletterLine: "다음 인양과 새 기록의 소식을 먼저 받아보세요.",
     newsletterCta: "뉴스레터 구독",
     newsletterPlaceholder: "you@example.com",
@@ -544,7 +615,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     ecBody: "수온·염분·조위·해류·수압·조류·파고·파주기의\n사계절 변화를 하나의 흐름으로 기록했습니다.",
     ecLegend: "금빛 선 · 수온",
     certTag: "소유 인증서",
-    certDedication: "이 병과 바다의 기록을\n당신의 이름으로 남깁니다",
+    certDedication: "바다의 기록을\n당신의 이름으로 남깁니다",
     certVerifiedShort: "NFC 인증 완료",
     certSeal: "NFC 원본 태그와 등록 기록이 일치합니다.",
     certAuthHead: "인증 정보",
@@ -561,22 +632,36 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certShareText: "뮤즈드마레 소유 인증서",
     ownHead: "등록된 소유자",
     ownVerified: "소유 등록 완료",
-    ownLinkedSub: "해저 숙성 · 남해 · 12개월",
+    ownBottleHead: "소유한 병",
     ownAccountHead: "소유자 정보",
-    ownEditName: "이름과 이메일 수정",
+    ownEditName: "이름 수정",
     ownEditNameSub: "인증서와 소유 기록에 반영됩니다.",
-    ownNotify: "소식 알림",
-    ownNotifySub: "다음 인양과 새 기록을 알려드립니다.",
-    ownRightsHead: "소유권",
-    ownTransfer: "소유권 이전",
-    ownTransferSub: "새 소유자에게 병과 디지털 인증서의 소유 기록을 이전합니다. 이전 후에는 되돌릴 수 없습니다.",
-    ownTransferCta: "본인 인증 후 이전하기",
-    ownSoon: "본인 인증 기능 준비 중입니다.",
-    ownBackRecord: "바다의 기록으로 돌아가기",
-    passportTitle: "이 병의 디지털 인증서를\n확인하세요.",
+    ownLanguage: "언어",
+    ownAuthed: "본인 인증됨",
+    ownSignOut: "인증 해제",
+    ownAuthOpen: "본인 인증하고 전체 보기",
+    ownOtpLead: "등록하신 이메일로 6자리 인증 코드를 보내드립니다.",
+    ownOtpSend: "인증 코드 받기",
+    ownOtpSending: "보내는 중",
+    ownOtpSent: "{email}로 코드를 보냈어요. 5분 안에 입력해 주세요.",
+    ownOtpPlaceholder: "6자리 코드",
+    ownOtpVerify: "확인",
+    ownOtpVerifying: "확인 중",
+    ownOtpResend: "코드 다시 받기",
+    ownFieldName: "이름",
+    ownFieldEmail: "이메일",
+    ownEmailLocked: "본인 인증에 쓰이는 주소입니다.",
+    ownEmailLockedTo: "변경은 {email}으로 문의해 주세요.",
+    ownCancel: "취소",
+    ownSave: "저장",
+    ownSaving: "저장 중",
+    ownErrGeneric: "잠시 후 다시 시도해 주세요.",
+    ownErrCode: "코드가 일치하지 않아요.",
+    ownErrSave: "저장 중 문제가 발생했습니다.",
+    ownMonths: "{n}개월",
+    passportTitle: "디지털 인증서를\n확인하세요.",
     passportBody: "소유 정보와 해저 숙성 기록이\n공식 인증서에 담겨 있습니다.",
     passportCta: "디지털 인증서 보기",
-    passportSave: "인증서 저장",
     passportManage: "소유 정보 관리",
     passportNews: "다음 인양과 새 기록의 소식 받기",
   },
@@ -584,8 +669,15 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     provHead: "ORIGIN · CHAMPAGNE",
     seaHead: "SUBSEA AGING · NAMHAE",
     provLabels: { maison: "MAISON", region: "REGION", cepage: "CÉPAGE", style: "STYLE", elevage: "ÉLEVAGE" },
-    seaLabels: { immersion: "IMMERSION", retrieval: "RETRIEVAL", duration: "AGING PERIOD", depth: "AGING DEPTH", location: "AGING SITE" },
+    seaLabels: {
+      immersion: "IMMERSION", retrieval: "RETRIEVAL", duration: "AGING PERIOD", depth: "AGING DEPTH", location: "AGING SITE",
+      environment: "ENVIRONMENT", coords: "COORDINATES",
+    },
     wando: "Wando waters",
+    ownedBy: "OWNED BY",
+    metricAgg: { avg: "{n}-MONTH MEAN", max: "{n}-MONTH MAX", depth: "AT {d}M DEPTH" },
+    durationFmt: "{m1}–{m2} {y} · {n} months",
+    envFmt: "{site} · {d} m depth",
     newsletterLine: "Be the first to hear of the next retrieval and new records.",
     newsletterCta: "Subscribe to the newsletter",
     newsletterPlaceholder: "you@example.com",
@@ -616,22 +708,36 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certShareText: "Muse de Marée certificate of ownership",
     ownHead: "Registered owner",
     ownVerified: "Ownership registered",
-    ownLinkedSub: "Subsea aging · Namhae · 12 months",
+    ownBottleHead: "Your bottle",
     ownAccountHead: "Owner details",
-    ownEditName: "Edit name & email",
+    ownEditName: "Edit name",
     ownEditNameSub: "Reflected in the certificate and ownership record.",
-    ownNotify: "News alerts",
-    ownNotifySub: "We'll tell you of the next retrieval and new records.",
-    ownRightsHead: "Ownership",
-    ownTransfer: "Transfer ownership",
-    ownTransferSub: "Transfer the bottle and its digital certificate to a new owner. This cannot be undone.",
-    ownTransferCta: "Verify identity to transfer",
-    ownSoon: "Identity verification is coming soon.",
-    ownBackRecord: "Back to the sea's record",
+    ownLanguage: "Language",
+    ownAuthed: "Identity verified",
+    ownSignOut: "Sign out",
+    ownAuthOpen: "Verify to see full details",
+    ownOtpLead: "We'll send a 6-digit code to your registered email.",
+    ownOtpSend: "Send code",
+    ownOtpSending: "Sending",
+    ownOtpSent: "Code sent to {email}. Enter it within 5 minutes.",
+    ownOtpPlaceholder: "6-digit code",
+    ownOtpVerify: "Confirm",
+    ownOtpVerifying: "Checking",
+    ownOtpResend: "Resend code",
+    ownFieldName: "Name",
+    ownFieldEmail: "Email",
+    ownEmailLocked: "This address verifies your identity.",
+    ownEmailLockedTo: "To change it, contact {email}.",
+    ownCancel: "Cancel",
+    ownSave: "Save",
+    ownSaving: "Saving",
+    ownErrGeneric: "Please try again in a moment.",
+    ownErrCode: "That code doesn't match.",
+    ownErrSave: "Something went wrong while saving.",
+    ownMonths: "{n} months",
     passportTitle: "View this bottle's\ndigital certificate.",
     passportBody: "Ownership and the subsea aging record\nare held in the official certificate.",
     passportCta: "View digital certificate",
-    passportSave: "Save certificate",
     passportManage: "Manage ownership",
     passportNews: "Get news of the next retrieval and new records",
   },
@@ -639,8 +745,15 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     provHead: "ORIGINE · CHAMPAGNE",
     seaHead: "VIEILLISSEMENT SOUS-MARIN · NAMHAE",
     provLabels: { maison: "MAISON", region: "RÉGION", cepage: "CÉPAGE", style: "STYLE", elevage: "ÉLEVAGE" },
-    seaLabels: { immersion: "IMMERSION", retrieval: "REMONTÉE", duration: "DURÉE", depth: "PROFONDEUR", location: "LIEU" },
+    seaLabels: {
+      immersion: "IMMERSION", retrieval: "REMONTÉE", duration: "DURÉE", depth: "PROFONDEUR", location: "LIEU",
+      environment: "ENVIRONNEMENT", coords: "COORDONNÉES",
+    },
     wando: "Eaux de Wando",
+    ownedBy: "OWNED BY",
+    metricAgg: { avg: "MOYENNE {n} MOIS", max: "MAX {n} MOIS", depth: "À {d} M" },
+    durationFmt: "{m1}–{m2} {y} · {n} mois",
+    envFmt: "{site} · {d} m de fond",
     newsletterLine: "Soyez informé en premier de la prochaine remontée et des nouveaux relevés.",
     newsletterCta: "S'abonner à la newsletter",
     newsletterPlaceholder: "vous@exemple.com",
@@ -671,22 +784,36 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certShareText: "Certificat de propriété Muse de Marée",
     ownHead: "Propriétaire enregistré",
     ownVerified: "Propriété enregistrée",
-    ownLinkedSub: "Vieillissement sous-marin · Namhae · 12 mois",
+    ownBottleHead: "Votre bouteille",
     ownAccountHead: "Détails du propriétaire",
-    ownEditName: "Modifier nom et e-mail",
+    ownEditName: "Modifier le nom",
     ownEditNameSub: "Reporté sur le certificat et le relevé de propriété.",
-    ownNotify: "Alertes actualités",
-    ownNotifySub: "Nous vous informerons de la prochaine remontée et des nouveaux relevés.",
-    ownRightsHead: "Propriété",
-    ownTransfer: "Transfert de propriété",
-    ownTransferSub: "Transférez la bouteille et son certificat numérique à un nouveau propriétaire. Irréversible.",
-    ownTransferCta: "Vérifier l'identité pour transférer",
-    ownSoon: "La vérification d'identité arrive bientôt.",
-    ownBackRecord: "Retour au relevé de la mer",
+    ownLanguage: "Langue",
+    ownAuthed: "Identité vérifiée",
+    ownSignOut: "Se déconnecter",
+    ownAuthOpen: "Vérifier pour tout afficher",
+    ownOtpLead: "Un code à 6 chiffres sera envoyé à votre e-mail enregistré.",
+    ownOtpSend: "Recevoir le code",
+    ownOtpSending: "Envoi",
+    ownOtpSent: "Code envoyé à {email}. Saisissez-le dans les 5 minutes.",
+    ownOtpPlaceholder: "Code à 6 chiffres",
+    ownOtpVerify: "Confirmer",
+    ownOtpVerifying: "Vérification",
+    ownOtpResend: "Renvoyer le code",
+    ownFieldName: "Nom",
+    ownFieldEmail: "E-mail",
+    ownEmailLocked: "Cette adresse sert à vérifier votre identité.",
+    ownEmailLockedTo: "Pour la modifier, écrivez à {email}.",
+    ownCancel: "Annuler",
+    ownSave: "Enregistrer",
+    ownSaving: "Enregistrement",
+    ownErrGeneric: "Veuillez réessayer dans un instant.",
+    ownErrCode: "Ce code ne correspond pas.",
+    ownErrSave: "Une erreur est survenue lors de l'enregistrement.",
+    ownMonths: "{n} mois",
     passportTitle: "Consultez le certificat\nnumérique de cette bouteille.",
     passportBody: "La propriété et le relevé de vieillissement sous-marin\nfigurent dans le certificat officiel.",
     passportCta: "Voir le certificat numérique",
-    passportSave: "Enregistrer le certificat",
     passportManage: "Gérer la propriété",
     passportNews: "Recevoir la prochaine remontée et les nouveaux relevés",
   },
@@ -694,8 +821,15 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     provHead: "原産地 · シャンパーニュ",
     seaHead: "海底熟成 · 南海",
     provLabels: { maison: "メゾン", region: "地域", cepage: "品種", style: "スタイル", elevage: "熟成" },
-    seaLabels: { immersion: "入水", retrieval: "引き揚げ", duration: "熟成期間", depth: "熟成水深", location: "熟成地" },
+    seaLabels: {
+      immersion: "入水", retrieval: "引き揚げ", duration: "熟成期間", depth: "熟成水深", location: "熟成地",
+      environment: "熟成環境", coords: "位置",
+    },
     wando: "莞島海域",
+    ownedBy: "OWNED BY",
+    metricAgg: { avg: "{n}か月平均", max: "{n}か月最高", depth: "水深 {d}M" },
+    durationFmt: "{y}年 {m1}–{m2} · {n}か月",
+    envFmt: "{site} · 水深 {d}m",
     newsletterLine: "次の引き揚げと新しい記録を、いち早くお届けします。",
     newsletterCta: "ニュースレターを購読",
     newsletterPlaceholder: "you@example.com",
@@ -726,22 +860,36 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certShareText: "ミューズ・ド・マレ 所有証明書",
     ownHead: "登録された所有者",
     ownVerified: "所有登録完了",
-    ownLinkedSub: "海底熟成 · 南海 · 12か月",
+    ownBottleHead: "所有する一本",
     ownAccountHead: "所有者情報",
-    ownEditName: "名前とメールを編集",
+    ownEditName: "名前を編集",
     ownEditNameSub: "証明書と所有記録に反映されます。",
-    ownNotify: "お知らせ",
-    ownNotifySub: "次の引き揚げと新しい記録をお知らせします。",
-    ownRightsHead: "所有権",
-    ownTransfer: "所有権の移転",
-    ownTransferSub: "新しい所有者へ一本とデジタル証明書の所有記録を移転します。移転後は取り消せません。",
-    ownTransferCta: "本人認証して移転する",
-    ownSoon: "本人認証機能は準備中です。",
-    ownBackRecord: "海の記録へ戻る",
+    ownLanguage: "言語",
+    ownAuthed: "本人確認済み",
+    ownSignOut: "認証を解除",
+    ownAuthOpen: "本人確認してすべて見る",
+    ownOtpLead: "登録のメールアドレスに6桁の認証コードをお送りします。",
+    ownOtpSend: "認証コードを受け取る",
+    ownOtpSending: "送信中",
+    ownOtpSent: "{email} にコードを送りました。5分以内に入力してください。",
+    ownOtpPlaceholder: "6桁のコード",
+    ownOtpVerify: "確認",
+    ownOtpVerifying: "確認中",
+    ownOtpResend: "コードを再送する",
+    ownFieldName: "名前",
+    ownFieldEmail: "メール",
+    ownEmailLocked: "本人確認に使うアドレスです。",
+    ownEmailLockedTo: "変更は {email} までお問い合わせください。",
+    ownCancel: "キャンセル",
+    ownSave: "保存",
+    ownSaving: "保存中",
+    ownErrGeneric: "しばらくしてからもう一度お試しください。",
+    ownErrCode: "コードが一致しません。",
+    ownErrSave: "保存中に問題が発生しました。",
+    ownMonths: "{n}か月",
     passportTitle: "この一本のデジタル証明書を\nご確認ください。",
     passportBody: "所有情報と海底熟成の記録が\n公式証明書に収められています。",
     passportCta: "デジタル証明書を見る",
-    passportSave: "証明書を保存",
     passportManage: "所有情報の管理",
     passportNews: "次の引き揚げと新しい記録のお知らせを受け取る",
   },
@@ -749,8 +897,15 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     provHead: "原产地 · 香槟区",
     seaHead: "海底熟成 · 南海",
     provLabels: { maison: "酒庄", region: "产区", cepage: "品种", style: "风格", elevage: "陈酿" },
-    seaLabels: { immersion: "入水", retrieval: "打捞", duration: "熟成周期", depth: "熟成水深", location: "熟成地点" },
+    seaLabels: {
+      immersion: "入水", retrieval: "打捞", duration: "熟成周期", depth: "熟成水深", location: "熟成地点",
+      environment: "熟成环境", coords: "位置",
+    },
     wando: "莞岛海域",
+    ownedBy: "OWNED BY",
+    metricAgg: { avg: "{n}个月平均", max: "{n}个月最高", depth: "水深 {d}M" },
+    durationFmt: "{y}年 {m1}–{m2} · {n}个月",
+    envFmt: "{site} · 水深 {d}m",
     newsletterLine: "第一时间获知下一次打捞与新的记录。",
     newsletterCta: "订阅通讯",
     newsletterPlaceholder: "you@example.com",
@@ -781,22 +936,36 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certShareText: "缪斯德玛雷 所有权证书",
     ownHead: "已登记所有者",
     ownVerified: "所有权登记完成",
-    ownLinkedSub: "海底熟成 · 南海 · 12个月",
+    ownBottleHead: "所拥有的一瓶",
     ownAccountHead: "所有者信息",
-    ownEditName: "修改姓名与邮箱",
+    ownEditName: "修改姓名",
     ownEditNameSub: "将同步至证书与所有权记录。",
-    ownNotify: "消息提醒",
-    ownNotifySub: "我们会通知你下一次打捞与新的记录。",
-    ownRightsHead: "所有权",
-    ownTransfer: "所有权转让",
-    ownTransferSub: "将这一瓶及其数字证书的所有权记录转让给新所有者。转让后不可撤销。",
-    ownTransferCta: "完成本人认证后转让",
-    ownSoon: "本人认证功能筹备中。",
-    ownBackRecord: "返回大海的记录",
+    ownLanguage: "语言",
+    ownAuthed: "已完成本人验证",
+    ownSignOut: "解除验证",
+    ownAuthOpen: "完成验证后查看全部",
+    ownOtpLead: "我们将向您登记的邮箱发送6位验证码。",
+    ownOtpSend: "获取验证码",
+    ownOtpSending: "发送中",
+    ownOtpSent: "验证码已发送至 {email}，请在5分钟内输入。",
+    ownOtpPlaceholder: "6位验证码",
+    ownOtpVerify: "确认",
+    ownOtpVerifying: "验证中",
+    ownOtpResend: "重新获取验证码",
+    ownFieldName: "姓名",
+    ownFieldEmail: "邮箱",
+    ownEmailLocked: "此地址用于本人验证。",
+    ownEmailLockedTo: "如需修改，请联系 {email}。",
+    ownCancel: "取消",
+    ownSave: "保存",
+    ownSaving: "保存中",
+    ownErrGeneric: "请稍后再试。",
+    ownErrCode: "验证码不匹配。",
+    ownErrSave: "保存时出现问题。",
+    ownMonths: "{n}个月",
     passportTitle: "查看这一瓶的\n数字证书。",
     passportBody: "所有权信息与海底熟成记录\n都收录在官方证书中。",
     passportCta: "查看数字证书",
-    passportSave: "保存证书",
     passportManage: "管理所有权",
     passportNews: "获取下一次打捞与新记录的消息",
   },

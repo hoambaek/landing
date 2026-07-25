@@ -9,9 +9,11 @@
  */
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./entry.module.css";
 import { ENTRY_COPY, PRODUCT_META, BOTTLE_LOCALES, type BottleLocale } from "../_lib/copy";
+import { persistBottleLocale } from "../_lib/locale";
 import { submitBottleRegistration } from "@/lib/forms";
 import BottleInscription from "./BottleInscription";
 
@@ -25,16 +27,23 @@ export default function BottleEntry({
   productId,
   serial,
   total,
+  initialLocale = "ko",
+  registered = false,
+  registeredTo = null,
 }: {
   code: string;
   productId: string;
   serial: number | null;
   total: number;
+  initialLocale?: BottleLocale;
+  /** 이미 소유 등록된 병 — 폼을 잠그고 기록 입구를 연다 */
+  registered?: boolean;
+  registeredTo?: string | null;
 }) {
   const router = useRouter();
   const meta = PRODUCT_META[productId] ?? PRODUCT_META.atomes_crochus_1y;
 
-  const [locale, setLocale] = useState<BottleLocale>("ko");
+  const [locale, setLocale] = useState<BottleLocale>(initialLocale);
   const [langOpen, setLangOpen] = useState(false);
   const copy = ENTRY_COPY[locale];
   const activeLocale = BOTTLE_LOCALES.find((l) => l.code === locale)!;
@@ -106,6 +115,9 @@ export default function BottleEntry({
     .replace("{serial}", String(serial));
   const ownBody =
     serial !== null ? copy.ownBody.replace("{serial}", String(serial)) : copy.ownBodyNoSerial;
+  /* 개체는 대명사가 아니라 번호로 부른다 — 번호가 없으면 부르지 않는다 */
+  const ownTitle =
+    serial !== null ? copy.ownTitle.replace("{serial}", String(serial)) : copy.ownTitleNoSerial;
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -193,8 +205,6 @@ export default function BottleEntry({
               aria-expanded={langOpen}
               aria-label="Language"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={activeLocale.flag} alt="" className={styles.langFlag} />
               <span>{activeLocale.short}</span>
               <svg width="7" height="5" viewBox="0 0 7 5" fill="none">
                 <polyline points="1,1 3.5,4 6,1" fill="none" stroke="rgba(241,239,235,0.55)" strokeWidth="1" />
@@ -211,11 +221,10 @@ export default function BottleEntry({
                     className={`${styles.langOpt} ${l.code === locale ? styles.langOptActive : ""}`}
                     onClick={() => {
                       setLocale(l.code);
+                      persistBottleLocale(l.code);
                       setLangOpen(false);
                     }}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={l.flag} alt="" className={styles.langFlag} />
                     <span className={styles.langOptCode}>{l.short}</span>
                     <span className={styles.langOptNative}>{l.native}</span>
                     {l.code === locale && (
@@ -247,8 +256,13 @@ export default function BottleEntry({
 
         {/* ── 01 Bottle Identity ── */}
         <section className={`${styles.identity} ${styles.reveal}`} ref={identityRef}>
+          {/* 빈 네모는 아무 뜻도 없는 장식이었다. 기록 히어로·인증서 서명과 같은
+              자물쇠 글리프를 써서 "암호로 확인된 태그"라는 뜻을 형태에 싣는다. */}
           <div className={styles.eyebrow}>
-            <span className={styles.eyebrowDot} aria-hidden />
+            <svg className={styles.eyebrowLock} width="8" height="10" viewBox="0 0 8 10" aria-hidden>
+              <path d="M2.4 4.4 V3 a1.6 1.6 0 0 1 3.2 0 V4.4" fill="none" stroke="currentColor" strokeWidth="0.9" />
+              <rect x="1" y="4.4" width="6" height="4.7" rx="0.9" fill="currentColor" />
+            </svg>
             <span>{copy.identityEyebrow}</span>
           </div>
           <h1 className={styles.productName}>{meta.name}</h1>
@@ -286,18 +300,38 @@ export default function BottleEntry({
               <span className={styles.factSub}>{copy.fact3Sub}</span>
             </div>
           </div>
+          {/* "소유 등록 후 열립니다" — 이미 등록된 병에는 틀린 말이라 숨긴다.
+              기록으로 가는 입구는 아래 Claim 섹션이 맡는다. */}
+          {!registered && (
           <div className={styles.provHint}>
+            {/* 화살표 없음 — 링크가 아니라 안내문이다. 셰브론이 붙으면 누를 수 있다고 읽힌다. */}
             <span>{copy.provHint}</span>
-            <span className={styles.provHintArrow} aria-hidden>→</span>
           </div>
+          )}
         </section>
 
         {/* ── 03 Claim Ownership ── */}
         <section className={`${styles.claim} ${styles.reveal}`}>
           <div className={styles.claimEyebrow}>{copy.ownEyebrow}</div>
-          <h2 className={styles.claimTitle}>{copy.ownTitle}</h2>
+          <h2 className={styles.claimTitle}>{registered ? copy.claimedTitle : ownTitle}</h2>
+          {registered ? (
+            /* 이미 등록된 병. 폼을 지우고 그 자리에 소유자와 기록 입구를 놓는다 —
+               재등록은 서버 액션에서도 막히지만, 애초에 쓸 수 없는 폼을 보여줄 이유가 없다. */
+            <>
+              <p className={styles.claimBody}>{copy.claimedBody}</p>
+              <div className={styles.claimed}>
+                <span className={styles.claimedLabel}>OWNED BY</span>
+                <span className={styles.claimedName}>{registeredTo ?? "—"}</span>
+              </div>
+              <Link href={`/b/${code}/record`} className={styles.claimedCta}>
+                {copy.claimedCta}
+              </Link>
+            </>
+          ) : (
           <p className={styles.claimBody}>{ownBody}</p>
+          )}
 
+          {!registered && (
           <form className={styles.form} onSubmit={onSubmit} noValidate>
             <label className={styles.field}>
               <span className={styles.fieldLabel}>{copy.nameLabel}</span>
@@ -334,6 +368,7 @@ export default function BottleEntry({
               {submitting ? copy.submitting : copy.submit}
             </button>
           </form>
+          )}
         </section>
       </div>
     </main>

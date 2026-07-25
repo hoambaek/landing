@@ -386,7 +386,7 @@ export default function MeetupView() {
             height={29}
             loading="lazy"
           />
-          <p className={s.footerTagline}>바다의 시간을 기록하는 브랜드</p>
+          <p className={s.footerTagline}>바다의 시간을 기록합니다.</p>
           <div className={s.footerMeta}>
             <span className={s.footerCopy}>© 2026 MUSE DE MARÉE</span>
             <span className={s.footerStamp}>남해 30M · 첫 인양 2026</span>
