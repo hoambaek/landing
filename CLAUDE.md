@@ -22,7 +22,7 @@
 > **브랜드 정의 (북극성):** 샴페인 하우스가 아니다. **바다의 시간을 기록하는 브랜드.**
 > 샴페인은 샹파뉴가 만들었고, 변화는 바다가 만든다. 우리가 하는 일은 — 지켜보고, 기록하고, 그 기록과 함께 병을 건네는 것.
 > **모토(고정):** *Written by the Sea.* / 바다가 쓴 시간 / *Écrit par la mer*
-> **방향성 정본 (Source of Truth):** `/Users/hoambaek/Documents/Cursor/docs/brand/musedemaree/brand-direction-2026.md` + `/Users/hoambaek/Documents/Cursor/docs/plans/musedemaree/2026-06-10-brand-north-star.md` — 이 두 문서가 모든 브랜드 결정의 최종 심판. ⚠️ **이 저장소 안이 아니라 `~/Documents/Cursor/docs/` 아래에 있다.** 정본 목록은 `~/Documents/Cursor/hub/brain/canon/registry.md`. (기존 `project.md`·`brand-guide.md`는 하위 실행 레이어)
+> **방향성 정본 (Source of Truth):** `/Users/hoambaek/Documents/Cursor/hub/docs-vault/brand/musedemaree/brand-direction-2026.md` + `/Users/hoambaek/Documents/Cursor/hub/docs-vault/plans/musedemaree/2026-06-10-brand-north-star.md` — 이 두 문서가 모든 브랜드 결정의 최종 심판. ⚠️ **이 저장소 안이 아니라 hub 저장소의 `docs-vault/` 아래에 있다(2026-07-25 이관).** 정본 목록은 `~/Documents/Cursor/hub/brain/canon/registry.md`. (기존 `project.md`·`brand-guide.md`는 하위 실행 레이어)
 
 레퍼런스: Krug.com + Kinfolk.com
 
@@ -122,12 +122,12 @@ teams/
 ```
 docs/
 ├── brand/                ← 브랜드 철학, 전략, 기획
-│   ├── (없음 — 정본은 저장소 밖 ~/Documents/Cursor/docs/brand/musedemaree/)
+│   ├── (없음 — 정본은 hub/docs-vault/brand/musedemaree/)
 │   ├── project.md           브랜드 철학/전략/타겟 (하위 레이어)
 │   ├── brand-book.md        브랜드 소개서(Paper) 문서
 │   └── PLAN.md              홈페이지 기획
 ├── plans/
-│   └── (없음 — 정본은 저장소 밖 ~/Documents/Cursor/docs/plans/musedemaree/)
+│   └── (없음 — 정본은 hub/docs-vault/plans/musedemaree/)
 ├── tech/                 ← 기술 스펙
 │   ├── spec.md              기술 스택 전체
 │   └── frontend-spec.md     CSS/컴포넌트/성능 상세
@@ -144,8 +144,8 @@ docs/
 
 | 문서 | 역할 | 참조 시점 |
 |------|------|-----------|
-| `/Users/hoambaek/Documents/Cursor/docs/brand/musedemaree/brand-direction-2026.md` (저장소 밖) | ★ **브랜드 방향성 정본** (정의·포지셔닝·4기둥·톤·금지목록 · **§6 개체 지칭 규칙**) | **카피/디자인 방향 시 최우선** |
-| `/Users/hoambaek/Documents/Cursor/docs/plans/musedemaree/2026-06-10-brand-north-star.md` (저장소 밖) | ★ 북극성 (전략 근거·리서치) | 방향성 근거 확인 시 |
+| `/Users/hoambaek/Documents/Cursor/hub/docs-vault/brand/musedemaree/brand-direction-2026.md` (저장소 밖) | ★ **브랜드 방향성 정본** (정의·포지셔닝·4기둥·톤·금지목록 · **§6 개체 지칭 규칙**) | **카피/디자인 방향 시 최우선** |
+| `/Users/hoambaek/Documents/Cursor/hub/docs-vault/plans/musedemaree/2026-06-10-brand-north-star.md` (저장소 밖) | ★ 북극성 (전략 근거·리서치) | 방향성 근거 확인 시 |
 | [`docs/tech/spec.md`](./docs/tech/spec.md) | 기술 스택 전체 | 개발 시작 전 필수 |
 | [`docs/tech/frontend-spec.md`](./docs/tech/frontend-spec.md) | CSS/컴포넌트/성능 상세 | UI 구현 시 |
 | [`docs/brand/PLAN.md`](./docs/brand/PLAN.md) | 홈페이지 기획 | 페이지 구조 파악 시 |
@@ -212,7 +212,7 @@ docs/
 - **🔴 영구 금지어**: "두 개의 떼루아"(Abyss 선점) · 풍미 우위 주장 · 수압 가속 주장 · 깊이/기간 스펙 경쟁 · "luxury/exclusive/timeless" · 연출된 희소성
 - **표기 규칙 (2026-07-05 확립)**: em-dash(`—`) 금지 → 쉼표/마침표로 · 가운뎃점(`·`)은 한 줄에 1개까지 · 스크롤 큐(`↓`) 금지 · 좌표/수온 등 정밀 수치는 실측·실시간 연동 값만 (임의 생성 금지)
 - **수심 표기는 30m로 통일** (코드베이스 일부 "50미터"는 구표기 — 30m가 정본)
-- 상세 → `/Users/hoambaek/Documents/Cursor/docs/brand/musedemaree/brand-direction-2026.md` §6 (톤·금지목록·**개체 지칭**)
+- 상세 → `/Users/hoambaek/Documents/Cursor/hub/docs-vault/brand/musedemaree/brand-direction-2026.md` §6 (톤·금지목록·**개체 지칭**)
 
 ---
 

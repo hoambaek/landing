@@ -846,3 +846,13 @@ owner 페이지는 여전히 `RECORD_EXTRA.ko` 하드코딩이고 UI 문자열 1
 - `bottle_units` 행 → 랜딩 `/b/L5vfZJvR` 200 → `numbered_bottles` 미스 → **`bottle_units` 폴백 적중** → "En Lieu Sûr Magnum" 렌더
 - **번호 미부여 변형 정상 작동** — `N°` 0회, `첫 소유자로`(ownBodyNoSerial) 출력. 오늘 만든 `ownTitleNoSerial`/`ctaNoSerial` 분기가 실물 데이터에서 검증됨
 - ⚠️ **재고 앱 UI는 렌더 검증 못 함** — Clerk가 로컬 보호 라우트를 404로 막는다. CLAUDE.md에 middleware 임시 개방 절차가 있으나 **미커밋 파일 16개 상태라 시도하지 않음**. 데이터 경로(쿼리 결과 ↔ 매퍼 필드)로 대체 검증
+
+### 문서 금고 이관 — docs → hub/docs-vault (2026-07-25)
+문제: 브랜드 정본(`brand-direction-2026.md`)이 **어느 git 저장소에도 속하지 않았다.** 오늘 §6을 세 번 고쳤는데 이력이 남지 않았고 되돌릴 수도 없었다. registry가 "정본"으로 가리키는 파일이 정작 추적 밖.
+- [x] `~/Documents/Cursor/docs` (2.3GB) → `hub/docs-vault/` 이동. hub는 private
+- [x] **바이너리 제외 gitignore 선행** — pdf·zip·indd·ai·psd·영상·폰트·오피스 등. GitHub 100MB 한도 초과 파일이 3개 있어 그대로 올리면 푸시가 거부된다
+- [x] 추적 대상 **271개 전부 텍스트**(md 172·html 52·txt 34·jsonl·csv). 50MB 초과 잔존 0
+- [x] 절대경로 참조 **103개 파일 342건 일괄 치환** + 축약 표기(`~/Documents/Cursor/docs/`)·훅 패턴 3곳 수동 정리
+- [x] 검증: registry가 가리키는 정본 6종 전부 실제로 열림 · landing CLAUDE.md 경로 열림 · 옛 경로 잔존 0
+- ⚠️ `hub/docs`와 이름 충돌(`docs/plans` 존재)이 있어 `docs-vault`로 명명
+- 작업 함정: 파일마다 python 프로세스를 띄우는 루프가 10분 타임아웃(2.3GB를 rg가 반복 스캔). **단일 프로세스 os.walk로 전환해 해결**

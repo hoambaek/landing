@@ -1,11 +1,11 @@
 # 한국어 카피 — 개체 지칭 규칙
 
 > **정본 §6 「개체 지칭」의 실행 요약.** 2026-07-25 확립·정본 반영 완료.
-> 근거: `/Users/hoambaek/Documents/Cursor/docs/brand/musedemaree/brand-direction-2026.md` §9 히어로 확정 카피 · `/Users/hoambaek/Documents/Cursor/docs/plans/musedemaree/2026-06-10-brand-north-star.md`
+> 근거: `/Users/hoambaek/Documents/Cursor/hub/docs-vault/brand/musedemaree/brand-direction-2026.md` §9 히어로 확정 카피 · `/Users/hoambaek/Documents/Cursor/hub/docs-vault/plans/musedemaree/2026-06-10-brand-north-star.md`
 > 외부 검증: 한국 주류 공식 카피 31건 실측 + krug.com 한/영 대조
 > 증류: `hub/brain/claims/뮤즈드마레-개체지칭-한병-이병-그병-상태별.md`
 
-⚠️ CLAUDE.md의 `docs/brand/brand-direction-2026.md`·`docs/plans/2026-06-10-brand-north-star.md`는 **이 저장소 상대경로가 아니라 `~/Documents/Cursor/docs/` 아래**에 있다. 위 절대경로가 실제 위치다.
+⚠️ CLAUDE.md의 `docs/brand/brand-direction-2026.md`·`docs/plans/2026-06-10-brand-north-star.md`는 **이 저장소 상대경로가 아니라 hub 저장소의 `docs-vault/` 아래**에 있다(2026-07-25 이관). 위 절대경로가 실제 위치다.
 
 이 문서는 정본의 사본이 아니라 **랜딩 코드 적용용 요약**이다. 규칙이 충돌하면 정본 §6이 이긴다.
 
