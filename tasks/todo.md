@@ -251,14 +251,16 @@
 - [x] 검증: tsc 0 · eslint 0 error · **pnpm build 성공**(신규 2라우트 dynamic 등록) · Playwright — 인증서 전체(마스킹 백••·certId MDM-2026-0015·서명)·PNG 다운로드·03A(마스킹·준비중 안내)·record Passport 링크 확인
 - phase-3 대기: 소유자 인증(로그인/토큰) — 도입 시 이름 전체 노출 전환 + 이름·이메일 수정 + 소유권 이전(재인증+수락+감사로그+단일 트랜잭션) 실제 구현. 04A/04B 별도 화면(저장 확인·결과)은 인라인 처리로 대체함
 
-## NFC 병 페이지 v2 — phase-3 (소유자 인증 · 소유권 이전) — 2026-07-24
+## NFC 병 페이지 v2 — phase-3 (소유자 인증 · ~~소유권 이전~~) — 2026-07-24
+> ⚠️ **소유권 이전은 이후 폐기됐다 (db6b312, 2026-07-25).** 아래 이전 관련 항목은 당시 기록이며 지금 코드에 없다. 폐기 경위는 「소유권 이전 폐기」 절 참조. **소유자 인증(OTP·세션)은 그대로 살아 있다.**
+
 결정: 이메일 OTP 6자리 인증 + 소유권 이전까지 전부. 성공기준: 세션 게이팅으로 안전한 변경/이전 + tsc/eslint/build 통과 + OTP 흐름 E2E 검증.
 - [x] DB(마이그레이션 bottle_owner_auth_and_transfer, marketing 프로젝트): bottle_owner_verifications(OTP)·bottle_ownership_audit(감사)·bottle_transfers(이전). 전부 RLS on(정책 없음=service_role 전용)
 - [x] env: BOTTLE_SESSION_SECRET(.env.local 추가, 64hex) — HMAC 서명 쿠키용. ⚠️ Vercel 등록 필요. 이전 링크용 NEXT_PUBLIC_SITE_URL도 미설정 시 musedemaree.com 폴백
 - [x] owner-auth.ts(server-only): HMAC 서명 세션 토큰(httpOnly 쿠키, /b/{code} 스코프, 30분) sign/verify/get/set/clear + genOtp + hashCode/hashToken(비밀키 해시, 평문 미저장)
-- [x] owner-actions.ts("use server"): requestOwnerOtp(등록 이메일로 6자리 발송, 10분 5회 레이트리밋)·verifyOwnerOtp(해시 timingSafe 비교, 5회 시도 제한, 성공 시 세션+감사)·signOutOwner·updateOwnerInfo(세션 재확인 후 최신 등록행 수정)·initiateTransfer(세션 게이팅, 토큰 이메일 발송, 기존 대기 취소)·acceptTransfer(토큰=이메일 통제 증명, 새 소유자 등록행 삽입=최신 소유자, 감사, 세션 이양)
+- [x] owner-actions.ts("use server"): requestOwnerOtp(등록 이메일로 6자리 발송, 10분 5회 레이트리밋)·verifyOwnerOtp(해시 timingSafe 비교, 5회 시도 제한, 성공 시 세션+감사)·signOutOwner·~~updateOwnerInfo(세션 재확인 후 최신 등록행 수정)·initiateTransfer(세션 게이팅, 토큰 이메일 발송, 기존 대기 취소)·acceptTransfer(토큰=이메일 통제 증명, 새 소유자 등록행 삽입=최신 소유자, 감사, 세션 이양)~~ → 폐기. **현재 남은 액션은 4개**: requestOwnerOtp·verifyOwnerOtp·signOutOwner·updateOwnerName
 - [x] data.ts: maskName/maskEmail export + fetchBottleOwnerRaw(인증 시에만 원본 반환)
-- [x] UI: BottleOwnerManage 재작성(미인증=마스킹+"본인 인증하고 전체 보기" OTP 인라인 / 인증=전체 이름·이메일+수정 폼+이전 폼+인증 해제, window.confirm으로 이전 재확인). BottleCertificate=ownerNameFull prop으로 인증 시 언마스킹. certificate/owner page.tsx=getOwnerSession 읽어 authed·원본 전달. 신규 /b/[code]/transfer(BottleTransferAccept + transfer.module.css)=이메일 링크 수락 화면
+- [x] UI: BottleOwnerManage 재작성(미인증=마스킹+"본인 인증하고 전체 보기" OTP 인라인 / 인증=전체 이름·이메일+수정 폼+이전 폼+인증 해제, window.confirm으로 이전 재확인). BottleCertificate=ownerNameFull prop으로 인증 시 언마스킹. certificate/owner page.tsx=getOwnerSession 읽어 authed·원본 전달. ~~신규 /b/[code]/transfer(BottleTransferAccept + transfer.module.css)=이메일 링크 수락 화면~~ → 라우트·컴포넌트·CSS 전부 삭제됨
 - [x] 검증: tsc 0 · eslint 0 · pnpm build 성공(신규 transfer 라우트) · **OTP E2E**: 요청→행 생성·이메일 발송 확인→DB 해시에서 코드 역산(031594)→UI 입력→verify→세션 발급→owner/cert 전체 이름 "백호암" 언마스킹 확인. 수정·이전 폼 렌더 확인(실제 데이터 변경·이전 발송은 미실행)
 - ⚠️ 알려진 한계: 소유권 모델=최신 bottle_registrations 행=현 소유자. 입장 페이지가 누구나 재등록 허용 → 재등록으로 소유자 덮어쓰기 가능(선행 이슈). OTP는 "인증 시점의 등록 이메일 통제"를 증명. 향후 하드닝=정규 소유자 테이블 + 입장 재등록 게이팅
 
@@ -734,7 +736,7 @@ owner 페이지는 여전히 `RECORD_EXTRA.ko` 하드코딩이고 UI 문자열 1
 
 ### ⚠️ 남은 미결 2건
 1. **"주인" vs "소유자"** — CTA는 "주인"(`cta`·`ctaNoSerial`), 본문은 "소유자"(`ownBody`·`ownBodyNoSerial`). **원래부터 갈려 있던 것**이고 CTA는 따뜻하게·본문은 문서적으로 쓴 의도된 분리로 보인다. 통일하려면 본문을 "첫 주인으로"로 내리는 쪽 권장
-2. **로케일 divergence** — ko만 손봐서 en·fr·ja·zh는 그대로. 지시사 문제는 한국어 고유("병"이 질병과 동음)라 두었지만, `provBody`는 **한국어만 "감상이 아니라" 절이 빠져 내용이 다르다**
+2. **로케일 divergence** — ko만 손봐서 en·fr·ja·zh는 그대로. 지시사 문제는 한국어 고유("병"이 질병과 동음)라 두었지만, `provBody`는 **한국어만 "감상이 아니라" 절이 빠져 내용이 다르다** → **2026-07-25 현행 유지로 종결** (아래 절)
 
 ### 개체 지칭 규칙 정립 + gbrain 증류 — 2026-07-25
 - [x] `ctaNoSerial`: "한 병의 주인으로" → **"첫 주인으로 이름을 남기다"** (유일한 변경)
@@ -752,10 +754,10 @@ owner 페이지는 여전히 `RECORD_EXTRA.ko` 하드코딩이고 UI 문자열 1
 1. 개체 지목 → **번호**(`N° 89`) 2. 번호 불가 → **지칭 생략, 기록을 주어로** 3. 서사 구간만 **"한 병"**
 ⚠️ 소유격 `한 병의 X`는 회피(수량 오독). 주어·처소격은 안전.
 
-#### 남은 미결
-- `ownTitle`("한 병의 기록에")이 소유격 회피 규칙에 걸리지만, 등록 *전* 화면이라 2인칭 소유를 못 쓰고 대안이 더 나쁘다. 주어가 "기록"이라 수량 해석이 약하다고 판단해 유지 — **다시 걸리면 여기부터 본다**
-- `provBody` 로케일 divergence: 한국어만 "감상이 아니라" 절이 빠져 en·fr·ja·zh와 내용이 다르다
-- ⚠️ **CLAUDE.md가 가리키는 브랜드 정본 2종이 저장소에 없다** (`docs/brand/brand-direction-2026.md`, `docs/plans/2026-06-10-brand-north-star.md`)
+#### 남은 미결 → **전부 종결됨 (2026-07-25)**
+- ~~`ownTitle`("한 병의 기록에")이 소유격 회피 규칙에 걸리지만, 등록 *전* 화면이라 2인칭 소유를 못 쓰고 대안이 더 나쁘다. 주어가 "기록"이라 수량 해석이 약하다고 판단해 유지~~ → **해결됨.** 같은 날 db6b312에서 `N° {serial}의 기록에`로 바뀌었다(번호=원칙 1). 병 번호 없으면 `ownTitleNoSerial`이 지칭을 생략(원칙 2). 소유격 회피에 더 이상 걸리지 않는다
+- `provBody` 로케일 divergence → **현행 유지로 종결** (아래 절)
+- ~~⚠️ **CLAUDE.md가 가리키는 브랜드 정본 2종이 저장소에 없다**~~ → 해결됨. 70f471d에서 hub `docs-vault/` 경로로 갱신
 
 ### 개체 지칭 최종 확정 — 대명사 대신 번호 — 2026-07-25
 조사 에이전트의 첫 줄 결론을 내가 놓치고 있었다: **"한국 고급 주류 공식 카피에서 개별 한 병을 대명사로 지칭하는 관습은 사실상 없다."** 31건 실측에서 `이 병` 1회·`그 병` 1회·`이 보틀` 0회. 나는 "이 병/한 병/그 병 중 뭘 고를까"에 매달렸는데 **질문 자체가 틀렸다.**
@@ -856,3 +858,45 @@ owner 페이지는 여전히 `RECORD_EXTRA.ko` 하드코딩이고 UI 문자열 1
 - [x] 검증: registry가 가리키는 정본 6종 전부 실제로 열림 · landing CLAUDE.md 경로 열림 · 옛 경로 잔존 0
 - ⚠️ `hub/docs`와 이름 충돌(`docs/plans` 존재)이 있어 `docs-vault`로 명명
 - 작업 함정: 파일마다 python 프로세스를 띄우는 루프가 10분 타임아웃(2.3GB를 rg가 반복 스캔). **단일 프로세스 os.walk로 전환해 해결**
+
+---
+
+## 소유권 이전 폐기 + 프로덕션 배포 — 2026-07-25
+
+### 소유권 이전 폐기 (db6b312)
+phase-3에서 만든 소유권 이전을 **기능째로 걷어냈다.** 실사용이 없었고, 제거하는 과정에서 오히려 구멍이 드러났다 — `updateOwnerInfo`가 email까지 덮어써서 **"이름 수정"이 사실상 이전**이었다. OTP를 받는 주소가 바뀌면 동의도 감사 기록도 없이 소유자가 갈린다.
+
+- [x] 서버액션 `initiateTransfer`·`acceptTransfer` 삭제. `updateOwnerInfo` → **`updateOwnerName`**으로 좁히고 email 파라미터 제거
+- [x] 라우트 `/b/[code]/transfer` + `BottleTransferAccept` + `transfer.module.css` 삭제
+- [x] 이메일은 읽기 전용 필드로. 변경은 문의 경로(`OWNER_CONTACT_EMAIL`)로만
+- [x] 카피 키 정리 — `src/app/b/` 전체에 `transfer` 문자열 **0건**
+
+**남은 액션 4개**: `requestOwnerOtp` · `verifyOwnerOtp` · `signOutOwner` · `updateOwnerName`
+
+⚠️ **DB에 `bottle_transfers` 테이블이 남아 있다** (행 0개, RLS on·정책 없음). 코드에서 아무도 안 쓴다. 드롭할지는 미결 — 남겨도 무해하지만 스키마를 읽는 사람에겐 있지도 않은 기능으로 읽힌다.
+
+### `provBody` 로케일 divergence — 현행 유지로 종결
+**위치:** 입장 페이지(`/b/[code]`) 프로비넌스 블록 본문 (`BottleEntry.tsx:285`)
+
+| 언어 | 현재 |
+|---|---|
+| ko | 지나온 시간은 / 실제 관측 기록으로 남아 있습니다. |
+| en·fr·ja·zh | …**감상이 아니라**(not sentiment / n'est pas un sentiment / 感傷ではなく / 并非感怀) 실제 관측… |
+
+한국어에만 그 절이 없는 건 실수가 아니라 **`humanize-korean`이 "A가 아니라 B" 대구를 AI 티(C-8)로 잡아내서 지운 결과**다. 되살리면 브랜드 톤 규칙을 거스른다. 반대로 en·fr·ja·zh에서는 자연스러운 수사라 뺄 이유가 없다.
+
+**확정: 언어별로 다르게 쓴다.** 카피는 번역이 아니라 각 언어로 쓰는 것이고, 한 언어에서만 문제가 되는 패턴은 그 언어에서만 고친다. 이 원칙을 적어두지 않아서 같은 항목이 두 번 미결로 올라왔다 — **다음에 또 걸리면 여기를 근거로 닫는다.**
+
+### 프로덕션 배포 (PR #1 → main 7e3a85f)
+브랜치가 main보다 5커밋 앞선 채 PR도 없이 멈춰 있었다. NFC v2가 통째로 라이브가 아니었다.
+
+- [x] PR #1 생성 → merge commit으로 main 병합 → Vercel 프로덕션 배포
+- [x] **`BOTTLE_SESSION_SECRET` 실동작 확인** — 배포 전까지 검증 불가였던 유일한 항목. Vercel이 Sensitive로 저장해 값 회수가 안 되니 **인증서 서명 블록이 렌더되는지가 유일한 판정 수단**이었다. N° 16(`Ypv7eDfD`)에서 `HMAC-SHA256` / `BB2D 4C99 A26C 33B7` / `ISSUED BY MUSE DE MARÉE OCEAN CELLAR` / `MDM-2026-0016` 출력 확인 → 키가 없으면 `signCertificate`가 null을 반환해 블록째 사라지므로, **서명이 보인다 = 소유자 인증도 살아 있다**
+- [x] 4개 라우트 전부 200 (입장·record·certificate·owner), 콘솔 에러 0
+- [x] 로케일 쿠키 SSR 실측 — `b_lang=fr` → 첫 응답 HTML에 프랑스어 / 쿠키 없음 → 한국어 / `b_lang=xx` → 한국어 폴백
+- [x] 관측 실데이터 확인 — 정적 폴백이 아니라 실측값(수온 13.5·15.6°C, 염분 34.7)
+
+⚠️ **PR #1 본문이 부정확하다.** 소유권 이전을 기능으로 설명하고 "미검증: transfer done 상태"까지 적혀 있다. 폐기 전 기록을 그대로 옮긴 탓 — 정정 필요.
+
+### 이번에 내가 틀린 것 (→ lessons)
+`tasks/todo.md`의 옛 절을 현재 상태로 읽고 미결 2건을 보고했는데, **둘 다 이미 닫혀 있었다.** 소유권 이전은 폐기됐고 `ownTitle`은 `N° {serial}`로 바뀐 뒤였다. todo는 시간순 로그라 **뒤쪽 절이 앞쪽을 무효화한다** — 상태를 물으면 문서가 아니라 코드를 먼저 봐야 한다.
