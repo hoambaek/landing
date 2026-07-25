@@ -74,6 +74,13 @@ function mean(values: (number | null)[]): number | null {
   return nums.reduce((a, b) => a + b, 0) / nums.length;
 }
 
+/** 최고값 — 조위·파고는 시안 라벨("최고")에 맞춰 일평균 중 최댓값으로 집계한다. */
+function max(values: (number | null)[]): number | null {
+  const nums = values.filter((v): v is number => v !== null && Number.isFinite(v));
+  if (nums.length === 0) return null;
+  return Math.max(...nums);
+}
+
 /**
  * 병 식별만 조회 (경량) — 입장 페이지용. 해양 집계 없이 N°·제품만 필요.
  * numbered_bottles 우선, bottle_units 차선. 민감 컬럼은 select하지 않는다.
@@ -102,6 +109,94 @@ export async function fetchBottleIdentity(code: string): Promise<BottleIdentity 
   }
 
   return null;
+}
+
+/* ── 소유자 조회 (인증서·소유 관리용) ──────────────────────────
+ * /b/[code]는 NFC 태그로 열리는 공개 URL이다. 병은 선물·접대 자리에 놓이므로
+ * "태그할 수 있는 사람 = 소유자"가 아니다. 그래서 노출 범위를 둘로 나눈다.
+ *
+ *  - 이름  : 등록자가 "인증서에 남길 이름"으로 직접 정한 값이라 그대로 공개한다.
+ *            무엇을 보일지는 시스템이 아니라 본인이 등록 시점에 선택한다.
+ *  - 이메일: 인증서에 있을 이유가 없고 연락처 식별자라 항상 마스킹한다.
+ *            원본은 소유자 인증(OTP) 통과 시 fetchBottleOwnerRaw로만 꺼낸다.
+ *
+ * 필드명이 곧 노출 범위다. emailMasked를 그대로 두면 실수로 원본이 새기 어렵다.
+ */
+export interface BottleOwner {
+  name: string;
+  emailMasked: string;
+  registeredAt: string | null; // YYYY-MM-DD
+}
+
+/* maskName은 제거했다. 이름은 등록자가 인증서용으로 정한 공개값이라 가리지 않는다.
+   되살릴 일이 생기면 노출 정책부터 다시 정할 것. */
+
+export function maskEmail(email: string): string {
+  const e = email.trim();
+  const at = e.indexOf("@");
+  if (at < 1) return "•••";
+  const local = e.slice(0, at);
+  const domain = e.slice(at + 1);
+  const head = local.slice(0, Math.min(2, local.length));
+  return `${head}•••@${domain}`;
+}
+
+/** 이미 소유 등록된 병인지 여부 — 입장 페이지 재등록 차단용(경량). */
+export async function isBottleRegistered(code: string): Promise<boolean> {
+  if (!supabaseAdmin) return false;
+  if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return false;
+  const { data } = await supabaseAdmin
+    .from("bottle_registrations")
+    .select("id")
+    .eq("nfc_code", code)
+    .limit(1)
+    .maybeSingle();
+  return !!data;
+}
+
+export async function fetchBottleOwner(code: string): Promise<BottleOwner | null> {
+  if (!supabaseAdmin) return null;
+  if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return null;
+
+  const { data } = await supabaseAdmin
+    .from("bottle_registrations")
+    .select("name, email, created_at")
+    .eq("nfc_code", code)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!data || !data.name) return null;
+  return {
+    name: data.name,
+    emailMasked: data.email ? maskEmail(data.email) : "",
+    registeredAt: data.created_at ? String(data.created_at).slice(0, 10) : null,
+  };
+}
+
+/** 원본 소유자 정보 — 소유자 인증 완료 시에만 호출한다(마스킹 없음). */
+export interface BottleOwnerRaw {
+  name: string;
+  email: string;
+  registeredAt: string | null;
+}
+
+export async function fetchBottleOwnerRaw(code: string): Promise<BottleOwnerRaw | null> {
+  if (!supabaseAdmin) return null;
+  if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return null;
+  const { data } = await supabaseAdmin
+    .from("bottle_registrations")
+    .select("name, email, created_at")
+    .eq("nfc_code", code)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (!data || !data.name) return null;
+  return {
+    name: data.name,
+    email: data.email ?? "",
+    registeredAt: data.created_at ? String(data.created_at).slice(0, 10) : null,
+  };
 }
 
 export async function fetchBottleRecord(code: string): Promise<BottleRecordData | null> {
@@ -147,12 +242,12 @@ export async function fetchBottleRecord(code: string): Promise<BottleRecordData 
   const averages: OceanAverages = {
     temp: round1(mean(rows.map((r) => bottomTemp40(r.sea_temperature_avg, Number(r.date.slice(5, 7)))))),
     salinity: round1(mean(rows.map((r) => r.salinity))),
-    tide: round0(mean(rows.map((r) => r.tide_level_avg))),
+    tide: round0(max(rows.map((r) => r.tide_level_avg))),
     // ocean_data_daily.current_velocity_avg는 Open-Meteo 기본 단위(km/h)로 수집됨 → m/s 변환
     current: round2(divOrNull(mean(rows.map((r) => r.current_velocity_avg)), 3.6)),
     pressure: round1(1 + depth / 10.33) ?? 3.9,
     tidal: round0(mean(rows.map((r) => r.tidal_current_speed))),
-    wave: round1(mean(rows.map((r) => r.wave_height_avg))),
+    wave: round1(max(rows.map((r) => r.wave_height_avg))),
     period: round1(mean(rows.map((r) => r.wave_period_avg))),
   };
 

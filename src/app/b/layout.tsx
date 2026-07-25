@@ -19,5 +19,7 @@ export const viewport: Viewport = {
 };
 
 export default function BottleLayout({ children }: { children: React.ReactNode }) {
-  return <div className={plexMono.variable}>{children}</div>;
+  /* b-root — globals.css가 이 마커로 루트 배경을 void로 돌린다(안전영역 틴트).
+     themeColor 메타는 iOS 26이 무시하므로 html 배경이 유일한 수단이다. */
+  return <div className={`b-root ${plexMono.variable}`}>{children}</div>;
 }

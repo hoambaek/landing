@@ -1,0 +1,638 @@
+/* /b 디지털 인증서 — Paper "04 — 디지털 인증서" 시안 (다크·앰버) */
+
+.page {
+  --c-void: #0a0908;
+  --c-ivory: #f1efeb;
+  --c-amber: #ccad7b;
+  --c-mono: var(--font-plex-mono), "IBM Plex Mono", monospace;
+  --c-serif: var(--font-heading), "Cormorant Garamond", serif;
+  --c-serif-kr: var(--font-serif-kr), "Noto Serif KR", serif;
+  --c-sans: var(--font-body), "Noto Sans KR", sans-serif;
+  min-height: 100svh;
+  background: var(--c-void);
+  color: var(--c-ivory);
+  font-family: var(--c-sans);
+  display: flex;
+  justify-content: center;
+}
+.frame {
+  width: min(430px, 100vw);
+  overflow: hidden;
+}
+
+/* ── 헤더 ──
+   증서는 "무슨 문서인가"가 먼저 읽혀야 한다. 로고는 모든 페이지에 있는 요소라
+   페이지를 구분해주지 못하므로 발행 주체 줄로 눌러 한 줄에 눕히고,
+   문서 종류를 제목으로 승격시킨다. (여권·학위증·감정서의 공통 위계) */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: max(38px, calc(env(safe-area-inset-top) + 20px)) 24px 34px;
+  border-bottom: 0.5px solid rgba(241, 239, 235, 0.14);
+}
+/* 인장 — 앰버 괘선 두 줄이 심볼을 위아래로 감싼다 */
+.certRule {
+  width: 104px;
+  height: 1px;
+  flex-shrink: 0;
+  background: var(--c-amber);
+  opacity: 0.5;
+}
+.headerLogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 26px 0 24px;
+}
+.headerSymbol {
+  width: 94px;
+  height: 78px;
+  object-fit: contain;
+}
+.certTag {
+  margin-top: 26px;
+  font-family: var(--c-serif-kr);
+  font-weight: 400;
+  font-size: 23px;
+  line-height: 30px;
+  letter-spacing: 0.08em;
+  color: var(--c-ivory);
+  text-align: center;
+  word-break: keep-all;
+}
+/* en·fr은 문서명이 길다 — 브랜드 라틴 디스플레이(Cormorant)로 바꿔 폭을 줄인다 */
+.certTagLatin {
+  font-family: var(--c-serif);
+  font-size: 24px;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  max-width: 300px;
+}
+/* 국제 문서 관습 — 자국어 문서명 아래 영문 병기. en 로케일은 제목과 중복이라 숨긴다. */
+.certTagEn {
+  margin-top: 9px;
+  font-family: var(--c-mono);
+  font-size: 8px;
+  line-height: 12px;
+  letter-spacing: 0.26em;
+  color: rgba(204, 173, 123, 0.86);
+}
+
+/* ── 대상: 도판 + 캡션 ──
+   사진만 큰 사각형이라 활자 사이에 떠 보였다. 앰버 헤어라인 도판에 앉혀 자리를 준다. */
+.plate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px 0;
+}
+.plateFrame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 222px;
+  padding: 24px 0;
+  border: 0.5px solid rgba(204, 173, 123, 0.34);
+}
+.edition {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  white-space: nowrap;
+}
+.edNo,
+.edTotal {
+  flex-shrink: 0;
+  font-family: var(--c-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: rgba(204, 173, 123, 0.72);
+}
+.edTotal { letter-spacing: 0.18em; }
+.edNum {
+  flex-shrink: 0;
+  font-family: var(--c-serif);
+  font-weight: 300;
+  font-size: 30px;
+  line-height: 32px;
+  color: var(--c-amber);
+}
+.bottleImg {
+  width: 138px;
+  height: 256px;
+  object-fit: contain;
+}
+
+/* ── 선언: 헌정문 + 소유자 ── */
+.declaration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+.dedication {
+  font-family: var(--c-serif-kr);
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 20px;
+  color: rgba(241, 239, 235, 0.58);
+  white-space: pre-line;
+}
+.ownerName {
+  margin-top: 16px;
+  font-family: var(--c-serif-kr);
+  font-size: 25px;
+  line-height: 30px;
+  color: var(--c-ivory);
+}
+/* 헤더 괘선과 같은 104px — 폭이 다르면 두 개의 다른 장치로 읽힌다 */
+.ownerRule {
+  width: 104px;
+  height: 1px;
+  margin-top: 24px;
+  background: var(--c-amber);
+  opacity: 0.5;
+}
+
+/* ── 진위 씰 ── */
+.seal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 24px;
+  text-align: center;
+}
+.sealMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(204, 173, 123, 0.7);
+  font-family: var(--c-sans);
+  font-weight: 300;
+  font-size: 12px;
+  color: var(--c-amber);
+}
+.sealText {
+  margin-top: 14px;
+  font-family: var(--c-sans);
+  font-weight: 300;
+  font-size: 11px;
+  line-height: 17px;
+  color: rgba(241, 239, 235, 0.52);
+  word-break: keep-all;
+}
+
+/* ── 정보 블록 ── */
+.block {
+  padding: 42px 24px 30px;
+  background: var(--c-void);
+}
+/* 원산지·해저 숙성 — 배경은 다른 블록과 같은 void. 여백만 조금 좁게 잡는다. */
+.blockTight {
+  padding: 28px 24px 34px;
+}
+.blockHead {
+  font-family: var(--c-sans);
+  font-size: 13px;
+  color: var(--c-amber);
+}
+.blockHeadAmber {
+  font-family: var(--c-sans);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--c-amber);
+}
+.rows {
+  margin-top: 16px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 0.5px solid rgba(241, 239, 235, 0.13);
+}
+.rowLabel {
+  flex-shrink: 0;
+  font-family: var(--c-sans);
+  font-size: 11px;
+  color: rgba(241, 239, 235, 0.44);
+}
+.rowValue,
+.rowValueMono {
+  text-align: right;
+  font-size: 11px;
+  color: var(--c-ivory);
+}
+.rowValue { font-family: var(--c-sans); }
+.rowValueMono { font-family: var(--c-mono); }
+.rowValueAmber {
+  font-family: var(--c-sans);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--c-amber);
+}
+
+/* ── 디지털 서명 ── */
+.signature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 42px 24px;
+}
+/* 봉인된 판 — 테두리를 아이보리에서 앰버로 바꿔 "인증된 블록"임을 색으로 말한다.
+   이 시스템에서 앰버 = 확인됨 (인증 상태 · NFC 자물쇠와 같은 어휘). */
+.signBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 20px 16px 18px;
+  border: 0.5px solid rgba(204, 173, 123, 0.32);
+  text-align: center;
+}
+/* 알고리즘은 라벨 — 자물쇠와 한 줄로 묶어 "무엇으로 잠갔는가"를 먼저 말한다 */
+.signAlgo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--c-mono);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: var(--c-amber);
+}
+/* 다이제스트가 증거다 — 크게, 밝게, 4자리 묶음이 읽히도록 자간을 연다 */
+.signHash {
+  margin-top: 12px;
+  font-family: var(--c-mono);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.16em;
+  color: rgba(241, 239, 235, 0.88);
+  word-break: break-all;
+}
+.signRule {
+  width: 40px;
+  height: 1px;
+  margin: 16px 0;
+  background: var(--c-amber);
+  opacity: 0.4;
+}
+.signIssuer {
+  font-family: var(--c-mono);
+  font-size: 8px;
+  line-height: 14px;
+  letter-spacing: 0.1em;
+  color: rgba(241, 239, 235, 0.4);
+}
+
+/* ── 액션 ── */
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 24px 44px;
+}
+.saveBtn {
+  width: 100%;
+  height: 54px;
+  background: var(--c-amber);
+  color: var(--c-void);
+  border: none;
+  font-family: var(--c-sans);
+  font-size: 13px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.saveBtn:active { opacity: 0.8; transform: scale(0.985); }
+.saveBtn:disabled { cursor: progress; }
+
+/* 렌더 중 — 흐리게 죽이지 않고 "각인되는 중"으로 보이게 한다.
+   금판 위를 void 띠가 훑고 지나가는 스캔 패스. 흰 셔머는 스켈레톤 로더 관용구라 피하고
+   브랜드 두 색(앰버 바탕 · void 띠)만 쓴다. 실제 진행률이 없으므로 채워지는 바는 쓰지 않는다. */
+.saveBtnBusy {
+  position: relative;
+  overflow: hidden;
+}
+.saveBtnBusy::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -40%;
+  width: 40%;
+  background: linear-gradient(
+    100deg,
+    rgba(10, 9, 8, 0) 0%,
+    rgba(10, 9, 8, 0.28) 50%,
+    rgba(10, 9, 8, 0) 100%
+  );
+  animation: certInscribe 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  /* 렌더 중에는 toPng가 메인 스레드를 붙잡는다. 컴포지터로 올려두지 않으면
+     정작 필요한 순간에 애니메이션이 멈춰 선다. */
+  will-change: transform;
+}
+@keyframes certInscribe {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(350%, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .saveBtnBusy::after { animation: none; opacity: 0.2; }
+}
+.saveNote {
+  margin-top: 14px;
+  font-family: var(--c-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--c-amber);
+}
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 22px;
+  font-family: var(--c-sans);
+  font-size: 11px;
+  color: rgba(241, 239, 235, 0.4);
+  text-decoration: none;
+}
+.backArrow {
+  flex-shrink: 0;
+  transform: translateY(0.5px);
+}
+
+/* ── 푸터 ── */
+.footer {
+  padding: 48px 24px 32px;
+  background: var(--c-void);
+  border-top: 0.5px solid rgba(241, 239, 235, 0.1);
+}
+.footerLogo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.footerSymbol { width: 34px; height: auto; opacity: 0.82; }
+.footerWordmark { width: 128px; height: auto; opacity: 0.9; }
+.footerTagline {
+  margin-top: 16px;
+  font-family: var(--c-sans);
+  font-weight: 300;
+  font-size: 11px;
+  line-height: 19px;
+  color: rgba(241, 239, 235, 0.56);
+}
+.footerCols {
+  display: flex;
+  gap: 12px;
+  margin-top: 30px;
+}
+.footerCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-decoration: none;
+}
+.footerColHead {
+  font-family: var(--c-mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: rgba(241, 239, 235, 0.36);
+}
+/* space-between으로 벌리면 화살표가 링크에서 떨어져 별개 요소로 읽힌다 */
+.footerColRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--c-sans);
+  font-weight: 300;
+  font-size: 12px;
+  color: rgba(241, 239, 235, 0.8);
+}
+/* 셰브론 SVG — bottle.module.css와 동일 규칙 */
+.footerArrow {
+  flex-shrink: 0;
+  color: var(--c-amber);
+  /* 셰브론 광학 중심 보정 — bottle.module.css와 동일 */
+  transform: translateY(0.5px);
+}
+/* 저작권 2줄 — 언어 버튼과 같은 줄에 놓기 위해 세로로 쌓는다 */
+.footerLegal {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.footerBase {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 0.5px solid rgba(241, 239, 235, 0.1);
+  font-family: var(--c-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: rgba(241, 239, 235, 0.36);
+}
+
+/* ── 언어 선택 (푸터) ── */
+.langSelect {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  /* 저작권의 시각적 밑선은 베이스라인, 칩의 밑선은 테두리 — 3px 차를 걷어낸다
+     (bottle.module.css .footerLang과 동일 보정) */
+  margin-bottom: 3px;
+}
+.langChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  background: transparent;
+  border: 0.5px solid rgba(241, 239, 235, 0.25);
+  font-family: var(--c-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgba(241, 239, 235, 0.85);
+  cursor: pointer;
+}
+.langPanel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  min-width: 150px;
+  padding: 6px;
+  background: rgba(15, 13, 11, 0.98);
+  border: 0.5px solid rgba(241, 239, 235, 0.14);
+  border-radius: 4px;
+  box-shadow: 0 -14px 40px rgba(0, 0, 0, 0.55);
+}
+.langOpt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: left;
+}
+.langOpt:active { background: rgba(241, 239, 235, 0.06); }
+.langOptCode {
+  width: 22px;
+  flex-shrink: 0;
+  font-family: var(--c-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(241, 239, 235, 0.5);
+}
+.langOptNative {
+  flex: 1;
+  font-family: var(--c-sans);
+  font-weight: 300;
+  font-size: 12.5px;
+  color: rgba(241, 239, 235, 0.9);
+}
+.langOptActive .langOptCode,
+.langOptActive .langOptNative { color: var(--c-amber); }
+
+/* ── 저장용 인증서 카드 (오프스크린) ── */
+.printArea {
+  position: absolute;
+  left: -99999px;
+  top: 0;
+  pointer-events: none;
+}
+.printCard {
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 36px 48px;
+  background: radial-gradient(circle at 50% 22%, #15110d 0%, #0a0908 68%);
+  text-align: center;
+}
+.printLogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 26px 0 24px;
+}
+.printSymbol { width: 94px; height: 78px; object-fit: contain; }
+.printTag {
+  margin-top: 26px;
+  font-family: var(--c-serif-kr);
+  font-weight: 400;
+  font-size: 23px;
+  line-height: 30px;
+  letter-spacing: 0.08em;
+  color: var(--c-ivory);
+}
+.printTagEn {
+  margin-top: 9px;
+  font-family: var(--c-mono);
+  font-size: 8px;
+  line-height: 12px;
+  letter-spacing: 0.26em;
+  color: rgba(204, 173, 123, 0.86);
+}
+.printPlate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 222px;
+  padding: 24px 0;
+  margin-top: 40px;
+  border: 0.5px solid rgba(204, 173, 123, 0.34);
+}
+.printBottleImg { width: 138px; height: 256px; object-fit: contain; }
+.printDedication {
+  margin-top: 40px;
+  font-family: var(--c-serif-kr);
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 22px;
+  color: rgba(241, 239, 235, 0.6);
+  white-space: pre-line;
+}
+.printOwner {
+  margin-top: 16px;
+  font-family: var(--c-serif-kr);
+  font-size: 28px;
+  line-height: 34px;
+  color: var(--c-ivory);
+}
+/* 인장 괘선 — 화면 헤더와 같은 장치 */
+.printRule {
+  width: 104px;
+  height: 1px;
+  flex-shrink: 0;
+  background: var(--c-amber);
+  opacity: 0.5;
+}
+.printRuleWide {
+  width: 104px;
+  height: 1px;
+  margin-top: 24px;
+  background: var(--c-amber);
+  opacity: 0.5;
+}
+.printEdition {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 20px;
+}
+.printEdNo,
+.printEdTotal {
+  font-family: var(--c-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgba(204, 173, 123, 0.72);
+}
+.printEdNum {
+  font-family: var(--c-serif);
+  font-weight: 300;
+  font-size: 34px;
+  line-height: 36px;
+  color: var(--c-amber);
+}
+.printCertId {
+  margin-top: 16px;
+  font-family: var(--c-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(241, 239, 235, 0.5);
+}
+/* 서명 — 문서번호 아래 한 줄. 자물쇠는 앰버, 다이제스트는 아이보리로 눌러
+   문서번호(주인공)를 넘어서지 않게 한다. */
+.printSign {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 9px;
+  font-family: var(--c-mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  /* 옮겨 적을 수 있어야 증거다 — 문서번호보다는 눌러도 판독선 아래로는 안 내린다 */
+  color: rgba(241, 239, 235, 0.42);
+}
+.printSign svg {
+  flex-shrink: 0;
+  color: rgba(204, 173, 123, 0.7);
+}

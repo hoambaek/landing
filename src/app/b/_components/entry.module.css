@@ -1,15 +1,19 @@
-/* /b 입장 페이지 — Paper "입장 페이지 — 이름을 남기다" 시안 1:1 (다크·앰버) */
+/* /b 입장 페이지 — Paper "NFC v2 · 입장 · 소유 등록" 시안 (다크·앰버) */
 
 .page {
   --e-void: #0a0908;
+  --e-ink: #0d0b09;
   --e-ivory: #f1efeb;
   --e-amber: #ccad7b;
   --e-mono: var(--font-plex-mono), "IBM Plex Mono", monospace;
+  --e-serif: var(--font-heading), "Cormorant Garamond", serif;
+  --e-serif-kr: var(--font-serif-kr), "Noto Serif KR", serif;
+  --e-sans: var(--font-body), "Noto Sans KR", sans-serif;
   position: relative;
   min-height: 100svh;
   background: var(--e-void);
   color: var(--e-ivory);
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--e-sans);
   display: flex;
   justify-content: center;
 }
@@ -46,8 +50,8 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-/* ── S1 히어로 (풀스크린 영상 placeholder) ─────────── */
-.hero {
+/* ── S1 풀필름 히어로 ─────────────────────────────── */
+.film {
   position: relative;
   min-height: 100svh;
   display: flex;
@@ -58,7 +62,7 @@
   background: radial-gradient(circle at 50% 40%, #171310 0%, #0a0908 72%);
   overflow: hidden;
 }
-.heroVideo {
+.filmVideo {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -66,21 +70,101 @@
   object-fit: cover;
   z-index: 0;
 }
-.heroLogo {
+.langSelect {
+  position: absolute;
+  top: max(22px, calc(env(safe-area-inset-top) + 2px));
+  right: 22px;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.langChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px;
+  background: rgba(10, 9, 8, 0.35);
+  border: 0.5px solid rgba(241, 239, 235, 0.25);
+  border-radius: 999px;
+  font-family: var(--e-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgba(241, 239, 235, 0.85);
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.langPanel {
+  margin-top: 8px;
+  min-width: 150px;
+  padding: 6px;
+  background: rgba(15, 13, 11, 0.96);
+  border: 0.5px solid rgba(241, 239, 235, 0.14);
+  border-radius: 4px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.langOpt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: left;
+}
+.langOpt:active {
+  background: rgba(241, 239, 235, 0.06);
+}
+.langOptActive {
+  color: var(--e-amber);
+}
+.langOptCode {
+  width: 22px;
+  flex-shrink: 0;
+  font-family: var(--e-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(241, 239, 235, 0.5);
+}
+.langOptActive .langOptCode {
+  color: var(--e-amber);
+}
+.langOptNative {
+  flex: 1;
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 12.5px;
+  color: rgba(241, 239, 235, 0.9);
+}
+.langOptActive .langOptNative {
+  color: var(--e-amber);
+}
+.langCheck {
+  flex-shrink: 0;
+  color: var(--e-amber);
+}
+.filmLogo {
   position: relative;
   z-index: 2;
   width: 80px;
   height: auto;
   opacity: 0.96;
 }
-.heroCenter {
+.filmCenter {
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.playGlyph {
+.playBtn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,209 +173,275 @@
   border-radius: 50%;
   border: 0.5px solid rgba(241, 239, 235, 0.2);
 }
-.heroScroll {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
+.filmCaption {
+  margin-top: 18px;
+  font-family: var(--e-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: rgba(241, 239, 235, 0.68);
 }
-/* SCROLL 제거 후 히어로 space-between 유지용 하단 스페이서 (영상/글리프 중앙 정렬) */
-.heroTail {
+.filmMeta {
+  margin-top: 8px;
+  font-family: var(--e-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--e-amber);
+}
+/* 히어로 space-between 유지용 하단 스페이서 (중앙 정렬) */
+.filmTail {
   flex: 0 0 auto;
   width: 1px;
   height: 1px;
 }
-.scrollLabel {
-  font-family: var(--e-mono);
-  font-size: 9px;
-  letter-spacing: 0.3em;
-  color: rgba(241, 239, 235, 0.5);
-}
-.scrollLine {
-  width: 1px;
-  height: 30px;
-  background: linear-gradient(180deg, rgba(241, 239, 235, 0.8), transparent);
-  transform-origin: top;
-  animation: scrollPulse 2.4s ease-in-out infinite;
-}
-@keyframes scrollPulse {
-  0%, 100% { opacity: 0.35; transform: scaleY(0.5); }
-  50% { opacity: 1; transform: scaleY(1); }
-}
 
-/* 히어로 인트로 정착 — 로고 디졸브가 걷히며 히어로 요소가 순차로 떠오른다 */
-.heroLogo,
-.heroCenter,
-.heroScroll {
+/* 인트로 정착 — 로고 디졸브가 걷히며 히어로 요소가 순차로 떠오른다 */
+.filmLogo,
+.filmCenter {
   opacity: 0;
   animation: heroSettle 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
-.heroLogo { animation-delay: 1.45s; }
-.heroCenter { animation-delay: 1.7s; }
-.heroScroll { animation-delay: 1.95s; }
+.filmLogo { animation-delay: 1.45s; }
+.filmCenter { animation-delay: 1.7s; }
 @keyframes heroSettle {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }
 }
 
-/* ── S2 감사 + 등록 ───────────────────────────────── */
-.register {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 80px 28px 88px;
-  background: var(--e-void);
-}
-/* 등록 요소 계단식 등장 (위→아래 시차 리빌) */
-.register > * {
+/* ── 섹션 스크롤 리빌 (공통) ───────────────────────── */
+.reveal {
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.85s cubic-bezier(0.25, 0.1, 0.25, 1),
     transform 0.85s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
-.register.revealIn > * {
+.revealIn {
   opacity: 1;
   transform: none;
 }
-.register.revealIn > *:nth-child(1) { transition-delay: 0s; }
-.register.revealIn > *:nth-child(2) { transition-delay: 0.07s; }
-.register.revealIn > *:nth-child(3) { transition-delay: 0.14s; }
-.register.revealIn > *:nth-child(4) { transition-delay: 0.21s; }
-.register.revealIn > *:nth-child(5) { transition-delay: 0.28s; }
-.register.revealIn > *:nth-child(6) { transition-delay: 0.35s; }
-.register.revealIn > *:nth-child(7) { transition-delay: 0.42s; }
-.register.revealIn > *:nth-child(8) { transition-delay: 0.49s; }
-.register.revealIn > *:nth-child(9) { transition-delay: 0.56s; }
-.register.revealIn > *:nth-child(10) { transition-delay: 0.63s; }
 
+/* ── 01 Bottle Identity ───────────────────────────── */
+.identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 72px 28px 34px;
+  background: var(--e-void);
+  word-break: keep-all;
+}
 .eyebrow {
   display: flex;
   align-items: center;
   gap: 8px;
   font-family: var(--e-mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  color: rgba(241, 239, 235, 0.5);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--e-amber);
 }
-.eyebrowDot {
-  width: 5px;
-  height: 5px;
-  flex-shrink: 0;
-  background: var(--e-amber);
-}
-.eyebrowIcon {
-  display: block;
+/* 자물쇠 — 기록 히어로 .heroVerifiedLock과 같은 규격.
+   nudge 없음: 이 글리프는 viewBox(0 0 8 10) 안에서 잉크가 1.4~9.1에 있어
+   이미 상자 중심보다 0.25 아래로 그려진다. 여기에 translateY를 더하면 이중으로 내려간다.
+   실측 결과 0이 최적(잔차 0.14px). */
+.eyebrowLock {
   flex-shrink: 0;
 }
-
-.thanksTitle {
-  width: min(319px, 86vw);
-  height: auto;
-  margin-top: 34px;
-}
-.thanksSub {
-  margin-top: 16px;
-  font-family: var(--font-body), sans-serif;
+.productName {
+  margin-top: 48px;
+  font-family: var(--e-serif);
   font-weight: 300;
-  font-size: 13px;
-  line-height: 23px;
-  color: rgba(241, 239, 235, 0.7);
+  font-size: 34px;
+  line-height: 40px;
+  letter-spacing: 0.01em;
+  color: var(--e-ivory);
   text-align: center;
 }
-
-/* 블루 스톤 플레이트 — 패티나 스톤 위 얇은 브라스 양각 넘버 (NAITO 스타일) */
-.serialPlate {
-  position: relative;
-  overflow: hidden;
-  width: min(300px, 86vw);
-  margin-top: 54px;
-  padding: 80px 20px;
-  display: flex;
-  justify-content: center;
-  background-image: url("/images/b-plaque-stone.webp");
-  background-size: cover;
-  background-position: center;
-  box-shadow:
-    0 22px 40px rgba(0, 0, 0, 0.55),
-    0 3px 8px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(190, 200, 216, 0.22),
-    inset 0 -2px 4px rgba(10, 16, 28, 0.5);
+.identityTagline {
+  margin-top: 8px;
+  font-family: var(--e-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: rgba(241, 239, 235, 0.48);
 }
-.serial {
-  position: relative;
-  z-index: 1;
+.identityRule {
+  width: min(334px, 100%);
+  height: 0.5px;
+  margin-top: 44px;
+  background: rgba(241, 239, 235, 0.14);
+}
+.edition {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 10px;
+  margin-top: 34px;
   white-space: nowrap;
 }
-.serialNo {
+.edNo,
+.edTotal {
   flex-shrink: 0;
-  font-family: var(--font-josefin), sans-serif;
-  font-weight: 300;
-  font-size: 22px;
-  letter-spacing: 0.12em;
-  color: #c8a468;
-  text-shadow: 0 -1px 0 rgba(255, 238, 205, 0.5), 0 2px 4px rgba(0, 0, 0, 0.55);
-}
-.serialNum {
-  flex-shrink: 0;
-  font-family: var(--font-josefin), sans-serif;
-  font-weight: 300;
-  font-size: 66px;
-  line-height: 62px;
-  letter-spacing: 0.06em;
-  color: #cba86c;
-  text-shadow: 0 -1.5px 0 rgba(255, 240, 208, 0.55), 0 3px 5px rgba(0, 0, 0, 0.6);
-}
-.serialTotal {
-  flex-shrink: 0;
-  font-family: var(--font-josefin), sans-serif;
-  font-weight: 300;
-  font-size: 25px;
+  font-family: var(--e-mono);
+  font-size: 13px;
   letter-spacing: 0.1em;
-  color: #a9884f;
-  text-shadow: 0 -1px 0 rgba(255, 238, 205, 0.4), 0 2px 4px rgba(0, 0, 0, 0.5);
+  color: rgba(204, 173, 123, 0.72);
 }
-
-/* 등록 카드(명부) — 타이틀·안내·폼·입장하기를 하나의 패널로 묶는다 (NAITO 톤과 조응하는 웜 차콜) */
-.registerCard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: min(334px, 100%);
-  margin-top: 54px;
-  padding: 34px 20px 30px;
-  background: linear-gradient(180deg, #15120d 0%, #0d0b09 100%);
-  border: 1px solid rgba(204, 173, 123, 0.2);
-  border-radius: 1px;
-  box-shadow:
-    0 22px 48px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(241, 239, 235, 0.05);
+.edTotal { letter-spacing: 0.18em; }
+.edNum {
+  flex-shrink: 0;
+  font-family: var(--e-serif);
+  font-weight: 300;
+  font-size: 68px;
+  line-height: 68px;
+  letter-spacing: 0.02em;
+  color: var(--e-amber);
 }
-
-.registerTitle {
-  width: min(272px, 78vw);
-  height: auto;
-  margin-top: 0;
-}
-.registerSub {
-  margin-top: 12px;
-  font-family: var(--font-body), sans-serif;
+.identityBody {
+  margin-top: 28px;
+  font-family: var(--e-sans);
   font-weight: 300;
   font-size: 13px;
   line-height: 22px;
-  color: rgba(241, 239, 235, 0.6);
+  color: rgba(241, 239, 235, 0.66);
   text-align: center;
+  white-space: pre-line;
+}
+
+/* ── 02 Provenance ────────────────────────────────── */
+.prov {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 72px 28px;
+  background: var(--e-ink);
+  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
+  word-break: keep-all;
+}
+.provEyebrow {
+  font-family: var(--e-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--e-amber);
+}
+.provTitle {
+  margin-top: 20px;
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 25px;
+  line-height: 38px;
+  letter-spacing: -0.02em;
+  color: var(--e-ivory);
+  white-space: pre-line;
+}
+.provBody {
+  margin-top: 18px;
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 23px;
+  color: rgba(241, 239, 235, 0.58);
+  white-space: pre-line;
+}
+.facts {
+  display: flex;
+  width: min(334px, 100%);
+  margin-top: 44px;
+  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
+  border-bottom: 0.5px solid rgba(241, 239, 235, 0.12);
+}
+.fact {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  height: 96px;
+  padding: 0 8px 0 12px;
+}
+.fact + .fact {
+  border-left: 0.5px solid rgba(241, 239, 235, 0.1);
+}
+.factLabel {
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 9px;
+  line-height: 13px;
+  color: rgba(241, 239, 235, 0.46);
+}
+.factValue,
+.factValueMono {
+  margin-top: 6px;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 24px;
+  color: var(--e-ivory);
+}
+.factValue { font-family: var(--e-serif-kr); }
+.factValueMono {
+  font-family: var(--e-mono);
+  letter-spacing: -0.03em;
+}
+.factSub {
+  margin-top: 4px;
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 8px;
+  line-height: 11px;
+  color: rgba(204, 173, 123, 0.68);
+}
+.provHint {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 28px;
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--e-amber);
+}
+
+/* ── 03 Claim Ownership ───────────────────────────── */
+.claim {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 28px;
+  background: var(--e-void);
+  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
+  word-break: keep-all;
+}
+.claimEyebrow {
+  font-family: var(--e-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--e-amber);
+}
+.claimTitle {
+  margin-top: 22px;
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 26px;
+  line-height: 39px;
+  letter-spacing: -0.02em;
+  color: var(--e-ivory);
+  text-align: center;
+  white-space: pre-line;
+}
+.claimBody {
+  margin-top: 16px;
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 23px;
+  color: rgba(241, 239, 235, 0.58);
+  text-align: center;
+  white-space: pre-line;
 }
 
 .form {
   display: flex;
   flex-direction: column;
   width: min(334px, 100%);
-  margin-top: 40px;
+  margin-top: 48px;
 }
 .field {
   display: flex;
@@ -304,19 +454,19 @@
 }
 .fieldLabel {
   font-family: var(--e-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  color: rgba(241, 239, 235, 0.5);
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  color: rgba(241, 239, 235, 0.46);
 }
 .input {
   width: 100%;
-  margin-top: 11px;
+  margin-top: 10px;
   padding: 0 0 12px;
   background: transparent;
   border: none;
-  border-bottom: 0.5px solid rgba(241, 239, 235, 0.2);
+  border-bottom: 0.5px solid rgba(241, 239, 235, 0.24);
   border-radius: 0;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--e-sans);
   font-weight: 300;
   /* 16px 미만이면 iOS Safari가 포커스 시 화면을 확대함 — 16px로 방지 */
   font-size: 16px;
@@ -328,12 +478,11 @@
   transition: border-color 0.25s ease;
 }
 .input::placeholder {
-  color: rgba(241, 239, 235, 0.3);
+  color: rgba(241, 239, 235, 0.34);
 }
 .input:focus {
   border-bottom-color: rgba(204, 173, 123, 0.65);
 }
-
 .error {
   align-self: flex-start;
   margin-top: 16px;
@@ -342,113 +491,257 @@
   letter-spacing: 0.04em;
   color: #c98b83;
 }
-
+.privacyNote {
+  margin-top: 34px;
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 10.5px;
+  line-height: 17px;
+  color: rgba(241, 239, 235, 0.4);
+  /* 줄바꿈을 브라우저 자동 감김에 맡기지 않는다 */
+  white-space: pre-line;
+  word-break: keep-all;
+}
 .submit {
   width: 100%;
   height: 54px;
-  margin-top: 46px;
+  margin-top: 26px;
   background: var(--e-amber);
   color: var(--e-void);
   border: none;
   border-radius: 0;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--e-sans);
   font-size: 14px;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   cursor: pointer;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 .submit:active {
   opacity: 0.8;
-  transform: scale(0.99);
+  transform: scale(0.985);
 }
 .submit:disabled {
   opacity: 0.6;
   cursor: default;
 }
 
-.note {
-  margin-top: 14px;
+/* ── 이미 등록된 병 ─────────────────────────────────
+   폼 자리에 소유자를 놓는다. 인증서·기록의 소유자 표기와 같은 조판
+   (라틴 라벨 위, 세리프 이름 아래)이라 세 화면에서 같은 이름으로 읽힌다. */
+.claimed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: min(334px, 100%);
+  margin-top: 34px;
+  padding: 26px 24px 28px;
+  border: 0.5px solid rgba(204, 173, 123, 0.34);
+  background: radial-gradient(140% 90% at 50% 0%, rgba(204, 173, 123, 0.07) 0%, rgba(204, 173, 123, 0) 64%);
+}
+.claimedLabel {
   font-family: var(--e-mono);
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  color: rgba(241, 239, 235, 0.5);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: rgba(204, 173, 123, 0.78);
+}
+.claimedName {
+  font-family: var(--e-serif-kr);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 34px;
+  letter-spacing: 0.02em;
+  color: var(--e-ivory);
+  text-align: center;
+  word-break: keep-all;
+}
+.claimedCta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(334px, 100%);
+  height: 54px;
+  margin-top: 18px;
+  background: var(--e-amber);
+  color: var(--e-void);
+  font-family: var(--e-sans);
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.claimedCta:active {
+  opacity: 0.8;
+  transform: scale(0.985);
 }
 
-/* ── 기록 예고 블록 — 입장 후 열리는 숙성 과정·데이터를 미리 알린다 ── */
-.recordPreview {
+/* ── 각인 공개 (등록 완료 화면) ───────────────────────── */
+.inscribe {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  padding: max(56px, calc(env(safe-area-inset-top) + 32px)) 28px 44px;
+  background: var(--e-void);
+  text-align: center;
+  word-break: keep-all;
+}
+.inscribeHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.inscribeEyebrow {
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--e-amber);
+}
+.inscribeTitle {
+  margin-top: 16px;
+  font-family: var(--e-serif-kr);
+  font-weight: 300;
+  font-size: 25px;
+  line-height: 34px;
+  letter-spacing: -0.02em;
+  color: var(--e-ivory);
+  white-space: pre-line;
+}
+.inscribeSub {
+  margin-top: 12px;
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 11px;
+  line-height: 16px;
+  color: rgba(241, 239, 235, 0.42);
+}
+.inscribeEdition {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+  white-space: nowrap;
+}
+.iEdNo,
+.iEdTotal {
+  flex-shrink: 0;
+  font-family: var(--e-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: rgba(204, 173, 123, 0.72);
+}
+.iEdTotal { letter-spacing: 0.18em; }
+.iEdNum {
+  flex-shrink: 0;
+  font-family: var(--e-serif);
+  font-weight: 300;
+  font-size: 40px;
+  line-height: 44px;
+  letter-spacing: 0.02em;
+  color: var(--e-amber);
+}
+.inscribeBottle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  height: 268px;
+}
+.inscribeBottleImg {
+  width: auto;
+  height: 264px;
+  object-fit: contain;
+}
+.inscribeOwner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+.iOwnerLabel {
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgba(241, 239, 235, 0.42);
+}
+.iOwnerName {
+  margin-top: 9px;
+  font-family: var(--e-serif-kr);
+  font-size: 27px;
+  line-height: 32px;
+  color: var(--e-ivory);
+}
+.iOwnerRule {
+  width: 34px;
+  height: 1px;
+  margin-top: 14px;
+  background: var(--e-amber);
+}
+.inscribeCta {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: min(334px, 100%);
-  padding-top: 38px;
+  margin-top: 40px;
 }
-.previewConnector {
-  width: 1px;
-  height: 26px;
-  flex-shrink: 0;
-  background: linear-gradient(180deg, rgba(204, 173, 123, 0.55) 0%, rgba(204, 173, 123, 0) 100%);
+.inscribeCtaBtn {
+  width: 100%;
+  height: 54px;
+  background: var(--e-amber);
+  color: var(--e-void);
+  border: none;
+  border-radius: 0;
+  font-family: var(--e-sans);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.previewLead {
-  margin-top: 18px;
-  width: min(310px, 100%);
-  text-align: center;
-  white-space: pre-line;
-  font-family: var(--font-body), sans-serif;
+.inscribeCtaBtn:active {
+  opacity: 0.8;
+  transform: scale(0.985);
+}
+.inscribeCtaSub {
+  margin-top: 14px;
+  font-family: var(--e-sans);
   font-weight: 300;
-  font-size: 13.5px;
-  line-height: 22px;
-  color: rgba(241, 239, 235, 0.82);
+  font-size: 10px;
+  line-height: 15px;
+  color: rgba(241, 239, 235, 0.38);
 }
-.previewItems {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 18px;
-  width: min(292px, 100%);
-  margin-top: 26px;
-  padding: 0;
-  list-style: none;
+
+/* 각인 리빌 — 위에서 아래로 순차 등장, CTA는 잠깐 정지 후 페이드 인 */
+.inscribeHead,
+.inscribeEdition,
+.inscribeBottle,
+.inscribeOwner,
+.inscribeCta {
+  opacity: 0;
+  animation: engrave 0.9s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
-.previewItem {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.previewGlyph {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 34px;
-  height: 28px;
-}
-.previewText {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.previewLabel {
-  font-family: var(--font-body), sans-serif;
-  font-weight: 400;
-  font-size: 13px;
-  letter-spacing: 0.01em;
-  color: rgba(241, 239, 235, 0.94);
-}
-.previewSub {
-  font-family: var(--font-body), sans-serif;
-  font-weight: 300;
-  font-size: 11.5px;
-  line-height: 16px;
-  letter-spacing: 0.01em;
-  color: rgba(241, 239, 235, 0.5);
+.inscribeHead { animation-delay: 0.1s; }
+.inscribeEdition { animation-delay: 0.5s; }
+.inscribeBottle { animation-delay: 0.9s; }
+.inscribeOwner { animation-delay: 1.4s; }
+.inscribeCta { animation-delay: 2s; }
+@keyframes engrave {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .intro { display: none; }
   .introLogo { animation: none; opacity: 1; transform: none; }
-  .register > * { opacity: 1; transform: none; transition: none; }
-  .heroLogo,
-  .heroCenter,
-  .heroScroll { opacity: 1; animation: none; transform: none; }
-  .scrollLine { animation: none; }
+  .filmLogo,
+  .filmCenter { opacity: 1; animation: none; transform: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .inscribeHead,
+  .inscribeEdition,
+  .inscribeBottle,
+  .inscribeOwner,
+  .inscribeCta { opacity: 1; animation: none; transform: none; }
 }

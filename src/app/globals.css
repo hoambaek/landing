@@ -4227,6 +4227,16 @@ html {
     background-color: var(--color-warm-ivory);
   }
 }
+
+/* /b (NFC 병 페이지) — 랜딩과 달리 전 구간 void 단색이라 위 아이보리 규칙을 되돌린다.
+   iOS 26 사파리는 theme-color를 무시하고 루트(html) 배경을 샘플링해 상태바를 칠하므로,
+   안전영역을 페이지와 같은 색으로 잇는 방법은 html에 그 색을 명시하는 것뿐이다.
+   (필름 그레인 body::after는 이미 모바일에서 꺼져 있어 샘플링을 깨지 않는다)
+   :has()가 media query의 html보다 특정도가 높아 순서와 무관하게 이긴다. */
+html:has(.b-root),
+html:has(.b-root) body {
+  background-color: var(--color-void-bg);
+}
 /* ══════════════════════════════════════════
    서브 페이지 — 편지형 폼 (Paper Page 1M8/1N0/1O7)
    ══════════════════════════════════════════ */
