@@ -610,19 +610,15 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
               {extra.passportManage}
             </Link>
           </div>
-        </section>
 
-        {/* ── S6 뉴스레터 ── */}
-        <section className={styles.registre}>
-          <p className={`${styles.newsletterLine} ${styles.reveal}`} data-reveal>{extra.newsletterLine}</p>
-
+          {/* 뉴스레터 — Paper: 텍스트 링크로 열어 인라인 폼 */}
           {nlStatus === "done" ? (
-            <p className={styles.newsletterDone}>{extra.newsletterDone}</p>
+            <p className={styles.passportNewsDone}>{extra.newsletterDone}</p>
           ) : nlOpen ? (
-            <form className={styles.newsletterForm} onSubmit={onSubscribe} noValidate>
+            <form className={styles.passportNewsForm} onSubmit={onSubscribe} noValidate>
               <input
                 type="email"
-                className={styles.newsletterInput}
+                className={styles.passportNewsInput}
                 placeholder={extra.newsletterPlaceholder}
                 value={nlEmail}
                 onChange={(e) => setNlEmail(e.target.value)}
@@ -630,40 +626,27 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
                 inputMode="email"
                 autoFocus
               />
-              <button type="submit" className={styles.newsletterSubmit} disabled={nlStatus === "submitting"}>
+              <button type="submit" className={styles.passportNewsSubmit} disabled={nlStatus === "submitting"}>
                 {extra.newsletterConfirm}
               </button>
             </form>
           ) : (
-            <button type="button" className={styles.ctaBtn} onClick={() => setNlOpen(true)}>
-              {extra.newsletterCta}
+            <button type="button" className={styles.passportNews} onClick={() => setNlOpen(true)}>
+              <span>{extra.passportNews}</span>
+              <span className={styles.passportNewsArrow} aria-hidden>→</span>
             </button>
           )}
           {nlErr && <p className={styles.newsletterErr}>{nlErr}</p>}
-
-          <div className={styles.navBtns}>
-            <a href="https://musedemaree.com" className={styles.navBtn}>
-              <span>{extra.brandPage}</span>
-              <span className={styles.navArrow}>→</span>
-            </a>
-            <a href="https://blog.musedemaree.com" className={styles.navBtn}>
-              <span>{extra.blogPage}</span>
-              <span className={styles.navArrow}>→</span>
-            </a>
-          </div>
         </section>
 
-        {/* ── 푸터 (언어 선택 포함) ── */}
+        {/* ── 푸터 (컴팩트 · Paper 7AI-0) ── */}
         <footer className={styles.footer}>
-          <div className={styles.footerHead}>
-            <div className={styles.footerBrand}>
-              <div className={styles.footerLogoRow}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/logo/logo_trans_W_lg.png" alt="" className={styles.footerSymbol} />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/logo/logo_text_trans_W.png" alt="Muse de Marée" className={styles.footerWordmark} />
-              </div>
-              <p className={styles.footerTagline}>{copy.footerTagline}</p>
+          <div className={styles.footerTop}>
+            <div className={styles.footerLogoRow}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/logo/logo_trans_W_lg.png" alt="" className={styles.footerSymbol} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/logo/logo_text_trans_W.png" alt="Muse de Marée" className={styles.footerWordmark} />
             </div>
 
             <div className={styles.footerLang}>
@@ -709,6 +692,27 @@ export default function BottleRecord({ data }: { data: BottleRecordData }) {
                 </div>
               )}
             </div>
+          </div>
+
+          <p className={styles.footerTagline}>{copy.footerTagline}</p>
+
+          <div className={styles.footerCols}>
+            <a href="https://musedemaree.com" className={styles.footerCol}>
+              <span className={styles.footerColHead}>BRAND</span>
+              <span className={styles.footerColRow}>
+                <span>{extra.brandPage}</span>
+                <span className={styles.footerArrow} aria-hidden>→</span>
+              </span>
+              <span className={styles.footerColUrl}>musedemaree.com</span>
+            </a>
+            <a href="https://blog.musedemaree.com" className={styles.footerCol}>
+              <span className={styles.footerColHead}>JOURNAL</span>
+              <span className={styles.footerColRow}>
+                <span>{extra.blogPage}</span>
+                <span className={styles.footerArrow} aria-hidden>→</span>
+              </span>
+              <span className={styles.footerColUrl}>blog.musedemaree.com</span>
+            </a>
           </div>
 
           <div className={styles.footerBase}>

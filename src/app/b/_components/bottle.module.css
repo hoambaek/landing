@@ -31,7 +31,7 @@
   justify-content: flex-end;
   padding: 18px 24px max(28px, env(safe-area-inset-bottom)) 24px;
   overflow: hidden;
-  background: var(--b-blue2);
+  background: var(--b-void);
 }
 .heroPhoto {
   object-fit: cover;
@@ -42,14 +42,15 @@
   position: absolute;
   inset: 0;
   z-index: 1;
+  /* Paper 66L-0과 동일 — 전 구간 void(#0a0908) opacity 변조 (블루 제거) */
   background: linear-gradient(
     180deg,
-    rgba(8, 10, 12, 0.62) 0%,
-    rgba(8, 10, 12, 0.12) 22%,
-    rgba(8, 10, 12, 0) 44%,
-    rgba(14, 26, 43, 0.5) 64%,
-    rgba(14, 26, 43, 0.92) 84%,
-    #0e1a2b 100%
+    rgba(10, 9, 8, 0.62) 0%,
+    rgba(10, 9, 8, 0.12) 22%,
+    rgba(10, 9, 8, 0) 44%,
+    rgba(10, 9, 8, 0.5) 64%,
+    rgba(10, 9, 8, 0.92) 84%,
+    #0a0908 100%
   );
 }
 .heroContent {
@@ -140,7 +141,7 @@
   display: flex;
   justify-content: center;
   padding: 44px 24px 52px;
-  background: var(--b-blue2);
+  background: var(--b-void);
   overflow: hidden;
 }
 .journeyScaler {
@@ -306,7 +307,7 @@
 }
 
 .flowSection {
-  background: linear-gradient(180deg, #0a0908 0%, #0a0d12 24%, #0a0d12 100%);
+  background: var(--b-void);
   overflow: hidden;
 }
 .flowScaler {
@@ -383,7 +384,7 @@
   flex-direction: column;
   align-items: center;
   padding: 0 0 56px;
-  background: linear-gradient(180deg, #0a0d12 0%, #0a0d12 55%, #0a0908 100%);
+  background: var(--b-void);
 }
 .convergeSvg {
   display: block;
@@ -678,6 +679,115 @@
   font-size: 9px;
   letter-spacing: 0.08em;
   color: rgba(241, 239, 235, 0.6);
+}
+
+/* 컴팩트 푸터 상단(로고 + 언어) · BRAND/JOURNAL 2열 */
+.footerTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.footerCols {
+  display: flex;
+  gap: 12px;
+  margin-top: 30px;
+}
+.footerCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-decoration: none;
+}
+.footerColHead {
+  font-family: var(--b-mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: rgba(241, 239, 235, 0.36);
+}
+.footerColRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  color: rgba(241, 239, 235, 0.8);
+}
+.footerArrow {
+  font-family: var(--b-mono);
+  color: var(--b-amber);
+}
+.footerColUrl {
+  font-family: var(--b-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.03em;
+  color: rgba(241, 239, 235, 0.28);
+}
+
+/* Digital Passport 하단 뉴스레터 — 텍스트 링크 → 인라인 폼 */
+.passportNews {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 28px;
+  padding: 6px 0;
+  background: transparent;
+  border: none;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 300;
+  font-size: 11.5px;
+  color: var(--b-amber);
+  cursor: pointer;
+}
+.passportNewsArrow {
+  font-family: var(--b-mono);
+}
+.passportNewsForm {
+  display: flex;
+  width: min(342px, 100%);
+  margin-top: 28px;
+}
+.passportNewsInput {
+  flex: 1;
+  min-width: 0;
+  height: 46px;
+  padding: 0 14px;
+  background: transparent;
+  border: 0.5px solid rgba(241, 239, 235, 0.24);
+  border-right: none;
+  border-radius: 0;
+  font-family: var(--font-body), sans-serif;
+  font-size: 16px;
+  color: var(--b-ivory);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.passportNewsInput::placeholder {
+  color: rgba(241, 239, 235, 0.34);
+}
+.passportNewsInput:focus {
+  border-color: rgba(204, 173, 123, 0.6);
+}
+.passportNewsSubmit {
+  flex-shrink: 0;
+  height: 46px;
+  padding: 0 20px;
+  background: var(--b-amber);
+  color: var(--b-void);
+  border: none;
+  border-radius: 0;
+  font-family: var(--font-body), sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+}
+.passportNewsDone {
+  margin-top: 28px;
+  font-family: var(--font-body), sans-serif;
+  font-size: 12px;
+  color: var(--b-amber);
 }
 
 /* ── 언어 선택 (푸터, 위로 열림) ───────────── */

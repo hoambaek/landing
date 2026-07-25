@@ -521,6 +521,7 @@ export interface RecordExtraCopy {
   passportCta: string; // "디지털 인증서 보기"
   passportSave: string; // "인증서 저장"
   passportManage: string; // "소유 정보 관리"
+  passportNews: string; // "다음 인양과 새 기록의 소식 받기"
 }
 
 export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
@@ -536,8 +537,8 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     newsletterConfirm: "구독하기",
     newsletterDone: "구독이 시작되었습니다. 감사합니다.",
     newsletterErr: "이메일 주소를 확인해 주세요.",
-    brandPage: "브랜드 페이지",
-    blogPage: "블로그 페이지",
+    brandPage: "브랜드 이야기",
+    blogPage: "바다의 기록",
     ecEyebrow: "EIGHT CURRENTS",
     ecTitle: "여덟 개의 관측이\n한 병의 시간을 그립니다.",
     ecBody: "수온·염분·조위·해류·수압·조류·파고·파주기의\n사계절 변화를 하나의 흐름으로 기록했습니다.",
@@ -577,6 +578,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     passportCta: "디지털 인증서 보기",
     passportSave: "인증서 저장",
     passportManage: "소유 정보 관리",
+    passportNews: "다음 인양과 새 기록의 소식 받기",
   },
   en: {
     provHead: "ORIGIN · CHAMPAGNE",
@@ -631,6 +633,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     passportCta: "View digital certificate",
     passportSave: "Save certificate",
     passportManage: "Manage ownership",
+    passportNews: "Get news of the next retrieval and new records",
   },
   fr: {
     provHead: "ORIGINE · CHAMPAGNE",
@@ -685,6 +688,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     passportCta: "Voir le certificat numérique",
     passportSave: "Enregistrer le certificat",
     passportManage: "Gérer la propriété",
+    passportNews: "Recevoir la prochaine remontée et les nouveaux relevés",
   },
   ja: {
     provHead: "原産地 · シャンパーニュ",
@@ -739,6 +743,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     passportCta: "デジタル証明書を見る",
     passportSave: "証明書を保存",
     passportManage: "所有情報の管理",
+    passportNews: "次の引き揚げと新しい記録のお知らせを受け取る",
   },
   zh: {
     provHead: "原产地 · 香槟区",
@@ -793,6 +798,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     passportCta: "查看数字证书",
     passportSave: "保存证书",
     passportManage: "管理所有权",
+    passportNews: "获取下一次打捞与新记录的消息",
   },
 };
 
