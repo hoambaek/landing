@@ -29,6 +29,11 @@
   display: flex;
   justify-content: center;
 }
+/* 종이 구간에서는 바탕도 종이 — 안 그러면 섹션 밖(오버스크롤·여백)에 void가 비친다.
+   b-paper는 안전영역용 전역 마커라 html과 같은 신호로 움직인다(globals.css). */
+.page:global(.b-paper) {
+  background: var(--e-paper);
+}
 
 .frame {
   width: min(430px, 100vw);
@@ -354,8 +359,10 @@
 .prov {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 72px 28px;
+  align-items: center;
+  /* 하단은 48px — 아래 .claim(58px)과 합쳐 106px이 되어 위 섹션 간격과 같아진다 */
+  padding: 72px 28px 48px;
+  text-align: center;
   background: var(--e-paper);
   border-top: 0.5px solid rgba(20, 17, 14, 0.2);
   word-break: keep-all;
@@ -397,10 +404,11 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   height: 96px;
-  padding: 0 8px 0 12px;
+  padding: 0 8px;
+  text-align: center;
 }
 .fact + .fact {
   border-left: 0.5px solid rgba(20, 17, 14, 0.18);
@@ -434,7 +442,7 @@
   color: rgba(138, 106, 58, 0.68);
 }
 .provHint {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 9px;
   margin-top: 28px;
@@ -446,13 +454,14 @@
 }
 
 /* ── 03 Claim Ownership ───────────────────────────── */
+/* Provenance와 가르는 선은 걷어냈다 — 위 증거 블록(.facts)이 이미 자기 테두리로
+   끝을 맺고 있어 선이 두 번 겹쳤다. 여백만으로 넘긴다. */
 .claim {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 80px 28px;
+  padding: 58px 28px 80px;
   background: var(--e-paper);
-  border-top: 0.5px solid rgba(20, 17, 14, 0.2);
   word-break: keep-all;
 }
 .claimEyebrow {
@@ -637,7 +646,9 @@
   margin-top: 34px;
   padding: 26px 24px 28px;
   border: 0.5px solid rgba(138, 106, 58, 0.34);
-  background: radial-gradient(140% 90% at 50% 0%, rgba(138, 106, 58, 0.07) 0%, rgba(138, 106, 58, 0) 64%);
+  /* 카드 전체를 같은 농도로 채운다. 상단 기점 라디얼은 64%에서 사라져
+     아래쪽 절반이 비어 보였다 — 테두리만 남고 면이 끊긴다. */
+  background: rgba(138, 106, 58, 0.07);
 }
 .claimedLabel {
   font-family: var(--e-mono);
@@ -645,6 +656,31 @@
   letter-spacing: 0.18em;
   color: rgba(138, 106, 58, 0.78);
 }
+/* 인증서(.ownerScript/.ownerNative)와 같은 조판.
+   같은 병의 같은 소유자가 화면마다 다른 얼굴이면 다른 문서로 읽힌다.
+   다만 여기는 페이지 하단의 확인란이라 인증서보다 한 단 작게 잡는다. */
+.claimedScript {
+  margin-top: 10px;
+  font-family: var(--e-script);
+  font-size: 46px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--e-ptext);
+  /* 커시브는 디센더가 깊어 다음 줄과 붙는다 */
+  padding-bottom: 5px;
+  word-break: keep-all;
+}
+.claimedNative {
+  margin-top: 4px;
+  font-family: var(--e-serif-kr);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 21px;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  color: rgba(20, 17, 14, 0.7);
+}
+/* 로마자 표기가 없는 소유자 — 한글 하나로 세운다 */
 .claimedName {
   font-family: var(--e-serif-kr);
   font-weight: 400;
@@ -692,12 +728,21 @@
   flex-direction: column;
   align-items: center;
 }
+/* 등록이 끝났다는 사실은 이 화면에서 유일하게 "상태"인 정보다.
+   글자만 두면 아래 제목의 도입부처럼 읽혀서, 채운 태그로 세워 상태임을 형태로 말한다.
+   테두리가 아니라 면으로 채운다 — 상태 배지는 확정된 사실이고, 선은 아직 열린 것에 쓴다. */
 .inscribeEyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px 7px;
+  background: var(--e-bronze);
+  border-radius: 999px;
   font-family: var(--e-sans);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 10px;
   letter-spacing: 0.22em;
-  color: var(--e-bronze);
+  text-indent: 0.22em;
+  color: var(--e-paper);
 }
 .inscribeTitle {
   margin-top: 16px;

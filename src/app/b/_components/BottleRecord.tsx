@@ -14,9 +14,9 @@ import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./bottle.module.css";
+import BottleFooter from "./BottleFooter";
 import {
   BOTTLE_COPY,
-  BOTTLE_LOCALES,
   MAISON_NAME,
   PRODUCT_META,
   RECORD_EXTRA,
@@ -25,7 +25,6 @@ import {
 } from "../_lib/copy";
 import type { BottleRecordData } from "../_lib/data";
 import { submitNewsletter } from "@/lib/forms";
-import { persistBottleLocale } from "../_lib/locale";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -97,7 +96,6 @@ export default function BottleRecord({
 }) {
   /* 서버가 쿠키에서 읽어 넘긴 값으로 시작 — 앞 화면의 선택이 이어진다 */
   const [locale, setLocale] = useState<BottleLocale>(initialLocale);
-  const [langOpen, setLangOpen] = useState(false);
   const [flowScale, setFlowScale] = useState(1);
   const [journeyScale, setJourneyScale] = useState(1);
   const [nlOpen, setNlOpen] = useState(false);
@@ -118,7 +116,6 @@ export default function BottleRecord({
 
   const copy = BOTTLE_COPY[locale];
   const extra = RECORD_EXTRA[locale];
-  const activeLocale = BOTTLE_LOCALES.find((l) => l.code === locale)!;
   const meta = PRODUCT_META[data.bottle.productId] ?? PRODUCT_META.atomes_crochus_1y;
   const prov = PROVENANCE[data.bottle.productId];
 
@@ -507,14 +504,16 @@ export default function BottleRecord({
         {/* ── S1 병사진 히어로 ── */}
         <section className={styles.hero}>
           <Image
-            src="/images/b-hero-bottle.webp"
+            /* 제품별 히어로 — Paper의 Product 아트보드(ARCHIVE N° 002~005)에 쓰인 컷과 같은 사진.
+               폴백은 En Lieu Sûr 컷이라 다른 제품에 서면 틀린 병이 보인다. 새 제품은 imageHero부터 채울 것. */
+            src={meta.imageHero ?? "/images/b-hero-bottle.webp"}
             alt=""
             fill
             priority
-            /* 세로 히어로 + object-fit:cover — 폭이 아니라 높이가 제약이다.
-               원본 비 1086:1448이라 100svh(≈844)를 덮으려면 폭 ≈ 633px가 필요한데
-               sizes="430px"는 그 절반짜리 후보를 서빙해 세로로 늘어나며 뭉갰다. */
-            sizes="720px"
+            /* object-fit:cover — 폭이 아니라 높이가 제약이다. 제품 히어로가 가로 컷(1672×941)이라
+               100svh(≈844)를 덮으려면 폭 ≈ 1500px가 필요하다. sizes를 화면 폭(390)에 맞추면
+               그만큼 작은 후보를 받아 확대되며 뭉갠다. 세로 원본은 원본 폭에서 잘리니 손해가 없다. */
+            sizes="1500px"
             className={styles.heroPhoto}
           />
           <div className={styles.heroScrim} />
@@ -838,101 +837,14 @@ export default function BottleRecord({
         </section>
 
         {/* ── 푸터 (컴팩트 · Paper 7AI-0) ── */}
-        <footer className={styles.footer}>
-          {/* 브랜드 줄 — 언어 선택은 하단으로 내렸다. 정체성과 기능을 같은 층에 두면
-              푸터가 헤더처럼 읽힌다. */}
-          <div className={styles.footerLogoRow}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_trans.png" alt="" className={styles.footerSymbol} />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_text_trans.png" alt="Muse de Marée" className={styles.footerWordmark} />
-          </div>
-
-          <p className={styles.footerTagline}>{copy.footerTagline}</p>
-
-          <div className={styles.footerCols}>
-            <a href="https://musedemaree.com" className={styles.footerCol}>
-              <span className={styles.footerColHead}>BRAND</span>
-              <span className={styles.footerColRow}>
-                <span>{extra.brandPage}</span>
-                <svg className={styles.footerArrow} width="5" height="9" viewBox="0 0 5 9" aria-hidden>
-                  <polyline
-                    points="0.9,0.9 4.1,4.5 0.9,8.1"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-            </a>
-            <a href="https://blog.musedemaree.com" className={styles.footerCol}>
-              <span className={styles.footerColHead}>JOURNAL</span>
-              <span className={styles.footerColRow}>
-                <span>{extra.blogPage}</span>
-                <svg className={styles.footerArrow} width="5" height="9" viewBox="0 0 5 9" aria-hidden>
-                  <polyline
-                    points="0.9,0.9 4.1,4.5 0.9,8.1"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-            </a>
-          </div>
-
-          <div className={styles.footerBase}>
-            <div className={styles.footerLegal}>
-              <span>© {year} MUSE DE MARÉE</span>
-              <span>ORKNEY CORP. · KOREA</span>
-            </div>
-
-            <div className={styles.footerLang}>
-              <button
-                type="button"
-                className={styles.langBtn}
-                onClick={() => setLangOpen((v) => !v)}
-                aria-expanded={langOpen}
-                aria-label="Language"
-              >
-                <span>{activeLocale.short}</span>
-                <svg width="7" height="5" viewBox="0 0 7 5" aria-hidden>
-                  <polyline points="1,1 3.5,4 6,1" fill="none" stroke="rgba(241,239,235,0.55)" strokeWidth="1" />
-                </svg>
-              </button>
-              {langOpen && (
-                <div className={styles.langPanel} role="listbox">
-                  {BOTTLE_LOCALES.map((l) => (
-                    <button
-                      key={l.code}
-                      type="button"
-                      role="option"
-                      aria-selected={l.code === locale}
-                      className={`${styles.langOpt} ${l.code === locale ? styles.langOptActive : ""}`}
-                      onClick={() => {
-                        setLocale(l.code);
-                        persistBottleLocale(l.code);
-                        setLangOpen(false);
-                      }}
-                    >
-                      <span className={styles.langOptCode}>{l.short}</span>
-                      <span>{l.native}</span>
-                      {l.code === locale && (
-                        <svg className={styles.langCheck} width="9" height="7" viewBox="0 0 9 7" aria-hidden>
-                          <polyline points="1,3.5 3.5,6 8,1" fill="none" stroke="currentColor" strokeWidth="1" />
-                        </svg>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </footer>
+        <BottleFooter
+          locale={locale}
+          onLocaleChange={setLocale}
+          tagline={copy.footerTagline}
+          brandPage={extra.brandPage}
+          blogPage={extra.blogPage}
+          year={year}
+        />
       </div>
     </main>
   );

@@ -4228,14 +4228,21 @@ html {
   }
 }
 
-/* /b (NFC 병 페이지) — 랜딩과 달리 전 구간 void 단색이라 위 아이보리 규칙을 되돌린다.
+/* /b (NFC 병 페이지) — 안전영역(상태바) 색.
    iOS 26 사파리는 theme-color를 무시하고 루트(html) 배경을 샘플링해 상태바를 칠하므로,
    안전영역을 페이지와 같은 색으로 잇는 방법은 html에 그 색을 명시하는 것뿐이다.
    (필름 그레인 body::after는 이미 모바일에서 꺼져 있어 샘플링을 깨지 않는다)
-   :has()가 media query의 html보다 특정도가 높아 순서와 무관하게 이긴다. */
+   :has()가 media query의 html보다 특정도가 높아 순서와 무관하게 이긴다.
+
+   기본은 void — 어두운 히어로로 시작하는 페이지(입장·record)가 그렇다.
+   .b-paper는 위아래가 전부 종이인 페이지(인증서·소유 관리)가 켠다. 같은 특정도라 순서로 이긴다. */
 html:has(.b-root),
 html:has(.b-root) body {
   background-color: var(--color-void-bg);
+}
+html:has(.b-paper),
+html:has(.b-paper) body {
+  background-color: #edeae3;
 }
 /* ══════════════════════════════════════════
    서브 페이지 — 편지형 폼 (Paper Page 1M8/1N0/1O7)

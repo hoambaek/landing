@@ -16,6 +16,7 @@ import { ENTRY_COPY, PRODUCT_META, BOTTLE_LOCALES, type BottleLocale } from "../
 import { persistBottleLocale } from "../_lib/locale";
 import { submitBottleRegistration } from "@/lib/forms";
 import BottleInscription from "./BottleInscription";
+import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
 
 /** 실제 풀필름 소스가 확보되면 지정 (예: "/videos/entry-loop.mp4"). null이면 포스터 상태로 렌더. */
 const ENTRY_VIDEO_SRC: string | null = null;
@@ -73,6 +74,10 @@ export default function BottleEntry({
   const identityRef = useRef<HTMLElement>(null);
   const countedRef = useRef(false);
 
+  /* 안전영역은 한 페이지에 한 색이다(상·하단 분리 불가 — use-safe-area-tint.ts 참고).
+     각인 화면은 종이 단색, 필름 화면은 위아래 다 검정. */
+  useSafeAreaTint(inscribed);
+
   /* 로고 인트로 디졸브 — 마운트 후 정착. reduced-motion이면 즉시(0ms) 해제, CSS로도 숨김 */
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -81,8 +86,12 @@ export default function BottleEntry({
     return () => clearTimeout(t);
   }, []);
 
-  /* 섹션 스크롤 리빌 + 대형 N° 카운트업 (0→serial, ease-out cubic 1.6s) */
+  /* 섹션 스크롤 리빌 + 대형 N° 카운트업 (0→serial, ease-out cubic 1.6s)
+     inscribed를 의존성에 넣는다 — 각인 화면이 떠 있는 동안에는 입장 화면 DOM이
+     아예 없어 frameRef가 비어 있다. 화면이 돌아왔을 때 다시 관찰하지 않으면
+     섹션들이 opacity 0인 채로 남는다. */
   useEffect(() => {
+    if (inscribed) return;
     const frame = frameRef.current;
     if (!frame) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -120,7 +129,7 @@ export default function BottleEntry({
     );
     sections.forEach((s) => io.observe(s));
     return () => io.disconnect();
-  }, [serial]);
+  }, [serial, inscribed]);
 
   const identityBody = (serial !== null ? copy.identityBody : copy.identityBodyNoSerial)
     .replace("{total}", String(total))
@@ -186,7 +195,7 @@ export default function BottleEntry({
 
   if (inscribed) {
     return (
-      <main className={styles.page}>
+      <main className={`${styles.page} b-paper`}>
         <div className={styles.frame}>
           <BottleInscription
             copy={copy}
@@ -198,7 +207,16 @@ export default function BottleEntry({
             image={meta.imagePortrait ?? meta.image}
             onContinue={() => router.push(`/b/${code}/record`)}
             /* 등록된 병으로 들어온 경우에만 — 방금 등록을 마친 사람에게는 주지 않는다 */
-            onBrowse={registered ? () => setInscribed(false) : undefined}
+            onBrowse={
+              registered
+                ? () => {
+                    setInscribed(false);
+                    /* 각인 화면에서 내려온 스크롤 위치가 남아 있으면
+                       입장 화면 중간부터 열린다 — 히어로부터 보여준다. */
+                    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+                  }
+                : undefined
+            }
           />
         </div>
       </main>
@@ -359,7 +377,15 @@ export default function BottleEntry({
               <p className={styles.claimBody}>{copy.claimedBody}</p>
               <div className={styles.claimed}>
                 <span className={styles.claimedLabel}>OWNED BY</span>
-                <span className={styles.claimedName}>{registeredTo ?? "—"}</span>
+                {/* 인증서·각인 화면과 같은 조판 — 로마자 서명체 위, 한글 정자 아래 */}
+                {registeredToLatin ? (
+                  <>
+                    <span className={styles.claimedScript}>{registeredToLatin}</span>
+                    <span className={styles.claimedNative}>{registeredTo}</span>
+                  </>
+                ) : (
+                  <span className={styles.claimedName}>{registeredTo ?? "—"}</span>
+                )}
               </div>
               <Link href={`/b/${code}/record`} className={styles.claimedCta}>
                 {copy.claimedCta}

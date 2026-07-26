@@ -12,17 +12,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { toPng } from "html-to-image";
 import styles from "./certificate.module.css";
+import BottleFooter from "./BottleFooter";
 import {
   BOTTLE_COPY,
-  BOTTLE_LOCALES,
   MAISON_NAME,
   PRODUCT_META,
   RECORD_EXTRA,
   PROVENANCE,
   type BottleLocale,
 } from "../_lib/copy";
-import { persistBottleLocale } from "../_lib/locale";
 import type { BottleRecordData, BottleOwner } from "../_lib/data";
+import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
 
 /* 문서명 영문 병기 — 여권처럼 자국어 위 영문을 함께 새긴다. 로케일 불변. */
 const CERT_TAG_LATIN = "CERTIFICATE OF OWNERSHIP";
@@ -78,14 +78,15 @@ export default function BottleCertificate({
   initialLocale?: BottleLocale;
 }) {
   const [locale, setLocale] = useState<BottleLocale>(initialLocale);
-  const [langOpen, setLangOpen] = useState(false);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
   const cardRef = useRef<HTMLDivElement>(null);
 
   const copy = BOTTLE_COPY[locale];
   const extra = RECORD_EXTRA[locale];
-  const activeLocale = BOTTLE_LOCALES.find((l) => l.code === locale)!;
+  /* 위아래가 전부 종이인 화면 — 안전영역도 종이로 잇는다(마크업의 b-paper와 짝) */
+  useSafeAreaTint(true);
+
   const meta = PRODUCT_META[data.bottle.productId] ?? PRODUCT_META.atomes_crochus_1y;
   const prov = PROVENANCE[data.bottle.productId];
 
@@ -302,8 +303,9 @@ export default function BottleCertificate({
   }
 
 
+  /* b-paper — 위아래가 전부 종이인 페이지다. 안전영역(상태바)까지 종이로 잇는다(globals.css) */
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} b-paper`}>
       <div className={styles.frame}>
         {/* ── 헤더: 심볼 → 문서명 국·영문 병기 ── */}
         <header className={styles.header}>
@@ -446,95 +448,14 @@ export default function BottleCertificate({
         </section>
 
         {/* ── 푸터 ── */}
-        <footer className={styles.footer}>
-          {/* 브랜드 줄 — 언어 선택은 하단으로 (기록 페이지와 동일 구조) */}
-          <div className={styles.footerLogo}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_trans.png" alt="" className={styles.footerSymbol} />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_text_trans.png" alt="Muse de Marée" className={styles.footerWordmark} />
-          </div>
-
-          <p className={styles.footerTagline}>{copy.footerTagline}</p>
-
-          <div className={styles.footerCols}>
-            <a href="https://musedemaree.com" className={styles.footerCol}>
-              <span className={styles.footerColHead}>BRAND</span>
-              <span className={styles.footerColRow}>
-                <span>{extra.brandPage}</span>
-                <svg className={styles.footerArrow} width="5" height="9" viewBox="0 0 5 9" aria-hidden>
-                  <polyline
-                    points="0.9,0.9 4.1,4.5 0.9,8.1"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-            </a>
-            <a href="https://blog.musedemaree.com" className={styles.footerCol}>
-              <span className={styles.footerColHead}>JOURNAL</span>
-              <span className={styles.footerColRow}>
-                <span>{extra.blogPage}</span>
-                <svg className={styles.footerArrow} width="5" height="9" viewBox="0 0 5 9" aria-hidden>
-                  <polyline
-                    points="0.9,0.9 4.1,4.5 0.9,8.1"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-            </a>
-          </div>
-
-          <div className={styles.footerBase}>
-            <div className={styles.footerLegal}>
-              <span>© {year} MUSE DE MARÉE</span>
-              <span>ORKNEY CORP. · KOREA</span>
-            </div>
-
-            <div className={styles.langSelect}>
-              <button
-                type="button"
-                className={styles.langChip}
-                onClick={() => setLangOpen((v) => !v)}
-                aria-expanded={langOpen}
-                aria-label="Language"
-              >
-                <span>{activeLocale.short}</span>
-                <svg width="7" height="5" viewBox="0 0 7 5" aria-hidden>
-                  <polyline points="1,1 3.5,4 6,1" fill="none" stroke="rgba(20,17,14,0.55)" strokeWidth="1" />
-                </svg>
-              </button>
-              {langOpen && (
-                <div className={styles.langPanel} role="listbox">
-                  {BOTTLE_LOCALES.map((l) => (
-                    <button
-                      key={l.code}
-                      type="button"
-                      role="option"
-                      aria-selected={l.code === locale}
-                      className={`${styles.langOpt} ${l.code === locale ? styles.langOptActive : ""}`}
-                      onClick={() => {
-                        setLocale(l.code);
-                        persistBottleLocale(l.code);
-                        setLangOpen(false);
-                      }}
-                    >
-                      <span className={styles.langOptCode}>{l.short}</span>
-                      <span className={styles.langOptNative}>{l.native}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </footer>
+        <BottleFooter
+          locale={locale}
+          onLocaleChange={setLocale}
+          tagline={copy.footerTagline}
+          brandPage={extra.brandPage}
+          blogPage={extra.blogPage}
+          year={year}
+        />
       </div>
 
       {/* ── 저장용 인증서 카드 (오프스크린, 고해상 PNG 렌더 대상) ── */}

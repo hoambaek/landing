@@ -1,0 +1,205 @@
+/* /b 공용 푸터 — record·certificate가 같은 마크업·같은 스타일을 쓴다.
+ *
+ * 페이지마다 푸터를 따로 두면 한 곳만 고쳐지고 서로 어긋난다.
+ * (실제로 라이트 전환 때 record 언어 버튼의 셰브론만 아이보리로 남아
+ *  종이 위에서 보이지 않았다.)
+ *
+ * 토큰을 이 안에서 정의한다 — 페이지마다 변수 접두사가 달라(--b-*, --c-*)
+ * 상속에 기대면 붙이는 곳마다 다르게 보인다.
+ */
+
+.footer {
+  --f-paper: #edeae3;
+  --f-ink: #14110e;
+  --f-bronze: #8a6a3a;
+  --f-dim: rgba(20, 17, 14, 0.7);
+  --f-micro: rgba(20, 17, 14, 0.5);
+  --f-rule: rgba(20, 17, 14, 0.14);
+  --f-mono: var(--font-mono), "DM Mono", monospace;
+  --f-sans: var(--font-body), "Noto Sans KR", sans-serif;
+  padding: 48px 24px max(30px, env(safe-area-inset-bottom));
+  background: var(--f-paper);
+  border-top: 0.5px solid var(--f-rule);
+  color: var(--f-ink);
+}
+
+/* 브랜드 줄 — 언어 선택은 하단으로 내렸다.
+   정체성과 기능을 같은 층에 두면 푸터가 헤더처럼 읽힌다. */
+.logoRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.symbol {
+  width: 34px;
+  height: auto;
+  opacity: 0.82;
+  display: block;
+}
+.wordmark {
+  width: 128px;
+  height: auto;
+  opacity: 0.9;
+  display: block;
+}
+.tagline {
+  margin-top: 16px;
+  font-family: var(--f-sans);
+  font-weight: 400;
+  font-size: 12.5px;
+  line-height: 21px;
+  color: var(--f-dim);
+}
+
+/* BRAND / JOURNAL 2열 */
+.cols {
+  display: flex;
+  gap: 12px;
+  margin-top: 30px;
+}
+.col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-decoration: none;
+}
+.colHead {
+  font-family: var(--f-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.15em;
+  color: var(--f-micro);
+}
+/* space-between으로 벌리면 화살표가 링크에서 떨어져 별개 요소로 읽힌다 */
+.colRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--f-sans);
+  font-weight: 400;
+  font-size: 13.5px;
+  color: var(--f-dim);
+}
+/* 셰브론 SVG — 글자 >는 폰트마다 굵기·수직정렬이 흔들리고 수식 기호로 읽힌다.
+   1px 획으로 그려 페이지의 0.5~1px 헤어라인 언어에 맞춘다.
+   셰브론 상자 중심은 줄상자 기준이라 글자의 실제 잉크 중심보다 위에 앉는다 — 0.5px 내린다. */
+.arrow {
+  flex-shrink: 0;
+  color: var(--f-bronze);
+  transform: translateY(0.5px);
+}
+
+.base {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 0.5px solid var(--f-rule);
+  font-family: var(--f-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: var(--f-micro);
+}
+/* 저작권 2줄 — 언어 버튼과 같은 줄에 놓기 위해 세로로 쌓는다 */
+.legal {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* ── 언어 선택 (위로 열림) ── */
+.lang {
+  position: relative;
+  flex-shrink: 0;
+  /* 저작권은 대문자뿐이라 시각적 밑선 = 베이스라인인데, 칩의 밑선은 테두리다.
+     상자끼리 붙이면(flex-end) 칩이 3px 밑으로 흘러내려 보인다. 그만큼 올린다. */
+  margin-bottom: 3px;
+}
+.langBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 0.5px solid rgba(20, 17, 14, 0.28);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(20, 17, 14, 0.9);
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+}
+/* 셰브론은 currentColor로 — 색을 박아두면 테마가 바뀔 때 한 곳만 남는다 */
+.langChevron {
+  flex-shrink: 0;
+  color: rgba(20, 17, 14, 0.6);
+}
+@keyframes langRise {
+  from { opacity: 0; transform: translateY(6px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.langPanel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  min-width: 172px;
+  padding: 6px 0;
+  background: #f5f3ef;
+  border: 0.5px solid rgba(20, 17, 14, 0.16);
+  border-radius: 14px;
+  overflow: hidden;
+  z-index: 20;
+  /* 브랜드 규칙: 뜨는 판은 따뜻하고 확산된 그림자 하나만. 딱딱한 검정 금지 */
+  box-shadow: 0 14px 34px rgba(49, 46, 42, 0.12);
+  transform-origin: bottom right;
+  animation: langRise 0.34s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.langOpt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-top: 0.5px solid rgba(20, 17, 14, 0.08);
+  color: var(--f-dim);
+  font-family: var(--f-sans);
+  font-weight: 400;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+.langOpt:first-child {
+  border-top: none;
+}
+.langOpt:active {
+  background: rgba(20, 17, 14, 0.05);
+}
+.langOptCode {
+  width: 24px;
+  flex-shrink: 0;
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: var(--f-micro);
+}
+.langOptActive,
+.langOptActive .langOptCode {
+  color: var(--f-bronze);
+}
+.langCheck {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--f-bronze);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .col:hover { opacity: 0.78; }
+  .langOpt:hover { background: rgba(20, 17, 14, 0.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .langPanel { animation: none; opacity: 1; transform: none; }
+}

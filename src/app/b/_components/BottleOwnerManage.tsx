@@ -21,6 +21,7 @@ import {
 } from "../_lib/copy";
 import { persistBottleLocale } from "../_lib/locale";
 import type { BottleRecordData, BottleOwner } from "../_lib/data";
+import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
 import {
   requestOwnerOtp,
   verifyOwnerOtp,
@@ -50,6 +51,9 @@ export default function BottleOwnerManage({
      전환은 입장·기록·인증서에서 한다. 여기서 또 고르게 하면 선택 지점만 늘어난다. */
   const extra = RECORD_EXTRA[locale];
   const activeLocale = BOTTLE_LOCALES.find((l) => l.code === locale)!;
+  /* 위아래가 전부 종이인 화면 — 안전영역도 종이로 잇는다(마크업의 b-paper와 짝) */
+  useSafeAreaTint(true);
+
   const meta = PRODUCT_META[data.bottle.productId] ?? PRODUCT_META.atomes_crochus_1y;
   const serial = data.bottle.serial;
 
@@ -149,7 +153,7 @@ export default function BottleOwnerManage({
   }
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} b-paper`}>
       <div className={styles.frame}>
         {/* ── 헤더 ── */}
         <header className={styles.header}>

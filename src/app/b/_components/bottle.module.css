@@ -35,7 +35,6 @@
   display: flex;
   justify-content: center;
 }
-
 .frame {
   width: min(430px, 100vw);
   overflow: hidden;
@@ -698,120 +697,6 @@
   color: var(--b-amber);
 }
 
-/* ── 푸터 (언어 선택 포함) ─────────────────── */
-.footer {
-  padding: 48px 24px max(30px, env(safe-area-inset-bottom));
-  background: var(--b-paper);
-  border-top: 0.5px solid var(--b-p-rule);
-  color: var(--b-ink);
-}
-.footerHead {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-}
-.footerBrand {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.footerLogoRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.footerSymbol {
-  width: 34px;
-  height: 28px;
-  object-fit: contain;
-  opacity: 0.82;
-  display: block;
-}
-.footerWordmark {
-  width: 132px;
-  height: 20px;
-  object-fit: contain;
-  opacity: 0.9;
-  transform: translateY(-2px);
-  display: block;
-}
-.footerTagline {
-  margin-top: 16px;
-  font-family: var(--font-body), sans-serif;
-  font-weight: 400;
-  font-size: 12.5px;
-  line-height: 21px;
-  color: var(--b-p-dim);
-}
-.footerLang {
-  position: relative;
-  flex-shrink: 0;
-  /* 저작권은 대문자뿐이라 시각적 밑선 = 베이스라인인데, 필의 밑선은 테두리다.
-     상자끼리 붙이면(flex-end) 필이 3px 밑으로 흘러내려 보인다. 그만큼 올린다. */
-  margin-bottom: 3px;
-}
-.footerBase {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 34px;
-  padding-top: 16px;
-  border-top: 0.5px solid var(--b-p-rule);
-  font-family: var(--b-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.08em;
-  color: var(--b-p-micro);
-}
-/* 저작권 2줄 — 언어 버튼과 같은 줄에 놓기 위해 세로로 쌓는다 */
-.footerLegal {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-/* BRAND/JOURNAL 2열 */
-.footerCols {
-  display: flex;
-  gap: 12px;
-  margin-top: 32px;
-}
-.footerCol {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  text-decoration: none;
-}
-.footerColHead {
-  font-family: var(--b-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.15em;
-  color: var(--b-p-micro);
-}
-/* space-between으로 벌리면 화살표가 링크에서 떨어져 별개 요소로 읽힌다 */
-.footerColRow {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-body), sans-serif;
-  font-weight: 400;
-  font-size: 13.5px;
-  color: var(--b-p-dim);
-}
-/* 셰브론 SVG — 글자 >는 폰트마다 굵기·수직정렬이 흔들리고 수식 기호로 읽힌다.
-   1px 획으로 그려 페이지의 0.5~1px 헤어라인 언어에 맞춘다. */
-.footerArrow {
-  flex-shrink: 0;
-  color: var(--b-bronze);
-  /* 셰브론 상자 중심은 줄상자 기준이라, 글자의 실제 잉크 중심보다 위에 앉는다.
-     캔버스 actualBoundingBox로 재보니 폰트·크기별로 0.47~0.63px 위였다.
-     0.5px면 전부 ±0.2px 안에 들고, DPR 2에서 정확히 1픽셀이라 획도 안 흐려진다.
-     (1px은 과해서 반대로 내려가 보였다) */
-  transform: translateY(0.5px);
-}
-
 /* Digital Passport 하단 뉴스레터 — 텍스트 링크 → 인라인 폼 */
 .passportNews {
   display: inline-flex;
@@ -885,21 +770,6 @@
   color: var(--b-bronze);
 }
 
-/* ── 언어 선택 (푸터, 위로 열림) ───────────── */
-.langBtn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 12px;
-  border: 0.5px solid rgba(20, 17, 14, 0.28);
-  border-radius: 999px;
-  background: transparent;
-  color: rgba(20, 17, 14, 0.9);
-  font-family: var(--b-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  cursor: pointer;
-}
 /* 상태 전환 — 패널이 툭 나타나면 어디서 왔는지 알 수 없다.
    버튼(하단 우측)에서 자라 올라오도록 origin을 묶는다. */
 @keyframes panelRise {
@@ -909,56 +779,6 @@
 @keyframes formOpen {
   from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }
-}
-.langPanel {
-  transform-origin: bottom right;
-  animation: panelRise 0.34s var(--b-out) forwards;
-  position: absolute;
-  bottom: calc(100% + 8px);
-  right: 0;
-  width: 188px;
-  background: #f5f3ef;
-  border: 0.5px solid rgba(20, 17, 14, 0.16);
-  border-radius: 14px;
-  padding: 6px 0;
-  overflow: hidden;
-  z-index: 20;
-  /* 브랜드 규칙: 뜨는 판은 따뜻하고 확산된 그림자 하나만. 딱딱한 검정 금지 */
-  box-shadow: 0 14px 34px rgba(49, 46, 42, 0.12);
-}
-.langOpt {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 10px 16px;
-  background: transparent;
-  border: none;
-  border-top: 0.5px solid rgba(20, 17, 14, 0.08);
-  color: var(--b-p-dim);
-  font-family: var(--font-body), sans-serif;
-  font-size: 13px;
-  cursor: pointer;
-  text-align: left;
-}
-.langOpt:first-child {
-  border-top: none;
-}
-.langOptCode {
-  font-family: var(--b-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
-  color: var(--b-p-micro);
-  width: 24px;
-  flex-shrink: 0;
-}
-.langOptActive,
-.langOptActive .langOptCode {
-  color: var(--b-bronze);
-}
-.langCheck {
-  margin-left: auto;
-  color: var(--b-bronze);
 }
 
 /* ── 촉각 피드백 ───────────────────────────
@@ -987,16 +807,11 @@
   border-color: rgba(138, 106, 58, 0.6);
   transition-duration: 0.08s;
 }
-.footerCol:active,
-.langOpt:active {
-  opacity: 0.6;
-  transition-duration: 0.08s;
-}
+
 @media (hover: hover) and (pointer: fine) {
   .passportCta:hover { opacity: 0.9; }
   .passportSub:hover { border-color: rgba(138, 106, 58, 0.55); }
-  .langOpt:hover { background: rgba(20, 17, 14, 0.05); }
-  .footerCol:hover { opacity: 0.78; }
+
 }
 
 /* ── 리빌 + 인트로 + 모션 감축 ─────────────── */

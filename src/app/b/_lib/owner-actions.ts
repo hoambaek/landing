@@ -68,7 +68,7 @@ function shell(inner: string): string {
         ${inner}
       </div>
       <div style="padding:30px 40px 32px;background:#14110F;text-align:center">
-        <div style="font-size:12px;line-height:19px;color:rgba(242,239,233,.55)">바다의 시간을 기록합니다.</div>
+        <div style="font-size:12px;line-height:19px;color:rgba(242,239,233,.55)">바다의 시간을 기록합니다</div>
       </div>
     </div>
   </div>`;
