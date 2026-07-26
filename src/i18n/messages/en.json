@@ -41,12 +41,12 @@
     "heroAlt": "The cuvée lineup recovered off Namhae",
     "cuvees": {
       "enLieuSur": "A first encounter with the sea's time",
-      "enLieuSurMagnum": "The larger the bottle, the slower it ages · 1500 ml",
+      "enLieuSurMagnum": "The same sea, twice the volume · 1500 ml",
       "elementDeSurprise": "Chardonnay alone, no dosage added\nExactly as the sea shaped it",
       "editionZero": "The first bottle, where every record began",
       "atomesCrochus1yr": "Petit Meslier, a rare grape\nOne year spent beneath the sea",
-      "atomesCrochus3yr": "Still maturing beneath the sea\nA record filling a thousand days",
-      "tag3yr": "3 yr",
+      "atomesCrochus2yr": "Still maturing beneath the sea\nA record filling eight seasons",
+      "tag2yr": "2 yr",
       "soldOut": "· SOLD OUT"
     },
     "cert": {
@@ -157,7 +157,7 @@
         },
         {
           "title": "Your bottle's record, for life",
-          "desc": "Revisit the record of its time in the deep, anytime."
+          "desc": "Revisit the record of its time at 30 metres, anytime."
         }
       ],
       "scarcity": "Seats open only to the number of bottles prepared.",
@@ -176,7 +176,7 @@
       "imageAlt": "A gloved hand tagging a barnacled bottle",
       "benefits": [
         {
-          "title": "A deep-sea record in every bottle",
+          "title": "A record of the sea in every bottle",
           "desc": "Coordinates, depth, and time become a story to share with your guests."
         },
         {
@@ -197,7 +197,7 @@
         },
         "cellar": {
           "label": "Cellar · Collection",
-          "desc": "Private cellar · membership bottles"
+          "desc": "Private cellar · membership collection"
         },
         "other": {
           "label": "Other proposals",

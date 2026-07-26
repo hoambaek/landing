@@ -28,7 +28,7 @@ const CUVEES: Cuvee[] = [
   { n: "ARCHIVE N° 003", name: "Élément de Surprise", descKey: "elementDeSurprise", img: "/images/03.webp" },
   { n: "ARCHIVE N° 000", name: "Édition Zéro", descKey: "editionZero", img: "/images/06.webp", soldOut: true },
   { n: "ARCHIVE N° 004", name: "Atomes Crochus", descKey: "atomesCrochus1yr", img: "/images/05.webp" },
-  { n: "ARCHIVE N° 005", name: "Atomes Crochus", nameTagKey: "tag3yr", descKey: "atomesCrochus3yr", outline: true },
+  { n: "ARCHIVE N° 005", name: "Atomes Crochus", nameTagKey: "tag2yr", descKey: "atomesCrochus2yr", outline: true },
 ];
 
 export default function ArchiveSection({
@@ -74,7 +74,7 @@ export default function ArchiveSection({
           <li key={c.n} className="s-col__card">
             <div className={`s-col__card-img${c.outline ? " s-col__card-img--outline" : ""}${c.soldOut ? " s-col__card-img--sold" : ""}`}>
               {c.outline ? (
-                <Image src="/images/bottle-outline-3yr.png" alt="" width={184} height={308} className="s-col__outline-img" />
+                <Image src="/images/bottle-outline-2yr.png" alt="" width={184} height={308} className="s-col__outline-img" />
               ) : (
                 <Image src={c.img!} alt={c.name} fill sizes="(max-width: 768px) 50vw, 330px" className="s-col__bottle-img" />
               )}

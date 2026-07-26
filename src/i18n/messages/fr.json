@@ -41,12 +41,12 @@
     "heroAlt": "La gamme de cuvées remontée au large de Namhae",
     "cuvees": {
       "enLieuSur": "Une première rencontre avec le temps de la mer",
-      "enLieuSurMagnum": "Plus la bouteille est grande, plus elle vieillit lentement · 1500 ml",
+      "enLieuSurMagnum": "La même mer, deux fois le volume · 1500 ml",
       "elementDeSurprise": "Chardonnay seul, sans dosage\nTel que la mer l'a façonné",
       "editionZero": "La première bouteille, où tout a commencé",
       "atomesCrochus1yr": "Petit Meslier, un cépage rare\nUne première année passée sous la mer",
-      "atomesCrochus3yr": "Encore en train de mûrir sous la mer\nUn relevé vers mille jours",
-      "tag3yr": "3 ans",
+      "atomesCrochus2yr": "Encore en train de mûrir sous la mer\nUn relevé au fil de huit saisons",
+      "tag2yr": "2 ans",
       "soldOut": "· ÉPUISÉ"
     },
     "cert": {
@@ -157,7 +157,7 @@
         },
         {
           "title": "Le relevé de votre bouteille, à vie",
-          "desc": "Consultez à tout moment le relevé du temps passé dans les profondeurs."
+          "desc": "Consultez à tout moment le relevé du temps passé à 30 mètres de profondeur."
         }
       ],
       "scarcity": "Les places n'ouvrent qu'à hauteur des bouteilles préparées.",
@@ -176,7 +176,7 @@
       "imageAlt": "Une main gantée posant une étiquette sur une bouteille couverte de balanes",
       "benefits": [
         {
-          "title": "Un relevé des profondeurs dans chaque bouteille",
+          "title": "Un relevé de la mer dans chaque bouteille",
           "desc": "Coordonnées, profondeur et temps deviennent une histoire à partager avec vos convives."
         },
         {
@@ -197,7 +197,7 @@
         },
         "cellar": {
           "label": "Cave · Collection",
-          "desc": "Cave privée · bouteilles d'adhésion"
+          "desc": "Cave privée · collection d'adhésion"
         },
         "other": {
           "label": "Autres propositions",
