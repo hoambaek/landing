@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import s from "./meetup.module.css";
 
@@ -352,12 +353,13 @@ export default function MeetupView() {
             </div>
             <div className={s.cRow}>
               <span className={s.cRowLabel}>홈페이지</span>
-              <a className={`${s.cRowValueMono} ${s.cRowHome}`} href="/">
+              {/* 같은 사이트 안이라 Link — <a>면 전체를 다시 내려받는다 */}
+              <Link className={`${s.cRowValueMono} ${s.cRowHome}`} href="/">
                 musedemaree.com
                 <span className={s.cRowHomeArrow} aria-hidden="true">
                   ↗
                 </span>
-              </a>
+              </Link>
             </div>
           </div>
 

@@ -217,18 +217,23 @@ export default function BottleRecord({
     return () => io.disconnect();
   }, []);
 
+  /* 해류 필드 이름이 current라 memo 본문의 data.averages.current를 컴파일러가 ref 접근으로 읽는다.
+     그러면 추론한 의존성이 수동 의존성과 어긋나 이 컴포넌트의 최적화를 통째로 건너뛴다.
+     memo 밖에서 미리 풀어 두면 본문에 .current 접근이 남지 않는다. */
+  const { temp, salinity, tide, current, pressure, tidal, wave, period } = data.averages;
+
   const stationValues: Record<MetricKey, StationValue> = useMemo(
     () => ({
-      temp: { num: data.averages.temp, decimals: 1, unit: "°C" },
-      salinity: { num: data.averages.salinity, decimals: 1, unit: " psu" },
-      tide: { num: data.averages.tide, decimals: 0, unit: " cm" },
-      current: { num: data.averages.current, decimals: 2, unit: " m/s" },
-      pressure: { num: data.averages.pressure, decimals: 1, unit: " atm" },
-      tidal: { num: data.averages.tidal, decimals: 0, unit: " cm/s" },
-      wave: { num: data.averages.wave, decimals: 1, unit: " m" },
-      period: { num: data.averages.period, decimals: 1, unit: " s" },
+      temp: { num: temp, decimals: 1, unit: "°C" },
+      salinity: { num: salinity, decimals: 1, unit: " psu" },
+      tide: { num: tide, decimals: 0, unit: " cm" },
+      current: { num: current, decimals: 2, unit: " m/s" },
+      pressure: { num: pressure, decimals: 1, unit: " atm" },
+      tidal: { num: tidal, decimals: 0, unit: " cm/s" },
+      wave: { num: wave, decimals: 1, unit: " m" },
+      period: { num: period, decimals: 1, unit: " s" },
     }),
-    [data.averages]
+    [temp, salinity, tide, current, pressure, tidal, wave, period]
   );
 
   const fmtStation = (v: StationValue) => (v.num === null ? "—" : `${v.num.toFixed(v.decimals)}${v.unit}`);
@@ -492,7 +497,6 @@ export default function BottleRecord({
       tickers.forEach((f) => gsap.ticker.remove(f));
       ctx.revert();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [serial, serialTotal]);
 
   return (

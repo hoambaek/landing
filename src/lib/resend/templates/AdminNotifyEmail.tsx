@@ -1,6 +1,5 @@
 import {
   Html,
-  Head,
   Body,
   Container,
   Section,

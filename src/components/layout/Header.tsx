@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useHeaderScroll, useIndicatorScroll } from "@/hooks/useScrollSection";
+import { useIsMounted, useClientValue } from "@/hooks/useClientEnv";
 import { locales, localePrefixMap, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { computeMeasureDays } from "@/lib/measurement";
@@ -48,8 +49,7 @@ export default function Header({
 
   /* 메뉴 오버레이는 portal로 body 직속 — 모바일 셸(#scroll-root) 안의 fixed는
      iOS가 absolute처럼 취급해 스크롤과 함께 사라지기 때문 */
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useIsMounted();
 
   /* 로고 클릭: 이미 랜딩이면 최상단으로 스크롤 (셸: scroll-root / 데스크톱: window) */
   const onLogoClick = useCallback(
@@ -71,10 +71,7 @@ export default function Header({
   /* 측정 경과일 — Living Data 카운터와 동일 소스로 계산(숫자 단일 출처).
      하이드레이션 불일치 방지를 위해 마운트 후 채운다. 메뉴는 마운트 뒤 열리므로
      사용자에게 빈 값이 노출되지 않는다. */
-  const [measureDays, setMeasureDays] = useState<number | null>(null);
-  useEffect(() => {
-    setMeasureDays(computeMeasureDays());
-  }, []);
+  const measureDays = useClientValue<number | null>("measureDays", computeMeasureDays, null);
   const recDays = dict.recDays.replace(
     "{n}",
     measureDays !== null ? String(measureDays) : "",

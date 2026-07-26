@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // 폰트 렌더 실험용 로컬 스크립트. .gitignore에도 들어 있어 배포에 포함되지 않는다.
+    "_workspace/**",
   ]),
 ]);
 

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { localePrefixMap, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { computeMeasureDays } from "@/lib/measurement";
+import { useClientValue } from "@/hooks/useClientEnv";
 
 /** 측정값 숫자 카운팅 — 뷰 진입 시 0→target, 800일 카운터와 동일한 2.0s ease-out. */
 function LogVals({
@@ -17,18 +18,18 @@ function LogVals({
 }) {
   const ref = useRef<HTMLUListElement>(null);
   const [progress, setProgress] = useState(0);
-  const [stamp, setStamp] = useState(""); // 오늘 날짜 — 하이드레이션 불일치 방지 위해 클라이언트에서 기록
-
-  useEffect(() => {
-    const intl = { ko: "ko-KR", en: "en-US", fr: "fr-FR", ja: "ja-JP" }[locale];
-    setStamp(
-      new Intl.DateTimeFormat(intl, {
+  /* 오늘 날짜 — 서버 시간대로 찍으면 하이드레이션 때 글자가 바뀐다. 클라이언트에서만 찍는다.
+     로케일별로 표기가 다르므로 키에 로케일을 넣는다. */
+  const stamp = useClientValue(
+    `stamp:${locale}`,
+    () =>
+      new Intl.DateTimeFormat({ ko: "ko-KR", en: "en-US", fr: "fr-FR", ja: "ja-JP" }[locale], {
         year: "numeric",
         month: "long",
         day: "numeric",
       }).format(new Date()),
-    );
-  }, [locale]);
+    "",
+  );
 
   useEffect(() => {
     const el = ref.current;
