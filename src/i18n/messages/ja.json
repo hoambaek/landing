@@ -1,0 +1,244 @@
+{
+  "hero": {
+    "headline": "今この瞬間も、一本のシャンパーニュが海の底で時を記録しています",
+    "brandLabel": "海底熟成シャンパーニュ",
+    "brandName": "ミューズ・ド・マレ",
+    "bgAlt": "南海 水深30m、ケージに納められた一本のシャンパーニュ · Muse de Marée"
+  },
+  "header": {
+    "recLine": "南海 34°N · 水温 13.5°C",
+    "recDays": "測定 {n}日目",
+    "aria": {
+      "home": "ホームへ",
+      "menuOpen": "メニューを開く",
+      "menuLabel": "ナビゲーションメニュー",
+      "close": "閉じる"
+    }
+  },
+  "living": {
+    "bgAlt": "南海 水深30m、引き揚げケージ、測定の現場",
+    "copy": "深い海の、光の絶えるところで記録がはじまります",
+    "counterUnit": "日目",
+    "methodLink": "詳しく見る",
+    "log": {
+      "temp": "水温 13.5°C",
+      "current": "海流 2.46 m/s",
+      "depth": "水深 30m"
+    }
+  },
+  "first": {
+    "eyebrow": "THE FIRST RECORD",
+    "headline": "最初の記録が、水面に浮かびあがりました",
+    "closing": "一本ごとに異なる海の指紋、同じものはひとつもありません",
+    "plateAlt": {
+      "light": "水面で出会う最初の光 · 最初の光",
+      "manuscript": "フジツボと塩の結晶がついた瓶の表面 · 海が書いた原稿"
+    }
+  },
+  "collection": {
+    "title": "collection.",
+    "sub": "それぞれのキュヴェがひとつの記録、海がつくった時間を預かるということ",
+    "heroAlt": "南海から引き揚げられたキュヴェのラインナップ",
+    "cuvees": {
+      "enLieuSur": "はじめて出会う海の時間",
+      "enLieuSurMagnum": "同じ海を、二倍の容量で · 1500ml",
+      "elementDeSurprise": "シャルドネ一種、糖を加えず\n海が刻んだそのままに",
+      "editionZero": "すべての記録がはじまった場所",
+      "atomesCrochus1yr": "稀少な品種プティ・メリエ\n海で過ごした最初の一年",
+      "atomesCrochus2yr": "いまも海の底で熟成中\n八つの季節を満たしてゆく記録",
+      "tag2yr": "2年",
+      "soldOut": "· SOLD OUT"
+    },
+    "cert": {
+      "showcaseAlt": "En Lieu Sûr、記録カードとともに",
+      "entry": "入水",
+      "entryValue": "2026年01月 · 冬",
+      "coordinates": "座標",
+      "aging": "海底熟成",
+      "agingValue": "12ヶ月 · 四季",
+      "recovery": "引き揚げ",
+      "recoveryValue": "2026年12月 · 冬",
+      "nfcText": "スマートフォンをかざすと、\n海底で過ごした12ヶ月の記録がひらきます"
+    },
+    "gift": {
+      "eyebrow": "贈りもの",
+      "head": "名を刻んで贈る時間",
+      "body": "空になっても、記録は残ります。"
+    },
+    "note": {
+      "numbering": "一本ごとの個別ナンバリング",
+      "card": "記録カード同梱",
+      "nfc": "NFCで記録を閲覧"
+    }
+  },
+  "maker": {
+    "title": "the maker.",
+    "subtitle": "シャンパーニュはシャンパーニュがつくりました、記録は南海ではじまります",
+    "imgAlt": "Champagne Mignon Boulard、シャンパーニュのメゾン",
+    "boulard": {
+      "desc": "1911年から四代、49の異なる土壌。\n均そうとせず、その複雑さをそのまま活かすメゾン。"
+    },
+    "comingSoon": {
+      "name": "coming soon",
+      "desc": "これから、海底熟成にふさわしい\n新しい生産者を順にご紹介します。"
+    },
+    "teaser": "二つめの署名 · 2027、次の入水とともに",
+    "aria": {
+      "prev": "前のメイカー",
+      "next": "次のメイカー"
+    }
+  },
+  "oceanCellar": {
+    "eyebrow": "membership",
+    "title": "Ocean Cellar Privé",
+    "sub": "発表をいちばん先に受け取る席",
+    "tags": {
+      "schedule": "発表をいちばん先に",
+      "attend": "用意された本数だけ",
+      "archive": "所蔵の記録を、いつでも"
+    },
+    "link": "招待を申し込む"
+  },
+  "partnership": {
+    "eyebrow": "Professional",
+    "title": "Partnership",
+    "sub": "あなたのテーブルへ続く、海の時間",
+    "tags": {
+      "fineDining": "ファインダイニング",
+      "hotelBar": "ラグジュアリーホテルのバー",
+      "cellar": "プライベートセラー"
+    },
+    "links": {
+      "partner": "パートナーのお問い合わせ",
+      "brandBook": "ブランドブック"
+    }
+  },
+  "forms": {
+    "common": {
+      "sending": "送信中",
+      "errNetwork": "ネットワーク接続をご確認のうえ、もう一度お試しください。",
+      "errFailed": "送信中に問題が発生しました。しばらくしてからもう一度お試しください。",
+      "placeholder": {
+        "name": "お名前",
+        "email": "メールアドレス",
+        "venue": "店舗名",
+        "contact": "ご担当者",
+        "affiliation": "所属 · 会社",
+        "referral": "どちらで知りましたか（任意）"
+      },
+      "menu": {
+        "open": "メニューを開く",
+        "label": "ナビゲーションメニュー",
+        "close": "閉じる",
+        "home": "ホームへ"
+      },
+      "referralOptions": [
+        "AI検索（ChatGPT、Perplexity など）",
+        "検索（Google、Yahoo!）",
+        "Instagram",
+        "YouTube",
+        "知人の紹介",
+        "記事、放送",
+        "ホテル、レストランで直接",
+        "その他"
+      ]
+    },
+    "invite": {
+      "metaTitle": "招待のお申し込み | Ocean Cellar Privé | Muse de Marée",
+      "metaDesc": "引き揚げをいちばん先に見守る人たち。Ocean Cellar Privé 招待のお申し込み。",
+      "eyebrow": "OCEAN CELLAR PRIVÉ",
+      "title": "招待のお申し込み",
+      "sub": "いちばん先に、あなたをお招きします。",
+      "imageAlt": "光の柱のなかで引き揚げられる瓶",
+      "benefits": [
+        {
+          "title": "発表をいちばん先に",
+          "desc": "新しいキュヴェの発表を、メンバーへいちばん先にお届けします。"
+        },
+        {
+          "title": "所蔵の記録を、いつでも",
+          "desc": "海で過ごした時間の記録を、いつでも読み返していただけます。"
+        }
+      ],
+      "scarcity": "席は、用意された本数の分だけひらきます。",
+      "submit": "招待を申し込む",
+      "note": "お申し込みをいただければ、募集がひらくときにメールでいちばん先にお知らせします。",
+      "errValidation": "お名前と正しいメールアドレスをご入力ください。",
+      "successLine": "お申し込みを承りました。",
+      "successNote": "招待状は、次の引き揚げのお知らせとともにお届けします。"
+    },
+    "partner": {
+      "metaTitle": "パートナーのお問い合わせ | Partnership | Muse de Marée",
+      "metaDesc": "あなたのテーブルへ続く海の時間。ファインダイニング · ホテルバー · プライベートセラーのパートナーお問い合わせ。",
+      "eyebrow": "PARTNERSHIP",
+      "title": "パートナーのお問い合わせ",
+      "sub": "海の時間を、テーブルの上に置くこと。",
+      "imageAlt": "白い手袋でフジツボのついた瓶にタグをつける手",
+      "benefits": [
+        {
+          "title": "一本ごとに納められた海の記録",
+          "desc": "座標と水深、熟成の時間が、お客様へ手渡す物語になります。"
+        },
+        {
+          "title": "空間に合わせたご提案",
+          "desc": "ファインダイニング、ホテルバー、プライベートセラー。空間の格に合わせた提案書をご用意します。"
+        }
+      ],
+      "catLabel": "PARTNERSHIP TYPE",
+      "catHint": "ひとつお選びください",
+      "categories": {
+        "dining": {
+          "label": "ダイニング · バーリスト",
+          "desc": "ワインリスト · バイザグラス掲載"
+        },
+        "event": {
+          "label": "プライベートイベント · ペアリング",
+          "desc": "ソムリエ · シェフ同席のディナー"
+        },
+        "cellar": {
+          "label": "セラー · コレクション",
+          "desc": "プライベートセラー · メンバーシップコレクション"
+        },
+        "other": {
+          "label": "その他のご提案",
+          "desc": "リテール、ギフト、協業"
+        }
+      },
+      "submit": "お問い合わせを送る",
+      "note": "いただいた内容を検討のうえ、営業日2日以内にご担当者から提案書とともにご返信します。",
+      "errCategory": "パートナーシップの種類をお選びください。",
+      "errValidation": "店舗名、ご担当者、正しいメールアドレスをご入力ください。",
+      "successLine": "お問い合わせを承りました。",
+      "successNote": "営業日2日以内に、担当者から直接お返事します。"
+    },
+    "brandBook": {
+      "metaTitle": "ブランドブック | Brand Book | Muse de Marée",
+      "metaDesc": "海が書いた時間の記録。ブランドの考えと記録の仕組み、キュヴェのラインナップ、パートナーシップのご案内をメールでお送りします。",
+      "title": "ブランドブック",
+      "sub": "海が書いた時間。",
+      "imageAlt": "石灰岩の上、フジツボのついた引き揚げの瓶",
+      "benefits": [
+        {
+          "title": "一冊で読むブランド",
+          "desc": "はじまりと考え、測定の方法、キュヴェのラインナップとパートナーシップを収めました。"
+        },
+        {
+          "title": "日本語と英語のPDF",
+          "desc": "確認のうえ、メールでそのままお送りします。"
+        }
+      ],
+      "submit": "ブランドブックを申し込む",
+      "note": "お名前、ご所属、メールアドレスだけで結構です。",
+      "errValidation": "お名前、ご所属、正しいメールアドレスをご入力ください。",
+      "successLine": "ご依頼を承りました。",
+      "successNote": "確認のうえ、ブランドブックをメールでお送りします。"
+    }
+  },
+  "footer": {
+    "policies": {
+      "terms": "利用規約",
+      "privacy": "プライバシーポリシー",
+      "cookies": "クッキーポリシー"
+    }
+  }
+}

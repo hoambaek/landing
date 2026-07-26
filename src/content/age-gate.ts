@@ -8,7 +8,7 @@ import type { Locale } from "@/i18n/config";
  * 미성년자 접근 제한(연령 게이트) + 경고문구 표기가 권고 사항.
  *
  * 경고문구(warning)는 보건복지부 고시 문구를 그대로 사용하며, 법적 문구이므로
- * en/fr 로케일에서도 한국어 원문을 유지한다(푸터 정책과 동일 기준).
+ * en/fr/ja 로케일에서도 한국어 원문을 유지한다(푸터 정책과 동일 기준).
  */
 
 export type AgeGateCopy = {
@@ -62,6 +62,15 @@ export const ageGateCopy: Record<Locale, AgeGateCopy> = {
     warningLabel: "경고",
     warning: WARNING_KO,
   },
+  ja: {
+    eyebrow: "muse de marée",
+    title: "満19歳以上ですか。",
+    body: "ミューズ・ド・マレは、海の時間を記録する酒類ブランドです。\n韓国の法令により、満19歳未満の方はご入場いただけません。",
+    confirm: "はい、満19歳以上です",
+    deny: "いいえ、19歳未満です",
+    warningLabel: "경고",
+    warning: WARNING_KO,
+  },
 };
 
 export const exitCopy: Record<Locale, ExitCopy> = {
@@ -88,5 +97,13 @@ export const exitCopy: Record<Locale, ExitCopy> = {
     back: "Retour",
     metaTitle: "Muse de Marée",
     metaDesc: "Ce site est réservé aux personnes âgées de 19 ans et plus.",
+  },
+  ja: {
+    eyebrow: "à bientôt",
+    title: "またお会いしましょう",
+    body: "ミューズ・ド・マレは、満19歳以上の方のための場所です。\n成人されてから、またお訪ねください。",
+    back: "戻る",
+    metaTitle: "Muse de Marée",
+    metaDesc: "満19歳以上の方のための場所です。",
   },
 };

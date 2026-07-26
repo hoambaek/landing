@@ -15,6 +15,7 @@ import {
   EB_Garamond,
   Mrs_Saint_Delafield,
   Josefin_Sans,
+  Work_Sans,
 } from "next/font/google";
 import "./globals.css";
 
@@ -82,6 +83,17 @@ const mrsSaintDelafield = Mrs_Saint_Delafield({
   display: "swap",
 });
 
+/* 라틴 본문(en·fr) — 정본 02는 "폰트를 스크립트별로 분리한다"를 원칙으로 둔다.
+   Noto Sans KR의 라틴은 한글용 폰트에 딸려온 것이라 영·불 본문에는 자간·자형이 헐겁다.
+   Cormorant Garamond(표제)와 부딪히지 않는 휴머니스트 산세리프로, 본문 웨이트 300을
+   실제로 갖고 있는 서체를 고른다. */
+const workSans = Work_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-latin",
+  display: "swap",
+});
+
 // 입장 페이지 에디션 넘버(블루 스톤 플레이트) 전용 — 얇은 지오메트릭
 const josefinSans = Josefin_Sans({
   subsets: ["latin"],
@@ -108,6 +120,7 @@ export const metadata: Metadata = {
       ko: "/",
       en: "/en",
       fr: "/fr",
+      ja: "/ja",
       "x-default": "/",
     },
     types: {
@@ -164,7 +177,9 @@ export default function RootLayout({
   // 프로덕션 배포에서만 GA 작동 (preview·로컬 개발 트래픽 제외)
   const gaEnabled = process.env.VERCEL_ENV === "production" && !!gaId;
   return (
-    <html lang="ko">
+    /* lang은 HtmlLang이 로케일별로 덮어쓴다(정적 라우트라 서버가 locale을 모른다).
+       하이드레이션 전에 바뀌므로 React가 불일치로 보고 — 이 속성만 검사에서 뺀다. */
+    <html lang="ko" suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
@@ -173,7 +188,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} ${josefinSans.variable} antialiased`}
+        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} ${josefinSans.variable} ${workSans.variable} antialiased`}
       >
         <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
         <JsonLd />

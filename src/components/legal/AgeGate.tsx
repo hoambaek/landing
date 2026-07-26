@@ -61,6 +61,7 @@ function grantAccess() {
 function localeFromPath(pathname: string): Locale {
   if (pathname === "/en" || pathname.startsWith("/en/")) return "en";
   if (pathname === "/fr" || pathname.startsWith("/fr/")) return "fr";
+  if (pathname === "/ja" || pathname.startsWith("/ja/")) return "ja";
   return "ko";
 }
 

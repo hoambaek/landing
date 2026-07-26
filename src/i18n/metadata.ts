@@ -7,6 +7,7 @@ export const hreflangLanguages = {
   ko: "/",
   en: "/en",
   fr: "/fr",
+  ja: "/ja",
   "x-default": "/",
 } as const;
 

@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ko: baseUrl,
     en: `${baseUrl}/en`,
     fr: `${baseUrl}/fr`,
+    ja: `${baseUrl}/ja`,
   };
 
   return [
@@ -31,7 +32,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
       alternates: { languages },
     },
-    ...(["/method", "/en/method", "/fr/method"] as const).map((path) => ({
+    {
+      url: languages.ja,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+      alternates: { languages },
+    },
+    ...(["/method", "/en/method", "/fr/method", "/ja/method"] as const).map((path) => ({
       url: `${baseUrl}${path}`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
@@ -41,6 +49,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
           ko: `${baseUrl}/method`,
           en: `${baseUrl}/en/method`,
           fr: `${baseUrl}/fr/method`,
+          ja: `${baseUrl}/ja/method`,
         },
       },
     })),

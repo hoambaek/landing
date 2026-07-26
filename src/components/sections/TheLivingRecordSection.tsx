@@ -20,7 +20,7 @@ function LogVals({
   const [stamp, setStamp] = useState(""); // 오늘 날짜 — 하이드레이션 불일치 방지 위해 클라이언트에서 기록
 
   useEffect(() => {
-    const intl = { ko: "ko-KR", en: "en-US", fr: "fr-FR" }[locale];
+    const intl = { ko: "ko-KR", en: "en-US", fr: "fr-FR", ja: "ja-JP" }[locale];
     setStamp(
       new Intl.DateTimeFormat(intl, {
         year: "numeric",

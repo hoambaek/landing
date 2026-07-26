@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: t.description,
   alternates: {
     canonical: "/method",
-    languages: { ko: "/method", en: "/en/method", fr: "/fr/method" },
+    languages: { ko: "/method", en: "/en/method", fr: "/fr/method", ja: "/ja/method" },
   },
 };
 

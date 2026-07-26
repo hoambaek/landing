@@ -1,3 +1,4 @@
+import HtmlLang from "@/components/HtmlLang";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
@@ -417,6 +418,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
 
   return (
     <>
+    <HtmlLang locale={locale} />
     <Header locale={locale} dict={dict.header} />
     <ScrollReveal />
     <main className={s.page}>

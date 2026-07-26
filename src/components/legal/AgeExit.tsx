@@ -1,3 +1,4 @@
+import HtmlLang from "@/components/HtmlLang";
 import Link from "next/link";
 import { exitCopy } from "@/content/age-gate";
 import { localePrefixMap, type Locale } from "@/i18n/config";
@@ -11,6 +12,7 @@ export default function AgeExit({ locale }: { locale: Locale }) {
   const home = localePrefixMap[locale];
   return (
     <div className="age-exit">
+      <HtmlLang locale={locale} />
       <div className="age-exit__inner">
         <span className="age-exit__eyebrow">{copy.eyebrow}</span>
         <h1 className="age-exit__title">{copy.title}</h1>

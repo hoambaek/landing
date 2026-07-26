@@ -1,3 +1,4 @@
+import HtmlLang from "@/components/HtmlLang";
 import Image from "next/image";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
@@ -28,6 +29,7 @@ export default function LetterShell({
 }) {
   return (
     <main className={`s-letter-page s-letter-page--${theme}`}>
+      <HtmlLang locale={locale} />
       {/* 헤더 — 메인과 동일한 공용 Header (섹션 tone 감지로 로고 색 전환) */}
       <Header locale={locale} dict={headerDict} />
 

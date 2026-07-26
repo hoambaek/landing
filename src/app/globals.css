@@ -81,6 +81,13 @@
    BASE
    ══════════════════════════════════════════ */
 @layer base {
+  /* 일본어 금칙 처리(禁則処理) — 작은 가나(ャ·ッ 등)·장음부·구두점이 줄 첫머리에 오지 않게 한다.
+     기본값 auto로는 적용되지 않아 히어로가 "…一本のシ / ャンパーニュ…"로 끊겼다(실측).
+     word-break: auto-phrase가 결과는 같지만 크롬 전용이라, 사파리에서도 도는 strict를 쓴다. */
+  html[lang="ja"] {
+    line-break: strict;
+  }
+
   body {
     font-family: var(--font-body);
     font-weight: 300;
@@ -5015,6 +5022,25 @@ html:has(.b-paper) body {
   font-weight: 400;
 }
 
+/* ── 일본어 표제 — 같은 의도를 일본 활자로 옮긴다 ──
+   위 규칙의 EB Garamond Italic에는 가나·한자 글리프가 없다. 지금은 브라우저 기본
+   폰트로 폴백돼 OS마다 다른 서체가 나온다(맥은 히라기노, 윈도우는 UI 고딕).
+   일본어 조판에 이탤릭은 없으므로 기울이지 않고, "잉크·펜 느낌 세리프"라는 본래
+   의도는 명조(明朝)가 받는다 — 라틴 세리프에 대응하는 일본어 활자다.
+   라틴 문자는 스택 앞의 Cormorant가 계속 맡는다. */
+html[lang="ja"] .s-void__h1-text,
+html[lang="ja"] .s-void__brand-name-text,
+html[lang="ja"] .s-living__copy-text,
+html[lang="ja"] .s-living__counter-unit-text,
+html[lang="ja"] .s-first__headline-text,
+html[lang="ja"] .s-first__closing-text,
+html[lang="ja"] .s-col__sub-text,
+html[lang="ja"] .s-maker__subtitle-text {
+  font-family: var(--font-heading), "Hiragino Mincho ProN", "Yu Mincho",
+    "Noto Serif JP", serif;
+  font-style: normal;
+}
+
 /* ══════════════════════════════════════════
    LEGAL PAGES — 이용약관·개인정보처리방침·쿠키 정책 (라이트)
    ══════════════════════════════════════════ */
@@ -5519,4 +5545,29 @@ html:has(.b-paper) body {
   .s-letter__col > *:nth-child(5) {
     animation-delay: 0.75s;
   }
+}
+
+/* ══════════════════════════════════════════
+   스크립트별 본문 서체 — @layer 밖에 두어야 한다
+   ══════════════════════════════════════════
+   정본 02: "폰트를 스크립트별로 분리한다." 한 벌의 한글 폰트가 라틴·가나까지
+   떠맡으면 그 스크립트에서 자형이 어긋난다.
+
+   next/font가 --font-body를 body에 직접 얹는데, 그 클래스는 캐스케이드 레이어 밖이다.
+   레이어 밖 선언은 레이어 안보다 항상 우선하므로 @layer base 안에서는 특정도를
+   아무리 올려도 지지 않는다. 그래서 이 규칙만 레이어 밖에 둔다.
+   html의 lang은 HtmlLang이 파싱 시점에 동기로 바로잡는다. */
+
+/* 라틴 — Noto Sans KR의 라틴은 한글 폰트에 딸려온 것이라 영·불 본문에 맞지 않는다 */
+html[lang="en"] body,
+html[lang="fr"] body {
+  --font-body: var(--font-latin), -apple-system, sans-serif;
+}
+
+/* 일본어 — 한자 자형이 한국 관행을 따르는 문제를 시스템 서체로 푼다.
+   웹폰트를 얹지 않는 편이 낫다. iOS·macOS의 히라기노는 내려받을 필요가 없고
+   일본어 독자에게 가장 익숙하다. 윈도우는 유고딕, 안드로이드는 Noto Sans JP. */
+html[lang="ja"] body {
+  --font-body: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium",
+    "Yu Gothic", "Noto Sans JP", sans-serif;
 }
