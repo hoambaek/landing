@@ -57,11 +57,20 @@ async function sendMail(to: string, subject: string, html: string) {
   }
 }
 
+/* 메일 껍데기 — ApplicantEmail(신청 확인 메일)과 같은 종이·같은 토큰을 쓴다.
+   같은 브랜드가 보내는 메일이 하나는 검고 하나는 밝으면 다른 곳에서 온 것으로 읽힌다.
+   색은 브랜드 정본값(ink #312E2A, brass-muted 계열 #8C6B33). */
 function shell(inner: string): string {
-  return `<div style="background:#0a0908;color:#f1efeb;font-family:'Noto Sans KR',sans-serif;padding:40px 28px;max-width:520px;margin:0 auto">
-    <div style="letter-spacing:.2em;font-size:11px;color:#ccad7b;margin-bottom:24px">MUSE DE MARÉE · OCEAN CELLAR</div>
-    ${inner}
-    <div style="margin-top:36px;font-size:11px;color:rgba(241,239,235,.4)">바다의 시간을 기록합니다.</div>
+  return `<div style="background:#DDD8D2;padding:40px 20px;font-family:'Noto Sans KR',-apple-system,'Apple SD Gothic Neo',sans-serif">
+    <div style="width:100%;max-width:520px;margin:0 auto;background:#C4BFBB">
+      <div style="padding:46px 40px 48px">
+        <div style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:12px;letter-spacing:.22em;color:#8C6B33;margin-bottom:20px">OCEAN CELLAR™</div>
+        ${inner}
+      </div>
+      <div style="padding:30px 40px 32px;background:#14110F;text-align:center">
+        <div style="font-size:12px;line-height:19px;color:rgba(242,239,233,.55)">바다의 시간을 기록합니다.</div>
+      </div>
+    </div>
   </div>`;
 }
 
@@ -91,13 +100,16 @@ export async function requestOwnerOtp(nfc: string): Promise<Result & { emailMask
   });
   if (error) return { ok: false, error: "잠시 후 다시 시도해 주세요." };
 
+  /* 제목 형식은 다른 발송 메일과 맞춘다("... | Muse de Marée").
+     대괄호 말머리는 이 브랜드가 쓰지 않는 어법이다. */
   await sendMail(
     email,
-    "[뮤즈드마레] 소유자 인증 코드",
+    "소유자 확인 코드 | Muse de Marée",
     shell(
-      `<div style="font-size:15px;margin-bottom:16px">소유자 인증 코드</div>
-       <div style="font-size:34px;letter-spacing:.3em;font-weight:300;color:#ccad7b">${code}</div>
-       <div style="margin-top:16px;font-size:12px;color:rgba(241,239,235,.6)">5분 안에 입력해 주세요. 본인이 요청하지 않았다면 이 메일을 무시하세요.</div>`
+      `<div style="font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;font-size:32px;font-weight:300;line-height:40px;letter-spacing:-0.01em;color:#312E2A;margin-bottom:24px">소유자 확인 코드</div>
+       <div style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:38px;letter-spacing:.3em;color:#312E2A">${code}</div>
+       <hr style="width:36px;margin:30px 0 22px;border:none;border-top:1px solid #8C6B33" />
+       <div style="font-size:16px;line-height:28px;color:#4A453F;word-break:keep-all">5분 동안 유효합니다.<br />요청하지 않으셨다면 이 메일은 그냥 두셔도 됩니다.</div>`
     )
   );
   return { ok: true, emailMasked: maskEmail(email) };

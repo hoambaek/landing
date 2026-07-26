@@ -37,11 +37,29 @@ export type PartnerPayload = {
   referralSource?: string;
 };
 export type BrandBookPayload = { name: string; affiliation: string; email: string };
+/**
+ * 로마자 표기의 첫 글자만 대문자로 올린다.
+ *
+ * 첫 글자만 건드리는 이유: 이름의 정확한 표기는 사람마다 다르다.
+ * 전체를 title case로 강제하면 van der Berg → Van Der Berg, McDonald → Mcdonald처럼
+ * 남의 이름을 틀리게 고쳐 인증서에 새기게 된다. 소문자로만 적어 넣은 경우를
+ * 바로잡되, 본인이 의도한 나머지 표기(대문자·하이픈·아포스트로피)는 그대로 둔다.
+ */
+function capitalizeFirst(v: string | null | undefined): string | null {
+  const t = (v ?? "").trim();
+  if (!t) return null;
+  return t.charAt(0).toUpperCase() + t.slice(1);
+}
+
 export type BottleRegistrationPayload = {
   nfcCode: string;
   productId?: string | null;
   serial?: number | null;
   name: string;
+  /* 인증서에 새길 로마자 표기 — 등록자가 직접 입력한 값만 쓴다.
+     한글에서 기계로 옮기면 표기가 갈려(백 → Baek/Baik/Paek) 남의 이름이 새겨진다. */
+  givenNameLatin?: string | null;
+  familyNameLatin?: string | null;
   email: string;
   locale?: string;
   referralSource?: string;
@@ -286,6 +304,9 @@ export async function submitBottleRegistration(
   }
 
   const referral = p.referralSource?.trim() || null;
+  /* 저장 시점에 한 번만 정규화한다 — 인증서·메일·관리자 알림이 모두 같은 값을 본다 */
+  const given = capitalizeFirst(p.givenNameLatin);
+  const family = capitalizeFirst(p.familyNameLatin);
   return insertAndNotify(
     "bottle_registrations",
     {
@@ -293,6 +314,8 @@ export async function submitBottleRegistration(
       product_id: p.productId ?? null,
       serial: p.serial ?? null,
       name: p.name,
+      given_name_latin: given,
+      family_name_latin: family,
       email: p.email,
       referral_source: referral,
       locale: p.locale ?? null,
@@ -303,6 +326,7 @@ export async function submitBottleRegistration(
       applicantName: p.name,
       adminFields: {
         성함: p.name,
+        "로마자 표기": [given, family].filter(Boolean).join(" ") || "—",
         이메일: p.email,
         "병 번호": p.serial != null ? `N° ${p.serial}` : "—",
         코드: p.nfcCode,

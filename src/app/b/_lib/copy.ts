@@ -246,9 +246,17 @@ export interface EntryCopy {
   claimedTitle: string;
   claimedBody: string;
   claimedCta: string;
-  nameLabel: string; // "이름 · NAME"
+  nameLabel: string; // 자국어 이름
   namePlaceholder: string;
-  emailLabel: string; // "이메일 · EMAIL"
+  /* 인증서에 새길 로마자 표기 — 등록자가 직접 정한다.
+     한글에서 기계로 옮기면 표기가 갈려(백 → Baek/Baik/Paek) 남의 이름이 새겨진다.
+     인증서에는 "이름 성" 순서로 새겨진다(서양 증서 어법). */
+  latinGivenLabel: string;
+  latinGivenPlaceholder: string;
+  latinFamilyLabel: string;
+  latinFamilyPlaceholder: string;
+  latinNote: string; // 로마자 입력란 아래 한 줄 안내
+  emailLabel: string;
   emailPlaceholder: string;
   privacyNote: string;
   submit: string; // "이름을 새기다"
@@ -260,8 +268,13 @@ export interface EntryCopy {
   inscribedOwnerLabel: string; // "첫 소유자"
   inscribedCta: string; // "바다의 기록 보기"
   inscribedCtaSub: string;
+  /* 이미 등록된 병으로 들어왔을 때만 — 각인 화면에서 입장 화면으로 내려가는 길.
+     개체는 번호로 부른다({serial} 치환). 번호가 없으면 부르지 않는다. */
+  inscribedBrowse: string;
+  inscribedBrowseNoSerial: string;
   /* 검증 */
   errName: string;
+  errLatinName: string;
   errEmail: string;
   errGeneric: string;
 }
@@ -295,9 +308,14 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedTitle: "이름이 새겨진 병입니다.",
     claimedBody: "기록은 누구에게나 열려 있습니다.",
     claimedCta: "바다의 기록 보기",
-    nameLabel: "이름 · NAME",
+    nameLabel: "이름",
     namePlaceholder: "인증서에 남길 이름",
-    emailLabel: "이메일 · EMAIL",
+    latinGivenLabel: "영문 이름",
+    latinGivenPlaceholder: "Given name",
+    latinFamilyLabel: "영문 성",
+    latinFamilyPlaceholder: "Surname",
+    latinNote: "인증서에는 이름 다음 성 순서로 새겨집니다.",
+    emailLabel: "이메일",
     emailPlaceholder: "디지털 인증서를 받을 주소",
     privacyNote:
       "인증서에 새겨진 이름은 병을 태그하는 누구에게나 보입니다.\n이메일은 공개하지 않고 인증서 발급에만 씁니다.",
@@ -309,7 +327,10 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedOwnerLabel: "첫 소유자",
     inscribedCta: "바다의 기록 보기",
     inscribedCtaSub: "바다가 남긴 사계절의 기록을 확인합니다.",
+    inscribedBrowse: "N° {serial}의 내력",
+    inscribedBrowseNoSerial: "내력 보기",
     errName: "이름을 입력해 주세요.",
+    errLatinName: "인증서에 새길 영문 이름과 성을 입력해 주세요.",
     errEmail: "이메일 주소를 확인해 주세요.",
     errGeneric: "잠시 후 다시 시도해 주세요.",
   },
@@ -343,6 +364,11 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedCta: "View the sea's record",
     nameLabel: "NAME",
     namePlaceholder: "Name for the certificate",
+    latinGivenLabel: "GIVEN NAME",
+    latinGivenPlaceholder: "Given name",
+    latinFamilyLabel: "FAMILY NAME",
+    latinFamilyPlaceholder: "Surname",
+    latinNote: "The certificate is engraved with your given name first.",
     emailLabel: "EMAIL",
     emailPlaceholder: "Address to receive the certificate",
     privacyNote:
@@ -355,7 +381,10 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedOwnerLabel: "First owner",
     inscribedCta: "View the sea's record",
     inscribedCtaSub: "See the four seasons the sea left behind.",
+    inscribedBrowse: "Provenance of N° {serial}",
+    inscribedBrowseNoSerial: "See the provenance",
     errName: "Please enter your name.",
+    errLatinName: "Please enter your given name and family name.",
     errEmail: "Please check your email address.",
     errGeneric: "Please try again in a moment.",
   },
@@ -389,6 +418,11 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedCta: "Voir le relevé de la mer",
     nameLabel: "NOM",
     namePlaceholder: "Nom pour le certificat",
+    latinGivenLabel: "PRÉNOM",
+    latinGivenPlaceholder: "Given name",
+    latinFamilyLabel: "NOM DE FAMILLE",
+    latinFamilyPlaceholder: "Surname",
+    latinNote: "Le certificat porte d'abord le prénom, puis le nom.",
     emailLabel: "E-MAIL",
     emailPlaceholder: "Adresse pour recevoir le certificat",
     privacyNote:
@@ -401,7 +435,10 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedOwnerLabel: "Premier propriétaire",
     inscribedCta: "Voir le relevé de la mer",
     inscribedCtaSub: "Découvrez les quatre saisons laissées par la mer.",
+    inscribedBrowse: "Provenance du N° {serial}",
+    inscribedBrowseNoSerial: "Voir la provenance",
     errName: "Veuillez saisir votre nom.",
+    errLatinName: "Veuillez saisir votre prénom et votre nom.",
     errEmail: "Veuillez vérifier votre adresse e-mail.",
     errGeneric: "Veuillez réessayer dans un instant.",
   },
@@ -433,9 +470,14 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedTitle: "すでに名が刻まれた一本です。",
     claimedBody: "記録は誰にでも開かれています。",
     claimedCta: "海の記録を見る",
-    nameLabel: "名前 · NAME",
+    nameLabel: "名前",
     namePlaceholder: "証明書に残す名前",
-    emailLabel: "メール · EMAIL",
+    latinGivenLabel: "ローマ字の名",
+    latinGivenPlaceholder: "Given name",
+    latinFamilyLabel: "ローマ字の姓",
+    latinFamilyPlaceholder: "Surname",
+    latinNote: "証明書には名・姓の順で刻まれます。",
+    emailLabel: "メール",
     emailPlaceholder: "デジタル証明書を受け取る宛先",
     privacyNote:
       "証明書に刻まれたお名前は、ボトルをタグした方に表示されます。\nメールアドレスは公開せず、証明書の発行にのみ使用します。",
@@ -447,7 +489,10 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedOwnerLabel: "最初の所有者",
     inscribedCta: "海の記録を見る",
     inscribedCtaSub: "海が残した四季の記録を確認します。",
+    inscribedBrowse: "N° {serial} の来歴",
+    inscribedBrowseNoSerial: "来歴を見る",
     errName: "お名前を入力してください。",
+    errLatinName: "証明書に刻むローマ字の名と姓を入力してください。",
     errEmail: "メールアドレスをご確認ください。",
     errGeneric: "しばらくしてからもう一度お試しください。",
   },
@@ -479,9 +524,14 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedTitle: "这一瓶已刻上名字。",
     claimedBody: "记录向所有人开放。",
     claimedCta: "查看大海的记录",
-    nameLabel: "姓名 · NAME",
+    nameLabel: "姓名",
     namePlaceholder: "留在证书上的名字",
-    emailLabel: "邮箱 · EMAIL",
+    latinGivenLabel: "拼音名",
+    latinGivenPlaceholder: "Given name",
+    latinFamilyLabel: "拼音姓",
+    latinFamilyPlaceholder: "Surname",
+    latinNote: "证书上按名、姓的顺序镌刻。",
+    emailLabel: "邮箱",
     emailPlaceholder: "接收数字证书的地址",
     privacyNote:
       "刻在证书上的姓名，轻触酒瓶的人都能看到。\n邮箱不公开，仅用于签发证书。",
@@ -493,7 +543,10 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedOwnerLabel: "首位所有者",
     inscribedCta: "查看大海的记录",
     inscribedCtaSub: "查看大海留下的四季记录。",
+    inscribedBrowse: "N° {serial} 的来历",
+    inscribedBrowseNoSerial: "查看来历",
     errName: "请输入你的名字。",
+    errLatinName: "请输入证书上镌刻的拼音名与姓。",
     errEmail: "请检查你的邮箱地址。",
     errGeneric: "请稍后再试。",
   },
@@ -612,7 +665,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     blogPage: "바다의 기록",
     ecEyebrow: "EIGHT CURRENTS",
     ecTitle: "여덟 개의 관측이\n한 병의 시간을 그립니다.",
-    ecBody: "수온·염분·조위·해류·수압·조류·파고·파주기의\n사계절 변화를 하나의 흐름으로 기록했습니다.",
+    ecBody: "사계절의 변화를 하나의 흐름으로 기록했습니다.",
     ecLegend: "금빛 선 · 수온",
     certTag: "소유 인증서",
     certDedication: "바다의 기록을\n당신의 이름으로 남깁니다",
@@ -688,7 +741,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     blogPage: "Journal",
     ecEyebrow: "EIGHT CURRENTS",
     ecTitle: "Eight readings\ndraw the time of one bottle.",
-    ecBody: "Temperature, salinity, tide, current, pressure, flow, wave height and period —\nfour seasons of change kept as one continuous stream.",
+    ecBody: "Four seasons of change, kept as one continuous stream.",
     ecLegend: "Golden line · temperature",
     certTag: "CERTIFICATE OF OWNERSHIP",
     certDedication: "This bottle and the sea's record,\nkept in your name",
@@ -764,7 +817,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     blogPage: "Journal",
     ecEyebrow: "EIGHT CURRENTS",
     ecTitle: "Huit relevés\ndessinent le temps d'une bouteille.",
-    ecBody: "Température, salinité, marée, courant, pression, flux, hauteur et période de houle —\nquatre saisons de variations en un seul flux continu.",
+    ecBody: "Quatre saisons de variations, en un seul flux continu.",
     ecLegend: "Ligne dorée · température",
     certTag: "CERTIFICAT DE PROPRIÉTÉ",
     certDedication: "Cette bouteille et le relevé de la mer,\nà votre nom",
@@ -840,7 +893,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     blogPage: "ジャーナル",
     ecEyebrow: "EIGHT CURRENTS",
     ecTitle: "八つの観測が\n一本の時間を描きます。",
-    ecBody: "水温・塩分・潮位・海流・水圧・潮流・波高・波周期の\n四季の変化を一つの流れとして記録しました。",
+    ecBody: "四季の変化を一つの流れとして記録しました。",
     ecLegend: "金色の線 · 水温",
     certTag: "所有証明書",
     certDedication: "この一本と海の記録を\nあなたの名前で残します",
@@ -916,7 +969,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     blogPage: "博客",
     ecEyebrow: "EIGHT CURRENTS",
     ecTitle: "八项观测\n描绘一瓶的时间。",
-    ecBody: "水温·盐度·潮位·海流·水压·潮流·浪高·波周期的\n四季变化，汇成一条连续的流。",
+    ecBody: "四季变化，汇成一条连续的流。",
     ecLegend: "金色线 · 水温",
     certTag: "所有权证书",
     certDedication: "将这一瓶与大海的记录\n以你之名留存",

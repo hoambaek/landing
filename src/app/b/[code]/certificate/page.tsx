@@ -38,6 +38,7 @@ export default async function BottleCertificatePage({ params }: { params: Promis
       data={data}
       owner={owner}
       ownerNameFull={ownerNameFull}
+      ownerNameLatin={owner?.nameLatin ?? null}
       certId={certId}
       signature={signature}
       initialLocale={initialLocale}

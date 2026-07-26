@@ -171,7 +171,7 @@ export default function BottleRecord({
   const seaRows: { label: string; value: string }[] = [
     {
       label: extra.seaLabels.duration,
-      value: durationValue + (data.aging.retrieved ? "" : ` (${copy.planned})`),
+      value: durationValue,
     },
     {
       label: extra.seaLabels.environment,
@@ -551,8 +551,19 @@ export default function BottleRecord({
               </div>
             )}
             <div className={styles.titleZone}>
+              {/* 타이틀 원본은 798×96(표시의 3배). sizes가 없으면 2x(640)까지만 만들어
+                  고밀도 화면에서 글자가 흐려진다 — 활자 이미지라 특히 눈에 띈다. */}
               {locale === "ko" ? (
-                <Image src="/images/b-record-title-ko.png" alt={copy.titleText} width={266} height={32} className={styles.titleImg} priority />
+                <Image
+                  src="/images/b-record-title-ko.png"
+                  alt={copy.titleText}
+                  width={266}
+                  height={32}
+                  sizes="266px"
+                  quality={95}
+                  className={styles.titleImg}
+                  priority
+                />
               ) : (
                 <h1 className={styles.titleText}>{copy.titleText}</h1>
               )}
@@ -613,7 +624,8 @@ export default function BottleRecord({
         {/* ── Eight Currents 인트로 ── */}
         <section className={styles.ecIntro}>
           <div className={styles.reveal} data-reveal>
-            <span className={styles.ecEyebrow}>{extra.ecEyebrow}</span>
+            {/* EIGHT CURRENTS 아이브로우는 걷어냈다 — 바로 아래 제목이
+                "여덟 개의 관측"이라고 같은 말을 하고 있었다. */}
             <h2 className={styles.ecTitle}>{extra.ecTitle}</h2>
             <p className={styles.ecBody}>{extra.ecBody}</p>
             <div className={styles.ecLegend}>
@@ -703,7 +715,11 @@ export default function BottleRecord({
             </g>
           </svg>
           <p className={`${styles.convergeText} ${styles.reveal}`} data-reveal>
-            {data.partial ? copy.converging : copy.converged}
+            {/* 인양이 끝나 고객 손에 있는 병에서 열리는 페이지다 —
+                진행형("담기고 있습니다")이 아니라 완료형으로 고정한다.
+                data.partial은 배치의 인양일이 미래로 남아 있을 때 참이 되는데,
+                그건 재고 데이터의 사정이지 이 화면을 보는 사람의 시점이 아니다. */}
+            {copy.converged}
           </p>
         </section>
 
@@ -711,7 +727,15 @@ export default function BottleRecord({
         <section className={styles.bottleSection}>
           {/* data-reveal(IO) 대신 수렴 점에 묶는다 — 점보다 먼저 뜨면 순서가 뒤집힌다 */}
           <div className={styles.reveal} ref={bottlePhotoRef}>
-            <Image src={meta.image} alt={meta.name} width={342} height={274} className={styles.bottlePhoto} />
+            <Image
+              src={meta.image}
+              alt={meta.name}
+              width={342}
+              height={274}
+              sizes="(max-width: 430px) 100vw, 342px"
+              quality={90}
+              className={styles.bottlePhoto}
+            />
           </div>
           {serialLine && (
             <p ref={bottleSerialRef} className={styles.bottleSerial}>
@@ -786,7 +810,12 @@ export default function BottleRecord({
                 inputMode="email"
                 autoFocus
               />
-              <button type="submit" className={styles.passportNewsSubmit} disabled={nlStatus === "submitting"}>
+              <button
+                type="submit"
+                className={`${styles.passportNewsSubmit} ${nlStatus === "submitting" ? styles.passportNewsSubmitBusy : ""}`}
+                disabled={nlStatus === "submitting"}
+                aria-busy={nlStatus === "submitting"}
+              >
                 {extra.newsletterConfirm}
               </button>
             </form>
@@ -814,9 +843,9 @@ export default function BottleRecord({
               푸터가 헤더처럼 읽힌다. */}
           <div className={styles.footerLogoRow}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_trans_W_lg.png" alt="" className={styles.footerSymbol} />
+            <img src="/images/logo/logo_trans.png" alt="" className={styles.footerSymbol} />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_text_trans_W.png" alt="Muse de Marée" className={styles.footerWordmark} />
+            <img src="/images/logo/logo_text_trans.png" alt="Muse de Marée" className={styles.footerWordmark} />
           </div>
 
           <p className={styles.footerTagline}>{copy.footerTagline}</p>

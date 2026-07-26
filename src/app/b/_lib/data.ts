@@ -124,6 +124,9 @@ export async function fetchBottleIdentity(code: string): Promise<BottleIdentity 
  */
 export interface BottleOwner {
   name: string;
+  /* 인증서에 새길 로마자 표기 — "이름 성" 순서로 합쳐 둔다(서양 증서 어법).
+     등록자가 직접 입력한 값만 담기며, 없으면 null이라 인증서는 자국어 이름만 세운다. */
+  nameLatin: string | null;
   emailMasked: string;
   registeredAt: string | null; // YYYY-MM-DD
 }
@@ -160,15 +163,20 @@ export async function fetchBottleOwner(code: string): Promise<BottleOwner | null
 
   const { data } = await supabaseAdmin
     .from("bottle_registrations")
-    .select("name, email, created_at")
+    .select("name, given_name_latin, family_name_latin, email, created_at")
     .eq("nfc_code", code)
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
 
   if (!data || !data.name) return null;
+  const latin = [data.given_name_latin, data.family_name_latin]
+    .map((v) => (typeof v === "string" ? v.trim() : ""))
+    .filter(Boolean)
+    .join(" ");
   return {
     name: data.name,
+    nameLatin: latin || null,
     emailMasked: data.email ? maskEmail(data.email) : "",
     registeredAt: data.created_at ? String(data.created_at).slice(0, 10) : null,
   };

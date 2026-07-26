@@ -1,11 +1,23 @@
-/* /b 입장 페이지 — Paper "NFC v2 · 입장 · 소유 등록" 시안 (다크·앰버) */
+/* /b 입장 페이지 — NFC 태그로 열리는 첫 화면.
+   2026-07-26: 한 페이지 안에서 테마가 한 번 바뀐다.
+   로고 인트로와 영상 히어로까지는 심해(다크), Bottle Identity부터는 종이(라이트).
+   탭하는 자리(매장·식탁·야외)는 주변광이 밝고, 영상 아래는 읽는 화면이다.
+   record·certificate·owner와 같은 종이를 쓴다 — 같은 병의 같은 기록이므로. */
 
 .page {
   --e-void: #0a0908;
   --e-ink: #0d0b09;
   --e-ivory: #f1efeb;
   --e-amber: #ccad7b;
-  --e-mono: var(--font-plex-mono), "IBM Plex Mono", monospace;
+  /* 종이 구간 — 다른 /b 페이지와 같은 값 */
+  --e-paper: #edeae3;
+  --e-ptext: #14110e;
+  --e-bronze: #8a6a3a;          /* 브라스는 종이 위 1.8:1이라 글자로 못 쓴다 */
+  /* 브랜드 정본은 DM Mono. --font-plex-mono는 정의된 적이 없었다. */
+  --e-mono: var(--font-mono), "DM Mono", monospace;
+  /* 브랜드 Signature 목소리 — 인증서 소유자 이름과 같은 활자.
+     등록 직후 보는 이름과 인증서에 새겨진 이름이 다르면 다른 문서로 읽힌다. */
+  --e-script: var(--font-delafield), "Mrs Saint Delafield", cursive;
   --e-serif: var(--font-heading), "Cormorant Garamond", serif;
   --e-serif-kr: var(--font-serif-kr), "Noto Serif KR", serif;
   --e-sans: var(--font-body), "Noto Sans KR", sans-serif;
@@ -69,6 +81,29 @@
   height: 100%;
   object-fit: cover;
   z-index: 0;
+}
+/* 영상 하단을 블랙으로 정착시키는 스크림.
+   종이로 넘기는 그라디언트는 두지 않는다 — 영상에서 종이로 녹이면 중간에 회갈색
+   띠가 생겨 어느 쪽에도 속하지 않는 대역이 보인다. 블랙에서 딱 끊고 다음 섹션을 시작한다.
+   스크림 자체는 필요하다: 영상은 재생 중 프레임마다 하단 밝기가 달라서
+   이게 없으면 섹션 경계가 프레임에 따라 튄다.
+   z-index 1 — 영상(0) 위, 히어로 문구(2) 아래라 글자는 이 위에 뜬다. */
+.filmFade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 34%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 9, 8, 0) 0%,
+    rgba(10, 9, 8, 0.34) 30%,
+    rgba(10, 9, 8, 0.72) 58%,
+    rgba(10, 9, 8, 0.93) 82%,
+    #0a0908 100%
+  );
 }
 .langSelect {
   position: absolute;
@@ -220,12 +255,17 @@
 }
 
 /* ── 01 Bottle Identity ───────────────────────────── */
+/* 여기서 수면 위로 올라온다 — 영상의 void를 이어받아 종이로 밝아진다.
+   void와 paper를 직선으로 이으면 중간이 무채색 회색으로 죽어 탁해진다.
+   물속에서 빛을 향해 올라올 때처럼 따뜻한 갈색 대역을 거치게 stop을 심었다. */
+/* 전환은 영상 안에서 끝난다(.filmFade) — 여기는 이미 온전한 종이다 */
 .identity {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 72px 28px 34px;
-  background: var(--e-void);
+  padding: 64px 28px 34px;
+  background: var(--e-paper);
+  color: var(--e-ptext);
   word-break: keep-all;
 }
 .eyebrow {
@@ -235,7 +275,7 @@
   font-family: var(--e-mono);
   font-size: 9px;
   letter-spacing: 0.15em;
-  color: var(--e-amber);
+  color: var(--e-bronze);
 }
 /* 자물쇠 — 기록 히어로 .heroVerifiedLock과 같은 규격.
    nudge 없음: 이 글리프는 viewBox(0 0 8 10) 안에서 잉크가 1.4~9.1에 있어
@@ -244,14 +284,23 @@
 .eyebrowLock {
   flex-shrink: 0;
 }
+/* 병 도판 — 인증서(.plateFrame)와 같은 자산·같은 어법.
+   태그를 탭한 사람이 처음 만나는 것은 이름이 아니라 병이어야 한다.
+   투명 누끼라 종이 위에 액자 없이 앉는다. */
+.identityBottle {
+  width: 156px;
+  height: 290px;
+  object-fit: contain;
+  margin-top: 24px;
+}
 .productName {
-  margin-top: 48px;
+  margin-top: 34px;
   font-family: var(--e-serif);
   font-weight: 300;
   font-size: 34px;
   line-height: 40px;
   letter-spacing: 0.01em;
-  color: var(--e-ivory);
+  color: var(--e-ptext);
   text-align: center;
 }
 .identityTagline {
@@ -259,20 +308,17 @@
   font-family: var(--e-mono);
   font-size: 10px;
   letter-spacing: 0.16em;
-  color: rgba(241, 239, 235, 0.48);
+  color: rgba(20, 17, 14, 0.56);
 }
-.identityRule {
-  width: min(334px, 100%);
-  height: 0.5px;
-  margin-top: 44px;
-  background: rgba(241, 239, 235, 0.14);
-}
+/* 제품명과 한정번호 사이의 구분선은 걷어냈다.
+   둘은 같은 대상을 가리키는 한 덩어리다 — 선을 그으면 다른 항목으로 갈라진다.
+   대신 간격만으로 묶는다: 이름·태그라인은 붙이고, 번호는 한 숨 띄운다. */
 .edition {
   display: flex;
   align-items: baseline;
   justify-content: center;
   gap: 10px;
-  margin-top: 34px;
+  margin-top: 26px;
   white-space: nowrap;
 }
 .edNo,
@@ -281,7 +327,7 @@
   font-family: var(--e-mono);
   font-size: 13px;
   letter-spacing: 0.1em;
-  color: rgba(204, 173, 123, 0.72);
+  color: rgba(138, 106, 58, 0.72);
 }
 .edTotal { letter-spacing: 0.18em; }
 .edNum {
@@ -291,7 +337,7 @@
   font-size: 68px;
   line-height: 68px;
   letter-spacing: 0.02em;
-  color: var(--e-amber);
+  color: var(--e-bronze);
 }
 .identityBody {
   margin-top: 28px;
@@ -299,7 +345,7 @@
   font-weight: 300;
   font-size: 13px;
   line-height: 22px;
-  color: rgba(241, 239, 235, 0.66);
+  color: rgba(20, 17, 14, 0.74);
   text-align: center;
   white-space: pre-line;
 }
@@ -310,15 +356,15 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 72px 28px;
-  background: var(--e-ink);
-  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
+  background: var(--e-paper);
+  border-top: 0.5px solid rgba(20, 17, 14, 0.2);
   word-break: keep-all;
 }
 .provEyebrow {
   font-family: var(--e-mono);
   font-size: 9px;
   letter-spacing: 0.16em;
-  color: var(--e-amber);
+  color: var(--e-bronze);
 }
 .provTitle {
   margin-top: 20px;
@@ -327,7 +373,7 @@
   font-size: 25px;
   line-height: 38px;
   letter-spacing: -0.02em;
-  color: var(--e-ivory);
+  color: var(--e-ptext);
   white-space: pre-line;
 }
 .provBody {
@@ -336,15 +382,15 @@
   font-weight: 300;
   font-size: 13px;
   line-height: 23px;
-  color: rgba(241, 239, 235, 0.58);
+  color: rgba(20, 17, 14, 0.66);
   white-space: pre-line;
 }
 .facts {
   display: flex;
   width: min(334px, 100%);
   margin-top: 44px;
-  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
-  border-bottom: 0.5px solid rgba(241, 239, 235, 0.12);
+  border-top: 0.5px solid rgba(20, 17, 14, 0.2);
+  border-bottom: 0.5px solid rgba(20, 17, 14, 0.2);
 }
 .fact {
   flex: 1 1 0;
@@ -357,14 +403,14 @@
   padding: 0 8px 0 12px;
 }
 .fact + .fact {
-  border-left: 0.5px solid rgba(241, 239, 235, 0.1);
+  border-left: 0.5px solid rgba(20, 17, 14, 0.18);
 }
 .factLabel {
   font-family: var(--e-sans);
   font-weight: 300;
   font-size: 9px;
   line-height: 13px;
-  color: rgba(241, 239, 235, 0.46);
+  color: rgba(20, 17, 14, 0.54);
 }
 .factValue,
 .factValueMono {
@@ -372,7 +418,7 @@
   font-weight: 300;
   font-size: 20px;
   line-height: 24px;
-  color: var(--e-ivory);
+  color: var(--e-ptext);
 }
 .factValue { font-family: var(--e-serif-kr); }
 .factValueMono {
@@ -385,7 +431,7 @@
   font-weight: 300;
   font-size: 8px;
   line-height: 11px;
-  color: rgba(204, 173, 123, 0.68);
+  color: rgba(138, 106, 58, 0.68);
 }
 .provHint {
   display: flex;
@@ -396,7 +442,7 @@
   font-weight: 300;
   font-size: 12px;
   line-height: 18px;
-  color: var(--e-amber);
+  color: var(--e-bronze);
 }
 
 /* ── 03 Claim Ownership ───────────────────────────── */
@@ -405,15 +451,15 @@
   flex-direction: column;
   align-items: center;
   padding: 80px 28px;
-  background: var(--e-void);
-  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
+  background: var(--e-paper);
+  border-top: 0.5px solid rgba(20, 17, 14, 0.2);
   word-break: keep-all;
 }
 .claimEyebrow {
   font-family: var(--e-mono);
   font-size: 9px;
   letter-spacing: 0.16em;
-  color: var(--e-amber);
+  color: var(--e-bronze);
 }
 .claimTitle {
   margin-top: 22px;
@@ -422,7 +468,7 @@
   font-size: 26px;
   line-height: 39px;
   letter-spacing: -0.02em;
-  color: var(--e-ivory);
+  color: var(--e-ptext);
   text-align: center;
   white-space: pre-line;
 }
@@ -432,7 +478,7 @@
   font-weight: 300;
   font-size: 13px;
   line-height: 23px;
-  color: rgba(241, 239, 235, 0.58);
+  color: rgba(20, 17, 14, 0.66);
   text-align: center;
   white-space: pre-line;
 }
@@ -443,46 +489,96 @@
   width: min(334px, 100%);
   margin-top: 48px;
 }
+/* 각 칸을 옅은 면으로 잡는다.
+   테두리를 두르면 페이지의 다른 곳(선을 다 걷어낸 도판·이름 구역)과 어긋난다.
+   면은 종이가 눌린 자리처럼 읽혀 조용하면서도 칸의 영역이 확실하다.
+   입력 밑줄은 그 면 안에서 "여기에 쓴다"를 마저 말한다. */
 .field {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
+  padding: 13px 16px 15px;
+  background: rgba(20, 17, 14, 0.038);
+  transition: background 0.25s ease;
+}
+/* 포커스 링은 칸(면) 전체에 건다.
+   전역 접근성 링이 input에만 걸리면 글자 주위에만 테두리가 떠 면과 따로 논다.
+   링 자체는 남긴다 — 키보드 사용자에게 어느 칸에 있는지 알리는 유일한 단서다. */
+.field:focus-within {
+  background: rgba(20, 17, 14, 0.075);
+  outline: 1.5px solid rgba(138, 106, 58, 0.5);
+  outline-offset: 0;
+}
+.input:focus,
+.input:focus-visible {
+  outline: none;
+}
+.field:focus-within .fieldLabel {
+  color: var(--e-bronze);
 }
 .field + .field {
-  margin-top: 28px;
+  margin-top: 12px;
+}
+/* 로마자 이름·성 — 한 사람의 이름이므로 한 줄에 나란히 둔다.
+   위아래로 쌓으면 서로 무관한 두 항목으로 읽힌다. */
+.fieldRow {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 12px;
+}
+.fieldHalf {
+  flex: 1 1 0;
+  min-width: 0;
+}
+/* 행 안의 두 칸은 나란히 선다 — .field + .field의 세로 간격이 여기까지 오면 계단이 된다 */
+.fieldRow .field + .field {
+  margin-top: 0;
+}
+/* 안내문이 사이에 끼므로 .fieldRow + .field로는 닿지 않는다 */
+.latinNote + .field {
+  margin-top: 34px;
+}
+.latinNote {
+  margin-top: 12px;
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 10.5px;
+  line-height: 17px;
+  color: rgba(20, 17, 14, 0.48);
 }
 .fieldLabel {
   font-family: var(--e-mono);
-  font-size: 9px;
-  letter-spacing: 0.13em;
-  color: rgba(241, 239, 235, 0.46);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: rgba(20, 17, 14, 0.6);
 }
 .input {
   width: 100%;
-  margin-top: 10px;
-  padding: 0 0 12px;
+  margin-top: 7px;
+  padding: 0;
   background: transparent;
   border: none;
-  border-bottom: 0.5px solid rgba(241, 239, 235, 0.24);
   border-radius: 0;
   font-family: var(--e-sans);
   font-weight: 300;
   /* 16px 미만이면 iOS Safari가 포커스 시 화면을 확대함 — 16px로 방지 */
   font-size: 16px;
   line-height: 20px;
-  color: var(--e-ivory);
+  color: var(--e-ptext);
   outline: none;
   -webkit-appearance: none;
   appearance: none;
   transition: border-color 0.25s ease;
 }
+/* 예시 문구는 입력값이 아니라 안내다 — 한 단 눌러 실제 입력과 위계를 나눈다.
+   입력 필드 자체는 16px를 유지해야 한다(그 아래로 내리면 iOS Safari가 포커스 시 확대). */
 .input::placeholder {
-  color: rgba(241, 239, 235, 0.34);
+  font-size: 13.5px;
+  color: rgba(20, 17, 14, 0.42);
 }
-.input:focus {
-  border-bottom-color: rgba(204, 173, 123, 0.65);
-}
+
 .error {
   align-self: flex-start;
   margin-top: 16px;
@@ -497,7 +593,7 @@
   font-weight: 300;
   font-size: 10.5px;
   line-height: 17px;
-  color: rgba(241, 239, 235, 0.4);
+  color: rgba(20, 17, 14, 0.48);
   /* 줄바꿈을 브라우저 자동 감김에 맡기지 않는다 */
   white-space: pre-line;
   word-break: keep-all;
@@ -506,8 +602,8 @@
   width: 100%;
   height: 54px;
   margin-top: 26px;
-  background: var(--e-amber);
-  color: var(--e-void);
+  background: var(--e-bronze);
+  color: var(--e-paper);
   border: none;
   border-radius: 0;
   font-family: var(--e-sans);
@@ -519,6 +615,10 @@
 .submit:active {
   opacity: 0.8;
   transform: scale(0.985);
+}
+/* 제출 중 — /b 공용 스캔 패스 (busy.module.css) */
+.submitBusy {
+  composes: busy from "./busy.module.css";
 }
 .submit:disabled {
   opacity: 0.6;
@@ -536,14 +636,14 @@
   width: min(334px, 100%);
   margin-top: 34px;
   padding: 26px 24px 28px;
-  border: 0.5px solid rgba(204, 173, 123, 0.34);
-  background: radial-gradient(140% 90% at 50% 0%, rgba(204, 173, 123, 0.07) 0%, rgba(204, 173, 123, 0) 64%);
+  border: 0.5px solid rgba(138, 106, 58, 0.34);
+  background: radial-gradient(140% 90% at 50% 0%, rgba(138, 106, 58, 0.07) 0%, rgba(138, 106, 58, 0) 64%);
 }
 .claimedLabel {
   font-family: var(--e-mono);
   font-size: 9px;
   letter-spacing: 0.18em;
-  color: rgba(204, 173, 123, 0.78);
+  color: rgba(138, 106, 58, 0.78);
 }
 .claimedName {
   font-family: var(--e-serif-kr);
@@ -551,7 +651,7 @@
   font-size: 26px;
   line-height: 34px;
   letter-spacing: 0.02em;
-  color: var(--e-ivory);
+  color: var(--e-ptext);
   text-align: center;
   word-break: keep-all;
 }
@@ -562,8 +662,8 @@
   width: min(334px, 100%);
   height: 54px;
   margin-top: 18px;
-  background: var(--e-amber);
-  color: var(--e-void);
+  background: var(--e-bronze);
+  color: var(--e-paper);
   font-family: var(--e-sans);
   font-size: 14px;
   letter-spacing: 0.05em;
@@ -583,7 +683,7 @@
   justify-content: center;
   min-height: 100svh;
   padding: max(56px, calc(env(safe-area-inset-top) + 32px)) 28px 44px;
-  background: var(--e-void);
+  background: var(--e-paper);
   text-align: center;
   word-break: keep-all;
 }
@@ -597,7 +697,7 @@
   font-weight: 300;
   font-size: 10px;
   letter-spacing: 0.22em;
-  color: var(--e-amber);
+  color: var(--e-bronze);
 }
 .inscribeTitle {
   margin-top: 16px;
@@ -606,7 +706,7 @@
   font-size: 25px;
   line-height: 34px;
   letter-spacing: -0.02em;
-  color: var(--e-ivory);
+  color: var(--e-ptext);
   white-space: pre-line;
 }
 .inscribeSub {
@@ -615,7 +715,7 @@
   font-weight: 300;
   font-size: 11px;
   line-height: 16px;
-  color: rgba(241, 239, 235, 0.42);
+  color: rgba(20, 17, 14, 0.5);
 }
 .inscribeEdition {
   display: flex;
@@ -631,7 +731,7 @@
   font-family: var(--e-mono);
   font-size: 8px;
   letter-spacing: 0.12em;
-  color: rgba(204, 173, 123, 0.72);
+  color: rgba(138, 106, 58, 0.72);
 }
 .iEdTotal { letter-spacing: 0.18em; }
 .iEdNum {
@@ -641,7 +741,7 @@
   font-size: 40px;
   line-height: 44px;
   letter-spacing: 0.02em;
-  color: var(--e-amber);
+  color: var(--e-bronze);
 }
 .inscribeBottle {
   display: flex;
@@ -666,20 +766,44 @@
   font-weight: 300;
   font-size: 9px;
   letter-spacing: 0.12em;
-  color: rgba(241, 239, 235, 0.42);
+  color: rgba(20, 17, 14, 0.5);
 }
+/* 인증서의 이름 조판을 그대로 가져온다 — 로마자는 서명체, 아래 한글 정자.
+   등록 직후 보는 얼굴과 인증서에 새겨진 얼굴이 같아야 한 문서로 읽힌다. */
+.iOwnerScript {
+  margin-top: 12px;
+  font-family: var(--e-script);
+  font-size: 52px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--e-ptext);
+  /* 커시브는 디센더가 깊어 다음 줄과 붙는다 */
+  padding-bottom: 5px;
+  word-break: keep-all;
+}
+.iOwnerNative {
+  margin-top: 5px;
+  font-family: var(--e-serif-kr);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  color: rgba(20, 17, 14, 0.7);
+}
+/* 로마자 표기가 없을 때만 — 한글 하나로 세운다 */
 .iOwnerName {
   margin-top: 9px;
   font-family: var(--e-serif-kr);
   font-size: 27px;
   line-height: 32px;
-  color: var(--e-ivory);
+  color: var(--e-ptext);
 }
 .iOwnerRule {
   width: 34px;
   height: 1px;
   margin-top: 14px;
-  background: var(--e-amber);
+  background: var(--e-bronze);
 }
 .inscribeCta {
   display: flex;
@@ -691,8 +815,8 @@
 .inscribeCtaBtn {
   width: 100%;
   height: 54px;
-  background: var(--e-amber);
-  color: var(--e-void);
+  background: var(--e-bronze);
+  color: var(--e-paper);
   border: none;
   border-radius: 0;
   font-family: var(--e-sans);
@@ -705,13 +829,29 @@
   opacity: 0.8;
   transform: scale(0.985);
 }
+/* 각인 화면에서 입장 화면으로 — 주 액션(기록 보기) 아래 조용한 텍스트 링크 */
+.inscribeBrowse {
+  margin-top: 18px;
+  padding: 6px 0;
+  background: transparent;
+  border: none;
+  font-family: var(--e-sans);
+  font-weight: 300;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--e-bronze);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 0.5px;
+  cursor: pointer;
+}
 .inscribeCtaSub {
   margin-top: 14px;
   font-family: var(--e-sans);
   font-weight: 300;
   font-size: 10px;
   line-height: 15px;
-  color: rgba(241, 239, 235, 0.38);
+  color: rgba(20, 17, 14, 0.46);
 }
 
 /* 각인 리빌 — 위에서 아래로 순차 등장, CTA는 잠깐 정지 후 페이드 인 */

@@ -156,9 +156,9 @@ export default function BottleOwnerManage({
           <Link href={`/b/${code}/record`} className={styles.back} aria-label="Back">‹</Link>
           <div className={styles.headerLogo}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_trans_W_lg.png" alt="" className={styles.headerSymbol} />
+            <img src="/images/logo/logo_trans.png" alt="" className={styles.headerSymbol} />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_text_trans_W.png" alt="Muse de Marée" className={styles.headerWordmark} />
+            <img src="/images/logo/logo_text_trans.png" alt="Muse de Marée" className={styles.headerWordmark} />
           </div>
           <span className={styles.headerSpacer} aria-hidden />
         </header>
@@ -193,7 +193,13 @@ export default function BottleOwnerManage({
               {otpStage === "request" ? (
                 <>
                   <p className={styles.authLead}>{extra.ownOtpLead}</p>
-                  <button type="button" className={styles.panelBtn} onClick={onRequestCode} disabled={busy}>
+                  <button
+                    type="button"
+                    className={`${styles.panelBtn} ${busy ? styles.panelBtnBusy : ""}`}
+                    onClick={onRequestCode}
+                    disabled={busy}
+                    aria-busy={busy}
+                  >
                     {busy ? extra.ownOtpSending : extra.ownOtpSend}
                   </button>
                 </>
@@ -210,7 +216,12 @@ export default function BottleOwnerManage({
                     onChange={(ev) => setOtpCode(ev.target.value.replace(/\D/g, ""))}
                     autoFocus
                   />
-                  <button type="submit" className={styles.panelBtn} disabled={busy}>
+                  <button
+                    type="submit"
+                    className={`${styles.panelBtn} ${busy ? styles.panelBtnBusy : ""}`}
+                    disabled={busy}
+                    aria-busy={busy}
+                  >
                     {busy ? extra.ownOtpVerifying : extra.ownOtpVerify}
                   </button>
                   <button type="button" className={styles.textAction} onClick={onRequestCode} disabled={busy}>
@@ -256,11 +267,20 @@ export default function BottleOwnerManage({
               <span className={styles.linkedFacts}>
                 <span className={styles.linkedFact}>
                   <span className={styles.linkedFactLabel}>{extra.seaLabels.depth}</span>
-                  <span className={styles.linkedFactValue}>{data.aging.depth}m</span>
+                  <span className={styles.linkedFactValue}>
+                    <span className={styles.linkedFactNum}>{data.aging.depth}</span>
+                    <span className={styles.linkedFactUnit}>m</span>
+                  </span>
                 </span>
                 <span className={styles.linkedFact}>
                   <span className={styles.linkedFactLabel}>{extra.seaLabels.duration}</span>
-                  <span className={styles.linkedFactValue}>{extra.ownMonths.replace("{n}", String(durationMonths))}</span>
+                  <span className={styles.linkedFactValue}>
+                    <span className={styles.linkedFactNum}>{durationMonths}</span>
+                    {/* 로케일 문자열에서 숫자 자리만 비워 단위만 남긴다("{n}개월" → "개월") */}
+                    <span className={styles.linkedFactUnit}>
+                      {extra.ownMonths.replace("{n}", "").trim()}
+                    </span>
+                  </span>
                 </span>
               </span>
             </span>
@@ -317,7 +337,12 @@ export default function BottleOwnerManage({
               {err && <p className={styles.panelErr}>{err}</p>}
               <div className={styles.panelRow}>
                 <button type="button" className={styles.panelCancel} onClick={() => setPanel("none")}>{extra.ownCancel}</button>
-                <button type="submit" className={styles.panelBtn} disabled={busy}>{busy ? extra.ownSaving : extra.ownSave}</button>
+                <button
+                    type="submit"
+                    className={`${styles.panelBtn} ${busy ? styles.panelBtnBusy : ""}`}
+                    disabled={busy}
+                    aria-busy={busy}
+                  >{busy ? extra.ownSaving : extra.ownSave}</button>
               </div>
             </form>
           )}

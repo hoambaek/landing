@@ -1,5 +1,11 @@
 /* /b 병 기록 페이지 — Paper "NFC 병 페이지 v2 — 여덟 줄기의 수렴" 시안 1:1 (Abyssal Amber) */
 
+/* 2026-07-26 — 한 페이지 안에서 테마가 한 번 바뀐다.
+   히어로부터 여덟 줄기 수렴까지는 심해(다크), 그 아래 기록·인증서 안내부터는 종이(라이트).
+   서사가 "바다에서 건져 올려 빛 아래에서 확인한다"이고, 실제로도 위쪽은 보는 화면이고
+   아래쪽은 읽는 화면이다. 수렴 시각화는 hairline 곡선과 발광점으로 그려져 있어
+   밝은 바탕에서는 성립하지 않는다 — 그래서 색을 뒤집지 않고 구간을 나눴다. */
+
 .page {
   --b-void: #0a0908;
   --b-blue1: #0a0d12;
@@ -7,7 +13,18 @@
   --b-elev: #141110;
   --b-ivory: #f1efeb;
   --b-amber: #ccad7b;
-  --b-mono: var(--font-plex-mono), "IBM Plex Mono", monospace;
+  /* 종이 구간 — certificate.module.css와 같은 값을 쓴다.
+     같은 병의 같은 기록이므로 두 페이지가 다른 종이 위에 있으면 안 된다. */
+  --b-paper: #edeae3;
+  --b-ink: #14110e;
+  --b-bronze: #8a6a3a;          /* 브라스는 종이 위 1.8:1이라 글자로 못 쓴다 */
+  --b-p-label: rgba(20, 17, 14, 0.58);
+  --b-p-dim: rgba(20, 17, 14, 0.66);
+  --b-p-micro: rgba(20, 17, 14, 0.5);
+  --b-p-rule: rgba(20, 17, 14, 0.14);
+  /* 브랜드 정본은 DM Mono다. --font-plex-mono는 정의된 적이 없어
+     기기 기본 고정폭으로 렌더되고 있었다. */
+  --b-mono: var(--font-mono), "DM Mono", monospace;
   /* 모션 곡선 — 브라우저 기본 ease(0.25,0.1,0.25,1)는 "무보정" 느낌을 준다.
      expo-out 계열은 빠르게 도착해 길게 안착해서 무게감이 생긴다. */
   --b-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -198,9 +215,13 @@
 /* ── S3 여덟 줄기 ─────────────────────────── */
 /* ── Eight Currents 인트로 ───────────────────── */
 .ecIntro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 68px 24px 54px;
   background: var(--b-void);
   border-top: 0.5px solid rgba(241, 239, 235, 0.1);
+  text-align: center;
   word-break: keep-all;
 }
 .ecEyebrow {
@@ -210,8 +231,9 @@
   letter-spacing: 0.16em;
   color: var(--b-amber);
 }
+/* 아이브로우를 걷어내 제목이 섹션의 첫 요소가 됐다 — 위 여백은 섹션 padding이 맡는다 */
 .ecTitle {
-  margin-top: 18px;
+  margin-top: 0;
   font-family: var(--font-body), sans-serif;
   font-weight: 300;
   font-size: 25px;
@@ -229,8 +251,10 @@
   color: rgba(241, 239, 235, 0.56);
   white-space: pre-line;
 }
+/* inline-flex — block flex면 폭이 부모만큼 잡혀 부모의 text-align: center가
+   닿지 않고 왼쪽에 붙는다. 내용만큼만 차지하게 해서 가운데로 보낸다. */
 .ecLegend {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
   margin-top: 28px;
@@ -254,35 +278,38 @@
   flex-direction: column;
   align-items: center;
   padding: 64px 24px 58px;
-  background: var(--b-void);
-  border-top: 0.5px solid rgba(241, 239, 235, 0.1);
+  background: var(--b-paper);
+  border-top: 0.5px solid var(--b-p-rule);
+  color: var(--b-ink);
   text-align: center;
   word-break: keep-all;
 }
 .passportEyebrow {
   font-family: var(--b-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.16em;
-  color: var(--b-amber);
+  color: var(--b-bronze);
 }
 .passportTitle {
   margin-top: 18px;
   font-family: var(--font-body), sans-serif;
-  font-weight: 300;
-  font-size: 19px;
-  line-height: 30px;
-  color: var(--b-ivory);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 32px;
+  color: var(--b-ink);
   white-space: pre-line;
 }
 .passportBody {
   margin-top: 12px;
   font-family: var(--font-body), sans-serif;
-  font-weight: 300;
-  font-size: 11.5px;
-  line-height: 19px;
-  color: rgba(241, 239, 235, 0.46);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 21px;
+  color: var(--b-p-dim);
   white-space: pre-line;
 }
+/* 브랜드 액센트로 세운다. 브라스(#ccad7b)는 종이 위 1.5:1이라 못 쓰지만
+   브론즈는 5.4:1이라 버튼 경계가 또렷하다 — /b 전 페이지의 주 액션이 같은 색이다. */
 .passportCta {
   display: flex;
   align-items: center;
@@ -290,10 +317,10 @@
   width: min(342px, 100%);
   height: 54px;
   margin-top: 32px;
-  background: var(--b-amber);
-  color: var(--b-void);
+  background: var(--b-bronze);
+  color: var(--b-paper);
   font-family: var(--font-body), sans-serif;
-  font-size: 14px;
+  font-size: 14.5px;
   letter-spacing: 0.04em;
   text-decoration: none;
 }
@@ -309,11 +336,11 @@
   align-items: center;
   justify-content: center;
   height: 48px;
-  border: 0.5px solid rgba(241, 239, 235, 0.24);
+  border: 0.5px solid rgba(20, 17, 14, 0.28);
   font-family: var(--font-body), sans-serif;
-  font-weight: 300;
-  font-size: 12px;
-  color: rgba(241, 239, 235, 0.78);
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--b-p-dim);
   text-decoration: none;
 }
 
@@ -450,14 +477,20 @@
   padding: 0 24px;
 }
 
-/* ── S5 개체 선언 + 표 ─────────────────────── */
+/* ── S5 개체 선언 + 표 ───────────────────────
+   여기서 수면 위로 올라온다.
+   그라디언트로 녹이지 않는다 — void와 paper 사이에는 어느 쪽에도 속하지 않는
+   회갈색 대역이 생겨 띠로 읽힌다(entry 히어로에서 같은 결론). 블랙에서 딱 끊는다. */
 .bottleSection {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 24px 64px;
-  background: var(--b-void);
+  padding: 72px 24px 64px;
+  background: var(--b-paper);
+  color: var(--b-ink);
 }
+/* 사진은 어두운 스튜디오 컷이라 종이 위에서 도판으로 읽힌다.
+   인쇄물의 사진이 그렇듯 사각 프레임을 그대로 둔다. */
 .bottlePhoto {
   width: 342px;
   max-width: 100%;
@@ -469,7 +502,7 @@
   font-family: var(--b-mono);
   font-size: 12px;
   letter-spacing: 0.18em;
-  color: var(--b-amber);
+  color: var(--b-bronze);
 }
 .bottleName {
   margin-top: 14px;
@@ -478,9 +511,11 @@
   font-size: 36px;
   line-height: 42px;
   letter-spacing: 0.01em;
+  color: var(--b-ink);
   text-align: center;
 }
 
+/* 표 — 다크에서는 라벨 9px·값 11px였다. 읽는 구간으로 넘어왔으니 활자를 올린다. */
 .tables {
   display: flex;
   flex-direction: column;
@@ -493,9 +528,9 @@
   gap: 7px;
   padding-bottom: 8px;
   font-family: var(--b-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.15em;
-  color: rgba(241, 239, 235, 0.5);
+  color: var(--b-p-micro);
 }
 .tableCaptionGap {
   margin-top: 36px;
@@ -504,27 +539,27 @@
   width: 4px;
   height: 4px;
   flex-shrink: 0;
-  background: var(--b-amber);
+  background: var(--b-bronze);
 }
 .tableRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 10px 0;
-  border-top: 0.5px solid rgba(241, 239, 235, 0.12);
+  padding: 12px 0;
+  border-top: 0.5px solid var(--b-p-rule);
 }
 .tableLabel {
   flex-shrink: 0;
   font-family: var(--b-mono);
-  font-size: 9px;
+  font-size: 10.5px;
   letter-spacing: 0.12em;
-  color: rgba(241, 239, 235, 0.68);
+  color: var(--b-p-label);
 }
 .tableValue {
   font-family: var(--b-mono);
-  font-size: 11px;
-  color: rgba(241, 239, 235, 0.85);
+  font-size: 13px;
+  color: var(--b-ink);
   text-align: right;
 }
 
@@ -666,8 +701,9 @@
 /* ── 푸터 (언어 선택 포함) ─────────────────── */
 .footer {
   padding: 48px 24px max(30px, env(safe-area-inset-bottom));
-  background: var(--b-void);
-  border-top: 0.5px solid rgba(241, 239, 235, 0.1);
+  background: var(--b-paper);
+  border-top: 0.5px solid var(--b-p-rule);
+  color: var(--b-ink);
 }
 .footerHead {
   display: flex;
@@ -703,10 +739,10 @@
 .footerTagline {
   margin-top: 16px;
   font-family: var(--font-body), sans-serif;
-  font-weight: 300;
-  font-size: 11px;
-  line-height: 19px;
-  color: rgba(241, 239, 235, 0.56);
+  font-weight: 400;
+  font-size: 12.5px;
+  line-height: 21px;
+  color: var(--b-p-dim);
 }
 .footerLang {
   position: relative;
@@ -722,11 +758,11 @@
   gap: 16px;
   margin-top: 34px;
   padding-top: 16px;
-  border-top: 0.5px solid rgba(241, 239, 235, 0.1);
+  border-top: 0.5px solid var(--b-p-rule);
   font-family: var(--b-mono);
-  font-size: 8px;
+  font-size: 9.5px;
   letter-spacing: 0.08em;
-  color: rgba(241, 239, 235, 0.36);
+  color: var(--b-p-micro);
 }
 /* 저작권 2줄 — 언어 버튼과 같은 줄에 놓기 위해 세로로 쌓는다 */
 .footerLegal {
@@ -750,9 +786,9 @@
 }
 .footerColHead {
   font-family: var(--b-mono);
-  font-size: 8px;
+  font-size: 9.5px;
   letter-spacing: 0.15em;
-  color: rgba(241, 239, 235, 0.36);
+  color: var(--b-p-micro);
 }
 /* space-between으로 벌리면 화살표가 링크에서 떨어져 별개 요소로 읽힌다 */
 .footerColRow {
@@ -760,15 +796,15 @@
   align-items: center;
   gap: 6px;
   font-family: var(--font-body), sans-serif;
-  font-weight: 300;
-  font-size: 12px;
-  color: rgba(241, 239, 235, 0.8);
+  font-weight: 400;
+  font-size: 13.5px;
+  color: var(--b-p-dim);
 }
 /* 셰브론 SVG — 글자 >는 폰트마다 굵기·수직정렬이 흔들리고 수식 기호로 읽힌다.
    1px 획으로 그려 페이지의 0.5~1px 헤어라인 언어에 맞춘다. */
 .footerArrow {
   flex-shrink: 0;
-  color: var(--b-amber);
+  color: var(--b-bronze);
   /* 셰브론 상자 중심은 줄상자 기준이라, 글자의 실제 잉크 중심보다 위에 앉는다.
      캔버스 actualBoundingBox로 재보니 폰트·크기별로 0.47~0.63px 위였다.
      0.5px면 전부 ±0.2px 안에 들고, DPR 2에서 정확히 1픽셀이라 획도 안 흐려진다.
@@ -786,9 +822,9 @@
   background: transparent;
   border: none;
   font-family: var(--font-body), sans-serif;
-  font-weight: 300;
-  font-size: 11.5px;
-  color: var(--b-amber);
+  font-weight: 400;
+  font-size: 12.5px;
+  color: var(--b-bronze);
   cursor: pointer;
 }
 .passportNewsArrow {
@@ -804,45 +840,49 @@
 .passportNewsDone {
   animation: formOpen 0.5s var(--b-out) forwards;
 }
+/* 전송 중 — /b 공용 스캔 패스 (busy.module.css) */
+.passportNewsSubmitBusy {
+  composes: busy from "./busy.module.css";
+}
 .passportNewsInput {
   flex: 1;
   min-width: 0;
   height: 46px;
   padding: 0 14px;
   background: transparent;
-  border: 0.5px solid rgba(241, 239, 235, 0.24);
+  border: 0.5px solid rgba(20, 17, 14, 0.26);
   border-right: none;
   border-radius: 0;
   font-family: var(--font-body), sans-serif;
   font-size: 16px;
-  color: var(--b-ivory);
+  color: var(--b-ink);
   outline: none;
   -webkit-appearance: none;
   appearance: none;
 }
 .passportNewsInput::placeholder {
-  color: rgba(241, 239, 235, 0.34);
+  color: rgba(20, 17, 14, 0.4);
 }
 .passportNewsInput:focus {
-  border-color: rgba(204, 173, 123, 0.6);
+  border-color: rgba(138, 106, 58, 0.7);
 }
 .passportNewsSubmit {
   flex-shrink: 0;
   height: 46px;
   padding: 0 20px;
-  background: var(--b-amber);
-  color: var(--b-void);
+  background: var(--b-bronze);
+  color: var(--b-paper);
   border: none;
   border-radius: 0;
   font-family: var(--font-body), sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   cursor: pointer;
 }
 .passportNewsDone {
   margin-top: 28px;
   font-family: var(--font-body), sans-serif;
-  font-size: 12px;
-  color: var(--b-amber);
+  font-size: 13px;
+  color: var(--b-bronze);
 }
 
 /* ── 언어 선택 (푸터, 위로 열림) ───────────── */
@@ -851,12 +891,12 @@
   align-items: center;
   gap: 8px;
   padding: 5px 12px;
-  border: 0.5px solid rgba(241, 239, 235, 0.25);
+  border: 0.5px solid rgba(20, 17, 14, 0.28);
   border-radius: 999px;
   background: transparent;
-  color: rgba(241, 239, 235, 0.85);
+  color: rgba(20, 17, 14, 0.9);
   font-family: var(--b-mono);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.14em;
   cursor: pointer;
 }
@@ -877,12 +917,14 @@
   bottom: calc(100% + 8px);
   right: 0;
   width: 188px;
-  background: var(--b-elev);
-  border: 0.5px solid rgba(241, 239, 235, 0.14);
+  background: #f5f3ef;
+  border: 0.5px solid rgba(20, 17, 14, 0.16);
   border-radius: 14px;
   padding: 6px 0;
   overflow: hidden;
   z-index: 20;
+  /* 브랜드 규칙: 뜨는 판은 따뜻하고 확산된 그림자 하나만. 딱딱한 검정 금지 */
+  box-shadow: 0 14px 34px rgba(49, 46, 42, 0.12);
 }
 .langOpt {
   display: flex;
@@ -892,10 +934,10 @@
   padding: 10px 16px;
   background: transparent;
   border: none;
-  border-top: 0.5px solid rgba(241, 239, 235, 0.06);
-  color: rgba(241, 239, 235, 0.75);
+  border-top: 0.5px solid rgba(20, 17, 14, 0.08);
+  color: var(--b-p-dim);
   font-family: var(--font-body), sans-serif;
-  font-size: 11.5px;
+  font-size: 13px;
   cursor: pointer;
   text-align: left;
 }
@@ -904,19 +946,19 @@
 }
 .langOptCode {
   font-family: var(--b-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   letter-spacing: 0.1em;
-  color: rgba(241, 239, 235, 0.55);
+  color: var(--b-p-micro);
   width: 24px;
   flex-shrink: 0;
 }
 .langOptActive,
 .langOptActive .langOptCode {
-  color: var(--b-amber);
+  color: var(--b-bronze);
 }
 .langCheck {
   margin-left: auto;
-  color: var(--b-amber);
+  color: var(--b-bronze);
 }
 
 /* ── 촉각 피드백 ───────────────────────────
@@ -942,7 +984,7 @@
 .langBtn:active,
 .passportNews:active {
   transform: translateY(0.5px);
-  border-color: rgba(204, 173, 123, 0.55);
+  border-color: rgba(138, 106, 58, 0.6);
   transition-duration: 0.08s;
 }
 .footerCol:active,
@@ -952,8 +994,8 @@
 }
 @media (hover: hover) and (pointer: fine) {
   .passportCta:hover { opacity: 0.9; }
-  .passportSub:hover { border-color: rgba(204, 173, 123, 0.5); }
-  .langOpt:hover { background: rgba(241, 239, 235, 0.05); }
+  .passportSub:hover { border-color: rgba(138, 106, 58, 0.55); }
+  .langOpt:hover { background: rgba(20, 17, 14, 0.05); }
   .footerCol:hover { opacity: 0.78; }
 }
 

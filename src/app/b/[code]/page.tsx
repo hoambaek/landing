@@ -9,8 +9,9 @@ export const dynamic = "force-dynamic";
 
 /**
  * 입장 페이지 — NFC 태그(musedemaree.com/b/{code})가 가장 먼저 여는 화면.
- * 등록 여부와 무관하게 늘 이 화면을 보여준다. 병은 선물·접대 자리에 놓여 여러 사람이 태그하는데,
- * 등록됐다고 바로 기록표로 넘겨버리면 필름·Identity·Provenance를 병당 한 번만 볼 수 있게 된다.
+ * 이미 등록된 병이면 각인 화면(BottleInscription)을 먼저 띄운다 — 태그한 사람이
+ * 가장 먼저 확인하려는 것은 "이 병이 누구의 것인가"이고, 등록 직후 본 화면과 같아야
+ * 같은 문서로 읽힌다. 필름·Identity·Provenance는 그 아래에서 이어서 볼 수 있다.
  * 재등록 차단은 폼을 잠그는 것으로 충분하다(서버 액션에도 같은 가드가 있다).
  */
 export default async function BottleEntryPage({ params }: { params: Promise<{ code: string }> }) {
@@ -34,6 +35,7 @@ export default async function BottleEntryPage({ params }: { params: Promise<{ co
       total={meta.quantity}
       initialLocale={initialLocale}
       registeredTo={owner?.name ?? null}
+      registeredToLatin={owner?.nameLatin ?? null}
       registered={!!owner}
     />
   );

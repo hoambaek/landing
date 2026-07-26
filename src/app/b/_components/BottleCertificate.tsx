@@ -27,6 +27,19 @@ import type { BottleRecordData, BottleOwner } from "../_lib/data";
 /* 문서명 영문 병기 — 여권처럼 자국어 위 영문을 함께 새긴다. 로케일 불변. */
 const CERT_TAG_LATIN = "CERTIFICATE OF OWNERSHIP";
 
+/* 등록 각인 — 문서번호와 같은 성격이라 로케일을 타지 않는다 */
+const MONTHS_LATIN = [
+  "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
+  "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER",
+];
+function stampDate(iso: string | null | undefined): string | null {
+  if (!iso) return null;
+  const [y, m, d] = iso.slice(0, 10).split("-");
+  const mi = Number(m) - 1;
+  if (!y || mi < 0 || mi > 11 || !d) return null;
+  return `REGISTERED · ${Number(d)} ${MONTHS_LATIN[mi]} ${y}`;
+}
+
 type SeasonKey = "winter" | "spring" | "summer" | "autumn";
 
 function seasonOf(m: number): SeasonKey {
@@ -46,6 +59,7 @@ export default function BottleCertificate({
   data,
   owner,
   ownerNameFull,
+  ownerNameLatin,
   certId,
   signature,
   initialLocale = "ko",
@@ -54,6 +68,10 @@ export default function BottleCertificate({
   data: BottleRecordData;
   owner: BottleOwner | null;
   ownerNameFull?: string | null;
+  /** 인증서에 새길 로마자 표기. 등록 시 본인이 정한 값만 쓴다 —
+      한글에서 기계로 옮기면 표기가 갈려(백 → Baek/Baik/Paek) 남의 이름이 새겨진다.
+      없으면 서명체를 포기하고 한글을 Display 목소리로 세운다. */
+  ownerNameLatin?: string | null;
   certId: string;
   /** 비밀키 미설정 시 null — 서명 블록을 렌더하지 않는다 */
   signature: string | null;
@@ -82,6 +100,12 @@ export default function BottleCertificate({
 
   /* 이름은 등록자가 인증서용으로 정한 값이라 인증 없이도 그대로 쓴다 */
   const ownerName = ownerNameFull ?? owner?.name ?? extra.certOwnerFallback;
+  /* 로마자가 있을 때만 서명체로 간다. 없으면 한글 하나로 세운다. */
+  const latin = ownerNameLatin?.trim() || null;
+  const registeredStamp = stampDate(owner?.registeredAt);
+  /* 등록 전 병 — 이름 자리에 안내 문구가 들어간다. 이름 크기를 그대로 주면
+     빈 자리가 채워진 것처럼 읽히므로 눌러서 보여준다. */
+  const ownerUnset = !ownerNameFull && !owner?.name;
 
   const seaWhen = (date: string | null, fallback: number) => {
     const m = monthIdxOf(date, fallback);
@@ -126,7 +150,9 @@ export default function BottleCertificate({
     { label: extra.seaLabels.immersion, value: seaWhen(data.aging.immersion, immMonth) },
     {
       label: extra.seaLabels.retrieval,
-      value: seaWhen(data.aging.retrieval, retMonth) + (data.aging.retrieved ? "" : ` (${copy.planned})`),
+      /* (예정)을 붙이지 않는다 — 이 문서는 인양이 끝나 고객 손에 있는 병에서 열린다.
+         배치의 인양일이 미래로 남아 있어도 그건 재고 데이터의 사정이다. */
+      value: seaWhen(data.aging.retrieval, retMonth),
     },
     { label: extra.seaLabels.duration, value: fmtMonths(months) },
     { label: extra.seaLabels.depth, value: `${data.aging.depth} m` },
@@ -211,7 +237,7 @@ export default function BottleCertificate({
     const RATIO = 3;
     const cardBox = node.getBoundingClientRect();
 
-    if (!photo) return toPng(node, { pixelRatio: RATIO, backgroundColor: "#0a0908" });
+    if (!photo) return toPng(node, { pixelRatio: RATIO, backgroundColor: "#edeae3" });
 
     const box = photo.getBoundingClientRect();
     const photoSrc = photo.currentSrc || photo.src;
@@ -219,7 +245,7 @@ export default function BottleCertificate({
     photo.style.visibility = "hidden";
     let base: string;
     try {
-      base = await toPng(node, { pixelRatio: RATIO, backgroundColor: "#0a0908" });
+      base = await toPng(node, { pixelRatio: RATIO, backgroundColor: "#edeae3" });
     } finally {
       photo.style.visibility = "";
     }
@@ -279,14 +305,12 @@ export default function BottleCertificate({
   return (
     <main className={styles.page}>
       <div className={styles.frame}>
-        {/* ── 헤더: 인장(괘선 + 심볼) → 문서명 국·영문 병기 ── */}
+        {/* ── 헤더: 심볼 → 문서명 국·영문 병기 ── */}
         <header className={styles.header}>
-          <span className={styles.certRule} aria-hidden />
           <div className={styles.headerLogo}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_trans_W_lg.png" alt="Muse de Marée" className={styles.headerSymbol} />
+            <img src="/images/logo/logo_trans.png" alt="Muse de Marée" className={styles.headerSymbol} />
           </div>
-          <span className={styles.certRule} aria-hidden />
           <h1 className={`${styles.certTag} ${isLatinLocale ? styles.certTagLatin : ""}`}>{extra.certTag}</h1>
           {locale !== "en" && <span className={styles.certTagEn}>{CERT_TAG_LATIN}</span>}
         </header>
@@ -313,31 +337,55 @@ export default function BottleCertificate({
         </section>
 
         {/* ── 선언: 헌정문 + 소유자 ──
-            "NFC 인증 완료"는 바로 아래 진위 씰과 같은 말이라 뺐다. */}
+            "NFC 인증 완료"는 아래 진위 씰과 같은 말이라 뺐다. */}
         <section className={styles.declaration}>
           <p className={styles.dedication}>{extra.certDedication}</p>
-          <p className={styles.ownerName}>{ownerName}</p>
-          <span className={styles.ownerRule} aria-hidden />
+          {latin ? (
+            <>
+              <p className={styles.ownerScript}>{latin}</p>
+              <p className={styles.ownerNative}>{ownerName}</p>
+            </>
+          ) : (
+            <p className={`${styles.ownerName} ${ownerUnset ? styles.ownerNameEmpty : ""}`}>{ownerName}</p>
+          )}
+          {registeredStamp && <span className={styles.ownerStamp}>{registeredStamp}</span>}
         </section>
 
-        {/* ── 진위 씰 ── */}
-        <section className={styles.seal}>
-          <span className={styles.sealMark} aria-hidden>✓</span>
-          <p className={styles.sealText}>{extra.certSeal}</p>
-        </section>
+        {/* ── 인증: 디지털 서명 + 문서번호 ──
+            "NFC 원본 태그와 등록 기록이 일치합니다"라는 씰 문구는 걷어냈다 —
+            해시가 이미 그 사실의 증거이고, 문장은 같은 말을 사람 말로 한 번 더 하는 것이었다.
+            증명은 주장하지 않고 내보이는 편이 강하다.
+            이름 바로 다음에 놓아 "누구의 것인가 → 무엇이 그것을 보증하는가"로 이어진다. */}
+        <section className={styles.attest}>
+          <span className={styles.attestRule} aria-hidden />
 
-        {/* ── 인증 정보 ── */}
-        <section className={styles.block}>
-          <h2 className={styles.blockHeadAmber}>{extra.certAuthHead}</h2>
-          <div className={styles.rows}>
-            <div className={styles.row}>
-              <span className={styles.rowLabel}>{extra.certIdLabel}</span>
-              <span className={styles.rowValueMono}>{certId}</span>
+          {/* 해시가 이 문서의 유일한 암호학적 증거다. 각주 크기로 숨기면 주장만 남고
+              증거가 사라진다 — 알고리즘은 라벨로 내리고 다이제스트를 주인공으로 올린다. */}
+          {signature && (
+            <div className={styles.signBox}>
+              <span className={styles.signAlgo}>
+                <svg width="8" height="10" viewBox="0 0 8 10" aria-hidden>
+                  <path
+                    d="M2.4 4.4 V3 a1.6 1.6 0 0 1 3.2 0 V4.4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="0.9"
+                  />
+                  <rect x="1" y="4.4" width="6" height="4.7" rx="0.9" fill="currentColor" />
+                </svg>
+                {/* 해시 함수 이름만 적으면 비밀키가 들어갔다는 사실이 안 드러난다 —
+                    실제보다 약하게 말하는 표기였다 */}
+                HMAC-SHA256
+              </span>
+              <span className={styles.signHash}>{signature}</span>
+              <span className={styles.signRule} aria-hidden />
+              <span className={styles.signIssuer}>ISSUED BY MUSE DE MARÉE OCEAN CELLAR</span>
             </div>
-            <div className={styles.row}>
-              <span className={styles.rowLabel}>{extra.certStatusLabel}</span>
-              <span className={styles.rowValueAmber}>{extra.certVerifiedShort}</span>
-            </div>
+          )}
+
+          <div className={styles.certIdRow}>
+            <span className={styles.certIdLabel}>{extra.certIdLabel}</span>
+            <span className={styles.certIdValue}>{certId}</span>
           </div>
         </section>
 
@@ -366,34 +414,6 @@ export default function BottleCertificate({
             ))}
           </div>
         </section>
-
-        {/* ── 디지털 서명 ── */}
-        {signature && (
-        <section className={styles.signature}>
-          <span className={styles.blockHeadAmber}>{extra.certSignHead}</span>
-          {/* 해시가 이 문서의 유일한 암호학적 증거다. 각주 크기로 숨기면 주장만 남고
-              증거가 사라진다 — 알고리즘은 라벨로 내리고 다이제스트를 주인공으로 올린다. */}
-          <div className={styles.signBox}>
-            <span className={styles.signAlgo}>
-              <svg width="8" height="10" viewBox="0 0 8 10" aria-hidden>
-                <path
-                  d="M2.4 4.4 V3 a1.6 1.6 0 0 1 3.2 0 V4.4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="0.9"
-                />
-                <rect x="1" y="4.4" width="6" height="4.7" rx="0.9" fill="currentColor" />
-              </svg>
-              {/* 해시 함수 이름만 적으면 비밀키가 들어갔다는 사실이 안 드러난다 —
-                  실제보다 약하게 말하는 표기였다 */}
-              HMAC-SHA256
-            </span>
-            <span className={styles.signHash}>{signature}</span>
-            <span className={styles.signRule} aria-hidden />
-            <span className={styles.signIssuer}>ISSUED BY MUSE DE MARÉE OCEAN CELLAR</span>
-          </div>
-        </section>
-        )}
 
         {/* ── 액션 ── */}
         <section className={styles.actions}>
@@ -430,9 +450,9 @@ export default function BottleCertificate({
           {/* 브랜드 줄 — 언어 선택은 하단으로 (기록 페이지와 동일 구조) */}
           <div className={styles.footerLogo}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_trans_W_lg.png" alt="" className={styles.footerSymbol} />
+            <img src="/images/logo/logo_trans.png" alt="" className={styles.footerSymbol} />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_text_trans_W.png" alt="Muse de Marée" className={styles.footerWordmark} />
+            <img src="/images/logo/logo_text_trans.png" alt="Muse de Marée" className={styles.footerWordmark} />
           </div>
 
           <p className={styles.footerTagline}>{copy.footerTagline}</p>
@@ -488,7 +508,7 @@ export default function BottleCertificate({
               >
                 <span>{activeLocale.short}</span>
                 <svg width="7" height="5" viewBox="0 0 7 5" aria-hidden>
-                  <polyline points="1,1 3.5,4 6,1" fill="none" stroke="rgba(241,239,235,0.55)" strokeWidth="1" />
+                  <polyline points="1,1 3.5,4 6,1" fill="none" stroke="rgba(20,17,14,0.55)" strokeWidth="1" />
                 </svg>
               </button>
               {langOpen && (
@@ -521,12 +541,10 @@ export default function BottleCertificate({
       <div className={styles.printArea} aria-hidden>
         {/* 화면과 같은 구성 — 인장 헤더 · 도판 · 캡션 · 선언 */}
         <div className={styles.printCard} ref={cardRef}>
-          <span className={styles.printRule} aria-hidden />
           <div className={styles.printLogo}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_trans_W_lg.png" alt="" className={styles.printSymbol} />
+            <img src="/images/logo/logo_trans.png" alt="" className={styles.printSymbol} />
           </div>
-          <span className={styles.printRule} aria-hidden />
           <span className={styles.printTag}>{extra.certTag}</span>
           {locale !== "en" && <span className={styles.printTagEn}>{CERT_TAG_LATIN}</span>}
           <div className={styles.printPlate}>
@@ -545,8 +563,14 @@ export default function BottleCertificate({
             <span className={styles.printEdTotal}>/ {serialTotal}</span>
           </div>
           <p className={styles.printDedication}>{extra.certDedication}</p>
-          <p className={styles.printOwner}>{ownerName}</p>
-          <span className={styles.printRuleWide} aria-hidden />
+          {latin ? (
+            <>
+              <p className={styles.printScript}>{latin}</p>
+              <p className={styles.printNative}>{ownerName}</p>
+            </>
+          ) : (
+            <p className={`${styles.printOwner} ${ownerUnset ? styles.ownerNameEmpty : ""}`}>{ownerName}</p>
+          )}
           <span className={styles.printCertId}>{certId}</span>
           {/* 저장본은 화면을 떠나 혼자 남는다. 문서번호만 있고 서명이 없으면
               대조할 근거가 사라진다 — 발행자만 만들 수 있는 값을 같이 굽는다. */}

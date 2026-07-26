@@ -30,6 +30,7 @@ export default function BottleEntry({
   initialLocale = "ko",
   registered = false,
   registeredTo = null,
+  registeredToLatin = null,
 }: {
   code: string;
   productId: string;
@@ -39,6 +40,8 @@ export default function BottleEntry({
   /** 이미 소유 등록된 병 — 폼을 잠그고 기록 입구를 연다 */
   registered?: boolean;
   registeredTo?: string | null;
+  /* 인증서와 같은 얼굴로 보여주기 위한 로마자 표기 */
+  registeredToLatin?: string | null;
 }) {
   const router = useRouter();
   const meta = PRODUCT_META[productId] ?? PRODUCT_META.atomes_crochus_1y;
@@ -46,16 +49,25 @@ export default function BottleEntry({
   const [locale, setLocale] = useState<BottleLocale>(initialLocale);
   const [langOpen, setLangOpen] = useState(false);
   const copy = ENTRY_COPY[locale];
+  /* 라틴 로케일은 이름 자체가 로마자라 자국어 칸을 따로 두지 않는다 */
+  const isLatinLocale = locale === "en" || locale === "fr";
   const activeLocale = BOTTLE_LOCALES.find((l) => l.code === locale)!;
 
   const [introOut, setIntroOut] = useState(false);
   const [name, setName] = useState("");
+  /* 인증서 서명체는 로마자로만 쓸 수 있다(브랜드 Signature 활자가 라틴 전용).
+     자국어 이름과 따로 받아, 인증서에는 "이름 성" 순서로 새긴다. */
+  const [latinGiven, setLatinGiven] = useState("");
+  const [latinFamily, setLatinFamily] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [displaySerial, setDisplaySerial] = useState(0);
-  const [inscribed, setInscribed] = useState(false);
-  const [inscribedName, setInscribedName] = useState("");
+  /* 이미 등록된 병으로 들어오면 각인 화면부터 — 등록 직후 본 화면과 같은 얼굴이다.
+     "아래에서 계속 보기"로 입장 화면 전체를 이어서 볼 수 있다. */
+  const [inscribed, setInscribed] = useState(registered);
+  const [inscribedName, setInscribedName] = useState(registeredTo ?? "");
+  const [inscribedLatin, setInscribedLatin] = useState<string | null>(registeredToLatin);
 
   const frameRef = useRef<HTMLDivElement>(null);
   const identityRef = useRef<HTMLElement>(null);
@@ -122,10 +134,21 @@ export default function BottleEntry({
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (submitting) return;
-    const n = name.trim();
+    /* 라틴 로케일은 이름 자체가 로마자다 — 자국어 칸을 따로 두지 않고
+       given/family를 합쳐 표시 이름으로 쓴다.
+       첫 글자 대문자화는 서버가 저장 시점에 한 번 더 한다(여기서는 화면 표시용).
+       첫 글자만 올린다 — 전체를 title case로 강제하면 van der Berg 같은 표기를 망친다. */
+    const cap = (v: string) => (v ? v.charAt(0).toUpperCase() + v.slice(1) : v);
+    const given = cap(latinGiven.trim());
+    const family = cap(latinFamily.trim());
+    const n = isLatinLocale ? [given, family].filter(Boolean).join(" ") : name.trim();
     const em = email.trim();
     if (!n) {
       setError(copy.errName);
+      return;
+    }
+    if (!given || !family) {
+      setError(copy.errLatinName);
       return;
     }
     if (!EMAIL_RE.test(em)) {
@@ -140,11 +163,15 @@ export default function BottleEntry({
         productId,
         serial,
         name: n,
+        givenNameLatin: given,
+        familyNameLatin: family,
         email: em,
         locale,
       });
       if (res.ok) {
-        setInscribedName(n);
+        setInscribedName(isLatinLocale ? n : name.trim());
+        /* 인증서와 같은 순서(이름 성)로 합쳐 넘긴다 */
+        setInscribedLatin([given, family].filter(Boolean).join(" ") || null);
         setInscribed(true);
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       } else {
@@ -164,10 +191,14 @@ export default function BottleEntry({
           <BottleInscription
             copy={copy}
             name={inscribedName}
+            nameLatin={inscribedLatin}
             serial={serial}
             total={total}
-            image={meta.image}
+            /* 세로 프레임에는 세로 누끼를 쓴다 — entry Identity·인증서와 같은 자산 */
+            image={meta.imagePortrait ?? meta.image}
             onContinue={() => router.push(`/b/${code}/record`)}
+            /* 등록된 병으로 들어온 경우에만 — 방금 등록을 마친 사람에게는 주지 않는다 */
+            onBrowse={registered ? () => setInscribed(false) : undefined}
           />
         </div>
       </main>
@@ -252,6 +283,8 @@ export default function BottleEntry({
           </div>
 
           <span className={styles.filmTail} aria-hidden />
+          {/* 영상이 종이로 잠기는 하단 페이드 — 다음 섹션이 아니라 영상 위에 얹는다 */}
+          <span className={styles.filmFade} aria-hidden />
         </section>
 
         {/* ── 01 Bottle Identity ── */}
@@ -265,9 +298,14 @@ export default function BottleEntry({
             </svg>
             <span>{copy.identityEyebrow}</span>
           </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={meta.imagePortrait ?? meta.image}
+            alt={meta.name}
+            className={styles.identityBottle}
+          />
           <h1 className={styles.productName}>{meta.name}</h1>
           <div className={styles.identityTagline}>{copy.identityTagline}</div>
-          <span className={styles.identityRule} aria-hidden />
           {serial !== null && (
             <div className={styles.edition}>
               <span className={styles.edNo}>N°</span>
@@ -333,18 +371,50 @@ export default function BottleEntry({
 
           {!registered && (
           <form className={styles.form} onSubmit={onSubmit} noValidate>
-            <label className={styles.field}>
-              <span className={styles.fieldLabel}>{copy.nameLabel}</span>
-              <input
-                type="text"
-                className={styles.input}
-                placeholder={copy.namePlaceholder}
-                value={name}
-                onChange={(ev) => setName(ev.target.value)}
-                autoComplete="name"
-                enterKeyHint="next"
-              />
-            </label>
+            {/* 라틴 로케일은 아래 로마자 칸이 곧 이름이라 자국어 칸을 두지 않는다 */}
+            {!isLatinLocale && (
+              <label className={styles.field}>
+                <span className={styles.fieldLabel}>{copy.nameLabel}</span>
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder={copy.namePlaceholder}
+                  value={name}
+                  onChange={(ev) => setName(ev.target.value)}
+                  autoComplete="name"
+                  enterKeyHint="next"
+                />
+              </label>
+            )}
+
+            {/* 인증서에 새겨질 로마자 — 성과 이름을 나눠 받아야 순서를 정할 수 있다 */}
+            <div className={styles.fieldRow}>
+              <label className={`${styles.field} ${styles.fieldHalf}`}>
+                <span className={styles.fieldLabel}>{copy.latinGivenLabel}</span>
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder={copy.latinGivenPlaceholder}
+                  value={latinGiven}
+                  onChange={(ev) => setLatinGiven(ev.target.value)}
+                  autoComplete="given-name"
+                  enterKeyHint="next"
+                />
+              </label>
+              <label className={`${styles.field} ${styles.fieldHalf}`}>
+                <span className={styles.fieldLabel}>{copy.latinFamilyLabel}</span>
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder={copy.latinFamilyPlaceholder}
+                  value={latinFamily}
+                  onChange={(ev) => setLatinFamily(ev.target.value)}
+                  autoComplete="family-name"
+                  enterKeyHint="next"
+                />
+              </label>
+            </div>
+            <p className={styles.latinNote}>{copy.latinNote}</p>
 
             <label className={styles.field}>
               <span className={styles.fieldLabel}>{copy.emailLabel}</span>
@@ -364,7 +434,12 @@ export default function BottleEntry({
 
             <p className={styles.privacyNote}>{copy.privacyNote}</p>
 
-            <button type="submit" className={styles.submit} disabled={submitting}>
+            <button
+              type="submit"
+              className={`${styles.submit} ${submitting ? styles.submitBusy : ""}`}
+              disabled={submitting}
+              aria-busy={submitting}
+            >
               {submitting ? copy.submitting : copy.submit}
             </button>
           </form>

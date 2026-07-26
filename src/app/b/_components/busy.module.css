@@ -1,0 +1,48 @@
+/* /b 공용 — 버튼이 일하는 중임을 알리는 스캔 패스.
+ *
+ * 인증서 저장 버튼에서 시작한 동작을 /b 전 페이지가 함께 쓴다.
+ * 같은 흐름 안에서 버튼마다 다르게 반응하면 어떤 것이 눌린 상태인지 매번 다시 배워야 한다.
+ *
+ * 흐리게 죽이지 않고 "각인되는 중"으로 보이게 한다 — 버튼 바탕 위를 반대 색 띠가 훑고 지나간다.
+ * 흰 셔머는 스켈레톤 로더의 관용구라 피하고, 페이지가 쓰는 두 색만 쓴다.
+ * 실제 진행률을 알 수 없으므로 채워지는 바는 쓰지 않는다.
+ *
+ * 쓰는 법: 버튼 클래스에 `composes: busy from "./busy.module.css"` 를 걸고,
+ * 바탕이 밝은 버튼이면 --busy-sheen 을 어두운 색으로 덮어쓴다.
+ */
+
+.busy {
+  position: relative;
+  overflow: hidden;
+}
+
+.busy::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -40%;
+  width: 40%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    var(--busy-sheen, rgba(237, 234, 227, 0.3)) 50%,
+    transparent 100%
+  );
+  animation: busyScan 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  /* 저장·전송 중에는 메인 스레드가 붙잡히는 구간이 있다(인증서 PNG 렌더 등).
+     컴포지터로 올려두지 않으면 정작 필요한 순간에 애니메이션이 멈춰 선다. */
+  will-change: transform;
+}
+
+@keyframes busyScan {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(350%, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .busy::after {
+    animation: none;
+    opacity: 0.2;
+  }
+}
