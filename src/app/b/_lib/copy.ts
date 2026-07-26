@@ -217,7 +217,7 @@ export const PRODUCT_META: Record<string, ProductMeta> = {
   en_lieu_sur_magnum: {
     name: "En Lieu Sûr Magnum", quantity: 24, style: "Brut",
     image: "/images/02-2.webp", imagePortrait: "/images/02.webp",
-    imageHero: "/images/b/en_lieu_sur_magnum/hero.png",
+    imageHero: "/images/b/en_lieu_sur_magnum/hero.webp",
   },
   element_de_surprise: {
     name: "Élément de Surprise", quantity: 110, cepage: "Chardonnay", style: "Non-dosé",
@@ -227,17 +227,17 @@ export const PRODUCT_META: Record<string, ProductMeta> = {
   atomes_crochus_1y: {
     name: "Atomes Crochus", quantity: 100, cepage: "Petit Meslier", style: "Ultra-Brut",
     image: "/images/04-2.webp", imagePortrait: "/images/04.webp",
-    imageHero: "/images/b/atomes_crochus_1y/hero.png",
+    imageHero: "/images/b/atomes_crochus_1y/hero.webp",
   },
   atomes_crochus_2y: {
     name: "Atomes Crochus", quantity: 40, cepage: "Petit Meslier", style: "Ultra-Brut",
     image: "/images/05-2.webp", imagePortrait: "/images/05.webp",
-    imageHero: "/images/b/atomes_crochus_2y/hero.png",
+    imageHero: "/images/b/atomes_crochus_2y/hero.webp",
   },
   atomes_crochus: {
     name: "Atomes Crochus", quantity: 100, cepage: "Petit Meslier", style: "Ultra-Brut",
     image: "/images/04-2.webp", imagePortrait: "/images/04.webp",
-    imageHero: "/images/b/atomes_crochus_1y/hero.png",
+    imageHero: "/images/b/atomes_crochus_1y/hero.webp",
   },
 };
 
@@ -299,7 +299,6 @@ export interface EntryCopy {
   inscribedEyebrow: string; // "등록 완료"
   inscribedTitle: string; // \n = 줄바꿈
   inscribedSub: string;
-  inscribedOwnerLabel: string; // "첫 소유자"
   inscribedCta: string; // "바다의 기록 보기"
   inscribedCtaSub: string;
   /* 이미 등록된 병으로 들어왔을 때만 — 각인 화면에서 입장 화면으로 내려가는 길.
@@ -358,7 +357,6 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedEyebrow: "등록 완료",
     inscribedTitle: "당신의 이름이\n바다의 기록에 남았습니다",
     inscribedSub: "소유 인증이 완료되었습니다.",
-    inscribedOwnerLabel: "첫 소유자",
     inscribedCta: "바다의 기록 보기",
     inscribedCtaSub: "바다가 남긴 사계절의 기록을 확인합니다.",
     inscribedBrowse: "N° {serial}의 내력",
@@ -412,7 +410,6 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedEyebrow: "REGISTERED",
     inscribedTitle: "Your name now stays\non the record of the sea",
     inscribedSub: "Ownership has been verified.",
-    inscribedOwnerLabel: "First owner",
     inscribedCta: "View the sea's record",
     inscribedCtaSub: "See the four seasons the sea left behind.",
     inscribedBrowse: "Provenance of N° {serial}",
@@ -466,7 +463,6 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedEyebrow: "ENREGISTRÉ",
     inscribedTitle: "Votre nom demeure désormais\nau relevé de la mer",
     inscribedSub: "La propriété a été authentifiée.",
-    inscribedOwnerLabel: "Premier propriétaire",
     inscribedCta: "Voir le relevé de la mer",
     inscribedCtaSub: "Découvrez les quatre saisons laissées par la mer.",
     inscribedBrowse: "Provenance du N° {serial}",
@@ -520,7 +516,6 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedEyebrow: "登録完了",
     inscribedTitle: "あなたの名が\n海の記録に残りました",
     inscribedSub: "所有認証が完了しました。",
-    inscribedOwnerLabel: "最初の所有者",
     inscribedCta: "海の記録を見る",
     inscribedCtaSub: "海が残した四季の記録を確認します。",
     inscribedBrowse: "N° {serial} の来歴",
@@ -574,7 +569,6 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedEyebrow: "登记完成",
     inscribedTitle: "你的名字\n已留在大海的记录中",
     inscribedSub: "所有权认证已完成。",
-    inscribedOwnerLabel: "首位所有者",
     inscribedCta: "查看大海的记录",
     inscribedCtaSub: "查看大海留下的四季记录。",
     inscribedBrowse: "N° {serial} 的来历",
@@ -1072,12 +1066,17 @@ const ATOMES_PROVENANCE: ProvenanceData = {
   region: "Venteuil · Vallée de la Marne",
   cepage: "Chardonnay 70% · Petit Meslier 30%",
   style: "Ultra-Brut",
+  /* 6개월 — 메종 공식 기술자료(fiche technique) 기준.
+     "Élevage en fût de chêne sur lies, 6 mois / Vieillissement 5 ans minimum".
+     홈페이지 본문에는 7개월로 읽히는 대목이 있으나 기술자료를 정본으로 삼는다.
+     출처: champagne-mignon-boulard.com/wp-content/uploads/2023/06/
+           FICHESTECHNIQUES-CHAMPAGNEMIGNON-BOULARD_ATOMESCROCHUS.pdf */
   elevage: {
-    ko: "오크통 7개월 · 코르크 5년",
-    en: "Oak barrel 7 mo · Cork 5 yr",
-    fr: "Fût de chêne 7 mois · Liège 5 ans",
-    ja: "オーク樽 7ヶ月 · コルク 5年",
-    zh: "橡木桶 7个月 · 软木塞 5年",
+    ko: "오크통 6개월 · 코르크 5년",
+    en: "Oak barrel 6 mo · Cork 5 yr",
+    fr: "Fût de chêne 6 mois · Liège 5 ans",
+    ja: "オーク樽 6ヶ月 · コルク 5年",
+    zh: "橡木桶 6个月 · 软木塞 5年",
   },
 };
 

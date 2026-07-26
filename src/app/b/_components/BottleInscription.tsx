@@ -18,6 +18,7 @@ export default function BottleInscription({
   serial,
   total,
   image,
+  productName,
   onContinue,
   onBrowse,
 }: {
@@ -28,6 +29,8 @@ export default function BottleInscription({
   serial: number | null;
   total: number;
   image: string;
+  /* 제품명 — 병 사진 아래 캡션 자리에 세운다 */
+  productName: string;
   onContinue: () => void;
   /* 이미 등록된 병으로 들어왔을 때만 — 입장 화면(필름·Identity·Provenance)으로 내려간다.
      등록 직후에는 방금 지나온 화면이라 주지 않는다. */
@@ -66,7 +69,9 @@ export default function BottleInscription({
       </div>
 
       <div className={styles.inscribeOwner}>
-        <span className={styles.iOwnerLabel}>{copy.inscribedOwnerLabel}</span>
+        {/* 라벨("첫 소유자") 자리에 제품명을 세운다 — 위 병 사진의 캡션이자
+           이 문서가 어느 술의 것인지를 밝히는 줄이다. */}
+        <span className={styles.iProductName}>{productName}</span>
         {nameLatin ? (
           <>
             <span className={styles.iOwnerScript}>{nameLatin}</span>

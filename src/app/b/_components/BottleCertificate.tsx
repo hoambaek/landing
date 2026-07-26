@@ -23,6 +23,7 @@ import {
 } from "../_lib/copy";
 import type { BottleRecordData, BottleOwner } from "../_lib/data";
 import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
+import { agingMonths } from "../_lib/duration";
 
 /* 문서명 영문 병기 — 여권처럼 자국어 위 영문을 함께 새긴다. 로케일 불변. */
 const CERT_TAG_LATIN = "CERTIFICATE OF OWNERSHIP";
@@ -118,13 +119,8 @@ export default function BottleCertificate({
     return `${mo} ${y} · ${se}`;
   };
 
-  const durationYears = (() => {
-    const i = data.aging.immersion;
-    const r = data.aging.retrieval;
-    if (i && r) return Math.max(1, Number(r.slice(0, 4)) - Number(i.slice(0, 4)));
-    return 1;
-  })();
-  const months = durationYears * 12;
+  /* 숙성 기간 — 실제 경과 일수 기준 (duration.ts) */
+  const months = agingMonths(data.aging.immersion, data.aging.retrieval);
   const fmtMonths = (m: number) => {
     if (locale === "en") return `${m} months`;
     if (locale === "fr") return `${m} mois`;

@@ -205,6 +205,7 @@ export default function BottleEntry({
             total={total}
             /* 세로 프레임에는 세로 누끼를 쓴다 — entry Identity·인증서와 같은 자산 */
             image={meta.imagePortrait ?? meta.image}
+            productName={meta.name}
             onContinue={() => router.push(`/b/${code}/record`)}
             /* 등록된 병으로 들어온 경우에만 — 방금 등록을 마친 사람에게는 주지 않는다 */
             onBrowse={

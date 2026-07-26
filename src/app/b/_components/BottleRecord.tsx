@@ -25,6 +25,7 @@ import {
 } from "../_lib/copy";
 import type { BottleRecordData } from "../_lib/data";
 import { submitNewsletter } from "@/lib/forms";
+import { agingMonths } from "../_lib/duration";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -129,15 +130,11 @@ export default function BottleRecord({
   const serial = data.bottle.serial;
   const serialLine = serial !== null ? `N° ${serial} / ${serialTotal}` : null;
 
-  /* 숙성 기간(년) — 입수·인양 연도 차 */
-  const durationYears = useMemo(() => {
-    const i = data.aging.immersion;
-    const r = data.aging.retrieval;
-    if (i && r) return Math.max(1, Number(r.slice(0, 4)) - Number(i.slice(0, 4)));
-    return 1;
-  }, [data.aging.immersion, data.aging.retrieval]);
-
-  const durationMonths = durationYears * 12;
+  /* 숙성 기간 — 실제 경과 일수 기준 (연도 뺄셈은 틀린다, duration.ts 참고) */
+  const durationMonths = useMemo(
+    () => agingMonths(data.aging.immersion, data.aging.retrieval),
+    [data.aging.immersion, data.aging.retrieval]
+  );
 
   /* 스테이션 라벨 접미 — "12개월 평균" / "12개월 최고" / "수심 30M" */
   const aggSuffix = (key: MetricKey) => {

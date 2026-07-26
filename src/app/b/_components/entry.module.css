@@ -806,12 +806,17 @@
   align-items: center;
   margin-top: 20px;
 }
-.iOwnerLabel {
-  font-family: var(--e-sans);
+/* 제품명 — 역할 라벨("첫 소유자")이 있던 자리다. 라벨은 9px 산세리프로 충분했지만
+   여기 오는 건 고유명사라 같은 활자로는 시스템 문구처럼 읽힌다.
+   이 페이지의 제품명 조판(.productName)과 같은 세리프를 캡션 크기로 쓴다 —
+   아래 서명체 이름이 주인공이므로 크기로 경쟁하지 않고 활자로만 격을 맞춘다. */
+.iProductName {
+  font-family: var(--e-serif);
   font-weight: 300;
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  color: rgba(20, 17, 14, 0.5);
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.02em;
+  color: rgba(20, 17, 14, 0.62);
 }
 /* 인증서의 이름 조판을 그대로 가져온다 — 로마자는 서명체, 아래 한글 정자.
    등록 직후 보는 얼굴과 인증서에 새겨진 얼굴이 같아야 한 문서로 읽힌다. */

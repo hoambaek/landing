@@ -22,6 +22,7 @@ import {
 import { persistBottleLocale } from "../_lib/locale";
 import type { BottleRecordData, BottleOwner } from "../_lib/data";
 import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
+import { agingMonths } from "../_lib/duration";
 import {
   requestOwnerOtp,
   verifyOwnerOtp,
@@ -57,13 +58,11 @@ export default function BottleOwnerManage({
   const meta = PRODUCT_META[data.bottle.productId] ?? PRODUCT_META.atomes_crochus_1y;
   const serial = data.bottle.serial;
 
-  /* 숙성 개월 수 — 기록 페이지와 같은 계산(입수·인양 연도 차 × 12) */
-  const durationMonths = useMemo(() => {
-    const i = data.aging.immersion;
-    const r = data.aging.retrieval;
-    const years = i && r ? Math.max(1, Number(r.slice(0, 4)) - Number(i.slice(0, 4))) : 1;
-    return years * 12;
-  }, [data.aging.immersion, data.aging.retrieval]);
+  /* 숙성 개월 수 — 기록·인증서와 같은 계산 (duration.ts) */
+  const durationMonths = useMemo(
+    () => agingMonths(data.aging.immersion, data.aging.retrieval),
+    [data.aging.immersion, data.aging.retrieval]
+  );
 
   /* 이름은 공개값이므로 인증 여부와 무관하게 같다. 이메일만 인증 후 전체가 열린다. */
   const displayName = ownerFull?.name ?? ownerMasked?.name ?? extra.certOwnerFallback;
