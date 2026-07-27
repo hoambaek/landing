@@ -16,16 +16,22 @@ export const dynamic = "force-dynamic";
  */
 export default async function BottleEntryPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
-  const identity = await fetchBottleIdentity(code);
+
+  /* 셋 다 code 하나만 있으면 되므로 순차로 기다릴 이유가 없다.
+     identity → owner를 줄줄이 await 하면 왕복이 그대로 더해진다(첫 화면 TTFB에 직결).
+     코드가 없는 병이면 owner 질의 한 번이 헛돈다 — 그 대신 정상 진입이 왕복 하나만큼 빨라진다.
+     무작위 코드 긁기는 proxy.ts의 코드 수 제한이 막는다. */
+  const [identity, owner, jar] = await Promise.all([
+    fetchBottleIdentity(code),
+    /* 등록 행이 있으면 소유자가 있다. 이름은 등록자가 인증서용으로 정한 공개값이라 그대로 보여준다. */
+    fetchBottleOwner(code),
+    cookies(),
+  ]);
 
   if (!identity) return <BottleNotFound />;
 
-  /* 등록 행이 있으면 소유자가 있다 — 질의 한 번으로 둘 다 얻는다.
-     이름은 등록자가 인증서용으로 정한 공개값이라 그대로 보여준다. */
-  const owner = await fetchBottleOwner(code);
-
   const meta = PRODUCT_META[identity.productId] ?? PRODUCT_META.atomes_crochus_1y;
-  const initialLocale = parseBottleLocale((await cookies()).get(BOTTLE_LANG_COOKIE)?.value);
+  const initialLocale = parseBottleLocale(jar.get(BOTTLE_LANG_COOKIE)?.value);
 
   return (
     <BottleEntry

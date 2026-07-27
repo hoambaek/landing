@@ -5,6 +5,15 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
  * /b 병 기록 조회 — service_role 서버 전용.
  * 공개 응답에 고객명·가격·메모는 절대 포함하지 않는다 (필드 필터링).
  * UAPS 계수·예측값은 조회 자체를 하지 않는다 (게이팅).
+ *
+ * 2026-07-27 — 여기의 질의 한 번은 왕복 한 번이고, /b는 전부 force-dynamic이라
+ * 매 요청이 실제로 DB를 친다. 그래서 두 가지를 지킨다.
+ *
+ *  1) 실행 지역. Supabase는 ap-northeast-2(서울)에 있는데 Vercel 기본 함수 지역은
+ *     iad1(버지니아)이라, 질의 하나당 태평양을 두 번 건너 ~200ms씩 붙었다
+ *     (입장 페이지 TTFB 실측 2.1초). vercel.json의 regions: ["icn1"]이 이걸 맞춘다.
+ *     주석을 못 다는 파일이라 근거를 여기 남긴다 — 지우면 다시 2초가 된다.
+ *  2) 호출부는 Promise.all로 묶는다. 순차 await는 왕복을 그대로 더한다.
  */
 
 export interface BottleIdentity {
