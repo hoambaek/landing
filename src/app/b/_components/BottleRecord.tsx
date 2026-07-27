@@ -105,6 +105,7 @@ export default function BottleRecord({
   const [nlErr, setNlErr] = useState<string | null>(null);
 
   const rootRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
   const heroSerialRef = useRef<HTMLDivElement>(null);
   const journeySectionRef = useRef<HTMLElement>(null);
   const flowSectionRef = useRef<HTMLElement>(null);
@@ -284,6 +285,43 @@ export default function BottleRecord({
             if (heroSerialRef.current) heroSerialRef.current.textContent = `N° ${Math.round(obj.v)} / ${serialTotal}`;
           },
         });
+      }
+
+      /* 히어로 시차 — 히어로는 제자리에 붙어 있고(sticky) 종이 지면이 그 위로 올라온다.
+         그런데 붙어만 있으면 덮이는 내내 사진의 가장 어두운 윗부분만 화면에 남는다.
+         스크롤의 42%만큼 속을 위로 밀어, 덮이는 동안 병목·병몸이 계속 올라오게 한다.
+         (모션 감축이면 이 블록 전체가 실행되지 않는다 — 정지한 히어로도 레이아웃은 온전하다) */
+      if (heroRef.current) {
+        const layers = Array.from(heroRef.current.children);
+        gsap.to(layers, {
+          y: () => -window.innerHeight * 0.42,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: () => `+=${window.innerHeight}`,
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        /* 제목은 종이가 닿기 전에 비운다 — 안 그러면 올라오는 지면이 글자를 가로로
+           썰고 지나가는 순간이 생긴다. 종이 모서리가 제목에 닿는 지점이 ≈160px라
+           그 전에 끝낸다.
+           opacity 대신 filter를 쓰는 이유: 이 요소의 등장 애니메이션(settle)이
+           forwards라 opacity: 1을 계속 주장해서 인라인 opacity가 먹지 않는다. */
+        const heroText = heroRef.current.querySelector<HTMLElement>(`.${styles.heroContent}`);
+        if (heroText) {
+          gsap.fromTo(
+            heroText,
+            { filter: "opacity(1)" },
+            {
+              filter: "opacity(0)",
+              ease: "none",
+              scrollTrigger: { trigger: heroRef.current, start: "top -40", end: "top -200", scrub: true },
+            },
+          );
+        }
       }
 
       /* S2 여정 곡선 드로잉 — 뷰 진입 시 선이 그려지고 점이 순차 등장 */
@@ -503,7 +541,7 @@ export default function BottleRecord({
     <main className={styles.page} ref={rootRef}>
       <div className={styles.frame}>
         {/* ── S1 병사진 히어로 ── */}
-        <section className={styles.hero}>
+        <section className={styles.hero} ref={heroRef}>
           <Image
             /* 제품별 히어로 — Paper의 Product 아트보드(ARCHIVE N° 002~005)에 쓰인 컷과 같은 사진.
                폴백은 En Lieu Sûr 컷이라 다른 제품에 서면 틀린 병이 보인다. 새 제품은 imageHero부터 채울 것. */
@@ -580,26 +618,32 @@ export default function BottleRecord({
             data-reveal
           >
             <div className={styles.journeyInner}>
+              {/* 종이 위 도표다 — 잉크(#14110E)와 브론즈(#8A6A3A)로 그린다.
+                  아래 여덟 줄기 도판의 앰버(#CCAD7B)를 여기 쓰면 종이 위 1.8:1이라 사라진다.
+                  값은 CSS 변수로 못 뺀다 — presentation attribute는 var()를 받지 않는다. */}
               <svg className={styles.journeySvg} width="342" height="110" viewBox="0 0 342 110" aria-hidden>
                 <defs>
                   <linearGradient id="bJourneyEmerge" gradientUnits="userSpaceOnUse" x1="333" y1="90" x2="333" y2="28">
-                    <stop offset="0" stopColor="#CCAD7B" stopOpacity="0.92" />
-                    <stop offset="1" stopColor="#CCAD7B" stopOpacity="0" />
+                    <stop offset="0" stopColor="#8A6A3A" stopOpacity="0.9" />
+                    <stop offset="1" stopColor="#8A6A3A" stopOpacity="0" />
                   </linearGradient>
                 </defs>
-                <line x1="0" y1="24" x2="342" y2="24" stroke="#F1EFEB" strokeWidth="0.5" strokeDasharray="1 5" opacity="0.16" />
-                <line x1="0" y1="90" x2="342" y2="90" stroke="#CCAD7B" strokeWidth="0.5" strokeDasharray="1 5" opacity="0.22" />
-                <text x="0" y="14" fontSize="8" fontFamily="IBM Plex Mono, monospace" letterSpacing="1" fill="rgba(241,239,235,0.4)">0m</text>
-                <text x="0" y="105" fontSize="8" fontFamily="IBM Plex Mono, monospace" letterSpacing="1" fill="rgba(204,173,123,0.65)">30m</text>
-                <path d="M 37 24 L 126 24 C 166 24 182 90 216 90" fill="none" stroke="rgba(241,239,235,0.68)" strokeWidth="1.4" strokeLinecap="round" />
-                <path d="M 216 90 L 305 90" fill="none" stroke="#CCAD7B" strokeWidth="1.8" strokeLinecap="round" />
+                <line x1="0" y1="24" x2="342" y2="24" stroke="#14110E" strokeWidth="0.5" strokeDasharray="1 5" opacity="0.22" />
+                <line x1="0" y1="90" x2="342" y2="90" stroke="#8A6A3A" strokeWidth="0.5" strokeDasharray="1 5" opacity="0.34" />
+                <text x="0" y="14" fontSize="8" fontFamily="IBM Plex Mono, monospace" letterSpacing="1" fill="rgba(20,17,14,0.45)">0m</text>
+                <text x="0" y="105" fontSize="8" fontFamily="IBM Plex Mono, monospace" letterSpacing="1" fill="rgba(138,106,58,0.9)">30m</text>
+                {/* 육상 구간 — 이 병의 시간이 아직 시작하지 않은 자리라 흐리게 둔다 */}
+                <path d="M 37 24 L 126 24 C 166 24 182 90 216 90" fill="none" stroke="rgba(20,17,14,0.5)" strokeWidth="1.4" strokeLinecap="round" />
+                {/* 해저 구간 — 기록이 만들어진 자리 */}
+                <path d="M 216 90 L 305 90" fill="none" stroke="#8A6A3A" strokeWidth="1.8" strokeLinecap="round" />
                 <path d="M 305 90 C 322 86 331 58 333 30" fill="none" stroke="url(#bJourneyEmerge)" strokeWidth="1.7" strokeLinecap="round" />
-                <circle cx="37" cy="24" r="5" fill="#0E1A2B" stroke="rgba(241,239,235,0.85)" strokeWidth="1.4" />
-                <circle cx="126" cy="24" r="5" fill="#0E1A2B" stroke="rgba(241,239,235,0.85)" strokeWidth="1.4" />
-                <circle cx="216" cy="90" r="9" fill="rgba(204,173,123,0.14)" />
-                <circle cx="216" cy="90" r="5.5" fill="#CCAD7B" />
-                <circle cx="305" cy="90" r="9" fill="rgba(204,173,123,0.14)" />
-                <circle cx="305" cy="90" r="5.5" fill="#CCAD7B" />
+                {/* 육상 노드는 속이 빈 원 — 종이색으로 채워 선을 끊는다 */}
+                <circle cx="37" cy="24" r="5" fill="#EDEAE3" stroke="rgba(20,17,14,0.62)" strokeWidth="1.4" />
+                <circle cx="126" cy="24" r="5" fill="#EDEAE3" stroke="rgba(20,17,14,0.62)" strokeWidth="1.4" />
+                <circle cx="216" cy="90" r="9" fill="rgba(138,106,58,0.16)" />
+                <circle cx="216" cy="90" r="5.5" fill="#8A6A3A" />
+                <circle cx="305" cy="90" r="9" fill="rgba(138,106,58,0.16)" />
+                <circle cx="305" cy="90" r="5.5" fill="#8A6A3A" />
               </svg>
               <div className={styles.jStop} style={{ left: 0, top: 40 }}>
                 <span className={styles.jName}>{copy.journey.origin}</span>

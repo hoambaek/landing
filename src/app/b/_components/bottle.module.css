@@ -1,10 +1,14 @@
 /* /b 병 기록 페이지 — Paper "NFC 병 페이지 v2 — 여덟 줄기의 수렴" 시안 1:1 (Abyssal Amber) */
 
-/* 2026-07-26 — 한 페이지 안에서 테마가 한 번 바뀐다.
-   히어로부터 여덟 줄기 수렴까지는 심해(다크), 그 아래 기록·인증서 안내부터는 종이(라이트).
-   서사가 "바다에서 건져 올려 빛 아래에서 확인한다"이고, 실제로도 위쪽은 보는 화면이고
-   아래쪽은 읽는 화면이다. 수렴 시각화는 hairline 곡선과 발광점으로 그려져 있어
-   밝은 바탕에서는 성립하지 않는다 — 그래서 색을 뒤집지 않고 구간을 나눴다. */
+/* 2026-07-27 — 이 페이지는 종이 문서이고, 심해는 그 안에 끼워 넣은 도판 한 장이다.
+   히어로(다크) → 여정·서문(종이) → 여덟 줄기 하강·수렴(다크) → 개체 기록·인증서 안내(종이).
+   히어로 바로 아래에서 빛 아래로 올라오고, 여덟 줄기 구간에서만 다시 물속으로 내려간다.
+   그 구간을 뒤집지 않는 이유는 하나다 — 수렴 시각화가 hairline 곡선과 발광점으로
+   그려져 있어 밝은 바탕에서 성립하지 않는다. 나머지는 전부 읽는 화면이므로 종이가 맞다.
+   (2026-07-26에는 경계가 수렴 아래 한 번뿐이었다.)
+
+   경계는 그라디언트로 녹이지 않는다 — void와 paper 사이에 어느 쪽에도 속하지 않는
+   회갈색 대역이 생겨 띠로 읽힌다(entry 히어로에서 같은 결론). 전부 딱 끊는다. */
 
 .page {
   --b-void: #0a0908;
@@ -37,18 +41,35 @@
 }
 .frame {
   width: min(430px, 100vw);
-  overflow: hidden;
+  /* overflow: hidden 이었다 — 세로축까지 자르면 스크롤 컨테이너가 생겨서
+     히어로의 sticky가 죽는다(붙을 스크롤 조상이 없어진다).
+     clip은 스크롤 컨테이너를 만들지 않으므로 가로만 잘라내고 sticky를 살린다. */
+  overflow-x: clip;
+}
+/* 히어로를 뺀 나머지는 전부 히어로 위 층이다 — 아래에서 올라와 히어로를 덮는다.
+   하나라도 빠지면 그 구간에서 히어로가 위로 튀어나온다(푸터 포함). */
+.frame > *:not(.hero) {
+  position: relative;
+  z-index: 1;
 }
 
-/* ── S1 병사진 히어로 ───────────────────────── */
+/* ── S1 병사진 히어로 ─────────────────────────
+   제자리에 남는다. 스크롤하면 히어로가 위로 빠지는 대신 종이 지면이
+   아래에서 올라와 덮는다 — 히어로 하단의 검정이 종이로 "채워지는" 것처럼 보인다.
+   전에는 히어로가 그대로 밀려 올라가서, 사진이 제목 바로 밑에서 잘린 단면이
+   화면 한가운데를 가로질렀다.
+   아래 여백을 28 → 92로 올린 것도 같은 이유다. 제목이 설 검정 바닥이 있어야
+   올라오는 종이가 글자부터 먹지 않는다. */
 .hero {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 0;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  padding: 18px 24px max(28px, env(safe-area-inset-bottom)) 24px;
+  padding: 18px 24px max(92px, calc(env(safe-area-inset-bottom) + 68px)) 24px;
   overflow: hidden;
   background: var(--b-void);
 }
@@ -164,11 +185,15 @@
 }
 
 /* ── S2 여정 (depth profile) ────────────────── */
+/* 종이 구간의 첫 장 — 히어로의 void에서 여기서 딱 끊는다.
+   위 여백을 40 → 56으로 올렸다. 어두운 바탕은 여백을 흡수하지만
+   종이는 반사해서, 같은 40px가 종이 위에서는 눌린 것처럼 보인다. */
 .journey {
   display: flex;
   justify-content: center;
-  padding: 40px 24px 56px;
-  background: var(--b-void);
+  padding: 56px 24px 60px;
+  background: var(--b-paper);
+  color: var(--b-ink);
   overflow: hidden;
 }
 .journeyScaler {
@@ -196,30 +221,35 @@
 .jName {
   font-family: var(--font-body), sans-serif;
   font-size: 11px;
-  color: rgba(241, 239, 235, 0.85);
+  color: rgba(20, 17, 14, 0.72);
 }
+/* 입수·인양 — 이 병의 시간이 실제로 시작하고 끝난 두 지점만 잉크 원색이다 */
 .jNameOn {
-  color: var(--b-ivory);
+  color: var(--b-ink);
 }
 .jSub {
   font-family: var(--b-mono);
   font-size: 8.5px;
   letter-spacing: 0.06em;
-  color: rgba(241, 239, 235, 0.68);
+  color: var(--b-p-micro);
 }
+/* 종이 위에서는 앰버(1.8:1)를 글자로 못 쓴다 — 브론즈로 내린다 */
 .jSubAmber {
-  color: var(--b-amber);
+  color: var(--b-bronze);
 }
 
 /* ── S3 여덟 줄기 ─────────────────────────── */
 /* ── Eight Currents 인트로 ───────────────────── */
+/* 아래 도판(여덟 줄기)의 캡션 자리다 — 도판은 물속이지만 설명은 종이 위에 있다.
+   아래 여백 54 → 62: 여기서 바로 다크로 끊기므로 그 앞에 숨 쉴 자리가 필요하다. */
 .ecIntro {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 68px 24px 54px;
-  background: var(--b-void);
-  border-top: 0.5px solid rgba(241, 239, 235, 0.1);
+  padding: 68px 24px 62px;
+  background: var(--b-paper);
+  border-top: 0.5px solid var(--b-p-rule);
+  color: var(--b-ink);
   text-align: center;
   word-break: keep-all;
 }
@@ -228,7 +258,7 @@
   font-family: var(--b-mono);
   font-size: 9px;
   letter-spacing: 0.16em;
-  color: var(--b-amber);
+  color: var(--b-bronze);
 }
 /* 아이브로우를 걷어내 제목이 섹션의 첫 요소가 됐다 — 위 여백은 섹션 padding이 맡는다 */
 .ecTitle {
@@ -238,7 +268,7 @@
   font-size: 25px;
   line-height: 38px;
   letter-spacing: -0.02em;
-  color: var(--b-ivory);
+  color: var(--b-ink);
   white-space: pre-line;
 }
 .ecBody {
@@ -247,7 +277,7 @@
   font-weight: 300;
   font-size: 12.5px;
   line-height: 22px;
-  color: rgba(241, 239, 235, 0.56);
+  color: var(--b-p-dim);
   white-space: pre-line;
 }
 /* inline-flex — block flex면 폭이 부모만큼 잡혀 부모의 text-align: center가
@@ -258,9 +288,12 @@
   gap: 10px;
   margin-top: 28px;
 }
+/* 이 선은 장식이 아니라 아래 도판의 범례다 — "금빛 선"이 가리키는 그 선과
+   같은 색이어야 한다. 그래서 종이 위에서도 브론즈로 내리지 않고 앰버로 둔다.
+   대신 1px → 2px. 앰버는 종이 위 1.8:1이라 hairline이면 사라진다. */
 .ecLegendLine {
   width: 36px;
-  height: 1px;
+  height: 2px;
   flex-shrink: 0;
   background: var(--b-amber);
 }
@@ -268,7 +301,7 @@
   font-family: var(--b-mono);
   font-size: 8px;
   letter-spacing: 0.12em;
-  color: rgba(241, 239, 235, 0.48);
+  color: var(--b-p-micro);
 }
 
 /* ── Owner Services · Digital Passport ── */
@@ -837,9 +870,13 @@
 .introFadeD2 {
   animation-delay: 0.85s;
 }
+/* transform 이 아니라 translate 로 올린다.
+   transform 애니메이션은 forwards 로 끝나도 계속 값을 주장해서, 같은 요소에
+   시차(gsap이 transform 에 씀)를 걸면 그쪽이 통째로 무시된다.
+   translate 는 별개 속성이라 둘이 합산된다 — 등장은 등장대로, 시차는 시차대로. */
 @keyframes settle {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; translate: 0 12px; }
+  to { opacity: 1; translate: 0 0; }
 }
 
 /* 여정 리빌 (data-reveal) */
@@ -893,6 +930,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* 히어로를 붙여 두는 것 자체는 애니메이션이 아니지만, 여기서는 짝이 되는
+     시차·제목 페이드(gsap)가 통째로 꺼진다. 그러면 올라오는 종이가 제목을
+     가로로 썰고 지나간다. 그냥 같이 밀려 올라가게 둔다 — 92px 검정 바닥이
+     있어서 잘린 단면은 생기지 않는다. */
+  .hero { position: relative; }
   .glowDot { animation: none; }
   .introFade { animation: none; opacity: 1; }
   .langPanel,
