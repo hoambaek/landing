@@ -6,7 +6,6 @@ import JsonLd from "@/components/JsonLd";
 import AgeGate from "@/components/legal/AgeGate";
 import {
   Cormorant_Garamond,
-  Cormorant_Infant,
   Noto_Sans_KR,
   Noto_Serif_KR,
   Diphylleia,
@@ -14,7 +13,6 @@ import {
   Gowun_Batang,
   EB_Garamond,
   Mrs_Saint_Delafield,
-  Josefin_Sans,
   Instrument_Sans,
   Special_Elite,
   New_Tegomin,
@@ -62,16 +60,22 @@ const zenKaku = Zen_Kaku_Gothic_New({
   preload: false, // 위와 같은 이유
 });
 
+/* weight를 적지 않는다 — Noto Sans KR은 가변 폰트라 축(100~900) 하나로 받는다.
+   고정 굵기 3개를 적으면 굵기마다 유니코드 조각을 통째로 따로 받는다.
+   실측(2026-07-27): 300;400;500 → @font-face 372개, 가변축 → 124개.
+   빌드가 fonts.gstatic.com에서 받아오는 파일이 그만큼 줄고, 화면은 그대로다
+   (300·400·500이 축 위의 값으로 그대로 나온다). */
 const notoSansKR = Noto_Sans_KR({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
   variable: "--font-body",
   display: "swap",
 });
 
+/* 이쪽도 가변 폰트다(축 200~900). 300;400 고정 → 248개, 가변축 → 124개.
+   ⚠️ 축이 100이 아니라 200에서 시작한다 — wght@100..900으로 물어보면 구글이 빈 응답을 준다.
+   가변 지원 여부를 확인할 때 100부터 잡고 없다고 판단하지 말 것. */
 const notoSerifKR = Noto_Serif_KR({
   subsets: ["latin"],
-  weight: ["300", "400"],
   variable: "--font-serif-kr",
   display: "swap",
 });
@@ -94,13 +98,6 @@ const gowunBatang = Gowun_Batang({
   subsets: ["latin"],
   weight: ["400"],
   variable: "--font-batang",
-  display: "swap",
-});
-
-const cormorantInfant = Cormorant_Infant({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-cormorant-infant",
   display: "swap",
 });
 
@@ -134,13 +131,6 @@ const instrumentSans = Instrument_Sans({
 });
 
 // 입장 페이지 에디션 넘버(블루 스톤 플레이트) 전용 — 얇은 지오메트릭
-const josefinSans = Josefin_Sans({
-  subsets: ["latin"],
-  weight: ["300", "400"],
-  variable: "--font-josefin",
-  display: "swap",
-});
-
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -227,7 +217,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} ${josefinSans.variable} ${instrumentSans.variable} ${specialElite.variable} ${newTegomin.variable} ${zenKaku.variable} antialiased`}
+        className={`${cormorant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} ${instrumentSans.variable} ${specialElite.variable} ${newTegomin.variable} ${zenKaku.variable} antialiased`}
       >
         <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
         <JsonLd />
