@@ -747,3 +747,37 @@
   .quoteText { font-size: 20px; }
   .closingText { font-size: 26px; }
 }
+
+/* ═══ 일본어 타이틀 — ko의 J1950 PNG 자리에 같은 계열의 일본 활자를 둔다 ═══
+   위 규칙들은 font-family가 var(--font-heading) 하나뿐이라 가나·한자가
+   브라우저 기본 폰트로 떨어진다. New Tegomin을 뒤에 붙여 그 자리를 받는다.
+   라틴 문자는 스택 앞의 Cormorant가 계속 맡는다. */
+:global(html[lang="ja"]) .heroTitleText,
+:global(html[lang="ja"]) .h2Text,
+:global(html[lang="ja"]) .quoteText,
+:global(html[lang="ja"]) .closingText {
+  font-family: var(--font-heading), var(--font-ja-title), "Hiragino Mincho ProN",
+    "Yu Mincho", serif;
+}
+
+/* 일본어 조판에 이탤릭은 없다 — 기울이면 브라우저가 억지로 비튼 자형을 만든다 */
+:global(html[lang="ja"]) .quoteText {
+  font-style: normal;
+}
+
+/* 표제 줄바꿈 — ko는 J1950 PNG라 손으로 잡혀 있고, 나머지 로케일은 브라우저가 나눈다.
+   그대로 두면 마지막 줄에 한 단어만 남는다. balance가 줄 길이를 고르게 맞춘다. */
+.heroTitleText,
+.h2Text,
+.quoteText,
+.closingText {
+  text-wrap: balance;
+}
+
+/* 일본어는 단어 사이 공백이 없어 균형만으로는 외래어가 중간에서 갈린다 */
+:global(html[lang="ja"]) .heroTitleText,
+:global(html[lang="ja"]) .h2Text,
+:global(html[lang="ja"]) .quoteText,
+:global(html[lang="ja"]) .closingText {
+  word-break: auto-phrase;
+}

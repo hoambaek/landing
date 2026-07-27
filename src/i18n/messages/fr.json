@@ -29,7 +29,7 @@
   "first": {
     "eyebrow": "THE FIRST RECORD",
     "headline": "Le premier relevé a émergé.",
-    "closing": "À chaque bouteille son empreinte de la mer ; aucune n'est identique.",
+    "closing": "À chaque bouteille son empreinte de la mer ; aucune n'est identique.",
     "plateAlt": {
       "light": "La première lumière rencontrée à la surface",
       "manuscript": "Balanes et cristaux de sel à la surface de la bouteille, un manuscrit écrit par la mer"
@@ -73,7 +73,7 @@
   },
   "maker": {
     "title": "the maker.",
-    "subtitle": "Le champagne est né en Champagne ; le relevé commence à Namhae.",
+    "subtitle": "Le champagne est né en Champagne ; le relevé commence à Namhae.",
     "imgAlt": "Champagne Mignon Boulard, une maison de Champagne",
     "boulard": {
       "desc": "Quatre générations depuis 1911, 49 sols distincts.\nUne maison qui préserve intacte la complexité que d'autres chercheraient à uniformiser."
@@ -124,7 +124,7 @@
         "venue": "Nom de l'établissement",
         "contact": "Personne à contacter",
         "affiliation": "Affiliation · Société",
-        "referral": "Comment nous avez-vous connus ? (facultatif)"
+        "referral": "Comment nous avez-vous connus ? (facultatif)"
       },
       "menu": {
         "open": "Ouvrir le menu",
@@ -162,7 +162,7 @@
       ],
       "scarcity": "Les places n'ouvrent qu'à hauteur des bouteilles préparées.",
       "submit": "Demander une invitation",
-      "note": "Laissez vos coordonnées : nous vous écrirons en premier à l'ouverture des adhésions.",
+      "note": "Laissez vos coordonnées : nous vous écrirons en premier à l'ouverture des adhésions.",
       "errValidation": "Veuillez saisir votre nom et une adresse e-mail valide.",
       "successLine": "Votre demande a bien été reçue.",
       "successNote": "L'invitation vous parviendra avec les nouvelles de la prochaine remontée."

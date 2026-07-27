@@ -15,7 +15,9 @@ import {
   EB_Garamond,
   Mrs_Saint_Delafield,
   Josefin_Sans,
-  Work_Sans,
+  Instrument_Sans,
+  New_Tegomin,
+  Zen_Kaku_Gothic_New,
 } from "next/font/google";
 import "./globals.css";
 
@@ -24,6 +26,28 @@ const cormorant = Cormorant_Garamond({
   weight: ["300", "400", "600"],
   variable: "--font-heading",
   display: "swap",
+});
+
+/* 일본어 표제 — 한국어 표제의 J1950(1950년대 활자)에 대응하는 옛 활자체.
+   구글 폰트가 글자 조각(unicode-range) 단위로 내보내므로 쓰인 글자만 내려받는다.
+   굵기는 400 하나뿐이다. */
+const newTegomin = New_Tegomin({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-ja-title",
+  display: "swap",
+  /* preload을 켜두면 일본어 조각 전부를 모든 페이지에서 미리 받는다(한국어 페이지 포함).
+     끄면 브라우저가 unicode-range를 보고 실제 쓰인 글자의 조각만 가져온다. */
+  preload: false,
+});
+
+/* 일본어 본문 — 획 끝이 부드러운 고딕. 한글 본문(Noto Sans KR)과 같은 굵기를 받는다 */
+const zenKaku = Zen_Kaku_Gothic_New({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-ja-body",
+  display: "swap",
+  preload: false, // 위와 같은 이유
 });
 
 const notoSansKR = Noto_Sans_KR({
@@ -85,11 +109,14 @@ const mrsSaintDelafield = Mrs_Saint_Delafield({
 
 /* 라틴 본문(en·fr) — 정본 02는 "폰트를 스크립트별로 분리한다"를 원칙으로 둔다.
    Noto Sans KR의 라틴은 한글용 폰트에 딸려온 것이라 영·불 본문에는 자간·자형이 헐겁다.
-   Cormorant Garamond(표제)와 부딪히지 않는 휴머니스트 산세리프로, 본문 웨이트 300을
-   실제로 갖고 있는 서체를 고른다. */
-const workSans = Work_Sans({
+   표제의 EB Garamond(획 대비가 큰 고전 세리프)와 대비를 이루는 현대 그로테스크를 쓴다.
+
+   Instrument Sans에는 굵기 300이 없다(400~700). 사이트가 300으로 지정한 자리는
+   가장 가까운 400으로 떨어진다 — 브라우저는 가는 쪽으로 합성하지 않으므로
+   자형이 뭉개지지는 않고, 본문이 지금보다 조금 단단해질 뿐이다. */
+const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: ["400", "500"],
   variable: "--font-latin",
   display: "swap",
 });
@@ -188,7 +215,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} ${josefinSans.variable} ${workSans.variable} antialiased`}
+        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} ${josefinSans.variable} ${instrumentSans.variable} ${newTegomin.variable} ${zenKaku.variable} antialiased`}
       >
         <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
         <JsonLd />
