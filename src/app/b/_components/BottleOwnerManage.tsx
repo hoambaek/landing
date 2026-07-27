@@ -20,7 +20,7 @@ import {
   type BottleLocale,
 } from "../_lib/copy";
 import { persistBottleLocale } from "../_lib/locale";
-import type { BottleRecordData, BottleOwner } from "../_lib/data";
+import type { BottleRecordData, BottleOwner, OwnedBottle } from "../_lib/data";
 import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
 import { agingMonths } from "../_lib/duration";
 import {
@@ -38,6 +38,7 @@ export default function BottleOwnerManage({
   ownerMasked,
   authed,
   ownerFull,
+  ownedBottles = [],
   locale = "ko",
 }: {
   code: string;
@@ -45,6 +46,8 @@ export default function BottleOwnerManage({
   ownerMasked: BottleOwner | null;
   authed: boolean;
   ownerFull: { name: string; email: string } | null;
+  /* 같은 이메일로 등록된 병 전부. 인증과 무관하게 채워져 온다 */
+  ownedBottles?: OwnedBottle[];
   locale?: BottleLocale;
 }) {
   const router = useRouter();
@@ -63,6 +66,21 @@ export default function BottleOwnerManage({
     () => agingMonths(data.aging.immersion, data.aging.retrieval),
     [data.aging.immersion, data.aging.retrieval]
   );
+
+  /* 소장품 목록 — 같은 이메일로 등록된 병이 전부 온다(인증 불필요).
+     서버가 빈 배열을 주는 경우(등록 기록이 없는 병)에는 지금 이 병만 세운다. */
+  const cards = useMemo(() => {
+    if (ownedBottles.length) {
+      return ownedBottles.map((b) => ({
+        code: b.code,
+        meta: PRODUCT_META[b.productId] ?? PRODUCT_META.atomes_crochus_1y,
+        serial: b.serial,
+        depth: b.depth,
+        months: agingMonths(b.immersion, b.retrieval),
+      }));
+    }
+    return [{ code, meta, serial, depth: data.aging.depth, months: durationMonths }];
+  }, [ownedBottles, code, meta, serial, data.aging.depth, durationMonths]);
 
   /* 이름은 공개값이므로 인증 여부와 무관하게 같다. 이메일만 인증 후 전체가 열린다. */
   const displayName = ownerFull?.name ?? ownerMasked?.name ?? extra.certOwnerFallback;
@@ -241,55 +259,63 @@ export default function BottleOwnerManage({
             소장품을 보는 자리다. 병 사진 없이 번호 상자만 두면 설정 행처럼 읽힌다.
             사진(실체) → 에디션(몇 번째인가) → 이름 → 바다 기록 순으로 위계를 세운다. */}
         <section className={styles.linked}>
-          <h2 className={styles.groupHead}>{extra.ownBottleHead}</h2>
-          <Link href={`/b/${code}/certificate`} className={styles.linkedCard}>
-            <span className={styles.linkedPlate}>
-              <Image
-                src={meta.imagePortrait ?? meta.image}
-                alt=""
-                width={200}
-                height={336}
-                className={styles.linkedBottle}
-              />
-            </span>
-            <span className={styles.linkedInfo}>
-              <span className={styles.linkedEdition}>
-                <span className={styles.linkedEdNo}>N°</span>
-                <span className={styles.linkedEdNum}>{serial ?? "—"}</span>
-                <span className={styles.linkedEdTotal}>/ {meta.quantity}</span>
+          <h2 className={styles.groupHead}>
+            {cards.length > 1 ? extra.ownBottleHeadPlural : extra.ownBottleHead}
+          </h2>
+          {cards.map((c) => (
+            <Link key={c.code} href={`/b/${c.code}/certificate`} className={styles.linkedCard}>
+              <span className={styles.linkedPlate}>
+                <Image
+                  src={c.meta.imagePortrait ?? c.meta.image}
+                  alt=""
+                  width={200}
+                  height={336}
+                  className={styles.linkedBottle}
+                />
               </span>
-              <span className={styles.linkedName}>{meta.name}</span>
-              {/* 품종·스타일은 제품마다 있을 수도 없을 수도 있다(first_edition은 둘 다 없음) */}
-              {(meta.cepage || meta.style) && (
-                <span className={styles.linkedTrait}>
-                  {[meta.cepage, meta.style].filter(Boolean).join(" · ")}
+              <span className={styles.linkedInfo}>
+                <span className={styles.linkedEdition}>
+                  <span className={styles.linkedEdNo}>N°</span>
+                  <span className={styles.linkedEdNum}>{c.serial ?? "—"}</span>
+                  <span className={styles.linkedEdTotal}>/ {c.meta.quantity}</span>
+                  {/* 여러 병이 세워졌을 때만 지금 태그한 병을 짚어준다 */}
+                  {cards.length > 1 && c.code === code && (
+                    <span className={styles.linkedHere}>{extra.ownThisBottle}</span>
+                  )}
                 </span>
-              )}
-              <span className={styles.linkedRule} aria-hidden />
-              {/* 값은 전부 실제 기록에서 파생 — 하드코딩 "12개월"은 걷어냈다 */}
-              <span className={styles.linkedFacts}>
-                <span className={styles.linkedFact}>
-                  <span className={styles.linkedFactLabel}>{extra.seaLabels.depth}</span>
-                  <span className={styles.linkedFactValue}>
-                    <span className={styles.linkedFactNum}>{data.aging.depth}</span>
-                    <span className={styles.linkedFactUnit}>m</span>
+                <span className={styles.linkedName}>{c.meta.name}</span>
+                {/* 품종·스타일은 제품마다 있을 수도 없을 수도 있다(first_edition은 둘 다 없음) */}
+                {(c.meta.cepage || c.meta.style) && (
+                  <span className={styles.linkedTrait}>
+                    {[c.meta.cepage, c.meta.style].filter(Boolean).join(" · ")}
                   </span>
-                </span>
-                <span className={styles.linkedFact}>
-                  <span className={styles.linkedFactLabel}>{extra.seaLabels.duration}</span>
-                  <span className={styles.linkedFactValue}>
-                    <span className={styles.linkedFactNum}>{durationMonths}</span>
-                    {/* 로케일 문자열에서 숫자 자리만 비워 단위만 남긴다("{n}개월" → "개월") */}
-                    <span className={styles.linkedFactUnit}>
-                      {extra.ownMonths.replace("{n}", "").trim()}
+                )}
+                <span className={styles.linkedRule} aria-hidden />
+                {/* 값은 전부 실제 기록에서 파생 — 하드코딩 "12개월"은 걷어냈다 */}
+                <span className={styles.linkedFacts}>
+                  <span className={styles.linkedFact}>
+                    <span className={styles.linkedFactLabel}>{extra.seaLabels.depth}</span>
+                    <span className={styles.linkedFactValue}>
+                      <span className={styles.linkedFactNum}>{c.depth}</span>
+                      <span className={styles.linkedFactUnit}>m</span>
+                    </span>
+                  </span>
+                  <span className={styles.linkedFact}>
+                    <span className={styles.linkedFactLabel}>{extra.seaLabels.duration}</span>
+                    <span className={styles.linkedFactValue}>
+                      <span className={styles.linkedFactNum}>{c.months}</span>
+                      {/* 로케일 문자열에서 숫자 자리만 비워 단위만 남긴다("{n}개월" → "개월") */}
+                      <span className={styles.linkedFactUnit}>
+                        {extra.ownMonths.replace("{n}", "").trim()}
+                      </span>
                     </span>
                   </span>
                 </span>
               </span>
-            </span>
-            {/* 셰브론은 뺐다. 카드 자체가 큼직한 탭 대상이라 행 화살표는 군더더기이고,
-                그 28px이 품종 줄을 두 줄로 쪼개고 있었다. */}
-          </Link>
+              {/* 셰브론은 뺐다. 카드 자체가 큼직한 탭 대상이라 행 화살표는 군더더기이고,
+                  그 28px이 품종 줄을 두 줄로 쪼개고 있었다. */}
+            </Link>
+          ))}
         </section>
 
         {/* ── 소유자 정보 ── */}

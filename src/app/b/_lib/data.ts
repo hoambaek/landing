@@ -292,3 +292,105 @@ function round1(v: number | null): number | null {
 function round2(v: number | null): number | null {
   return v === null ? null : Math.round(v * 100) / 100;
 }
+
+/* ── 같은 소유자의 병 목록 ─────────────────────────────────────
+ * 인증 없이 부른다. 담는 값은 병 번호·제품·수심·기간뿐으로, 각 병의 인증서가
+ * 이미 공개하는 범위와 같다. 이메일은 기준으로만 쓰고 결과에 담지 않는다.
+ *
+ * 기준은 이메일이다. 이름은 소유자가 나중에 고칠 수 있어(updateOwnerName)
+ * 오타 하나를 바로잡는 순간 소장품이 둘로 갈린다. OTP가 증명하는 것도 이메일이다.
+ * 대소문자는 무시한다 — 등록 시점에 정규화하지 않고 입력한 그대로 저장하기 때문이다.
+ *
+ * 소유권은 "nfc_code별 최신 등록 행"이 갖는다. 그래서 이메일로 뽑은 뒤
+ * 코드마다 최신 행을 다시 확인해, 그 사이 다른 사람에게 넘어간 병은 뺀다.
+ */
+export interface OwnedBottle {
+  code: string;
+  productId: string;
+  serial: number | null;
+  depth: number;
+  immersion: string | null;
+  retrieval: string | null;
+  registeredAt: string | null;
+}
+
+export async function fetchOwnedBottles(email: string): Promise<OwnedBottle[]> {
+  if (!supabaseAdmin) return [];
+  const target = (email ?? "").trim().toLowerCase();
+  if (!target) return [];
+
+  /* 이 이메일이 등장하는 모든 등록 행. 코드별 최신 행을 가리기 위해 created_at까지 받는다.
+     ilike의 %·_는 와일드카드라 그대로 넘기면 남의 주소까지 걸린다 — 이스케이프한다. */
+  const pattern = target.replace(/([\\%_])/g, "\\$1");
+  const { data: mine } = await supabaseAdmin
+    .from("bottle_registrations")
+    .select("nfc_code, created_at")
+    .ilike("email", pattern);
+  if (!mine?.length) return [];
+
+  const codes = [...new Set(mine.map((r) => r.nfc_code).filter((c): c is string => !!c))];
+  if (!codes.length) return [];
+
+  /* 코드별 최신 소유자 확인 — 최신 행의 주인이 내가 아니면 뺀다 */
+  const { data: allRows } = await supabaseAdmin
+    .from("bottle_registrations")
+    .select("nfc_code, email, created_at")
+    .in("nfc_code", codes);
+
+  const latest = new Map<string, { email: string; createdAt: string | null }>();
+  for (const r of allRows ?? []) {
+    if (!r.nfc_code) continue;
+    const prev = latest.get(r.nfc_code);
+    const at = r.created_at ? String(r.created_at) : null;
+    if (!prev || (at ?? "") > (prev.createdAt ?? "")) {
+      latest.set(r.nfc_code, { email: (r.email ?? "").toLowerCase(), createdAt: at });
+    }
+  }
+  const owned = codes.filter((c) => latest.get(c)?.email === target);
+  if (!owned.length) return [];
+
+  /* 병 식별 — 두 테이블에 나뉘어 있다(번호 병 / 배치 병). 한 번씩만 훑는다. */
+  const [{ data: nbs }, { data: bus }] = await Promise.all([
+    supabaseAdmin.from("numbered_bottles").select("nfc_code, product_id, bottle_number").in("nfc_code", owned),
+    supabaseAdmin.from("bottle_units").select("nfc_code, product_id, serial_number").in("nfc_code", owned),
+  ]);
+
+  const identity = new Map<string, { productId: string; serial: number | null }>();
+  for (const r of nbs ?? []) {
+    if (r.nfc_code) identity.set(r.nfc_code, { productId: r.product_id ?? "first_edition", serial: r.bottle_number ?? null });
+  }
+  for (const r of bus ?? []) {
+    if (r.nfc_code && !identity.has(r.nfc_code)) {
+      identity.set(r.nfc_code, { productId: r.product_id, serial: r.serial_number ?? null });
+    }
+  }
+
+  /* 재고에서 기록이 초기화된 옛 코드는 등록 행만 남아 있다. 그 카드를 그리면
+     열리지 않는 페이지로 보내게 되므로 여기서 떨군다. */
+  const live = owned.filter((c) => identity.has(c));
+  if (!live.length) return [];
+
+  const productIds = [...new Set(live.map((c) => identity.get(c)!.productId))];
+  const { data: batches } = await supabaseAdmin
+    .from("inventory_batches")
+    .select("product_id, immersion_date, retrieval_date, aging_depth")
+    .in("product_id", productIds);
+  const batchOf = new Map((batches ?? []).map((b) => [b.product_id, b]));
+
+  return live
+    .map((code) => {
+      const id = identity.get(code)!;
+      const b = batchOf.get(id.productId);
+      return {
+        code,
+        productId: id.productId,
+        serial: id.serial,
+        depth: b?.aging_depth ?? 30,
+        immersion: b?.immersion_date ?? null,
+        retrieval: b?.retrieval_date ?? null,
+        registeredAt: latest.get(code)?.createdAt?.slice(0, 10) ?? null,
+      };
+    })
+    /* 번호 순으로 세운다 — 소장품은 등록한 날짜가 아니라 병 번호로 기억된다 */
+    .sort((a, b) => (a.productId === b.productId ? (a.serial ?? 0) - (b.serial ?? 0) : a.productId.localeCompare(b.productId)));
+}

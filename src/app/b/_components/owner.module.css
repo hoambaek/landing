@@ -215,6 +215,17 @@
   letter-spacing: 0.14em;
   color: rgba(20, 17, 14, 0.44);
 }
+/* 여러 병이 세워졌을 때 지금 태그한 병을 짚는 표시.
+   소장품 목록에서 "내가 방금 든 병이 어느 것인가"만 알려주면 되므로
+   테두리 없이 브라스 글자만 둔다 — 칩을 두면 에디션 번호와 무게가 겨룬다. */
+.linkedHere {
+  margin-left: 2px;
+  font-family: var(--o-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: rgba(138, 106, 58, 0.9);
+  white-space: nowrap;
+}
 .linkedName {
   margin-top: 6px;
   font-family: var(--o-serif);

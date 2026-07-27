@@ -633,7 +633,9 @@ export interface RecordExtraCopy {
   /* 소유 관리 (03A) */
   ownHead: string; // "등록된 소유자"
   ownVerified: string; // "소유 등록 완료"
-  ownBottleHead: string; // "소유한 병"
+  ownBottleHead: string; // "소유한 병" — 한 병일 때
+  ownBottleHeadPlural: string; // 여러 병일 때 (같은 이메일로 등록된 병 전부)
+  ownThisBottle: string; // 여러 병 중 지금 태그한 병을 짚는 표시
   ownAccountHead: string; // "소유자 정보"
   ownEditName: string; // "이름 수정"
   ownEditNameSub: string;
@@ -714,6 +716,8 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     ownHead: "등록된 소유자",
     ownVerified: "소유 등록 완료",
     ownBottleHead: "소유한 병",
+    ownBottleHeadPlural: "소유한 병",
+    ownThisBottle: "지금 이 병",
     ownAccountHead: "소유자 정보",
     ownEditName: "이름 수정",
     ownEditNameSub: "인증서와 소유 기록에 반영됩니다.",
@@ -790,6 +794,8 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     ownHead: "Registered owner",
     ownVerified: "Ownership registered",
     ownBottleHead: "Your bottle",
+    ownBottleHeadPlural: "Your bottles",
+    ownThisBottle: "This one",
     ownAccountHead: "Owner details",
     ownEditName: "Edit name",
     ownEditNameSub: "Reflected in the certificate and ownership record.",
@@ -866,6 +872,8 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     ownHead: "Propriétaire enregistré",
     ownVerified: "Propriété enregistrée",
     ownBottleHead: "Votre bouteille",
+    ownBottleHeadPlural: "Vos bouteilles",
+    ownThisBottle: "Celle-ci",
     ownAccountHead: "Détails du propriétaire",
     ownEditName: "Modifier le nom",
     ownEditNameSub: "Reporté sur le certificat et le relevé de propriété.",
@@ -942,6 +950,8 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     ownHead: "登録された所有者",
     ownVerified: "所有登録完了",
     ownBottleHead: "所有する一本",
+    ownBottleHeadPlural: "所有する一本",
+    ownThisBottle: "いま手元の一本",
     ownAccountHead: "所有者情報",
     ownEditName: "名前を編集",
     ownEditNameSub: "証明書と所有記録に反映されます。",
@@ -1018,6 +1028,8 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     ownHead: "已登记所有者",
     ownVerified: "所有权登记完成",
     ownBottleHead: "所拥有的一瓶",
+    ownBottleHeadPlural: "所拥有的酒瓶",
+    ownThisBottle: "当前这瓶",
     ownAccountHead: "所有者信息",
     ownEditName: "修改姓名",
     ownEditNameSub: "将同步至证书与所有权记录。",
