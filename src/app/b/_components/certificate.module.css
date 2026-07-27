@@ -114,6 +114,19 @@
   width: 222px;
   padding: 24px 0;
 }
+/* 제품명 — 등록 완료 화면(.iProductName)과 같은 조판이다.
+   등록 직후 본 얼굴과 인증서에 새겨진 얼굴이 같아야 한 문서로 읽힌다.
+   번호 아래에 놓는 순서까지 그쪽을 따른다. */
+.productName {
+  margin-top: 10px;
+  font-family: var(--c-serif);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: rgba(20, 17, 14, 0.62);
+}
 .edition {
   display: flex;
   align-items: baseline;
@@ -331,39 +344,60 @@
   letter-spacing: 0.1em;
   color: var(--c-faint);
 }
-/* 잠긴 서명 — 판 크기는 열렸을 때와 비슷하게 잡아 열 때 문서가 덜 흔들리게 한다 */
+/* 잠긴 서명 — 열렸을 때와 같은 판 크기를 채운다.
+   열림 상태를 실측하면 136px이고 전 로케일이 같다(HMAC-SHA256 · 다이제스트 ·
+   괘선 · 발행자 줄로 내용이 고정이라 번역을 타지 않는다).
+   signBox의 세로 패딩을 뺀 안쪽이 96px — 그 높이를 잡아 두면
+   여는 순간 아래 문서가 밀리지 않는다(실측으로 맞춘 값이다). */
 .signLock {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: 14px;
   width: 100%;
-  padding: 6px 0 4px;
+  min-height: 96px;
+  padding: 0;
   background: none;
   border: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
+/* 열쇠는 판을 채우지 않는다 — 문구 위에 놓인 표지 정도의 크기.
+   원본 실루엣이 가로로 길어(비율 2.85:1) 폭으로 잡는다. */
 .signKey {
+  width: 58px;
+  height: auto;
   color: var(--c-bronze);
-  opacity: 0.8;
+  opacity: 0.85;
   transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .signLock:active .signKey {
   opacity: 1;
 }
+/* 문구가 천천히 숨 쉬며 터치를 부른다. 깜빡임이 아니라 농도의 오르내림이라
+   문서의 정적을 깨지 않는다. 한 번 열면 이 자리 자체가 사라진다. */
 .signLockLabel {
   font-family: var(--c-mono);
   font-size: 9.5px;
   letter-spacing: 0.2em;
   color: var(--c-bronze);
+  animation: signBreath 2.8s ease-in-out infinite;
 }
-/* 안내는 라벨보다 한 단 낮게 — 무엇인지 먼저 읽히고 어떻게 여는지가 뒤따른다 */
-.signLockHint {
-  font-family: var(--c-mono);
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  color: var(--c-faint);
+@keyframes signBreath {
+  0%,
+  100% {
+    opacity: 0.42;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .signLockLabel {
+    animation: none;
+    opacity: 1;
+  }
 }
 /* 문서번호 — 대조 키. 라벨을 앞에 눕혀 한 줄로 둔다.
    서명 판 안에 넣지 않은 이유: 해시는 발행자만 만들 수 있는 값이고
@@ -534,6 +568,15 @@
   line-height: 49px;
   letter-spacing: 0.012em;
   color: var(--c-ink);
+}
+.printProductName {
+  margin-top: 10px;
+  font-family: var(--c-serif);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.02em;
+  color: rgba(20, 17, 14, 0.62);
 }
 .printEdition {
   display: flex;

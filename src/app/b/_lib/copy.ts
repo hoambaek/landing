@@ -131,30 +131,30 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
   ja: {
     verified: "NFC認証済み · RECORD AUTHENTICATED",
     titleText: "海が刻んだ四季",
-    subLabel: "南海 30m · 四季の記録",
-    immersion: "沈酒",
+    subLabel: "南海（ナムヘ）水深30m · 四季の記録",
+    immersion: "海中投入",
     retrieval: "引き揚げ",
     planned: "予定",
     months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
     seasons: { winter: "冬", spring: "春", summer: "夏", autumn: "秋" },
     journey: { origin: "シャンパーニュ", originSub: "VENTEUIL", aging: "瓶熟成", agingSub: "MAISON" },
     obsHead: "海洋観測 · 年間平均",
-    obsHeadPartial: "海洋観測 · 沈酒後の平均",
+    obsHeadPartial: "海洋観測 · 投入後の平均",
     metrics: {
       temp: "水温", salinity: "塩分", tide: "潮位", current: "海流速度",
       pressure: "水圧", tidal: "潮流速度", wave: "波高", period: "波周期",
     },
     metricsShort: { temp: "水温", salinity: "塩分", tide: "潮位", current: "海流", pressure: "水圧", tidal: "潮流", wave: "波高", period: "波周期" },
-    converged: "一年の海が、この一本に納められました",
-    converging: "海は今も、この一本に刻まれつづけています",
+    converged: "一年の海が、この一本に。",
+    converging: "海は今も、この一本に刻まれている。",
     passport: { maison: "MAISON", cepage: "CÉPAGE", style: "STYLE" },
-    gating: "この記録の全文は、引き揚げ立ち会いへの招待とともに公開されます。",
+    gating: "記録の全文は、引き揚げ立ち会いへのご招待とともに公開されます。",
     cta: "N° {serial} の所有者として名を残す",
     ctaNoSerial: "この一本の所有者として名を残す",
     ctaSub: "REGISTRE · OCEAN CELLAR™",
-    footerTagline: "海の時間を記録します",
+    footerTagline: "海の時間を、記録する。",
     notFoundTitle: "ボトルが見つかりません",
-    notFoundBody: "コードが無効か、まだ登録されていません。",
+    notFoundBody: "コードが無効であるか、このボトルはまだ登録されていません。",
   },
   zh: {
     verified: "NFC认证完成 · RECORD AUTHENTICATED",
@@ -293,7 +293,9 @@ export interface EntryCopy {
   emailLabel: string;
   emailPlaceholder: string;
   privacyNote: string;
-  submit: string; // "N° {serial}{acc} 소장하다" — {acc}는 컴포넌트가 을/를로 치환(ko만)
+  submit: string; // "N° {serial}{acc} 소장하기" — {acc}는 컴포넌트가 을/를로 치환(ko만)
+  /* 종결형 규칙: 기록 페이지 CTA는 흐름으로 들어오라는 초대라 각인체(-다),
+     이 버튼은 폼을 닫고 다음으로 넘기는 완결이라 명사형(-기). 무게가 아니라 역할로 가른다 */
   submitNoSerial: string; // 번호 없는 병 — 번호 호명 불가 시(정본 규칙 2: 부르지 않는다)
   submitting: string;
   /* 각인 공개 (등록 완료 화면) */
@@ -353,8 +355,8 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     emailPlaceholder: "디지털 인증서를 받을 주소",
     privacyNote:
       "인증서에 새겨진 이름은 병을 태그하는 누구에게나 보입니다.\n이메일은 공개하지 않고 인증서 발급에만 씁니다.",
-    submit: "N° {serial}{acc} 소장하다",
-    submitNoSerial: "소장을 시작하다",
+    submit: "N° {serial}{acc} 소장하기",
+    submitNoSerial: "소장하기",
     submitting: "기록하는 중",
     inscribedEyebrow: "등록 완료",
     inscribedTitle: "바다의 시간이\n당신의 것이 되었습니다",
@@ -477,7 +479,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     errGeneric: "Veuillez réessayer dans un instant.",
   },
   ja: {
-    filmCaption: "海の底の時間が目を覚まします",
+    filmCaption: "海の底で、時間が目を覚ます。",
     filmMeta: "FULL FILM · 00:08",
     identityEyebrow: "NFC AUTHENTICATED",
     identityTagline: "OCEAN AGED · FOUR SEASONS",
@@ -485,24 +487,24 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     identityBodyNoSerial: "世界にわずか{total}本、最初の海底熟成エディション。\nいまかざした一本も、その記録のひとつです。",
     provEyebrow: "PROVENANCE",
     provTitle: "海が残した\n三つの証",
-    provBody: "この一本がたどった時間は、演出ではなく\n実際の観測記録として保存されています。",
+    provBody: "この一本がたどった時間は、\n実際の観測記録として残っています。",
     fact1Label: "熟成水深",
     fact1Value: "30m",
-    fact1Sub: "南海の海底",
+    fact1Sub: "南海（ナムヘ）の海底",
     fact2Label: "熟成期間",
     fact2Value: "12ヶ月",
     fact2Sub: "四季の移ろい",
     fact3Label: "海洋観測",
     fact3Value: "8項目",
     fact3Sub: "実測データ",
-    provHint: "熟成記録の全文は、所有登録のあとにひらきます",
+    provHint: "熟成記録の全文は、所有登録の後にご覧いただけます",
     ownEyebrow: "OWNERSHIP",
     ownTitle: "この一本の記録に\nあなたの名前を",
     ownTitleNoSerial: "この一本の記録に\nあなたの名前を",
-    ownBody: "N° {serial} の最初の所有者として記録され、\n海の底で過ごしたすべての時間がひらきます。",
-    ownBodyNoSerial: "この一本の最初の所有者として記録され、\n海の底で過ごしたすべての時間がひらきます。",
+    ownBody: "N° {serial} の最初の所有者として登録され、\nこの一本が海の底で過ごした、すべての記録をご覧いただけます。",
+    ownBodyNoSerial: "この一本の最初の所有者として登録され、\n海の底で過ごした、すべての記録をご覧いただけます。",
     claimedTitle: "すでに名が刻まれた一本です",
-    claimedBody: "記録は誰にでも開かれています。",
+    claimedBody: "記録は、どなたでもご覧いただけます。",
     claimedCta: "海の記録を見る",
     nameLabel: "お名前",
     namePlaceholder: "証明書に残すお名前",
@@ -514,7 +516,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     emailLabel: "メールアドレス",
     emailPlaceholder: "デジタル証明書を受け取る宛先",
     privacyNote:
-      "証明書に刻まれたお名前は、ボトルにかざせば誰でも見られます。\nメールアドレスは公開されず、証明書の発行にのみ使用します。",
+      "証明書のお名前は、ボトルにスマートフォンをかざした誰もが見られます。\nメールアドレスは公開されず、証明書の発行にのみ使用します。",
     submit: "N° {serial} を所蔵する",
     submitNoSerial: "この一本を所蔵する",
     submitting: "記録しています",
@@ -626,9 +628,23 @@ export interface RecordExtraCopy {
   certSeal: string; // 진위 확인 문구
   certAuthHead: string; // "인증 정보"
   certIdLabel: string; // "인증서 ID"
-  /* 서명은 가려 두었다가 눌러야 열린다 — 안내 문구와 열린 뒤의 라벨 */
+  /* 잠긴 서명 자리의 라벨 — 열쇠 글리프와 한 줄. 누르면 서명이 열린다.
+     "발행자 서명"은 발행하는 쪽의 말이었고, "터치하여 진위 확인"은 NFC 업계의
+     기술 어투다(TAG·TAP·AUTHENTICATE). 메종은 검증을 앞세우지 않는다 —
+     Krug iD·Krug 앱은 인증 기능이 있는데도 verify·authenticate·unlock을 한 번도
+     쓰지 않고 discover 하나로 간다("discover the story of your bottle").
+
+     다만 Krug의 discover는 이야기를 여는 자리다. 이 자리가 여는 것은 이야기가
+     아니라 암호 서명이라 "발견"은 과장이 된다. 비유(봉인)도 걷어냈다.
+
+     한국어 후보를 실측으로 걸렀다. "발행인"은 신문·잡지 쪽 말이고, 인증서의
+     발급 주체를 가리키는 한국 표준어는 "발급기관"이다(과기부 전자서명 인증서
+     필수 항목). 다만 그 말은 공인인증서 어조라 이 문서에 얹히지 않고,
+     소비자 관습어 "정품 인증"은 쇼핑몰 배지처럼 읽힌다.
+     열면 실제로 코드가 나오므로 본 대로 적는다 — 전문용어도 비유도 아니다.
+     "보기"를 붙이는 이유: 명사만 두면 라벨로 읽혀 누를 수 있다는 것이 안 보인다.
+     화면을 여는 동작은 명사형이라는 종결형 규칙과도 맞는다(바다의 기록 보기·내력 보기). */
   signLocked: string;
-  signLockedHint: string;
   certStatusLabel: string; // "인증 상태"
   certSignHead: string; // "디지털 서명"
   certSave: string; // "인증서 저장"
@@ -712,8 +728,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certSeal: "NFC 원본 태그와 등록 기록이 일치합니다.",
     certAuthHead: "인증 정보",
     certIdLabel: "인증서 ID",
-    signLocked: "발행자 서명",
-    signLockedHint: "눌러서 확인",
+    signLocked: "인증 코드 보기",
     certStatusLabel: "인증 상태",
     certSignHead: "디지털 서명",
     certSave: "인증서 저장",
@@ -792,8 +807,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certSeal: "The original NFC tag matches the registration record.",
     certAuthHead: "Certification",
     certIdLabel: "Certificate ID",
-    signLocked: "Issuer signature",
-    signLockedHint: "Tap to reveal",
+    signLocked: "View certificate code",
     certStatusLabel: "Status",
     certSignHead: "Digital signature",
     certSave: "Save certificate",
@@ -872,8 +886,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certSeal: "Le tag NFC d'origine correspond au relevé d'enregistrement.",
     certAuthHead: "Certification",
     certIdLabel: "ID du certificat",
-    signLocked: "Signature de l'émetteur",
-    signLockedHint: "Toucher pour afficher",
+    signLocked: "Voir le code du certificat",
     certStatusLabel: "Statut",
     certSignHead: "Signature numérique",
     certSave: "Enregistrer le certificat",
@@ -923,15 +936,15 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
   },
   ja: {
     provHead: "原産地 · シャンパーニュ",
-    seaHead: "海底熟成 · 南海",
+    seaHead: "海底熟成 · 南海（ナムヘ）",
     provLabels: { maison: "メゾン", region: "地域", cepage: "品種", style: "スタイル", elevage: "熟成" },
     seaLabels: {
-      immersion: "沈酒", retrieval: "引き揚げ", duration: "熟成期間", depth: "熟成水深", location: "熟成地",
+      immersion: "海中投入", retrieval: "引き揚げ", duration: "熟成期間", depth: "熟成水深", location: "熟成地",
       environment: "熟成環境", coords: "位置",
     },
     wando: "莞島（ワンド）海域",
     ownedBy: "OWNED BY",
-    metricAgg: { avg: "{n}ヶ月平均", max: "{n}ヶ月最高", depth: "水深 {d}M" },
+    metricAgg: { avg: "{n}ヶ月平均", max: "{n}ヶ月最高値", depth: "水深 {d}M" },
     durationFmt: "{y}年 {m1}–{m2} · {n}ヶ月",
     envFmt: "{site} · 水深 {d}m",
     newsletterLine: "次の引き揚げと新しい記録を、いち早くお届けします。",
@@ -943,17 +956,16 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     brandPage: "ブランドページ",
     blogPage: "ジャーナル",
     ecEyebrow: "EIGHT CURRENTS",
-    ecTitle: "八つの観測が\n一本の時間を描きます",
+    ecTitle: "八つの観測項目が\n一本の時間を描く",
     ecBody: "四季の変化を一つの流れとして記録しました。",
     ecLegend: "金色の線 · 水温",
     certTag: "所有証明書",
-    certDedication: "海の記録を\nこの名が所蔵します",
+    certDedication: "海の記録は\nこの名のもとに",
     certVerifiedShort: "NFC認証済み",
-    certSeal: "NFCの原本タグと登録記録が一致します。",
+    certSeal: "ボトルのNFCタグと登録記録が一致しています。",
     certAuthHead: "認証情報",
     certIdLabel: "証明書ID",
-    signLocked: "発行者の署名",
-    signLockedHint: "タップして表示",
+    signLocked: "認証コードを見る",
     certStatusLabel: "認証状態",
     certSignHead: "デジタル署名",
     certSave: "証明書を保存",
@@ -974,9 +986,9 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     ownEditNameSub: "証明書と所有記録に反映されます。",
     ownLanguage: "言語",
     ownAuthed: "本人確認済み",
-    ownSignOut: "認証を解除",
+    ownSignOut: "ログアウト",
     ownAuthOpen: "本人確認してすべて表示",
-    ownOtpLead: "登録のメールアドレスに6桁の認証コードをお送りします。",
+    ownOtpLead: "ご登録のメールアドレスに、6桁の認証コードをお送りします。",
     ownOtpSend: "認証コードを受け取る",
     ownOtpSending: "送信中",
     ownOtpSent: "{email} にコードを送りました。5分以内に入力してください。",
@@ -987,7 +999,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     ownFieldName: "名前",
     ownFieldEmail: "メール",
     ownEmailLocked: "本人確認に使うアドレスです。",
-    ownEmailLockedTo: "変更は {email} までお問い合わせください。",
+    ownEmailLockedTo: "メールアドレスの変更は、{email}までお問い合わせください。",
     ownCancel: "キャンセル",
     ownSave: "保存",
     ownSaving: "保存中",
@@ -1032,8 +1044,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certSeal: "NFC原始标签与登记记录一致。",
     certAuthHead: "认证信息",
     certIdLabel: "证书编号",
-    signLocked: "发行方签名",
-    signLockedHint: "轻触以显示",
+    signLocked: "查看认证代码",
     certStatusLabel: "认证状态",
     certSignHead: "数字签名",
     certSave: "保存证书",

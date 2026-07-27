@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { fetchBottleRecord, fetchBottleOwner, fetchBottleOwnerRaw } from "../../_lib/data";
 import { BOTTLE_LANG_COOKIE, parseBottleLocale } from "../../_lib/locale";
 import { getOwnerSession, signCertificate } from "../../_lib/owner-auth";
@@ -23,6 +24,9 @@ export default async function BottleCertificatePage({ params }: { params: Promis
   ]);
 
   if (!data) return <BottleNotFound />;
+  /* 소유자가 없는 소유 인증서는 발급하지 않는다. 이름 자리에 안내 문구를 넣어
+     빈 증서를 그리고 있었는데, 서명까지 붙은 문서라 저장하면 그대로 남는다. */
+  if (!owner) redirect(`/b/${code}`);
   const initialLocale = parseBottleLocale(jar.get(BOTTLE_LANG_COOKIE)?.value);
 
   const ownerNameFull = session ? (await fetchBottleOwnerRaw(code))?.name ?? null : null;

@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import {
   fetchBottleRecord,
   fetchBottleOwner,
@@ -25,6 +26,8 @@ export default async function BottleOwnerPage({ params }: { params: Promise<{ co
   ]);
 
   if (!data) return <BottleNotFound />;
+  /* 관리할 소유 정보가 아직 없다 — 등록부터 하도록 진입 화면으로 돌려보낸다 */
+  if (!ownerMasked) redirect(`/b/${code}`);
 
   /* 언어 선택기가 없는 화면 — 앞 화면(/b 공통 쿠키)에서 고른 언어를 그대로 따른다 */
   const locale = parseBottleLocale(jar.get(BOTTLE_LANG_COOKIE)?.value);

@@ -11,6 +11,7 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { toPng } from "html-to-image";
+import KeyGlyph from "./KeyGlyph";
 import styles from "./certificate.module.css";
 import BottleFooter from "./BottleFooter";
 import {
@@ -327,6 +328,9 @@ export default function BottleCertificate({
               className={styles.bottleImg}
             />
           </div>
+          {/* 무엇에 대한 증서인지가 도판 alt에만 있었다 — 저장본에서는 그마저 사라진다.
+              번호 위에 제품명을 세운다: 무엇인가 → 그중 몇 번째인가 순서다. */}
+          <p className={styles.productName}>{meta.name}</p>
           {serial !== null && (
             <div className={styles.edition}>
               <span className={styles.edNo}>N°</span>
@@ -392,39 +396,10 @@ export default function BottleCertificate({
                   type="button"
                   className={styles.signLock}
                   onClick={() => setSignOpen(true)}
-                  aria-label={`${extra.signLocked} — ${extra.signLockedHint}`}
+                  aria-label={extra.signLocked}
                 >
-                  {/* 자물쇠가 아니라 열쇠 — 잠긴 상태가 아니라 "열 수 있다"를 말한다.
-                      고전 열쇠의 세 부분을 그대로 세운다: 장식 보우(고리), 목의 칼라,
-                      두 갈래 워드. 획은 문서의 헤어라인 괘선과 같은 굵기로 맞춰
-                      아이콘이 아니라 이 종이에 새겨진 것처럼 읽히게 한다. */}
-                  <svg
-                    className={styles.signKey}
-                    width="22"
-                    height="40"
-                    viewBox="0 0 24 44"
-                    fill="none"
-                    aria-hidden
-                  >
-                    <circle cx="12" cy="9" r="6.2" stroke="currentColor" strokeWidth="1" />
-                    <circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="0.85" />
-                    <path d="M12 15.2 V40" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
-                    <path
-                      d="M9.4 21.6 H14.6 M9.4 24 H14.6"
-                      stroke="currentColor"
-                      strokeWidth="0.85"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M12 31.4 H17.8 V34.4 H14.8 V36.6 H17.8 V40"
-                      stroke="currentColor"
-                      strokeWidth="1"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  <KeyGlyph className={styles.signKey} />
                   <span className={styles.signLockLabel}>{extra.signLocked}</span>
-                  <span className={styles.signLockHint}>{extra.signLockedHint}</span>
                 </button>
               )}
             </div>
@@ -523,6 +498,8 @@ export default function BottleCertificate({
               className={styles.printBottleImg}
             />
           </div>
+          {/* 저장본은 화면을 떠나 혼자 남는다 — 무엇에 대한 증서인지가 그 안에 있어야 한다 */}
+          <p className={styles.printProductName}>{meta.name}</p>
           <div className={styles.printEdition}>
             <span className={styles.printEdNo}>N°</span>
             <span className={styles.printEdNum}>{serial ?? "—"}</span>
