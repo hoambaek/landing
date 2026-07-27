@@ -26,6 +26,7 @@ import {
 import type { BottleRecordData } from "../_lib/data";
 import { submitNewsletter } from "@/lib/forms";
 import { agingMonths } from "../_lib/duration";
+import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -115,6 +116,9 @@ export default function BottleRecord({
   /* 병 사진은 IO가 아니라 수렴 점이 다 맺힌 뒤에 연다 (아래 renderConverge) */
   const bottlePhotoRef = useRef<HTMLDivElement>(null);
   const bottleSerialRef = useRef<HTMLParagraphElement>(null);
+
+  /* 안드로이드 크롬은 루트 배경이 아니라 theme-color 메타를 본다 — 위 b-paper와 같은 값을 준다 */
+  useSafeAreaTint(true);
 
   const copy = BOTTLE_COPY[locale];
   const extra = RECORD_EXTRA[locale];
@@ -538,7 +542,11 @@ export default function BottleRecord({
   }, [serial, serialTotal]);
 
   return (
-    <main className={styles.page} ref={rootRef}>
+    /* b-paper — 안전영역(상태바·하단바)을 종이색으로. globals.css의 html:has(.b-paper)와 짝이다.
+       히어로만 어둡고 그 아래는 전부 종이인 화면이라, 검정으로 두면 스크롤한 대부분의 시간 동안
+       위아래 띠만 검게 남는다. 처음 한 화면에서 종이 띠가 어두운 히어로를 감싸는 것은 감수한다 —
+       이 페이지는 종이 문서이고 히어로가 그 안에 끼워 넣은 도판이라는 구조와도 맞는다. */
+    <main className={`${styles.page} b-paper`} ref={rootRef}>
       <div className={styles.frame}>
         {/* ── S1 병사진 히어로 ── */}
         <section className={styles.hero} ref={heroRef}>
@@ -611,7 +619,7 @@ export default function BottleRecord({
         </section>
 
         {/* ── S2 여정 (depth profile) ── */}
-        <section className={styles.journey} ref={journeySectionRef}>
+        <section id="tmpProbe" className={styles.journey} ref={journeySectionRef}>
           <div
             className={styles.journeyScaler}
             style={{ transform: `scale(${journeyScale})`, height: 150 * journeyScale }}
