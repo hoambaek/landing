@@ -46,6 +46,11 @@ const LEGAL = [
 
 const EMAIL = "info@musedemaree.com";
 
+/* 일본 주류업계 표준 적정음주 문구 — ja 로케일에만 추가 표기.
+   보건복지부 고시 경고문구(한국어)는 법정 문구라 전 로케일 유지(age-gate.ts와 동일 기준). */
+const WARNING_JA =
+  "飲酒は20歳になってから。お酒は楽しく適量を。妊娠中や授乳期の飲酒は、胎児・乳児の発育に悪影響を与えるおそれがあります。";
+
 function InstagramIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -122,6 +127,12 @@ export default function Footer({
       {/* 하단 */}
       <div className="s-footer__bottom">
         <p className="s-footer__warning">
+          {locale === "ja" && (
+            <>
+              {WARNING_JA}
+              <br />
+            </>
+          )}
           알코올은 발암물질로 지나친 음주는 간암, 위암 등을 일으킵니다.
           <br />
           임신 중 음주는 기형아 출생 위험을 높입니다.

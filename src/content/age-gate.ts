@@ -64,7 +64,7 @@ export const ageGateCopy: Record<Locale, AgeGateCopy> = {
   },
   ja: {
     eyebrow: "muse de marée",
-    title: "満19歳以上ですか。",
+    title: "満19歳以上ですか？",
     body: "ミューズ・ド・マレは、海の時間を記録する酒類ブランドです。\n韓国の法令により、満19歳未満の方はご入場いただけません。",
     confirm: "はい、満19歳以上です",
     deny: "いいえ、19歳未満です",
