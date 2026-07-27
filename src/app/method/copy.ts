@@ -117,7 +117,7 @@ const ko: MethodCopy = {
   },
   ch02: {
     h2: "시간이 지나갈 길을 예측합니다.",
-    lead: "풍미가 숙성 시간을 따라 어떻게 변하는지, 112,316건의 테이스팅으로 기록했습니다. 이 데이터로 배운 모델이 여섯 개의 축으로 풍미를 읽습니다. 향이 열리는 속도와 기포가 남는 정도는 물리와 화학의 법칙으로 다듬습니다. 그렇게 36개월의 변화를 하나의 곡선으로 그립니다. 더 좋아지는 길이 아니라, 지상과는 다른 길입니다.",
+    lead: "풍미가 숙성 시간을 따라 어떻게 변하는지, 112,316건의 테이스팅 기록으로 배웠습니다. 그렇게 배운 모델이 여섯 개의 축으로 풍미를 읽습니다. 향이 열리는 속도와 기포가 남는 정도는 물리와 화학의 법칙으로 다듬습니다. 그렇게 36개월의 변화를 하나의 곡선으로 그립니다. 더 좋아지는 길이 아니라, 지상과는 다른 길입니다.",
     tagPlan: { em: "계획", text: "12개월" },
     tagRec: { em: "추천", text: "12개월 · 84점" },
     tagPeak: { em: "PEAK", text: "14개월 · 87점" },
@@ -206,7 +206,7 @@ const ko: MethodCopy = {
   },
   closing: {
     title: "우리는 예측을 마쳤습니다. 이제 바다가 답할 차례입니다.",
-    sub: ["새 퀴베 출시를 가장 먼저 만나고, 심해에서 보낸 시간의 기록을 평생 열람하는 자리입니다.", "자리는 준비된 병의 수만큼만 열립니다."],
+    sub: ["새 퀴베 출시를 가장 먼저 만나고, 바다에서 보낸 시간의 기록을 평생 열람하는 자리입니다.", "자리는 준비된 병의 수만큼만 열립니다."],
     cta: "초대 신청하기",
     secondary: "파인다이닝과 호텔 바를 위한 안내는 파트너 문의로.",
   },
@@ -235,7 +235,7 @@ const en: MethodCopy = {
   },
   ch02: {
     h2: "We predict the path time will take.",
-    lead: "We recorded how flavour changes over aging time across 112,316 tastings. A model trained on that data reads flavour along six axes. The pace at which aromas open and the way bubbles persist are refined by the laws of physics and chemistry. From it we draw a single 36-month curve. Not a better path, but a different one from land.",
+    lead: "We learned how flavour changes over aging time from 112,316 tasting records. A model trained on those records reads flavour along six axes. The pace at which aromas open and the way bubbles persist are refined by the laws of physics and chemistry. From it we draw a single 36-month curve. Not a better path, but a different one from land.",
     tagPlan: { em: "PLAN", text: "12 mo" },
     tagRec: { em: "ADVISED", text: "12 mo · 84" },
     tagPeak: { em: "PEAK", text: "14 mo · 87" },
@@ -324,7 +324,7 @@ const en: MethodCopy = {
   },
   closing: {
     title: "Our prediction is written. Now it is the sea's turn to answer.",
-    sub: ["Be the first to hear of a new cuvée's release, and keep the record of its time in the deep for life.", "Seats open only as many as the bottles prepared."],
+    sub: ["Be the first to hear of a new cuvée's release, and keep the record of its time in the sea for life.", "Seats open only as many as the bottles prepared."],
     cta: "Request an invitation",
     secondary: "For fine dining and hotel bars, see partnership enquiries.",
   },
@@ -353,7 +353,7 @@ const fr: MethodCopy = {
   },
   ch02: {
     h2: "Nous prédisons le chemin que prendra le temps.",
-    lead: "Nous avons enregistré l'évolution des arômes au fil du vieillissement sur 112 316 dégustations. Un modèle entraîné sur ces données lit le vin selon six axes. La vitesse d'ouverture des arômes et la tenue des bulles sont affinées par les lois de la physique et de la chimie. Nous en traçons une seule courbe sur 36 mois. Non pas une meilleure voie, mais une voie différente de celle de la terre.",
+    lead: "Nous avons appris l'évolution des arômes au fil du vieillissement à partir de 112 316 relevés de dégustation. Un modèle entraîné sur ces relevés lit le vin selon six axes. La vitesse d'ouverture des arômes et la tenue des bulles sont affinées par les lois de la physique et de la chimie. Nous en traçons une seule courbe sur 36 mois. Non pas une meilleure voie, mais une voie différente de celle de la terre.",
     tagPlan: { em: "PRÉVU", text: "12 mois" },
     tagRec: { em: "CONSEILLÉ", text: "12 mois · 84" },
     tagPeak: { em: "PIC", text: "14 mois · 87" },
@@ -442,7 +442,7 @@ const fr: MethodCopy = {
   },
   closing: {
     title: "Notre prévision est écrite. À la mer de répondre, désormais.",
-    sub: ["Découvrez en avant-première la sortie d'une nouvelle cuvée et gardez à vie le relevé de son temps dans les profondeurs.", "Les places s'ouvrent à la mesure des bouteilles préparées."],
+    sub: ["Découvrez en avant-première la sortie d'une nouvelle cuvée et gardez à vie le relevé de son temps en mer.", "Les places s'ouvrent à la mesure des bouteilles préparées."],
     cta: "Demander une invitation",
     secondary: "Restaurants gastronomiques et bars d'hôtel : voir l'espace partenaires.",
   },
@@ -471,7 +471,7 @@ const ja: MethodCopy = {
   },
   ch02: {
     h2: "時間がたどる道筋を予測します。",
-    lead: "風味が熟成の時間とともにどう変わるのかを、112,316件のテイスティングで記録してきました。そのデータで学習したモデルが、六つの軸から風味を読み取ります。香りのひらく速さや気泡の残り方は、物理と化学の法則で整えます。そうして、36ヶ月の変化をひとつの曲線に描きます。より良くなる道ではなく、地上とは別の道です。",
+    lead: "風味が熟成の時間とともにどう変わるのかを、112,316件のテイスティング記録から学んできました。そこから学んだモデルが、六つの軸で風味を読み取ります。香りのひらく速さや気泡の残り方は、物理と化学の法則で整えます。そうして、36ヶ月の変化をひとつの曲線に描きます。より良くなる道ではなく、地上とは別の道です。",
     tagPlan: { em: "計画", text: "12ヶ月" },
     tagRec: { em: "推奨", text: "12ヶ月 · 84点" },
     tagPeak: { em: "PEAK", text: "14ヶ月 · 87点" },
