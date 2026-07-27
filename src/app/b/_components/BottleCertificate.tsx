@@ -80,6 +80,8 @@ export default function BottleCertificate({
 }) {
   const [locale, setLocale] = useState<BottleLocale>(initialLocale);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  /* 한 번 열면 다시 잠그지 않는다 — 감출 목적이 아니라 여는 동작을 남기려는 것이다 */
+  const [signOpen, setSignOpen] = useState(false);
 
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -359,25 +361,72 @@ export default function BottleCertificate({
 
           {/* 해시가 이 문서의 유일한 암호학적 증거다. 각주 크기로 숨기면 주장만 남고
               증거가 사라진다 — 알고리즘은 라벨로 내리고 다이제스트를 주인공으로 올린다. */}
+          {/* 서명은 잠가 둔다. 인증서를 남에게 보여주는 자리에서 다이제스트까지 늘 펼쳐
+              있을 이유가 없고, 잠긴 것을 여는 동작이 "이 문서에 지켜지는 것이 있다"를
+              말보다 잘 전한다. 저장본(printSign)은 별개 블록이라 늘 펼쳐진 채 구워진다 —
+              화면을 떠난 문서에서 대조 근거가 사라지면 안 된다. */}
           {signature && (
             <div className={styles.signBox}>
-              <span className={styles.signAlgo}>
-                <svg width="8" height="10" viewBox="0 0 8 10" aria-hidden>
-                  <path
-                    d="M2.4 4.4 V3 a1.6 1.6 0 0 1 3.2 0 V4.4"
+              {signOpen ? (
+                <>
+                  <span className={styles.signAlgo}>
+                    <svg width="8" height="10" viewBox="0 0 8 10" aria-hidden>
+                      <path
+                        d="M2.4 4.4 V3 a1.6 1.6 0 0 1 3.2 0 V4.4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="0.9"
+                      />
+                      <rect x="1" y="4.4" width="6" height="4.7" rx="0.9" fill="currentColor" />
+                    </svg>
+                    {/* 해시 함수 이름만 적으면 비밀키가 들어갔다는 사실이 안 드러난다 —
+                        실제보다 약하게 말하는 표기였다 */}
+                    HMAC-SHA256
+                  </span>
+                  <span className={styles.signHash}>{signature}</span>
+                  <span className={styles.signRule} aria-hidden />
+                  <span className={styles.signIssuer}>ISSUED BY MUSE DE MARÉE OCEAN CELLAR</span>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.signLock}
+                  onClick={() => setSignOpen(true)}
+                  aria-label={`${extra.signLocked} — ${extra.signLockedHint}`}
+                >
+                  {/* 자물쇠가 아니라 열쇠 — 잠긴 상태가 아니라 "열 수 있다"를 말한다.
+                      고전 열쇠의 세 부분을 그대로 세운다: 장식 보우(고리), 목의 칼라,
+                      두 갈래 워드. 획은 문서의 헤어라인 괘선과 같은 굵기로 맞춰
+                      아이콘이 아니라 이 종이에 새겨진 것처럼 읽히게 한다. */}
+                  <svg
+                    className={styles.signKey}
+                    width="22"
+                    height="40"
+                    viewBox="0 0 24 44"
                     fill="none"
-                    stroke="currentColor"
-                    strokeWidth="0.9"
-                  />
-                  <rect x="1" y="4.4" width="6" height="4.7" rx="0.9" fill="currentColor" />
-                </svg>
-                {/* 해시 함수 이름만 적으면 비밀키가 들어갔다는 사실이 안 드러난다 —
-                    실제보다 약하게 말하는 표기였다 */}
-                HMAC-SHA256
-              </span>
-              <span className={styles.signHash}>{signature}</span>
-              <span className={styles.signRule} aria-hidden />
-              <span className={styles.signIssuer}>ISSUED BY MUSE DE MARÉE OCEAN CELLAR</span>
+                    aria-hidden
+                  >
+                    <circle cx="12" cy="9" r="6.2" stroke="currentColor" strokeWidth="1" />
+                    <circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="0.85" />
+                    <path d="M12 15.2 V40" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
+                    <path
+                      d="M9.4 21.6 H14.6 M9.4 24 H14.6"
+                      stroke="currentColor"
+                      strokeWidth="0.85"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M12 31.4 H17.8 V34.4 H14.8 V36.6 H17.8 V40"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span className={styles.signLockLabel}>{extra.signLocked}</span>
+                  <span className={styles.signLockHint}>{extra.signLockedHint}</span>
+                </button>
+              )}
             </div>
           )}
 

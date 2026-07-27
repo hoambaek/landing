@@ -63,16 +63,22 @@ export default function BottleEntry({
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [displaySerial, setDisplaySerial] = useState(0);
-  /* 이미 등록된 병으로 들어오면 각인 화면부터 — 등록 직후 본 화면과 같은 얼굴이다.
-     "아래에서 계속 보기"로 입장 화면 전체를 이어서 볼 수 있다. */
+  /* 이미 등록된 병으로 들어오면 각인 화면부터 — 등록 직후 본 화면과 같은 얼굴이다. */
   const [inscribed, setInscribed] = useState(registered);
   const [inscribedName, setInscribedName] = useState(registeredTo ?? "");
   const [inscribedLatin, setInscribedLatin] = useState<string | null>(registeredToLatin);
+  /* 등록 시트 — 필름이 끝나면 히어로 위로 올라온다.
+     위로 남은 필름 조각을 누르면 다시 내려가고(다시 보기), 끝나면 또 올라온다 */
+  const [sheetUp, setSheetUp] = useState(false);
 
   const frameRef = useRef<HTMLDivElement>(null);
-  const identityRef = useRef<HTMLElement>(null);
-  const countedRef = useRef(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  /* 영상 기준 등판 예약 — 다시 보기 때 재예약하므로 이전 것을 지워야 한다 */
+  const sheetTimerRef = useRef<number | null>(null);
+  const scheduleSheetUp = (ms: number) => {
+    if (sheetTimerRef.current !== null) window.clearTimeout(sheetTimerRef.current);
+    sheetTimerRef.current = window.setTimeout(() => setSheetUp(true), ms);
+  };
 
   /* 안전영역은 한 페이지에 한 색이다(상·하단 분리 불가 — use-safe-area-tint.ts 참고).
      각인 화면은 종이 단색, 필름 화면은 위아래 다 검정. */
@@ -86,59 +92,60 @@ export default function BottleEntry({
     return () => clearTimeout(t);
   }, []);
 
-  /* 섹션 스크롤 리빌 + 대형 N° 카운트업 (0→serial, ease-out cubic 1.6s)
-     inscribed를 의존성에 넣는다 — 각인 화면이 떠 있는 동안에는 입장 화면 DOM이
-     아예 없어 frameRef가 비어 있다. 화면이 돌아왔을 때 다시 관찰하지 않으면
-     섹션들이 opacity 0인 채로 남는다. */
+  /* 등록 시트 등판 — 필름이 끝나는 시점에 올린다.
+     지금은 실영상이 없어(ENTRY_VIDEO_SRC=null) 인트로 디졸브(1.7s)가 걷히고
+     화면이 한 박자 가라앉은 뒤(합계 3.2s)를 "끝"으로 삼는다. 영상이 생기면
+     video의 onLoadedMetadata가 실제 길이로 이 타이머를 대체한다(아래 JSX).
+     reduced-motion은 기다림 자체가 연출이므로 즉시 올린다. */
   useEffect(() => {
-    if (inscribed) return;
-    const frame = frameRef.current;
-    if (!frame) return;
+    if (inscribed || sheetUp) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    /* reduce여도 0ms 타이머로 미룬다 — 이펙트 본문의 동기 setState는 연쇄 렌더가 된다 */
+    if (!reduce && ENTRY_VIDEO_SRC) return; // 영상이 있으면 영상 길이가 결정한다
+    const t = setTimeout(() => setSheetUp(true), reduce ? 0 : 3200);
+    return () => clearTimeout(t);
+  }, [inscribed, sheetUp]);
 
-    const startCount = () => {
-      if (countedRef.current || serial === null) return;
-      countedRef.current = true;
-      if (reduce) {
-        setDisplaySerial(serial);
-        return;
-      }
-      const dur = 1600;
-      const t0 = performance.now();
-      const tick = (now: number) => {
-        const p = Math.min(1, (now - t0) / dur);
-        const eased = 1 - Math.pow(1 - p, 3);
-        setDisplaySerial(Math.round(serial * eased));
-        if (p < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
+  /* 영상 예약 타이머는 언마운트 때만 정리한다 — sheetUp 변화에 정리하면 예약이 죽는다 */
+  useEffect(() => {
+    return () => {
+      if (sheetTimerRef.current !== null) window.clearTimeout(sheetTimerRef.current);
     };
+  }, []);
 
-    const sections = Array.from(frame.querySelectorAll(`.${styles.reveal}`));
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add(styles.revealIn);
-            if (e.target === identityRef.current) startCount();
-            io.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.18 }
-    );
-    sections.forEach((s) => io.observe(s));
-    return () => io.disconnect();
-  }, [serial, inscribed]);
-
-  const identityBody = (serial !== null ? copy.identityBody : copy.identityBodyNoSerial)
-    .replace("{total}", String(total))
-    .replace("{serial}", String(serial));
+  /* 필름 다시 보기 — 시트 위로 남은 필름 조각을 눌렀을 때.
+     영상이 있으면 처음부터 다시 틀고 그 길이만큼, 없으면 no-video 이펙트가
+     (sheetUp이 false로 돌아가며) 3.2초 타이머를 다시 건다. */
+  const replayFilm = () => {
+    if (!sheetUp) return;
+    setSheetUp(false);
+    const v = videoRef.current;
+    if (v) {
+      try {
+        v.currentTime = 0;
+        void v.play();
+      } catch {
+        /* 자동재생 거부 등 — 시트 등판 예약은 그대로 간다 */
+      }
+      if (Number.isFinite(v.duration) && v.duration > 0) {
+        scheduleSheetUp(v.duration * 1000);
+      }
+    }
+  };
   const ownBody =
     serial !== null ? copy.ownBody.replace("{serial}", String(serial)) : copy.ownBodyNoSerial;
   /* 개체는 대명사가 아니라 번호로 부른다 — 번호가 없으면 부르지 않는다 */
   const ownTitle =
     serial !== null ? copy.ownTitle.replace("{serial}", String(serial)) : copy.ownTitleNoSerial;
+  /* 버튼도 번호를 부른다("N° 2를 소장하다"). 한국어 목적격 조사는 숫자 끝자리의
+     한자어 읽기로 갈린다 — 이(2)·사(4)·오(5)·구(9)는 모음으로 끝나 "를", 나머지는 "을".
+     {acc}는 ko 문자열에만 있고 다른 로케일에서는 치환할 자리가 없어 그대로 통과한다. */
+  const submitLabel =
+    serial !== null
+      ? copy.submit
+          .replace("{serial}", String(serial))
+          .replace("{acc}", [2, 4, 5, 9].includes(serial % 10) ? "를" : "을")
+      : copy.submitNoSerial;
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -233,10 +240,19 @@ export default function BottleEntry({
       </div>
 
       <div className={styles.frame} ref={frameRef}>
-        {/* ── S1 풀필름 히어로 ── */}
-        <section className={styles.film}>
+        {/* ── S1 풀필름 히어로 ──
+            시트가 올라온 뒤 위로 남은 필름 조각을 누르면 시트가 내려가 필름을
+            다시 볼 수 있다. 언어 선택기·재생 버튼 등 버튼 클릭은 건드리지 않는다. */}
+        <section
+          className={`${styles.film} ${sheetUp ? styles.filmDimmed : ""}`}
+          onClick={(e) => {
+            if ((e.target as HTMLElement).closest("button")) return;
+            replayFilm();
+          }}
+        >
           {ENTRY_VIDEO_SRC && (
             <video
+              ref={videoRef}
               className={styles.filmVideo}
               src={ENTRY_VIDEO_SRC}
               autoPlay
@@ -244,6 +260,14 @@ export default function BottleEntry({
               loop
               playsInline
               preload="auto"
+              /* 첫 재생이 끝나는 시점에 등록 시트를 올린다. loop 중이라 ended가
+                 오지 않으므로 길이를 읽어 예약한다 — 영상은 시트 뒤에서 계속 돈다 */
+              onLoadedMetadata={(e) => {
+                const v = e.currentTarget;
+                if (Number.isFinite(v.duration) && v.duration > 0) {
+                  scheduleSheetUp(v.duration * 1000);
+                }
+              }}
             />
           )}
 
@@ -291,7 +315,13 @@ export default function BottleEntry({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/logo/logo_trans_W_lg.png" alt="Muse de Marée" className={styles.filmLogo} />
 
-          <div className={styles.filmCenter}>
+          {/* 기다리지 않을 사람의 길 — 누르면 시트가 바로 올라온다 */}
+          <button
+            type="button"
+            className={styles.filmCenter}
+            onClick={() => setSheetUp(true)}
+            aria-label={copy.filmCaption}
+          >
             <span className={styles.playBtn}>
               <svg width="18" height="20" viewBox="0 0 18 20" aria-hidden>
                 <path d="M2 1.5 L16.5 10 L2 18.5 Z" fill="rgba(241,239,235,0.82)" />
@@ -299,76 +329,21 @@ export default function BottleEntry({
             </span>
             <span className={styles.filmCaption}>{copy.filmCaption}</span>
             <span className={styles.filmMeta}>{copy.filmMeta}</span>
-          </div>
+          </button>
 
           <span className={styles.filmTail} aria-hidden />
           {/* 영상이 종이로 잠기는 하단 페이드 — 다음 섹션이 아니라 영상 위에 얹는다 */}
           <span className={styles.filmFade} aria-hidden />
         </section>
 
-        {/* ── 01 Bottle Identity ── */}
-        <section className={`${styles.identity} ${styles.reveal}`} ref={identityRef}>
-          {/* 빈 네모는 아무 뜻도 없는 장식이었다. 기록 히어로·인증서 서명과 같은
-              자물쇠 글리프를 써서 "암호로 확인된 태그"라는 뜻을 형태에 싣는다. */}
-          <div className={styles.eyebrow}>
-            <svg className={styles.eyebrowLock} width="8" height="10" viewBox="0 0 8 10" aria-hidden>
-              <path d="M2.4 4.4 V3 a1.6 1.6 0 0 1 3.2 0 V4.4" fill="none" stroke="currentColor" strokeWidth="0.9" />
-              <rect x="1" y="4.4" width="6" height="4.7" rx="0.9" fill="currentColor" />
-            </svg>
-            <span>{copy.identityEyebrow}</span>
-          </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={meta.imagePortrait ?? meta.image}
-            alt={meta.name}
-            className={styles.identityBottle}
-          />
-          <h1 className={styles.productName}>{meta.name}</h1>
-          <div className={styles.identityTagline}>{copy.identityTagline}</div>
-          {serial !== null && (
-            <div className={styles.edition}>
-              <span className={styles.edNo}>N°</span>
-              <span className={styles.edNum}>{displaySerial}</span>
-              <span className={styles.edTotal}>/ {total}</span>
-            </div>
-          )}
-          <p className={styles.identityBody}>{identityBody}</p>
-        </section>
-
-        {/* ── 02 Provenance ── */}
-        <section className={`${styles.prov} ${styles.reveal}`}>
-          <div className={styles.provEyebrow}>{copy.provEyebrow}</div>
-          <h2 className={styles.provTitle}>{copy.provTitle}</h2>
-          <p className={styles.provBody}>{copy.provBody}</p>
-          <div className={styles.facts}>
-            <div className={styles.fact}>
-              <span className={styles.factLabel}>{copy.fact1Label}</span>
-              <span className={styles.factValueMono}>{copy.fact1Value}</span>
-              <span className={styles.factSub}>{copy.fact1Sub}</span>
-            </div>
-            <div className={styles.fact}>
-              <span className={styles.factLabel}>{copy.fact2Label}</span>
-              <span className={styles.factValue}>{copy.fact2Value}</span>
-              <span className={styles.factSub}>{copy.fact2Sub}</span>
-            </div>
-            <div className={styles.fact}>
-              <span className={styles.factLabel}>{copy.fact3Label}</span>
-              <span className={styles.factValue}>{copy.fact3Value}</span>
-              <span className={styles.factSub}>{copy.fact3Sub}</span>
-            </div>
-          </div>
-          {/* "소유 등록 후 열립니다" — 이미 등록된 병에는 틀린 말이라 숨긴다.
-              기록으로 가는 입구는 아래 Claim 섹션이 맡는다. */}
-          {!registered && (
-          <div className={styles.provHint}>
-            {/* 화살표 없음 — 링크가 아니라 안내문이다. 셰브론이 붙으면 누를 수 있다고 읽힌다. */}
-            <span>{copy.provHint}</span>
-          </div>
-          )}
-        </section>
-
-        {/* ── 03 Claim Ownership ── */}
-        <section className={`${styles.claim} ${styles.reveal}`}>
+        {/* ── 등록 시트 — 필름 위로 올라오는 종이 ──
+            병 정보·세 가지 증거 섹션은 걷어냈다(2026-07-27 대표 지시: 히어로만
+            남기고 바로 등록). 그 내용은 등록 뒤 기록 페이지가 다 보여준다. */}
+        <div
+          className={`${styles.sheet} ${sheetUp ? styles.sheetUp : ""}`}
+          aria-hidden={!sheetUp}
+        >
+        <section className={styles.claim}>
           <div className={styles.claimEyebrow}>{copy.ownEyebrow}</div>
           <h2 className={styles.claimTitle}>{registered ? copy.claimedTitle : ownTitle}</h2>
           {registered ? (
@@ -461,17 +436,22 @@ export default function BottleEntry({
 
             <p className={styles.privacyNote}>{copy.privacyNote}</p>
 
-            <button
-              type="submit"
-              className={`${styles.submit} ${submitting ? styles.submitBusy : ""}`}
-              disabled={submitting}
-              aria-busy={submitting}
-            >
-              {submitting ? copy.submitting : copy.submit}
-            </button>
+            {/* 버튼은 시트 바닥에 고정한다 — 작은 화면에서 접히는 선 아래로 밀리면
+                등록으로 가는 길이 안 보인다. 위 내용은 이 독 아래로 흘러 지나간다. */}
+            <div className={styles.submitDock}>
+              <button
+                type="submit"
+                className={`${styles.submit} ${submitting ? styles.submitBusy : ""}`}
+                disabled={submitting}
+                aria-busy={submitting}
+              >
+                {submitting ? copy.submitting : submitLabel}
+              </button>
+            </div>
           </form>
           )}
         </section>
+        </div>
       </div>
     </main>
   );

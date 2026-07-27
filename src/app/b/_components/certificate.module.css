@@ -331,6 +331,40 @@
   letter-spacing: 0.1em;
   color: var(--c-faint);
 }
+/* 잠긴 서명 — 판 크기는 열렸을 때와 비슷하게 잡아 열 때 문서가 덜 흔들리게 한다 */
+.signLock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 0 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.signKey {
+  color: var(--c-bronze);
+  opacity: 0.8;
+  transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.signLock:active .signKey {
+  opacity: 1;
+}
+.signLockLabel {
+  font-family: var(--c-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  color: var(--c-bronze);
+}
+/* 안내는 라벨보다 한 단 낮게 — 무엇인지 먼저 읽히고 어떻게 여는지가 뒤따른다 */
+.signLockHint {
+  font-family: var(--c-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--c-faint);
+}
 /* 문서번호 — 대조 키. 라벨을 앞에 눕혀 한 줄로 둔다.
    서명 판 안에 넣지 않은 이유: 해시는 발행자만 만들 수 있는 값이고
    문서번호는 사람이 옮겨 적고 문의에 쓰는 값이라 성격이 다르다. */

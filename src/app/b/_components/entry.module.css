@@ -203,6 +203,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* 버튼으로 바뀌었다 — 누르면 등록 시트가 바로 올라온다 */
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 .playBtn {
   display: flex;
@@ -456,6 +464,104 @@
 /* ── 03 Claim Ownership ───────────────────────────── */
 /* Provenance와 가르는 선은 걷어냈다 — 위 증거 블록(.facts)이 이미 자기 테두리로
    끝을 맺고 있어 선이 두 번 겹쳤다. 여백만으로 넘긴다. */
+/* ── 등록 시트 — 필름 위로 올라오는 종이 ──────────────
+   스크롤로 내려가던 등록 섹션이 필름이 끝나는 시점에 스스로 올라온다.
+   페이지는 더 이상 스크롤하지 않고, 시트 안쪽만 넘친 만큼 스크롤한다.
+   숨김 상태에 visibility를 함께 쓰는 이유: translate로 밀어만 두면
+   키보드 탭이 화면 밖 입력칸까지 들어간다. */
+/* 시트가 올라오면 필름은 "다시 보기" 입구가 된다 — 살짝 가라앉히고 커서로 알린다 */
+.filmDimmed {
+  cursor: pointer;
+}
+.filmDimmed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: rgba(5, 4, 3, 0.35);
+  transition: opacity 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.sheet {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 40;
+  width: min(430px, 100vw);
+  max-height: 92dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--e-paper);
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -24px 60px rgba(5, 4, 3, 0.45);
+  visibility: hidden;
+  transform: translate(-50%, 103%);
+  transition:
+    transform 1.05s cubic-bezier(0.23, 1, 0.32, 1),
+    visibility 0s linear 1.05s;
+}
+.sheetUp {
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition:
+    transform 1.05s cubic-bezier(0.23, 1, 0.32, 1),
+    visibility 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet {
+    transition: none;
+  }
+}
+
+/* 시트 안에서는 조판을 조인다 — 등록 버튼까지 첫 화면에 들어와야 한다.
+   스크롤 페이지였을 때의 너른 여백(58px 상단·48px 폼 간격)은 시트 높이를
+   먹어 버튼을 접히는 선 아래로 밀었다. 글자 크기는 제목만 한 단 내리고
+   나머지는 간격으로만 줄인다. */
+.sheet .claim {
+  padding: 30px 26px 26px;
+}
+.sheet .claimTitle {
+  margin-top: 12px;
+  font-size: 23px;
+  line-height: 34px;
+}
+.sheet .claimBody {
+  margin-top: 11px;
+}
+.sheet .form {
+  margin-top: 24px;
+}
+.sheet .privacyNote {
+  margin-top: 18px;
+}
+
+/* 등록 버튼 독 — 시트 바닥에 붙어 항상 보인다.
+   화면이 작아 내용이 넘치면 위 내용만 이 독 아래로 흘러 지나간다.
+   sticky의 기준은 스크롤 조상인 .sheet다. */
+.submitDock {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  width: 100%;
+  margin-top: 18px;
+  padding-bottom: 2px;
+  background: var(--e-paper);
+}
+/* 글자가 버튼 윗변에서 잘려 보이지 않게 종이로 흐려 보낸다 */
+.submitDock::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 20px;
+  background: linear-gradient(to top, var(--e-paper), rgba(237, 234, 227, 0));
+  pointer-events: none;
+}
+.sheet .submit {
+  margin-top: 0;
+}
+
 .claim {
   display: flex;
   flex-direction: column;
