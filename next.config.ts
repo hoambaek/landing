@@ -4,6 +4,24 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
   },
+  /* dev는 Turbopack(빠르다), 프로덕션 빌드는 webpack — package.json의 `next build --webpack`.
+   *
+   * 2026-07-27, 배포가 세 번 연속 깨졌다. 코드가 아니라 빌드 시점 구글 폰트 다운로드가 원인이다.
+   *   There was an issue establishing a connection while requesting fonts.gstatic.com/...
+   *   → Module not found: '@vercel/turbopack-next/internal/font/google/font'
+   *
+   * next/font/google는 빌드 때 폰트를 받아온다. CJK는 unicode-range로 100조각 넘게 쪼개져
+   * 있어 이 레포는 빌드 한 번에 약 1,000건을 요청한다. 마지막 실패 로그는 999건 중 335건 실패 —
+   * 전면 차단이 아니라 부분 실패(스로틀링)다.
+   *
+   * 두 경로의 차이가 결정적이다.
+   *   webpack   — @next/font/dist/google/retry.js 가 CSS·폰트 파일 요청을 재시도한다
+   *   Turbopack — Rust 구현에 재시도가 없어 한 건만 실패해도 빌드가 그대로 깨진다
+   *
+   * 그래서 빌드만 webpack으로 돌린다. 구글 폰트는 그대로 쓴다.
+   * 대가는 빌드 시간이다(로컬 4.8초 → 12.4초). 산출물은 같다 — 폰트 파일 960개 동일 확인.
+   * Turbopack 빌드에 재시도가 들어가면 되돌릴 것.
+   */
   turbopack: {
     root: __dirname,
   },
