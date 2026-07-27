@@ -550,6 +550,9 @@ export default function BottleRecord({
       <div className={styles.frame}>
         {/* ── S1 병사진 히어로 ── */}
         <section className={styles.hero} ref={heroRef}>
+          {/* void는 본체가 아니라 이 자식이 칠한다 — 본체에 칠하면 Safari 26이
+              sticky의 background-color를 안전영역 바 색으로 삼아 위아래가 검게 잠긴다 */}
+          <div className={styles.heroVoid} aria-hidden />
           <Image
             /* 제품별 히어로 — Paper의 Product 아트보드(ARCHIVE N° 002~005)에 쓰인 컷과 같은 사진.
                폴백은 En Lieu Sûr 컷이라 다른 제품에 서면 틀린 병이 보인다. 새 제품은 imageHero부터 채울 것. */
@@ -619,7 +622,7 @@ export default function BottleRecord({
         </section>
 
         {/* ── S2 여정 (depth profile) ── */}
-        <section id="tmpProbe" className={styles.journey} ref={journeySectionRef}>
+        <section className={styles.journey} ref={journeySectionRef}>
           <div
             className={styles.journeyScaler}
             style={{ transform: `scale(${journeyScale})`, height: 150 * journeyScale }}

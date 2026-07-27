@@ -71,6 +71,18 @@
   justify-content: flex-end;
   padding: 18px 24px max(92px, calc(env(safe-area-inset-bottom) + 68px)) 24px;
   overflow: hidden;
+  /* 안전영역(상태바·하단바) 색은 이 한 줄이 정한다.
+     Safari 26은 theme-color를 무시하고, 뷰포트 가장자리 4px 안에 걸친 fixed/sticky
+     요소의 background-color만 읽어 위아래 바를 칠한다(absolute 자식·의사요소는 무시).
+     이 히어로는 sticky 100svh라 페이지 내내 두 가장자리에 걸쳐 있고, 여기에 void를
+     칠하면 바가 영영 검게 잠긴다. 그래서 본체는 종이색을 들고(=바 색), 실제 어두운
+     비주얼은 아래 .heroVoid(absolute 자식)와 사진·스크림이 전부 덮는다.
+     1ar.io Safari 26 처방 · brain claim(2026-07-09) "본체 투명/밝게, 배경은 absolute 자식에" */
+  background: var(--b-paper);
+}
+.heroVoid {
+  position: absolute;
+  inset: 0;
   background: var(--b-void);
 }
 .heroPhoto {
