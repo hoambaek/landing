@@ -5005,9 +5005,14 @@ html:has(.b-paper) body {
 }
 
 /* ══════════════════════════════════════════
-   i18n 타이틀 폰트 = EB Garamond Italic
-   한글 J1950(붓 손글씨)과 페어링되는 잉크·펜 느낌 이탤릭 세리프.
+   i18n 타이틀 폰트 = Special Elite
+   한국어 표제는 J1950(1950년대 활자)을 PNG로 굽는다. 같은 자리의 로마자도 활자
+   인쇄의 성격을 갖도록 타자기 활자체를 쓴다 — 세 문자 체계가 한 목소리를 낸다
+   (한국어 J1950 · 일본어 New Tegomin · 로마자 Special Elite).
    기존 각 텍스트 규칙과 동일 specificity·후순위로 --font-heading을 덮어쓴다.
+
+   이 서체에는 이탤릭이 없다. italic을 남겨두면 브라우저가 기울여 만든 자형이 나오는데,
+   타자기 활자의 획에서는 그게 눌린 것처럼 보인다. 그래서 normal로 잡는다.
    ══════════════════════════════════════════ */
 .s-void__h1 .s-void__h1-text,
 .s-void__brand-name-text,
@@ -5017,8 +5022,8 @@ html:has(.b-paper) body {
 .s-first__closing-line .s-first__closing-text,
 .s-col__sub .s-col__sub-text,
 .s-maker__subtitle .s-maker__subtitle-text {
-  font-family: var(--font-eb-garamond);
-  font-style: italic;
+  font-family: var(--font-title-latin), var(--font-eb-garamond), Georgia, serif;
+  font-style: normal;
   font-weight: 400;
 }
 
@@ -5037,7 +5042,9 @@ html[lang="ja"] .s-first__closing-text,
 html[lang="ja"] .s-col__sub-text,
 html[lang="ja"] .s-maker__subtitle-text,
 html[lang="ja"] .s-letter__title {
-  font-family: var(--font-heading), var(--font-ja-title), "Hiragino Mincho ProN",
+  /* 로마자는 다른 로케일과 같은 Special Elite가 맡고, 가나·한자만 New Tegomin으로
+     떨어진다. 일본어 화면 안의 "Muse de Marée"가 영·불 화면과 같은 얼굴이어야 한다. */
+  font-family: var(--font-title-latin), var(--font-ja-title), "Hiragino Mincho ProN",
     "Yu Mincho", serif;
   font-style: normal;
 }
@@ -5315,14 +5322,18 @@ html[lang="ja"] .s-letter__title {
    ScrollReveal.tsx가 .reveal-mask에 .is-visible 부여 */
 /* 관찰은 클립되지 않는 부모(.reveal-mask-watch)가 담당 — clip-path로 가려진
    요소는 IntersectionObserver 교차 영역이 0이라 스스로 트리거될 수 없다 */
+/* 1.6초 ease-gentle이었다. 사이트에서 가장 느린 연출인 데다(.reveal 0.9s,
+   .reveal-scale 1.4s), ease-gentle은 끝자락이 길게 늘어져 실제보다 더 느리게 읽혔다.
+   시작이 빠르고 끝에서 가라앉는 ease-water로 바꿔 같은 우아함을 더 짧게 얻는다.
+   이미지 쪽을 0.2초 길게 두어 마스크가 걷힌 뒤 화면이 한 박자 더 가라앉게 한다. */
 .reveal-mask {
   clip-path: inset(100% 0 0 0);
-  transition: clip-path 1.6s var(--ease-gentle);
+  transition: clip-path 0.9s var(--ease-water);
 }
 
 .reveal-mask .s-first__img {
   transform: translateY(5%) scale(1.05);
-  transition: transform 1.6s var(--ease-gentle);
+  transition: transform 1.1s var(--ease-water);
 }
 
 .reveal-mask-watch.is-visible .reveal-mask {

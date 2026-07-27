@@ -16,6 +16,7 @@ import {
   Mrs_Saint_Delafield,
   Josefin_Sans,
   Instrument_Sans,
+  Special_Elite,
   New_Tegomin,
   Zen_Kaku_Gothic_New,
 } from "next/font/google";
@@ -25,6 +26,17 @@ const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["300", "400", "600"],
   variable: "--font-heading",
+  display: "swap",
+});
+
+/* 라틴 표제 — 한국어 표제의 J1950에 대응하는 활자. 타자기 활자를 옮긴 얼굴이라
+   금속 활자 인쇄의 성격을 공유한다. 이탤릭이 없으므로(굵기도 400 하나) 쓰는 쪽에서
+   font-style을 normal로 잡아야 한다 — 두면 브라우저가 억지로 기울인 자형을 만든다.
+   프랑스어 악센트는 213자 안에 전부 들어 있다(À à ç è é ê ù É û 확인). */
+const specialElite = Special_Elite({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400"],
+  variable: "--font-title-latin",
   display: "swap",
 });
 
@@ -215,7 +227,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} ${josefinSans.variable} ${instrumentSans.variable} ${newTegomin.variable} ${zenKaku.variable} antialiased`}
+        className={`${cormorant.variable} ${cormorantInfant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} ${josefinSans.variable} ${instrumentSans.variable} ${specialElite.variable} ${newTegomin.variable} ${zenKaku.variable} antialiased`}
       >
         <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
         <JsonLd />
