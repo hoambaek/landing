@@ -52,7 +52,6 @@ export interface MethodCopy {
     nextRetrieval: string;
     cardNo: string;
     cardTitle: string;
-    cardTitleEn: string;
     cardSub: string;
     cardSealedBadge: string;
     cardBatchLabel: string;
@@ -147,7 +146,6 @@ const ko: MethodCopy = {
     nextRetrieval: "다음 인양 · 2026년 겨울",
     cardNo: "N° 2026-014",
     cardTitle: "예측 기록서",
-    cardTitleEn: "Sealed Prediction",
     cardSub: "먼저 기록하고, 인양하는 날 공개합니다.",
     cardSealedBadge: "SEALED · 인양 시 공개",
     cardBatchLabel: "BATCH — ATOMES CROCHUS",
@@ -155,7 +153,7 @@ const ko: MethodCopy = {
       ["입수", "2026년 01월 · 겨울"],
       ["좌표", "34°N · 126°E"],
       ["수심", "30 m"],
-      ["인양 예정", "2026년 12월 · 겨울"],
+      ["인양", "2026년 12월 · 겨울"],
     ],
     cardAxesLabel: "풍미 예측 — 6 AXES",
     cardAxes: ["과실향", "플로럴·미네랄", "효모·숙성향", "산도", "바디감", "여운"],
@@ -265,7 +263,6 @@ const en: MethodCopy = {
     nextRetrieval: "Next retrieval · Winter 2026",
     cardNo: "N° 2026-014",
     cardTitle: "Prediction Record",
-    cardTitleEn: "Sealed Prediction",
     cardSub: "Written first, opened on retrieval day.",
     cardSealedBadge: "SEALED · Opens at retrieval",
     cardBatchLabel: "BATCH — ATOMES CROCHUS",
@@ -383,7 +380,6 @@ const fr: MethodCopy = {
     nextRetrieval: "Prochaine remontée · hiver 2026",
     cardNo: "N° 2026-014",
     cardTitle: "Registre de prévision",
-    cardTitleEn: "Sealed Prediction",
     cardSub: "Écrit d'abord, ouvert le jour de la remontée.",
     cardSealedBadge: "SEALED · Ouvert à la remontée",
     cardBatchLabel: "BATCH — ATOMES CROCHUS",
@@ -501,7 +497,6 @@ const ja: MethodCopy = {
     nextRetrieval: "次の引き揚げ · 2026年冬",
     cardNo: "N° 2026-014",
     cardTitle: "予測記録",
-    cardTitleEn: "Sealed Prediction",
     cardSub: "予測を事前に封印し、引き揚げの日に公開します。",
     cardSealedBadge: "SEALED · 引き揚げの日に公開",
     cardBatchLabel: "BATCH — ATOMES CROCHUS",
@@ -509,7 +504,7 @@ const ja: MethodCopy = {
       ["海中投入", "2026年01月 · 冬"],
       ["座標", "34°N · 126°E"],
       ["水深", "30 m"],
-      ["引き揚げ予定", "2026年12月 · 冬"],
+      ["引き揚げ", "2026年12月 · 冬"],
     ],
     cardAxesLabel: "風味予測 — 6 AXES",
     cardAxes: ["果実香", "フローラル・ミネラル", "酵母・熟成香", "酸味", "ボディ", "余韻"],

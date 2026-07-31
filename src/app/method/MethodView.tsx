@@ -596,12 +596,13 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
               <span className={s.cardNo}>{t.ch03.cardNo}</span>
             </div>
             <div className={s.cardTitle}>
-              <strong>{t.ch03.cardTitle} <em>{t.ch03.cardTitleEn}</em></strong>
+              <strong>{t.ch03.cardTitle}</strong>
               <span>{t.ch03.cardSub}</span>
             </div>
             <div className={s.cardBadgeRow}>
               <span className={s.cardBadge}><i />{t.ch03.cardSealedBadge}</span>
-              <Image src="/images/logo/logo_trans_W.png" alt="" width={54} height={46} unoptimized className={s.cardMark} />
+              {/* 스크린이 전 뷰포트 라이트라 로고도 전 뷰포트 다크 한 장 */}
+              <Image src="/images/logo/logo_trans.png" alt="" width={54} height={46} unoptimized className={s.cardMark} />
             </div>
             {/* BATCH 카드 */}
             <div className={s.batchCard}>

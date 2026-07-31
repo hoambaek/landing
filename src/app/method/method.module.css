@@ -389,13 +389,15 @@
   background: #000;
   z-index: 3;
 }
-/* 화면(스크린) — 상단은 Dynamic Island 공간, 하단은 블러로 사라짐 */
+/* 화면(스크린) — 전 뷰포트 라이트. 베젤(하드웨어)은 다크 유지, 실제 아이폰이 라이트모드 앱을
+   띄운 모습과 동일한 문법. 팔레트는 이 파일 안의 기존 라이트 섹션 톤을 그대로 가져온다:
+   골드 #b89868(.light .monoLabel), 잉크 #312e2a(.light .h2Text). */
 .card {
   border-radius: 46px;
-  background: radial-gradient(120% 50% at 50% 0%, #101827 0%, #0a0f1a 55%), #0a0f1a;
+  background: radial-gradient(120% 50% at 50% 0%, #fdfbf6 0%, #f5f1ea 60%), #f5f1ea;
   padding: 74px 30px 48px;
   overflow: hidden;
-  color: #e8e5e1;
+  color: #312e2a;
 }
 .cardHead {
   display: flex;
@@ -404,13 +406,12 @@
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.24em;
-  color: #b7916e;
+  color: #b89868;
 }
-.cardNo { letter-spacing: 0.12em; color: rgba(232, 229, 225, 0.45); }
+.cardNo { letter-spacing: 0.12em; color: rgba(49, 46, 42, 0.45); }
 .cardTitle { display: flex; flex-direction: column; gap: 7px; padding-top: 18px; }
-.cardTitle strong { font-family: var(--font-serif-kr); font-weight: 500; font-size: 22px; color: #f2efe9; }
-.cardTitle strong em { font-family: var(--font-heading); font-style: italic; font-weight: 400; font-size: 22px; color: #b7916e; margin-left: 6px; }
-.cardTitle span { font-family: var(--font-serif-kr); font-weight: 300; font-size: 13px; line-height: 1.6; color: rgba(232, 229, 225, 0.55); }
+.cardTitle strong { font-family: var(--font-serif-kr); font-weight: 500; font-size: 22px; color: #312e2a; }
+.cardTitle span { font-family: var(--font-serif-kr); font-weight: 300; font-size: 13px; line-height: 1.6; color: rgba(49, 46, 42, 0.6); }
 /* SEALED 배지 + 로고 */
 .cardBadgeRow { display: flex; align-items: center; justify-content: space-between; padding-top: 20px; }
 .cardBadge {
@@ -419,20 +420,20 @@
   gap: 9px;
   padding: 9px 18px;
   border-radius: 999px;
-  border: 1px solid rgba(183, 145, 110, 0.55);
-  background: rgba(183, 145, 110, 0.08);
+  border: 1px solid rgba(184, 152, 104, 0.5);
+  background: rgba(184, 152, 104, 0.14);
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.16em;
-  color: #cfa87d;
+  color: #96703f;
 }
-.cardBadge i { width: 7px; height: 7px; border-radius: 50%; background: #b7916e; box-shadow: 0 0 10px 2px rgba(183, 145, 110, 0.55); flex-shrink: 0; }
+.cardBadge i { width: 7px; height: 7px; border-radius: 50%; background: #b89868; box-shadow: 0 0 10px 2px rgba(184, 152, 104, 0.45); flex-shrink: 0; }
 .cardMark { width: 54px; height: auto; opacity: 0.9; }
 /* BATCH 카드 · 잠긴 축 카드 공통 글래스 */
 .batchCard, .axesCard {
   margin-top: 18px;
-  border: 1px solid rgba(232, 229, 225, 0.08);
-  background: rgba(232, 229, 225, 0.035);
+  border: 1px solid rgba(49, 46, 42, 0.1);
+  background: rgba(49, 46, 42, 0.035);
   border-radius: 18px;
   padding: 20px 22px;
 }
@@ -440,24 +441,24 @@
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.24em;
-  color: rgba(232, 229, 225, 0.4);
+  color: rgba(49, 46, 42, 0.45);
 }
 .batchLabel { display: block; margin-bottom: 12px; }
 .batchRow { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; }
-.batchKey { font-family: var(--font-serif-kr); font-weight: 300; font-size: 13px; color: rgba(232, 229, 225, 0.55); }
-.batchVal { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.04em; color: #e8e5e1; }
+.batchKey { font-family: var(--font-serif-kr); font-weight: 300; font-size: 13px; color: rgba(49, 46, 42, 0.55); }
+.batchVal { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.04em; color: #312e2a; }
 .axesHead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-.axesLock { color: #cfa87d; flex-shrink: 0; }
+.axesLock { color: #96703f; flex-shrink: 0; }
 .axisRow { display: flex; align-items: center; gap: 14px; padding: 8px 0; }
-.axisName { width: 92px; flex-shrink: 0; font-family: var(--font-serif-kr); font-weight: 300; font-size: 13px; color: rgba(232, 229, 225, 0.6); }
-.axisBar { flex: 1; height: 5px; border-radius: 3px; background: rgba(232, 229, 225, 0.07); position: relative; overflow: hidden; }
-.axisBar i { position: absolute; left: 0; top: 0; bottom: 0; width: 62%; border-radius: 3px; background: linear-gradient(90deg, rgba(183, 145, 110, 0.85), rgba(183, 145, 110, 0.25)); filter: blur(4px); }
-.axisVal { width: 40px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: rgba(232, 229, 225, 0.32); flex-shrink: 0; }
+.axisName { width: 92px; flex-shrink: 0; font-family: var(--font-serif-kr); font-weight: 300; font-size: 13px; color: rgba(49, 46, 42, 0.62); }
+.axisBar { flex: 1; height: 5px; border-radius: 3px; background: rgba(49, 46, 42, 0.08); position: relative; overflow: hidden; }
+.axisBar i { position: absolute; left: 0; top: 0; bottom: 0; width: 62%; border-radius: 3px; background: linear-gradient(90deg, rgba(184, 152, 104, 0.95), rgba(184, 152, 104, 0.4)); filter: blur(3px); }
+.axisVal { width: 40px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: rgba(49, 46, 42, 0.35); flex-shrink: 0; }
 @media (max-width: 768px) {
   .phone { width: 100%; max-width: 360px; margin: 0 auto; border-radius: 48px; padding: 10px; box-shadow: inset 0 0 0 5px #16181d, 0 16px 40px rgba(0, 0, 0, 0.5); }
   .phoneIsland { top: 22px; width: 100px; height: 28px; }
   .card { border-radius: 40px; padding: 60px 20px 34px; }
-  .cardTitle strong, .cardTitle strong em { font-size: 19px; }
+  .cardTitle strong { font-size: 19px; }
   .cardTitle span { font-size: 12px; }
   .batchCard, .axesCard { padding: 16px 18px; }
   .axisName { width: 78px; font-size: 12px; }
