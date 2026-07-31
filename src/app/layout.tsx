@@ -16,7 +16,7 @@ import {
   Instrument_Sans,
   Special_Elite,
   New_Tegomin,
-  Zen_Kaku_Gothic_New,
+  Noto_Sans_JP,
 } from "next/font/google";
 import "./globals.css";
 
@@ -39,6 +39,8 @@ const specialElite = Special_Elite({
 });
 
 /* 일본어 표제 — 한국어 표제의 J1950(1950년대 활자)에 대응하는 옛 활자체.
+   dassai.com 구성(Noto Serif JP)으로 교체했다가 대표 지시(2026-07-30)로 원복 —
+   표제는 New Tegomin, 본문만 Noto Sans JP로 바꾼다.
    구글 폰트가 글자 조각(unicode-range) 단위로 내보내므로 쓰인 글자만 내려받는다.
    굵기는 400 하나뿐이다. */
 const newTegomin = New_Tegomin({
@@ -51,10 +53,10 @@ const newTegomin = New_Tegomin({
   preload: false,
 });
 
-/* 일본어 본문 — 획 끝이 부드러운 고딕. 한글 본문(Noto Sans KR)과 같은 굵기를 받는다 */
-const zenKaku = Zen_Kaku_Gothic_New({
+/* 일본어 본문 — dassai.com과 같은 구성으로 Noto Sans JP(고딕)로 교체
+   (대표 지시 2026-07-30). 가변 폰트라 축이 100~900이다 — weight 미지정. */
+const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
   variable: "--font-ja-body",
   display: "swap",
   preload: false, // 위와 같은 이유
@@ -217,7 +219,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${cormorant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} ${instrumentSans.variable} ${specialElite.variable} ${newTegomin.variable} ${zenKaku.variable} antialiased`}
+        className={`${cormorant.variable} ${notoSansKR.variable} ${notoSerifKR.variable} ${diphylleia.variable} ${dmMono.variable} ${gowunBatang.variable} ${ebGaramond.variable} ${mrsSaintDelafield.variable} ${instrumentSans.variable} ${specialElite.variable} ${newTegomin.variable} ${notoSansJP.variable} antialiased`}
       >
         <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
         <JsonLd />

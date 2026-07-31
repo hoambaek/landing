@@ -5577,8 +5577,8 @@ html[lang="fr"] body {
 }
 
 /* 일본어 본문 — 시스템 서체에 맡기면 맥은 히라기노, 윈도우는 유고딕이 나와
-   인상이 갈린다. 획 끝이 부드러운 Zen Kaku Gothic New로 양쪽을 맞춘다.
-   시스템 서체는 웹폰트가 오기 전까지의 대기 서체로 남긴다. */
+   인상이 갈린다. dassai.com과 같은 구성인 Noto Sans JP로 양쪽을 맞춘다
+   (대표 지시 2026-07-30). 시스템 서체는 웹폰트가 오기 전까지의 대기 서체로 남긴다. */
 html[lang="ja"] body {
   --font-body: var(--font-ja-body), "Hiragino Sans", "Hiragino Kaku Gothic ProN",
     "Yu Gothic Medium", "Yu Gothic", sans-serif;
