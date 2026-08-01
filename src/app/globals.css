@@ -5316,47 +5316,9 @@ html[lang="ja"] .s-letter__title {
   transform: translateY(0);
 }
 
-/* ═══════════ Mask Reveal — 인양 사진 클립 리빌 ═══════════
-   The First Record의 인양 컷: 아래에서 위로 드러나며(clip-path)
-   이미지는 반대로 살짝 내려앉아 "물 위로 올라오는" 결을 만든다.
-   ScrollReveal.tsx가 .reveal-mask에 .is-visible 부여 */
-/* 관찰은 클립되지 않는 부모(.reveal-mask-watch)가 담당 — clip-path로 가려진
-   요소는 IntersectionObserver 교차 영역이 0이라 스스로 트리거될 수 없다 */
-/* 1.6초 ease-gentle이었다. 사이트에서 가장 느린 연출인 데다(.reveal 0.9s,
-   .reveal-scale 1.4s), ease-gentle은 끝자락이 길게 늘어져 실제보다 더 느리게 읽혔다.
-   시작이 빠르고 끝에서 가라앉는 ease-water로 바꿔 같은 우아함을 더 짧게 얻는다.
-   이미지 쪽을 0.2초 길게 두어 마스크가 걷힌 뒤 화면이 한 박자 더 가라앉게 한다. */
-.reveal-mask {
-  clip-path: inset(100% 0 0 0);
-  transition: clip-path 0.9s var(--ease-water);
-}
-
-.reveal-mask .s-first__img {
-  transform: translateY(5%) scale(1.05);
-  transition: transform 1.1s var(--ease-water);
-}
-
-.reveal-mask-watch.is-visible .reveal-mask {
-  clip-path: inset(0 0 0 0);
-}
-
-.reveal-mask-watch.is-visible .reveal-mask .s-first__img {
-  transform: none;
-}
-
 @media (prefers-reduced-motion: reduce) {
   [data-word-reveal] .wr-word {
     opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-
-  .reveal-mask {
-    clip-path: none !important;
-    transition: none !important;
-  }
-
-  .reveal-mask .s-first__img {
     transform: none !important;
     transition: none !important;
   }

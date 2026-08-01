@@ -41,8 +41,8 @@ export default function TheFirstRecordSection({
 
       {/* 인양 기록 2컷 — 단일 소스, 반응형 (데스크톱 센터 / 모바일 블리드) */}
       <div className="s-first__rows">
-        <figure className="s-first__row s-first__row--center s-first__row--bleed reveal-mask-watch">
-          <div className="s-first__plate s-first__plate--03 s-first__plate--m2 reveal-mask">
+        <figure className="s-first__row s-first__row--center s-first__row--bleed">
+          <div className="s-first__plate s-first__plate--03 s-first__plate--m2">
             <Image src="/images/ai/rec03.webp" alt={dict.plateAlt.light} fill sizes="(max-width: 768px) 100vw, 920px" className="s-first__img" />
           </div>
         </figure>

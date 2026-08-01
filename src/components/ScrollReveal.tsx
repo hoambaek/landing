@@ -16,8 +16,7 @@ export default function ScrollReveal() {
      * IntersectionObserver는 프레임 경계에서 교차 상태를 샘플링한다. 빠르게 튕겨
      * 내리면 요소가 한 프레임 사이에 화면을 통째로 지나가, 기준을 넘긴 순간이
      * 관측되지 않는다. 켜기만 하고 끄지 않는 구조라 한 번 놓치면 영영 가려진 채
-     * 남는다 — .reveal-mask는 clip-path로 완전히 덮으므로 이미지가 로딩되지 않은
-     * 것처럼 보인다.
+     * 남는다.
      *
      * boundingClientRect.top < 0은 요소 윗변이 화면 위로 넘어갔다는 뜻이다.
      * 그때는 연출을 보여줄 기회가 이미 지났으니 늦게라도 켜서 내용을 드러낸다.
@@ -45,14 +44,9 @@ export default function ScrollReveal() {
     // reveal-scale: 30% 노출 시 트리거
     const scaleObserver = revealAt(0.3);
 
-    // reveal-mask: 65% 노출 시 트리거 — 마스크 리빌은 아래→위로 풀리므로
-    // 이르게 시작하면 스윕이 폴드 아래(화면 밖)에서 끝나버려 체감이 안 된다
-    const maskObserver = revealAt(0.65);
-
     const observeElements = () => {
       document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
       document.querySelectorAll(".reveal-scale").forEach((el) => scaleObserver.observe(el));
-      document.querySelectorAll(".reveal-mask-watch").forEach((el) => maskObserver.observe(el));
     };
 
     // 대기 중인 노드를 hydration 이후에 observe
@@ -97,7 +91,6 @@ export default function ScrollReveal() {
       clearTimeout(timer);
       observer.disconnect();
       scaleObserver.disconnect();
-      maskObserver.disconnect();
       mutation.disconnect();
     };
   }, []);
