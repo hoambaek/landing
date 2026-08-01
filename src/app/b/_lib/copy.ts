@@ -11,7 +11,7 @@ export const BOTTLE_LOCALES: { code: BottleLocale; short: string; native: string
   { code: "ko", short: "KO", native: "한국어" },
   { code: "en", short: "EN", native: "English" },
   { code: "fr", short: "FR", native: "Français" },
-  { code: "ja", short: "JA", native: "日本語" },
+  { code: "ja", short: "JP", native: "日本語" },
   { code: "zh", short: "ZH", native: "中文" },
 ];
 

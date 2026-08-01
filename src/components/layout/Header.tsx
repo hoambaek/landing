@@ -329,7 +329,7 @@ export default function Header({
                 className={lc === locale ? "menu-overlay__lang-active" : ""}
                 onClick={close}
               >
-                {lc === "ko" ? "KR" : lc.toUpperCase()}
+                {lc === "ko" ? "KR" : lc === "ja" ? "JP" : lc.toUpperCase()}
               </Link>
             ))}
           </div>

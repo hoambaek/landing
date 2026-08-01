@@ -166,7 +166,7 @@ export default function Footer({
                   href={localePrefixMap[lc]}
                   className={lc === locale ? "s-footer__lang-active" : undefined}
                 >
-                  {lc === "ko" ? "KR" : lc.toUpperCase()}
+                  {lc === "ko" ? "KR" : lc === "ja" ? "JP" : lc.toUpperCase()}
                 </Link>
               ))}
             </div>
