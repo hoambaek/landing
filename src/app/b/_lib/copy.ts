@@ -137,7 +137,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     planned: "予定",
     months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
     seasons: { winter: "冬", spring: "春", summer: "夏", autumn: "秋" },
-    journey: { origin: "シャンパーニュ", originSub: "VENTEUIL", aging: "瓶熟成", agingSub: "MAISON" },
+    journey: { origin: "シャンパーニュ", originSub: "VENTEUIL", aging: "瓶内熟成", agingSub: "MAISON" },
     obsHead: "海洋観測 · 年間平均",
     obsHeadPartial: "海洋観測 · 投入後の平均",
     metrics: {
@@ -154,7 +154,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     ctaSub: "REGISTRE · OCEAN CELLAR™",
     footerTagline: "海の時間を、記録する。",
     notFoundTitle: "ボトルが見つかりません",
-    notFoundBody: "コードが無効であるか、このボトルはまだ登録されていません。",
+    notFoundBody: "コードが正しくないか、まだ登録されていないボトルです。",
   },
   zh: {
     verified: "NFC认证完成 · RECORD AUTHENTICATED",
@@ -516,7 +516,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     emailLabel: "メールアドレス",
     emailPlaceholder: "デジタル証明書を受け取る宛先",
     privacyNote:
-      "証明書のお名前は、ボトルにスマートフォンをかざした誰もが見られます。\nメールアドレスは公開されず、証明書の発行にのみ使用します。",
+      "証明書のお名前は、ボトルにスマートフォンをかざした方すべてに表示されます。\nメールアドレスは公開されず、証明書の発行にのみ使用します。",
     submit: "N° {serial} を所蔵する",
     submitNoSerial: "この一本を所蔵する",
     submitting: "記録しています",
@@ -957,7 +957,7 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     blogPage: "ジャーナル",
     ecEyebrow: "EIGHT CURRENTS",
     ecTitle: "八つの観測項目が\n一本の時間を描く",
-    ecBody: "四季の変化を一つの流れとして記録しました。",
+    ecBody: "四季の変化を、ひとつの流れとして記録しました。",
     ecLegend: "金色の線 · 水温",
     certTag: "所有証明書",
     certDedication: "海の記録は\nこの名のもとに",

@@ -127,7 +127,7 @@ export default function BottleCertificate({
   const fmtMonths = (m: number) => {
     if (locale === "en") return `${m} months`;
     if (locale === "fr") return `${m} mois`;
-    if (locale === "ja") return `${m}か月`;
+    if (locale === "ja") return `${m}ヶ月`;
     if (locale === "zh") return `${m}个月`;
     return `${m}개월`;
   };
