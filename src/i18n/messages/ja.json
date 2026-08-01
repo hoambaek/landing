@@ -29,7 +29,7 @@
   "first": {
     "eyebrow": "THE FIRST RECORD",
     "headline": "深い時が、いま水面に還る。",
-    "closing": "ボトル一本ごとに宿る、海が残した指紋。同じものはふたつとありません",
+    "closing": "一本ごとに、海と重ねた時間が宿る。同じ味は、ふたつとない。",
     "plateAlt": {
       "light": "水面で出会う最初の光 · 最初の光",
       "manuscript": "フジツボと塩の結晶がついた瓶の表面 · 海が書いた原稿"
@@ -37,15 +37,15 @@
   },
   "collection": {
     "title": "collection.",
-    "sub": "それぞれのキュヴェが、ひとつの記録。海が育んだ時間を手にする歓び",
+    "sub": "それぞれのキュヴェに、ひとつの海。その時間を、手のなかに。",
     "heroAlt": "南海から引き揚げられたキュヴェのラインナップ",
     "cuvees": {
       "enLieuSur": "はじめて出会う、海の時間",
-      "enLieuSurMagnum": "同じ海を、より深く味わうマグナム · 1500ml",
-      "elementDeSurprise": "シャルドネ100%、ノン・ドサージュ。\n海が刻んだ、ありのままの姿",
-      "editionZero": "すべての記録がはじまった場所",
+      "enLieuSurMagnum": "同じ海を、より深く。マグナム · 1500ml",
+      "elementDeSurprise": "シャルドネ100%、ノン・ドサージュ。\n海が育てた、ありのままの味",
+      "editionZero": "すべては、この一本からはじまった",
       "atomesCrochus1yr": "希少品種プティ・メリエ。\n海とともに過ごした最初の一年",
-      "atomesCrochus2yr": "いまも海底で熟成中。\n八つの季節を重ねてゆく記録",
+      "atomesCrochus2yr": "いまも海底で、八つの季節を重ねている",
       "tag2yr": "2年",
       "soldOut": "· SOLD OUT"
     },
