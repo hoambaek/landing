@@ -113,6 +113,8 @@ export default function BottleRecord({
   const flowSvgRef = useRef<SVGSVGElement>(null);
   const convergeSvgRef = useRef<SVGSVGElement>(null);
   const convergeDotRef = useRef<SVGGElement>(null);
+  /* 수렴 텍스트도 IO가 아니라 점이 나타나기 시작할 때 함께 연다 (아래 renderConverge) */
+  const convergeTextRef = useRef<HTMLParagraphElement>(null);
   /* 병 사진은 IO가 아니라 수렴 점이 다 맺힌 뒤에 연다 (아래 renderConverge) */
   const bottlePhotoRef = useRef<HTMLDivElement>(null);
   const bottleSerialRef = useRef<HTMLParagraphElement>(null);
@@ -506,6 +508,11 @@ export default function BottleRecord({
             const e = 1 - Math.pow(1 - d, 3);
             gsap.set(dot, { opacity: e, scale: 0.72 + 0.28 * e });
           }
+          /* 점이 나타나기 "시작"하면 텍스트도 함께 뜬다 — 병 사진(d>=0.95)보다 앞서야
+             "점이 나타날 때 함께"라는 요구를 만족한다. */
+          if (d > 0.05 && convergeTextRef.current) {
+            convergeTextRef.current.classList.add(styles.revealIn);
+          }
           /* 점이 다 맺힌 다음에야 아래 병 사진이 열린다.
              p가 부동소수점 탓에 정확히 1에 닿지 않으므로 0.95로 본다.
              점은 이징(power3) 때문에 d≈0.79면 이미 눈에는 다 나타난 상태다. */
@@ -769,7 +776,8 @@ export default function BottleRecord({
               <circle cx="195" cy="278" r="3.5" fill="#CCAD7B" className={styles.glowDot} />
             </g>
           </svg>
-          <p className={`${styles.convergeText} ${styles.reveal}`} data-reveal>
+          {/* data-reveal(IO) 대신 수렴 점에 묶는다 — 점보다 먼저 뜨면 병 사진처럼 순서가 뒤집힌다 */}
+          <p className={`${styles.convergeText} ${styles.reveal}`} ref={convergeTextRef}>
             {/* 인양이 끝나 고객 손에 있는 병에서 열리는 페이지다 —
                 진행형("담기고 있습니다")이 아니라 완료형으로 고정한다.
                 data.partial은 배치의 인양일이 미래로 남아 있을 때 참이 되는데,
