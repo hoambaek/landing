@@ -68,7 +68,7 @@ export default function JsonLd() {
       {
         "@type": "ListItem",
         position: 6,
-        name: "Atomes Crochus 3 Years Aged",
+        name: "Atomes Crochus 2 Years Aged",
         url: `${baseUrl}/#archive`,
       },
     ],
@@ -107,7 +107,7 @@ export default function JsonLd() {
         name: "Muse de Marée의 컬렉션은 어떤 것이 있나요?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "여섯 개의 퀴베가 있습니다: En Lieu Sûr(Brut, 모든 퀴베의 기준), En Lieu Sûr Magnum(1500ml), Élément de Surprise(Blanc de Blancs, Non-dosé), Édition Zéro(서막 · 최초 인양분), Atomes Crochus 1 Year(Ultra-Brut, Petit Meslier 블렌드), Atomes Crochus 3 Years(Ultra-Brut, Petit Meslier 블렌드). 숙성 기간은 6개월·1년·3년의 세 단계로, 브랜드의 기준 시간은 1년입니다.",
+          text: "여섯 개의 퀴베가 있습니다: En Lieu Sûr(Brut, 모든 퀴베의 기준), En Lieu Sûr Magnum(1500ml), Élément de Surprise(Blanc de Blancs, Non-dosé), Édition Zéro(서막 · 최초 인양분), Atomes Crochus 1 Year(Ultra-Brut, Petit Meslier 블렌드), Atomes Crochus 2 Years(Ultra-Brut, Petit Meslier 블렌드). 숙성 기간은 6개월·1년·2년의 세 단계로, 브랜드의 기준 시간은 1년입니다.",
         },
       },
       {

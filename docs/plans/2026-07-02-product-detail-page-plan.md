@@ -1,5 +1,7 @@
 # 제품(큐베) 상세페이지 기획 — Muse de Marée
 
+> ⚠️ **2026-08-02 대표 확정으로 최장 티어가 2년(T-24)으로 변경됨.** 이 문서 본문의 `Atomes Crochus 3yr` 표기는 작성 시점(2026-07-02) 기록이며 현재 정본이 아니다. 정본은 `docs-vault/brand/musedemaree/brand-direction-2026.md`.
+
 > 작성: 2026-07-02 · 상태: **기획 초안(검토 대기)**
 > 근거: [`brand-direction-2026.md`](../brand/brand-direction-2026.md) · [`2026-06-10-brand-north-star.md`](./2026-06-10-brand-north-star.md) · 경쟁사 리서치(Krug iD·Dom Pérignon·Roederer·Ruinart·Le Labo·Aesop)
 > 레퍼런스: Krug.com(몰입) + Kinfolk.com(에디토리얼 여백)

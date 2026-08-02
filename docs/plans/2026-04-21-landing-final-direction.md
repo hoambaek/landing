@@ -1,5 +1,7 @@
 # Muse de Marée — 랜딩페이지 최종 방향 (C-revised)
 
+> ⚠️ **2026-08-02 대표 확정으로 최장 티어가 2년(T-24)으로 변경됨.** 이 문서 본문의 `Atomes Crochus 3 Years`·`3년` 표기는 작성 시점(2026-04-21) 기록이며 현재 정본이 아니다. 정본은 `docs-vault/brand/musedemaree/brand-direction-2026.md`.
+
 > **작성일:** 2026-04-21
 > **대체 대상:** 이전 Direction C, viral-website-architecture-analysis(2026-04-08)
 > **근거 문서:**

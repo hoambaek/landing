@@ -20,7 +20,7 @@ Muse de Marée(뮤즈드마레)는 프랑스 샹파뉴에서 태어난 샴페인
 브랜드의 기준 시간은 1년. 같은 바다의 시간을 세 두께의 기록으로 건넵니다.
 - T-6 (6개월) — 약 180일의 측정 기록. 진입 라인.
 - T-12 (1년) — 사계절 전체의 기록. 브랜드의 기준.
-- T-36 (3년) — 천 일이 넘는 기록. 컬렉터블 정점.
+- T-24 (2년) — 여덟 계절의 기록. 컬렉터블 정점.
 - 장소: 한국 남해 수심 30m
 - 조건: 완전한 차광, 일정한 저수온, 해류의 미세 진동
 - 기록: 입수부터 인양까지 전 기간의 수온·해류를 측정해 병마다 동봉
@@ -32,7 +32,7 @@ Muse de Marée(뮤즈드마레)는 프랑스 샹파뉴에서 태어난 샴페인
 - Élément de Surprise (엘레멍드쉬르프리즈) — Blanc de Blancs, Non-dosé, 샤르도네 100%
 - Édition Zéro (에디션 제로) — 서막. 브랜드 최초 인양분(0번), 일회성
 - Atomes Crochus 1 Year (아톰크로슈 1년) — Ultra-Brut, Petit Meslier 블렌드
-- Atomes Crochus 3 Years (아톰크로슈 3년) — Ultra-Brut, Petit Meslier 블렌드
+- Atomes Crochus 2 Years (아톰크로슈 2년) — Ultra-Brut, Petit Meslier 블렌드
 
 ## Makers
 - Champagne Mignon Boulard — Venteuil, Vallée de la Marne. 1911년부터 4세대.
@@ -78,4 +78,4 @@ A: 2026년 7-8월 공식 런칭 예정입니다.
 - Ocean Cellar Membership: https://www.musedemaree.com/#ocean-circle
 
 ---
-Last updated: 2026-06-27
+Last updated: 2026-08-02

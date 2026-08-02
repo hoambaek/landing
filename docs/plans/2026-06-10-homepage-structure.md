@@ -1,5 +1,7 @@
 # Muse de Marée — 메인 페이지 구조 & 디자인 스펙 (Written by the Sea 기반)
 
+> ⚠️ **2026-08-02 대표 확정으로 최장 티어가 2년(T-24)으로 변경됨.** 이 문서 본문의 `T-36`·`3년`·`36개월`·`12계절` 표기는 작성 시점(2026-06-10) 기록이며 현재 정본이 아니다. 정본은 `docs-vault/brand/musedemaree/brand-direction-2026.md`.
+
 > **작성일:** 2026-06-10 (v2 — 섹션별 컬러·이미지·모션 스펙 추가, S1.5 제거)
 > **기반:** [`docs/brand/brand-direction-2026.md`](../brand/brand-direction-2026.md) · [`docs/brand/brand-guide.md`](../brand/brand-guide.md) (Abyssal Amber)
 > **원칙:** 기존 섹션 ID·컴포넌트 비파괴, 역할과 순서 재정의. 컬러는 전부 `@theme` 기존 토큰만 사용
