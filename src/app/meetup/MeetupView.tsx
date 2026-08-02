@@ -8,7 +8,6 @@ import s from "./meetup.module.css";
 const EMAIL = "info@musedemaree.com";
 const TEL_DISPLAY = "010-5212-9514";
 const TEL_HREF = "tel:01052129514";
-const PDF_HREF = "/musedemaree-brandbook.pdf";
 
 const MAILTO =
   `mailto:${EMAIL}` +
@@ -367,12 +366,12 @@ export default function MeetupView() {
             <a className={s.ctaPrimary} href={MAILTO}>
               이메일로 미팅 잡기
             </a>
-            <a className={s.ctaSecondary} href={PDF_HREF} download>
-              브랜드 소개서 PDF
+            <Link className={s.ctaSecondary} href="/brand-book">
+              브랜드 소개서 신청
               <span className={s.ctaArrow} aria-hidden="true">
-                ↓
+                ↗
               </span>
-            </a>
+            </Link>
           </div>
         </div>
       </section>
