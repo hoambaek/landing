@@ -165,12 +165,14 @@ async function sendEmails({
 
 /**
  * 브랜드 소개서 전달 메일(PDF 첨부) — 관리자 승인 시 발송.
- * 신청자에게만 발송(운영자 알림 없음). 발송 성공 여부를 반환한다.
+ * 신청자에게만 발송(운영자 알림 없음).
+ * 발송 성공 여부와 함께 Resend message id를 돌려준다 —
+ * 이 id가 없으면 이후 전달·반송 웹훅을 신청 행에 붙일 수 없다.
  */
 export async function sendBrandBookDelivery(p: {
   email: string;
   name?: string;
-}): Promise<SubmitResult> {
+}): Promise<SubmitResult & { messageId?: string }> {
   if (!isResendConfigured() || !resend) {
     return { ok: false, error: "이메일 발송이 설정되지 않았습니다." };
   }
@@ -182,7 +184,7 @@ export async function sendBrandBookDelivery(p: {
     const html = await render(
       ApplicantEmail({ kind: "brandbook", name: p.name, mode: "send" })
     );
-    const { error } = await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: p.email,
       subject: getApplicantSubject("brandbook", "send"),
@@ -193,7 +195,7 @@ export async function sendBrandBookDelivery(p: {
       console.error("[forms] 소개서 전달 메일 실패:", error);
       return { ok: false, error: "메일 발송에 실패했습니다." };
     }
-    return { ok: true };
+    return { ok: true, messageId: data?.id };
   } catch (e) {
     console.error("[forms] 소개서 전달 예외:", e);
     return { ok: false, error: "메일 발송 중 오류가 발생했습니다." };

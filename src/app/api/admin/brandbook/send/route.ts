@@ -59,13 +59,25 @@ export async function POST(req: Request) {
     );
   }
 
+  const now = new Date().toISOString();
   const { error: updErr } = await supabaseAdmin
     .from("brandbook_requests")
-    .update({ status: "sent", sent_at: new Date().toISOString() })
+    .update({
+      status: "sent",
+      sent_at: now,
+      // 전달 추적은 승인 워크플로와 별개 축이다. 재발송이면 앞선 메일의
+      // 전달 결과를 지우고 이번 메일 기준으로 다시 센다.
+      resend_message_id: result.messageId ?? null,
+      delivery_status: result.messageId ? "sent" : null,
+      delivered_at: null,
+      last_event_at: result.messageId ? now : null,
+      delivery_error: null,
+    })
     .eq("id", id);
 
   if (updErr) {
-    // 메일은 발송됨 — 상태 갱신 실패는 로깅하되 성공으로 반환(재발송 방지 위해 sent 처리 권장)
+    // 메일은 발송됨 — 상태 갱신 실패는 로깅하되 성공으로 반환(재발송 방지 위해 sent 처리 권장).
+    // message id를 못 남기면 이 건은 전달 추적이 끊긴다.
     console.error("[admin/brandbook/send] status 갱신 실패:", updErr.message);
   }
 
