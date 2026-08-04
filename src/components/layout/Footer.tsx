@@ -158,6 +158,9 @@ export default function Footer({
               <Link href="/terms">{dict.policies.terms}</Link>
               <Link href="/privacy">{dict.policies.privacy}</Link>
               <Link href="/cookies">{dict.policies.cookies}</Link>
+              {/* 법적 문서는 한국어 정본만 둔다(2026-08-04 결정). 번역본을 두면 효력 해석이 갈린다.
+                  타 로케일에서는 링크가 한국어 페이지로 가므로 그 사실을 먼저 밝힌다. */}
+              {dict.policiesNote && <span>{dict.policiesNote}</span>}
             </div>
             <div className="s-footer__lang">
               {locales.map((lc) => (
