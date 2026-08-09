@@ -26,6 +26,10 @@ export interface BottleCopy {
   planned: string;
   months: string[]; // index 0 = 1월
   seasons: { winter: string; spring: string; summer: string; autumn: string };
+  /* 연도를 월 앞에 두는지 뒤에 두는지 — {y}=연도, {m}=월.
+     해를 넘겨 숙성한 병은 월만으로는 어느 해인지 갈리지 않는다(2년물은 1월이 두 번 온다).
+     어순은 인증서의 입수·인양 표기(seaWhen)와 같게 둔다 — 두 화면이 같은 말을 해야 한다. */
+  yearMonth: string;
   /* originDepth·agingDepth = S2 세로 목차의 깊이 열(육상 두 행).
      해저 두 행(입수·인양)의 깊이는 data.aging.depth에서 온다.
      「지하」·cave·カーヴ·酒窖는 큐베 스펙 원문의 "préservé en cave"를 옮긴 말이지
@@ -66,6 +70,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     planned: "예정",
     months: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
     seasons: { winter: "겨울", spring: "봄", summer: "여름", autumn: "가을" },
+    yearMonth: "{y}년 {m}",
     journey: { origin: "샹파뉴", originSub: "VENTEUIL", aging: "병숙성", agingSub: "MAISON", originDepth: "지상", agingDepth: "지하" },
     obsHead: "해양 관측 · 1년 평균",
     obsHeadPartial: "해양 관측 · 입수 후 평균",
@@ -94,6 +99,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     planned: "PLANNED",
     months: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
     seasons: { winter: "WINTER", spring: "SPRING", summer: "SUMMER", autumn: "AUTUMN" },
+    yearMonth: "{m} {y}",
     journey: { origin: "Champagne", originSub: "VENTEUIL", aging: "Bottle aging", agingSub: "MAISON", originDepth: "Vineyard", agingDepth: "Cellar" },
     obsHead: "OCEAN OBSERVATION · ANNUAL MEAN",
     obsHeadPartial: "OCEAN OBSERVATION · SINCE IMMERSION",
@@ -122,6 +128,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     planned: "PRÉVUE",
     months: ["JANV", "FÉVR", "MARS", "AVR", "MAI", "JUIN", "JUIL", "AOÛT", "SEPT", "OCT", "NOV", "DÉC"],
     seasons: { winter: "HIVER", spring: "PRINTEMPS", summer: "ÉTÉ", autumn: "AUTOMNE" },
+    yearMonth: "{m} {y}",
     journey: { origin: "Champagne", originSub: "VENTEUIL", aging: "Élevage", agingSub: "MAISON", originDepth: "Vigne", agingDepth: "Cave" },
     obsHead: "OBSERVATION MARINE · MOYENNE ANNUELLE",
     obsHeadPartial: "OBSERVATION MARINE · DEPUIS L'IMMERSION",
@@ -150,6 +157,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     planned: "予定",
     months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
     seasons: { winter: "冬", spring: "春", summer: "夏", autumn: "秋" },
+    yearMonth: "{y}年 {m}",
     journey: { origin: "シャンパーニュ", originSub: "VENTEUIL", aging: "瓶内熟成", agingSub: "MAISON", originDepth: "ブドウ畑", agingDepth: "カーヴ" },
     obsHead: "海洋観測 · 年間平均",
     obsHeadPartial: "海洋観測 · 投入後の平均",
@@ -178,6 +186,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     planned: "预定",
     months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
     seasons: { winter: "冬", spring: "春", summer: "夏", autumn: "秋" },
+    yearMonth: "{y}年 {m}",
     journey: { origin: "香槟区", originSub: "VENTEUIL", aging: "瓶中陈酿", agingSub: "MAISON", originDepth: "葡萄园", agingDepth: "酒窖" },
     obsHead: "海洋观测 · 年均值",
     obsHeadPartial: "海洋观测 · 入水后均值",
@@ -1157,3 +1166,56 @@ export const PROVENANCE: Record<string, ProvenanceData> = {
   atomes_crochus_2y: ATOMES_PROVENANCE,
   atomes_crochus: ATOMES_PROVENANCE,
 };
+
+/* ── 숙성 기간이 문장 안에 박혀 있는 자리 ────────────────────────
+ *
+ * 위 세 카피 묶음은 전부 1년물을 전제로 쓰였다 — "1년의 바다"·"사계절의 기록"처럼
+ * 기간이 문장의 일부다. 2년물(24개월)에 그대로 세우면 화면이 거짓말을 한다.
+ * 정본 표기는 둘뿐이다: 1년 = 12개월 · 4계절 / 2년 = 24개월 · 8계절.
+ *
+ * 문장을 조각내 조립하지 않고(로케일마다 어순이 달라 퍼즐이 된다) 기간이 박힌 문장만
+ * 통째로 갈아 끼운다. 여기 없는 키는 1년 문안을 그대로 쓴다 — 기간과 무관한 문장이다.
+ */
+const TWO_YEAR_FROM_MONTHS = 24;
+
+/* ⚠️ ko는 정본 어휘(2년 · 여덟 계절)로 맞춘 임시값이고, en·fr·ja·zh는 marketing 문안을 기다린다.
+   비어 있는 동안 그 네 로케일의 2년물은 1년 문장을 그대로 세운다(배포 전 채울 것). */
+export const BOTTLE_COPY_2Y: Record<BottleLocale, Partial<BottleCopy>> = {
+  ko: {
+    subLabel: "남해 30m · 여덟 계절의 기록",
+    converged: "2년의 바다가 한 병에 담겼습니다",
+  },
+  en: {},
+  fr: {},
+  ja: {},
+  zh: {},
+};
+
+export const RECORD_EXTRA_2Y: Record<BottleLocale, Partial<RecordExtraCopy>> = {
+  ko: { ecBody: "여덟 계절의 변화를 하나의 흐름으로 기록했습니다." },
+  en: {},
+  fr: {},
+  ja: {},
+  zh: {},
+};
+
+export const ENTRY_COPY_2Y: Record<BottleLocale, Partial<EntryCopy>> = {
+  ko: { inscribedCtaSub: "바다가 남긴 여덟 계절의 기록을 확인합니다." },
+  en: {},
+  fr: {},
+  ja: {},
+  zh: {},
+};
+
+function forDuration<T extends object>(base: T, longer: Partial<T>, months: number): T {
+  return months >= TWO_YEAR_FROM_MONTHS ? { ...base, ...longer } : base;
+}
+
+export const bottleCopy = (locale: BottleLocale, months: number): BottleCopy =>
+  forDuration(BOTTLE_COPY[locale], BOTTLE_COPY_2Y[locale], months);
+
+export const recordExtra = (locale: BottleLocale, months: number): RecordExtraCopy =>
+  forDuration(RECORD_EXTRA[locale], RECORD_EXTRA_2Y[locale], months);
+
+export const entryCopy = (locale: BottleLocale, months: number): EntryCopy =>
+  forDuration(ENTRY_COPY[locale], ENTRY_COPY_2Y[locale], months);

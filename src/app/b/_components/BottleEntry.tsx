@@ -12,7 +12,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./entry.module.css";
-import { ENTRY_COPY, PRODUCT_META, RECORD_EXTRA, BOTTLE_LOCALES, type BottleLocale } from "../_lib/copy";
+import { entryCopy, PRODUCT_META, RECORD_EXTRA, BOTTLE_LOCALES, type BottleLocale } from "../_lib/copy";
 import { persistBottleLocale } from "../_lib/locale";
 import { agingMonths, immersionYear } from "../_lib/duration";
 import { formatOwnerLatin } from "../_lib/owner-name";
@@ -58,7 +58,10 @@ export default function BottleEntry({
 
   const [locale, setLocale] = useState<BottleLocale>(initialLocale);
   const [langOpen, setLangOpen] = useState(false);
-  const copy = ENTRY_COPY[locale];
+  /* 숙성 기간이 문장 안에 박힌 카피가 있다(등록 완료 화면의 "사계절의 기록") —
+     어느 묶음을 세울지 배치 기간이 정한다. copy.ts의 2년물 오버레이 참고. */
+  const months = agingMonths(immersion, retrieval);
+  const copy = entryCopy(locale, months);
   /* 라틴 로케일은 이름 자체가 로마자라 자국어 칸을 따로 두지 않는다 */
   const isLatinLocale = locale === "en" || locale === "fr";
   const activeLocale = BOTTLE_LOCALES.find((l) => l.code === locale)!;
@@ -232,10 +235,7 @@ export default function BottleEntry({
                배치가 없는 병은 세우지 않는다 — 없는 연도를 지어내지 않는다. */
             productSub={
               immersion
-                ? `${immersionYear(immersion)} · ${RECORD_EXTRA[locale].ownMonths.replace(
-                    "{n}",
-                    String(agingMonths(immersion, retrieval))
-                  )}`
+                ? `${immersionYear(immersion)} · ${RECORD_EXTRA[locale].ownMonths.replace("{n}", String(months))}`
                 : null
             }
             onContinue={() => router.push(`/b/${code}/record`)}

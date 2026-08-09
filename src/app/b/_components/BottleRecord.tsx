@@ -16,10 +16,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./bottle.module.css";
 import BottleFooter from "./BottleFooter";
 import {
-  BOTTLE_COPY,
+  bottleCopy,
   MAISON_NAME,
   PRODUCT_META,
-  RECORD_EXTRA,
+  recordExtra,
   PROVENANCE,
   type BottleLocale,
 } from "../_lib/copy";
@@ -82,7 +82,11 @@ type MetricKey = "temp" | "salinity" | "tide" | "current" | "pressure" | "tidal"
 /* Paper 03 좌표 — SVG는 섹션 top 6px, 스테이션·계절 라벨은 아트보드 절대 좌표 그대로 */
 const FLOW_SVG_TOP = 6;
 const FLOW_HEIGHT = 1296;
-const SEASON_TOPS = [18, 300, 600, 900, 1200];
+/* 왼쪽 세로축의 계절 눈금 자리 — 1년물은 Paper가 확정한 다섯 좌표를 그대로 쓴다.
+   더 긴 배치만 같은 상하한 안에서 균등 분할한다(아래 seasonMarks). */
+const SEASON_TOPS_1Y = [18, 300, 600, 900, 1200];
+const AXIS_TOP = SEASON_TOPS_1Y[0];
+const AXIS_BOTTOM = SEASON_TOPS_1Y[SEASON_TOPS_1Y.length - 1];
 const STATION_TOPS: Record<MetricKey, number> = {
   temp: 126, salinity: 266, tide: 406, current: 546, pressure: 696, tidal: 836, wave: 976, period: 1116,
 };
@@ -129,26 +133,33 @@ export default function BottleRecord({
   /* 안드로이드 크롬은 루트 배경이 아니라 theme-color 메타를 본다 — 위 b-paper와 같은 값을 준다 */
   useSafeAreaTint(true);
 
-  const copy = BOTTLE_COPY[locale];
-  const extra = RECORD_EXTRA[locale];
+  /* 숙성 기간 — 실제 경과 일수 기준 (연도 뺄셈은 틀린다, duration.ts 참고).
+     카피보다 먼저 구한다: 기간이 문장 안에 박혀 있어(1년의 바다·사계절의 기록)
+     어느 묶음을 세울지 이 값이 정한다. */
+  const durationMonths = useMemo(
+    () => agingMonths(data.aging.immersion, data.aging.retrieval),
+    [data.aging.immersion, data.aging.retrieval]
+  );
+
+  const copy = bottleCopy(locale, durationMonths);
+  const extra = recordExtra(locale, durationMonths);
   const meta = PRODUCT_META[data.bottle.productId] ?? PRODUCT_META.atomes_crochus_1y;
   const prov = PROVENANCE[data.bottle.productId];
 
   const immMonth = monthIdxOf(data.aging.immersion, 0);
   const retMonth = monthIdxOf(data.aging.retrieval, 11);
   const year = immersionYear(data.aging.immersion);
+  /* 인양 연도 — 입수와 다르면 기간·축 표기에 두 해가 다 서야 한다.
+     배치에 인양일이 없으면 입수 연도로 되돌려, 없는 해를 지어내지 않는다. */
+  const retYear = data.aging.retrieval?.slice(0, 4) || year;
+  const crossesYear = retYear !== year;
 
   const monthSeason = (m: number) => `${copy.months[m]} ${copy.seasons[seasonOf(m)]}`;
+  const yearMonth = (y: string, m: number) => copy.yearMonth.replace("{y}", y).replace("{m}", copy.months[m]);
 
   const serialTotal = meta.quantity;
   const serial = data.bottle.serial;
   const serialLine = serial !== null ? `N° ${serial} / ${serialTotal}` : null;
-
-  /* 숙성 기간 — 실제 경과 일수 기준 (연도 뺄셈은 틀린다, duration.ts 참고) */
-  const durationMonths = useMemo(
-    () => agingMonths(data.aging.immersion, data.aging.retrieval),
-    [data.aging.immersion, data.aging.retrieval]
-  );
 
   /* 스테이션 라벨 접미 — "12개월 평균" / "12개월 최고" / "수심 30M" */
   const aggSuffix = (key: MetricKey) => {
@@ -169,12 +180,19 @@ export default function BottleRecord({
         ...(meta.cepage ? [{ label: extra.provLabels.cepage, value: meta.cepage }] : []),
       ];
 
-  /* 해저 숙성 표 — Paper 03은 숙성 기간·숙성 환경·위치 3행. 입수·인양 시점은 S2 여정이 담당. */
-  const durationValue = extra.durationFmt
-    .replace("{y}", year)
-    .replace("{m1}", copy.months[immMonth])
-    .replace("{m2}", copy.months[retMonth])
-    .replace("{n}", String(durationMonths));
+  /* 해저 숙성 표 — Paper 03은 숙성 기간·숙성 환경·위치 3행. 입수·인양 시점은 S2 여정이 담당.
+     해를 넘긴 병은 연도를 하나만 세울 수 없다 — durationFmt는 「{y}년 {m1}–{m2}」라
+     입수 연도 하나에 두 해치 개월 수를 얹어, 2년물이 「2026년 1월–12월 · 24개월」이 됐다.
+     한 해에 24개월이 흐르지 않고, 같은 병의 인증서는 인양을 2027년 12월로 쓴다.
+     두 해가 걸리면 양끝에 각자의 연도를 붙인다(어순은 인증서와 같은 yearMonth).
+     개월 수 문자열은 소유 관리 화면과 같은 ownMonths를 쓴다 — 같은 값에 두 문안을 두지 않는다. */
+  const durationValue = crossesYear
+      ? `${yearMonth(year, immMonth)} – ${yearMonth(retYear, retMonth)} · ${extra.ownMonths.replace("{n}", String(durationMonths))}`
+      : extra.durationFmt
+          .replace("{y}", year)
+          .replace("{m1}", copy.months[immMonth])
+          .replace("{m2}", copy.months[retMonth])
+          .replace("{n}", String(durationMonths));
 
   const seaRows: { label: string; value: string }[] = [
     {
@@ -207,6 +225,32 @@ export default function BottleRecord({
     { name: copy.immersion, sub: monthSeason(immMonth), depth: depthValue, sea: true, above: "ink", below: "bronze" },
     { name: copy.retrieval, sub: monthSeason(retMonth), depth: depthValue, sea: true, above: "bronze", below: "fade" },
   ];
+
+  /* S3 왼쪽 세로축의 계절 눈금 — 입수 달부터 세 달마다 하나, 마지막은 숙성 마지막 달.
+     이 축은 달력 한 해가 아니라 이 병이 바다에 있던 기간이다. 1월→12월 한 바퀴로 고정하면
+     2년물은 사계절이 두 번인데 화면은 한 번만 돌고, 같은 「1월 겨울」이 어느 해인지 갈리지 않는다.
+     12개월이면 다섯 눈금(Paper 확정 좌표 그대로), 24개월이면 여덟 계절 + 마지막 달로 아홉이 된다.
+     스물넷을 다 찍으면 9px 모노가 뭉개지므로 계절 단위로만 끊는다.
+     연도는 해가 바뀌는 눈금에만 붙인다 — 전부 붙이면 아홉 줄이 연도로 도배된다. */
+  const seasonMarks = (() => {
+    const offsets: number[] = [];
+    for (let o = 0; o + 1 < durationMonths; o += 3) offsets.push(o);
+    offsets.push(durationMonths - 1);
+    const tops =
+      offsets.length === SEASON_TOPS_1Y.length
+        ? SEASON_TOPS_1Y
+        : offsets.map((_, i) => AXIS_TOP + (i * (AXIS_BOTTOM - AXIS_TOP)) / (offsets.length - 1));
+    const startYear = Number(year);
+    let shown = -1;
+    return offsets.map((o, i) => {
+      const abs = immMonth + o;
+      const m = abs % 12;
+      const y = startYear + Math.floor(abs / 12);
+      const head = crossesYear && y !== shown ? yearMonth(String(y), m) : copy.months[m];
+      shown = y;
+      return { top: tops[i], text: `${head} ${copy.seasons[seasonOf(m)]}` };
+    });
+  })();
 
   /* S3 스케일 (390px 고정 지오메트리 → 좁은 화면 축소) */
   useEffect(() => {
@@ -699,13 +743,24 @@ export default function BottleRecord({
                 ))}
               </svg>
 
-              {/* 첫 라벨만 잉크다 — 이 높이(y 18~30)는 이제 종이색 위다.
-                  나머지 넷은 y 300 아래라 이미 남색·심해 구간이므로 그대로 둔다. */}
-              <span className={`${styles.seasonLabel} ${styles.seasonLabelInk}`} style={{ top: SEASON_TOPS[0] }}>{`${copy.months[0]} ${copy.seasons.winter}`}</span>
-              <span className={styles.seasonLabel} style={{ top: SEASON_TOPS[1] }}>{`${copy.months[3]} ${copy.seasons.spring}`}</span>
-              <span className={styles.seasonLabel} style={{ top: SEASON_TOPS[2] }}>{`${copy.months[6]} ${copy.seasons.summer}`}</span>
-              <span className={styles.seasonLabel} style={{ top: SEASON_TOPS[3] }}>{`${copy.months[9]} ${copy.seasons.autumn}`}</span>
-              <span className={`${styles.seasonLabel} ${styles.seasonLabelOn}`} style={{ top: SEASON_TOPS[4] }}>{`${copy.months[11]} ${copy.seasons.winter}`}</span>
+              {/* 첫 눈금만 잉크다 — 이 높이(y 18~30)는 아직 종이색 위다.
+                  나머지는 y 134 아래라 이미 남색·심해 구간이므로 그대로 둔다.
+                  마지막 눈금은 도착점이라 한 단 밝게 세운다. */}
+              {seasonMarks.map((mark, i) => (
+                <span
+                  key={mark.top}
+                  className={`${styles.seasonLabel} ${
+                    i === 0
+                      ? styles.seasonLabelInk
+                      : i === seasonMarks.length - 1
+                        ? styles.seasonLabelOn
+                        : ""
+                  }`}
+                  style={{ top: mark.top }}
+                >
+                  {mark.text}
+                </span>
+              ))}
 
               {(Object.keys(STATION_TOPS) as MetricKey[]).map((key) => {
                 const v = stationValues[key];

@@ -45,8 +45,12 @@ export interface BottleRecordData {
   bottle: BottleIdentity;
   aging: AgingWindow;
   averages: OceanAverages;
-  monthlyTemps: (number | null)[]; // index 0 = 1월, 관측 없으면 null
-  currentMonthIndex: number; // 발광 포인트가 설 달 (0-based)
+  /* monthlyTemps·currentMonthIndex는 걷어냈다(2026-08-09).
+     v2 히어로의 월별 수온 곡선이 쓰던 값인데, v3에서 히어로가 병 사진으로 바뀌며
+     그리는 곳이 사라졌다. 남은 집계는 연도를 버리고 월만 봐서 2026-01과 2027-01을
+     한 점으로 평균했다 — 2년물이면 두 해가 겹쳐 접힌다. 그리지 않는 값을 두 해치로
+     고쳐 두느니 지운다. 월별 곡선을 되살릴 때는 달력 월이 아니라 입수부터의
+     경과 월(0..n-1)로 모아야 한다. */
   partial: boolean; // 인양 전(기록 진행 중)
 }
 
@@ -312,23 +316,10 @@ export async function fetchBottleRecord(code: string): Promise<BottleRecordData 
     period: round1(mean(rows.map((r) => r.wave_period_avg))),
   };
 
-  const byMonth: (number | null)[][] = Array.from({ length: 12 }, () => []);
-  for (const r of rows) {
-    const m = Number(r.date.slice(5, 7)) - 1;
-    if (m >= 0 && m < 12) byMonth[m].push(bottomTemp40(r.sea_temperature_avg, m + 1));
-  }
-  const monthlyTemps = byMonth.map((vals) => round1(mean(vals)));
-
-  const currentMonthIndex = immersion
-    ? Math.min(11, Math.max(0, Number((retrieved && retrieval ? retrieval : today).slice(5, 7)) - 1))
-    : new Date().getMonth();
-
   return {
     bottle,
     aging: { immersion, retrieval, depth, retrieved },
     averages,
-    monthlyTemps,
-    currentMonthIndex,
     partial: Boolean(immersion) && !retrieved,
   };
 }
