@@ -8,10 +8,35 @@
   --o-elev: #f5f3ef;
   --o-ink: #14110e;
   --o-bronze: #8a6a3a;   /* 브라스는 종이 위 1.8:1이라 글자로 못 쓴다 */
-  --o-mono: var(--font-mono), "DM Mono", monospace;
+  /* DM Mono에 CJK 글립이 없어 제네릭 앞에 지면 산세리프를 받친다 — 근거는
+     인증서 모듈 주석(certificate.module.css의 --c-mono). */
+  --o-mono: var(--font-mono), "DM Mono", var(--o-sans-page), monospace;
   --o-serif: var(--font-heading), "Cormorant Garamond", serif;
-  --o-serif-kr: var(--font-serif-kr), "Noto Serif KR", serif;
-  --o-sans: var(--font-body), "Noto Sans KR", sans-serif;
+  /* 일본어·중국어 세리프 — 인증서 모듈과 같은 관례(certificate.module.css 주석에 근거).
+     ⚠️ -face- 토큰에 제네릭(serif)을 붙이지 않는다 — 붙이면 그 뒤가 전부 죽는다. */
+  --o-face-jp: var(--font-serif-jp), "Noto Serif JP";
+  --o-face-sc: var(--font-serif-sc), "Noto Serif SC";
+  --o-face-kr: var(--font-serif-kr), "Noto Serif KR";
+  /* 이 지면의 말이 어느 얼굴로 그려지는가. 로케일이 아래에서 갈아끼운다. */
+  --o-face-page: var(--o-face-kr);
+  /* 이 화면에서 세리프로 세우는 것은 소유자 이름 하나뿐이라 지면말 토큰(-serif-cjk)은 두지 않는다 */
+  /* 소유자 이름 전용 — 이름의 스크립트는 지면 언어와 다르다(인증서 모듈 주석 참조) */
+  --o-serif-name: var(--o-face-page), var(--o-face-kr), serif;
+  /* 일본어·중국어 산세리프 — 인증서 모듈과 같은 관례(certificate.module.css 주석에 근거).
+     랜딩 ja 본문과 같은 구성이고, 일본어 웹폰트는 루트 layout이 이미 물고 있다.
+     ⚠️ -sans- 토큰에 제네릭(sans-serif)을 붙이지 않는다 — 붙이면 그 뒤가 전부 죽는다. */
+  --o-sans-jp: var(--font-ja-body), "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic Medium", "Yu Gothic";
+  --o-sans-sc: var(--font-sans-sc), "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei";
+  --o-sans-kr: var(--font-body), "Noto Sans KR";
+  /* 이 지면의 본문이 어느 얼굴로 그려지는가. 로케일이 아래에서 갈아끼운다. */
+  --o-sans-page: var(--o-sans-kr);
+  --o-sans: var(--o-sans-page), sans-serif;
+  /* 이름 입력칸 전용 — 여기에는 이미 등록된 소유자 이름이 미리 담겨 나온다.
+     지면이 일본어라도 담긴 이름은 한글일 수 있으므로, 세리프 이름 토큰과 같은 관례로
+     지면 얼굴을 앞에 두고 한글 얼굴을 뒤에 받친다. */
+  --o-sans-name: var(--o-sans-page), var(--o-sans-kr), sans-serif;
   min-height: 100svh;
   background: var(--o-paper);
   color: var(--o-ink);
@@ -19,6 +44,9 @@
   display: flex;
   justify-content: center;
 }
+/* ⚠️ 반드시 .page 뒤에 온다 — 같은 단일 클래스라 순서가 승패를 가른다 */
+.pageJa { --o-face-page: var(--o-face-jp); --o-sans-page: var(--o-sans-jp); }
+.pageZh { --o-face-page: var(--o-face-sc); --o-sans-page: var(--o-sans-sc); }
 .frame {
   width: min(430px, 100vw);
   /* overflow: hidden은 스크롤 컨테이너를 만들어 헤더의 sticky를 무력화한다.
@@ -86,7 +114,7 @@
 /* 인증서의 소유자 이름(.ownerName)과 같은 세리프 — 두 화면에서 같은 이름으로 읽혀야 한다 */
 .identityName {
   margin-top: 16px;
-  font-family: var(--o-serif-kr);
+  font-family: var(--o-serif-name);
   font-weight: 400;
   font-size: 30px;
   line-height: 38px;
@@ -233,6 +261,16 @@
   font-size: 21px;
   line-height: 26px;
   color: var(--o-ink);
+}
+/* 입수 연차 — 큐베명 아래 한 단 작고 흐리게. 같은 큐베가 해마다 들어가므로
+   목록에서는 이 줄이 카드끼리를 가른다. 숙성 기간은 아래 사실 칸이 이미 세우고 있다. */
+.linkedYear {
+  margin-top: 5px;
+  font-family: var(--o-sans);
+  font-size: 11px;
+  line-height: 15px;
+  letter-spacing: 0.12em;
+  color: rgba(20, 17, 14, 0.52);
 }
 /* 제품 정체와 바다 기록을 가르는 짧은 획. 구분선이 아니라 인장에 가깝게 */
 /* 가장 긴 조합이 "Petit Meslier · Ultra-Brut"이고 정보칸에 딱 맞았다.
@@ -489,7 +527,7 @@
   border: none;
   border-bottom: 0.5px solid rgba(20, 17, 14, 0.32);
   border-radius: 0;
-  font-family: var(--o-sans);
+  font-family: var(--o-sans-name);
   font-weight: 300;
   font-size: 16px;
   color: var(--o-ink);

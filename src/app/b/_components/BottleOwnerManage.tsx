@@ -22,7 +22,7 @@ import {
 import { persistBottleLocale } from "../_lib/locale";
 import type { BottleRecordData, BottleOwner, OwnedBottle } from "../_lib/data";
 import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
-import { agingMonths } from "../_lib/duration";
+import { agingMonths, immersionYear } from "../_lib/duration";
 import {
   requestOwnerOtp,
   verifyOwnerOtp,
@@ -55,6 +55,9 @@ export default function BottleOwnerManage({
      전환은 입장·기록·인증서에서 한다. 여기서 또 고르게 하면 선택 지점만 늘어난다. */
   const extra = RECORD_EXTRA[locale];
   const activeLocale = BOTTLE_LOCALES.find((l) => l.code === locale)!;
+  /* ja·zh 지면의 CJK 세리프를 각 언어 서체로 돌린다. 규칙마다 modifier를 달지 않고
+     루트에서 --o-serif-cjk 토큰 하나를 갈아끼운다(owner.module.css). */
+  const scriptClass = locale === "ja" ? styles.pageJa : locale === "zh" ? styles.pageZh : "";
   /* 위아래가 전부 종이인 화면 — 안전영역도 종이로 잇는다(마크업의 b-paper와 짝) */
   useSafeAreaTint(true);
 
@@ -77,10 +80,22 @@ export default function BottleOwnerManage({
         serial: b.serial,
         depth: b.depth,
         months: agingMonths(b.immersion, b.retrieval),
+        /* 같은 큐베가 해마다 들어가므로 목록에서는 연차가 있어야 카드끼리 구분된다.
+           배치가 없는 병은 null — 없는 연도를 지어내지 않는다. */
+        year: b.immersion ? immersionYear(b.immersion) : null,
       }));
     }
-    return [{ code, meta, serial, depth: data.aging.depth, months: durationMonths }];
-  }, [ownedBottles, code, meta, serial, data.aging.depth, durationMonths]);
+    return [
+      {
+        code,
+        meta,
+        serial,
+        depth: data.aging.depth,
+        months: durationMonths,
+        year: data.aging.immersion ? immersionYear(data.aging.immersion) : null,
+      },
+    ];
+  }, [ownedBottles, code, meta, serial, data.aging.depth, data.aging.immersion, durationMonths]);
 
   /* 이름은 공개값이므로 인증 여부와 무관하게 같다. 이메일만 인증 후 전체가 열린다. */
   const displayName = ownerFull?.name ?? ownerMasked?.name ?? extra.certOwnerFallback;
@@ -170,7 +185,7 @@ export default function BottleOwnerManage({
   }
 
   return (
-    <main className={`${styles.page} b-paper`}>
+    <main className={`${styles.page} ${scriptClass} b-paper`}>
       <div className={styles.frame}>
         {/* ── 헤더 ── */}
         <header className={styles.header}>
@@ -284,6 +299,10 @@ export default function BottleOwnerManage({
                   )}
                 </span>
                 <span className={styles.linkedName}>{c.meta.name}</span>
+                {/* 입수 연차 — 큐베명만으로는 이듬해 입수분과 같은 이름이 된다.
+                    숙성 기간은 붙이지 않는다: 아래 사실 칸이 같은 형식으로 이미 세우고 있다.
+                    배치가 없는 병은 세우지 않는다 — 없는 연도를 지어내지 않는다. */}
+                {c.year && <span className={styles.linkedYear}>{c.year}</span>}
                 {/* 품종·스타일은 제품마다 있을 수도 없을 수도 있다(first_edition은 둘 다 없음) */}
                 {(c.meta.cepage || c.meta.style) && (
                   <span className={styles.linkedTrait}>
