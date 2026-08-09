@@ -3,8 +3,8 @@
 /**
  * /b 입장 페이지 — NFC 태그가 가장 먼저 여는 화면.
  * 로고 인트로(디졸브) → 풀필름 히어로 → Bottle Identity(N°·에디션) →
- * Provenance(세 가지 증거) → Claim Ownership(이름·이메일 → "이름을 새기다").
- * 등록 성공 시 각인 공개(BottleInscription)로 전환, CTA로 기록 페이지(/record) 진입.
+ * Provenance(세 가지 증거) → Claim Ownership(이름·이메일 → "N° {serial}을 소장하기").
+ * 등록 성공 시 등록 완료 화면(BottleInscription)으로 전환, CTA로 기록 페이지(/record) 진입.
  * 표기 규칙: 병 번호 N°/총량. 커머스 문구 금지. 다크·앰버·시네마틱(기록 페이지와 동일 톤).
  */
 
@@ -12,8 +12,10 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./entry.module.css";
-import { ENTRY_COPY, PRODUCT_META, BOTTLE_LOCALES, type BottleLocale } from "../_lib/copy";
+import { ENTRY_COPY, PRODUCT_META, RECORD_EXTRA, BOTTLE_LOCALES, type BottleLocale } from "../_lib/copy";
 import { persistBottleLocale } from "../_lib/locale";
+import { agingMonths, immersionYear } from "../_lib/duration";
+import { formatOwnerLatin } from "../_lib/owner-name";
 import { submitBottleRegistration } from "@/lib/forms";
 import BottleInscription from "./BottleInscription";
 import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
@@ -28,6 +30,8 @@ export default function BottleEntry({
   productId,
   serial,
   total,
+  immersion,
+  retrieval,
   initialLocale = "ko",
   registered = false,
   registeredTo = null,
@@ -37,6 +41,11 @@ export default function BottleEntry({
   productId: string;
   serial: number | null;
   total: number;
+  /* 제품 식별의 나머지 두 조각(입수 연차 · 숙성 기간)이 여기서 파생된다 —
+     큐베명만으로는 1년물·2년물이, 연차가 없으면 이듬해 입수분이 같은 이름이 된다.
+     제품 마스터를 해마다 늘리지 않고 배치(inventory_batches)에서 얻는다. */
+  immersion: string | null;
+  retrieval: string | null;
   initialLocale?: BottleLocale;
   /** 이미 소유 등록된 병 — 폼을 잠그고 기록 입구를 연다 */
   registered?: boolean;
@@ -53,6 +62,10 @@ export default function BottleEntry({
   /* 라틴 로케일은 이름 자체가 로마자라 자국어 칸을 따로 두지 않는다 */
   const isLatinLocale = locale === "en" || locale === "fr";
   const activeLocale = BOTTLE_LOCALES.find((l) => l.code === locale)!;
+  /* ja·zh 지면의 CJK 세리프를 각 언어 서체로 돌린다. 규칙마다 modifier를 달지 않고
+     루트에서 --e-serif-cjk 토큰 하나를 갈아끼운다(entry.module.css).
+     하위의 BottleInscription도 이 루트 안에 있어 함께 따라온다. */
+  const scriptClass = locale === "ja" ? styles.pageJa : locale === "zh" ? styles.pageZh : "";
 
   const [introOut, setIntroOut] = useState(false);
   const [name, setName] = useState("");
@@ -186,8 +199,9 @@ export default function BottleEntry({
       });
       if (res.ok) {
         setInscribedName(isLatinLocale ? n : name.trim());
-        /* 인증서와 같은 순서(이름 성)로 합쳐 넘긴다 */
-        setInscribedLatin([given, family].filter(Boolean).join(" ") || null);
+        /* 인증서와 같은 순서(이름 성)·같은 표기 규칙(첫 글자만 대문자)으로 합쳐 넘긴다 —
+           등록 직후 본 이름과 인증서의 이름이 다르면 다른 문서로 읽힌다 */
+        setInscribedLatin(formatOwnerLatin(given, family));
         setInscribed(true);
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       } else {
@@ -202,7 +216,7 @@ export default function BottleEntry({
 
   if (inscribed) {
     return (
-      <main className={`${styles.page} b-paper`}>
+      <main className={`${styles.page} ${scriptClass} b-paper`}>
         <div className={styles.frame}>
           <BottleInscription
             copy={copy}
@@ -213,6 +227,17 @@ export default function BottleEntry({
             /* 세로 프레임에는 세로 누끼를 쓴다 — entry Identity·인증서와 같은 자산 */
             image={meta.imagePortrait ?? meta.image}
             productName={meta.name}
+            /* 이 화면에는 숙성 기간을 담은 표가 없다 — 제품 식별 세 조각이 여기서 다 끝나야 한다.
+               기간 표기는 record·certificate·owner가 쓰는 것과 같은 로케일 문자열을 쓴다.
+               배치가 없는 병은 세우지 않는다 — 없는 연도를 지어내지 않는다. */
+            productSub={
+              immersion
+                ? `${immersionYear(immersion)} · ${RECORD_EXTRA[locale].ownMonths.replace(
+                    "{n}",
+                    String(agingMonths(immersion, retrieval))
+                  )}`
+                : null
+            }
             onContinue={() => router.push(`/b/${code}/record`)}
             /* 등록된 병으로 들어온 경우에만 — 방금 등록을 마친 사람에게는 주지 않는다 */
             onBrowse={
@@ -232,7 +257,7 @@ export default function BottleEntry({
   }
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${scriptClass}`}>
       {/* ── 로고 인트로 (디졸브) ── */}
       <div className={`${styles.intro} ${introOut ? styles.introOut : ""}`} aria-hidden>
         {/* eslint-disable-next-line @next/next/no-img-element */}

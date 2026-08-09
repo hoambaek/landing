@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { fetchBottleIdentity, fetchBottleOwner } from "../_lib/data";
+import { fetchBottleIdentity, fetchBottleOwner, fetchAgingBatch } from "../_lib/data";
 import { PRODUCT_META } from "../_lib/copy";
 import { BOTTLE_LANG_COOKIE, parseBottleLocale } from "../_lib/locale";
 import BottleEntry from "../_components/BottleEntry";
@@ -33,12 +33,19 @@ export default async function BottleEntryPage({ params }: { params: Promise<{ co
   const meta = PRODUCT_META[identity.productId] ?? PRODUCT_META.atomes_crochus_1y;
   const initialLocale = parseBottleLocale(jar.get(BOTTLE_LANG_COOKIE)?.value);
 
+  /* 등록 완료 화면의 제품 식별 캡션(입수 연차 · 숙성 기간)용 — 제품 마스터가 아니라
+     배치에서 파생한다. 이 질의만 productId에 의존해 위 Promise.all에 넣을 수 없다.
+     날짜 자체를 넘긴다: 기간 표기가 로케일을 타는데 언어는 클라이언트에서 바뀐다. */
+  const batch = await fetchAgingBatch(identity.productId);
+
   return (
     <BottleEntry
       code={identity.nfcCode}
       productId={identity.productId}
       serial={identity.serial}
       total={meta.quantity}
+      immersion={batch.immersion}
+      retrieval={batch.retrieval}
       initialLocale={initialLocale}
       registeredTo={owner?.name ?? null}
       registeredToLatin={owner?.nameLatin ?? null}

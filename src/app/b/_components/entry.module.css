@@ -13,14 +13,39 @@
   --e-paper: #edeae3;
   --e-ptext: #14110e;
   --e-bronze: #8a6a3a;          /* 브라스는 종이 위 1.8:1이라 글자로 못 쓴다 */
-  /* 브랜드 정본은 DM Mono. --font-plex-mono는 정의된 적이 없었다. */
-  --e-mono: var(--font-mono), "DM Mono", monospace;
+  /* 브랜드 정본은 DM Mono. --font-plex-mono는 정의된 적이 없었다.
+     DM Mono에 CJK 글립이 없어 제네릭 앞에 지면 산세리프를 받친다 — 근거는
+     인증서 모듈 주석(certificate.module.css의 --c-mono). */
+  --e-mono: var(--font-mono), "DM Mono", var(--e-sans-page), monospace;
   /* 브랜드 Signature 목소리 — 인증서 소유자 이름과 같은 활자.
      등록 직후 보는 이름과 인증서에 새겨진 이름이 다르면 다른 문서로 읽힌다. */
   --e-script: var(--font-delafield), "Mrs Saint Delafield", cursive;
   --e-serif: var(--font-heading), "Cormorant Garamond", serif;
-  --e-serif-kr: var(--font-serif-kr), "Noto Serif KR", serif;
-  --e-sans: var(--font-body), "Noto Sans KR", sans-serif;
+  /* 일본어·중국어 세리프 — 인증서 모듈과 같은 관례(certificate.module.css 주석에 근거).
+     한자는 KR·JP·SC 자형이 서로 달라 한국 폰트로 대신 그리지 않는다.
+     폰트는 /b 레이아웃이 이미 물고 있어 추가 바이트가 없다.
+     ⚠️ -face- 토큰에 제네릭(serif)을 붙이지 않는다 — 붙이면 그 뒤가 전부 죽는다. */
+  --e-face-jp: var(--font-serif-jp), "Noto Serif JP";
+  --e-face-sc: var(--font-serif-sc), "Noto Serif SC";
+  --e-face-kr: var(--font-serif-kr), "Noto Serif KR";
+  /* 이 지면의 말이 어느 얼굴로 그려지는가. 로케일이 아래에서 갈아끼운다. */
+  --e-face-page: var(--e-face-kr);
+  /* 지면의 말에 쓴다 — 사람 이름은 아래 --e-serif-name이다. */
+  --e-serif-cjk: var(--e-face-page), serif;
+  /* 소유자 이름 전용 — 이름의 스크립트는 지면 언어와 다르다(인증서 모듈 주석 참조).
+     지면 얼굴을 앞에 두고 한글 얼굴을 뒤에 받쳐, 앞 얼굴에 없는 글자만 넘긴다. */
+  --e-serif-name: var(--e-face-page), var(--e-face-kr), serif;
+  /* 일본어·중국어 산세리프 — 인증서 모듈과 같은 관례(certificate.module.css 주석에 근거).
+     랜딩 ja 본문과 같은 구성이고, 일본어 웹폰트는 루트 layout이 이미 물고 있다.
+     ⚠️ -sans- 토큰에 제네릭(sans-serif)을 붙이지 않는다 — 붙이면 그 뒤가 전부 죽는다. */
+  --e-sans-jp: var(--font-ja-body), "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic Medium", "Yu Gothic";
+  --e-sans-sc: var(--font-sans-sc), "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei";
+  --e-sans-kr: var(--font-body), "Noto Sans KR";
+  /* 이 지면의 본문이 어느 얼굴로 그려지는가. 로케일이 아래에서 갈아끼운다. */
+  --e-sans-page: var(--e-sans-kr);
+  --e-sans: var(--e-sans-page), sans-serif;
   position: relative;
   min-height: 100svh;
   background: var(--e-void);
@@ -29,6 +54,9 @@
   display: flex;
   justify-content: center;
 }
+/* ⚠️ 반드시 .page 뒤에 온다 — 같은 단일 클래스라 순서가 승패를 가른다 */
+.pageJa { --e-face-page: var(--e-face-jp); --e-sans-page: var(--e-sans-jp); }
+.pageZh { --e-face-page: var(--e-face-sc); --e-sans-page: var(--e-sans-sc); }
 /* 종이 구간에서는 바탕도 종이 — 안 그러면 섹션 밖(오버스크롤·여백)에 void가 비친다.
    b-paper는 안전영역용 전역 마커라 html과 같은 신호로 움직인다(globals.css). */
 .page:global(.b-paper) {
@@ -436,7 +464,7 @@
   line-height: 24px;
   color: var(--e-ptext);
 }
-.factValue { font-family: var(--e-serif-kr); }
+.factValue { font-family: var(--e-serif-cjk); }
 .factValueMono {
   font-family: var(--e-mono);
   letter-spacing: -0.03em;
@@ -778,7 +806,7 @@
 }
 .claimedNative {
   margin-top: 4px;
-  font-family: var(--e-serif-kr);
+  font-family: var(--e-serif-name);
   font-weight: 300;
   font-size: 15px;
   line-height: 21px;
@@ -788,7 +816,7 @@
 }
 /* 로마자 표기가 없는 소유자 — 한글 하나로 세운다 */
 .claimedName {
-  font-family: var(--e-serif-kr);
+  font-family: var(--e-serif-name);
   font-weight: 400;
   font-size: 26px;
   line-height: 34px;
@@ -852,7 +880,7 @@
 }
 .inscribeTitle {
   margin-top: 16px;
-  font-family: var(--e-serif-kr);
+  font-family: var(--e-serif-cjk);
   font-weight: 300;
   font-size: 25px;
   line-height: 34px;
@@ -924,6 +952,17 @@
   letter-spacing: 0.02em;
   color: rgba(20, 17, 14, 0.62);
 }
+/* 입수 연차 · 숙성 기간 — 제품명보다 한 단 작고 흐리게. 제품명이 먼저 읽혀야 한다.
+   모노가 아니라 본문 활자다: 기간 단위가 한글("개월")·일본어("ヶ月")로 오는 로케일에서
+   고정폭이 폴백되어 뭉갠다(같은 이유로 .linkedFactLabel도 본문 활자로 두었다). */
+.iProductSub {
+  margin-top: 5px;
+  font-family: var(--e-sans);
+  font-size: 11.5px;
+  line-height: 16px;
+  letter-spacing: 0.09em;
+  color: rgba(20, 17, 14, 0.52);
+}
 /* 인증서의 이름 조판을 그대로 가져온다 — 로마자는 서명체, 아래 한글 정자.
    등록 직후 보는 얼굴과 인증서에 새겨진 얼굴이 같아야 한 문서로 읽힌다. */
 .iOwnerScript {
@@ -939,7 +978,7 @@
 }
 .iOwnerNative {
   margin-top: 5px;
-  font-family: var(--e-serif-kr);
+  font-family: var(--e-serif-name);
   font-weight: 300;
   font-size: 16px;
   line-height: 22px;
@@ -950,7 +989,7 @@
 /* 로마자 표기가 없을 때만 — 한글 하나로 세운다 */
 .iOwnerName {
   margin-top: 9px;
-  font-family: var(--e-serif-kr);
+  font-family: var(--e-serif-name);
   font-size: 27px;
   line-height: 32px;
   color: var(--e-ptext);

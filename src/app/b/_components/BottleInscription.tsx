@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * 각인 공개 — 소유 등록 직후 나타나는 완료 화면 (Paper "02 등록 완료 · 각인 공개").
- * 등록 완료 문구 → 대형 N° → 병 → 소유자 이름을 위에서 아래로 각인하듯 리빌하고,
+ * 등록 완료 — 소유 등록 직후 나타나는 완료 화면 (Paper "02 등록 완료").
+ * 등록 완료 문구 → 대형 N° → 병 → 소유자 이름을 위에서 아래로 순차 리빌하고,
  * 잠깐 정지한 뒤 CTA를 페이드 인한다. 자동 이동은 하지 않는다(사용자가 눌러 이동).
  * 표기 규칙: 병 번호 N°/총량. 다크·앰버 톤(기록 페이지와 동일).
  */
@@ -19,6 +19,7 @@ export default function BottleInscription({
   total,
   image,
   productName,
+  productSub,
   onContinue,
   onBrowse,
 }: {
@@ -31,6 +32,10 @@ export default function BottleInscription({
   image: string;
   /* 제품명 — 병 사진 아래 캡션 자리에 세운다 */
   productName: string;
+  /* 입수 연차 · 숙성 기간 — 큐베명 아래 한 단 작게. 큐베명만으로는 1년물·2년물이
+     같은 이름이고, 연차가 없으면 이듬해 입수분과도 같은 이름이 된다.
+     숙성 배치가 없는 병은 null — 없는 연도를 지어내느니 줄을 비운다. */
+  productSub: string | null;
   onContinue: () => void;
   /* 이미 등록된 병으로 들어왔을 때만 — 입장 화면(필름·Identity·Provenance)으로 내려간다.
      등록 직후에는 방금 지나온 화면이라 주지 않는다. */
@@ -41,7 +46,11 @@ export default function BottleInscription({
       <div className={styles.inscribeHead}>
         <span className={styles.inscribeEyebrow}>{copy.inscribedEyebrow}</span>
         <h1 className={styles.inscribeTitle}>{copy.inscribedTitle}</h1>
-        <p className={styles.inscribeSub}>{copy.inscribedSub}</p>
+        <p className={styles.inscribeSub}>
+          {serial !== null
+            ? copy.inscribedSub.replace("{serial}", String(serial))
+            : copy.inscribedSubNoSerial}
+        </p>
       </div>
 
       {serial !== null && (
@@ -72,6 +81,7 @@ export default function BottleInscription({
         {/* 라벨("첫 소유자") 자리에 제품명을 세운다 — 위 병 사진의 캡션이자
            이 문서가 어느 술의 것인지를 밝히는 줄이다. */}
         <span className={styles.iProductName}>{productName}</span>
+        {productSub && <span className={styles.iProductSub}>{productSub}</span>}
         {nameLatin ? (
           <>
             <span className={styles.iOwnerScript}>{nameLatin}</span>
