@@ -79,6 +79,8 @@ type NotifyArgs = {
   attachments?: Attachment[];
   /** 신청자 메일 모드 — 브랜드 소개서 접수확인("ack") vs 전달("send") */
   mode?: EmailMode;
+  /** 병 번호 — bottle 메일에서만 쓴다. 개체는 번호로 부르고, 없으면 부르지 않는다 */
+  serial?: number | null;
 };
 
 /** insert 성공 후 이메일 2종 발송(병렬, 실패 무시) */
@@ -114,6 +116,7 @@ async function sendEmails({
   adminFields,
   attachments,
   mode = "send",
+  serial = null,
 }: NotifyArgs): Promise<void> {
   if (!isResendConfigured() || !resend) {
     console.warn("[forms] Resend 미설정 — 이메일 발송 건너뜀");
@@ -128,7 +131,7 @@ async function sendEmails({
 
   try {
     const [applicantHtml, adminHtml] = await Promise.all([
-      render(ApplicantEmail({ kind, name: applicantName, mode })),
+      render(ApplicantEmail({ kind, name: applicantName, mode, serial })),
       render(AdminNotifyEmail({ kind, fields: adminFields, receivedAt })),
     ]);
 
@@ -136,7 +139,7 @@ async function sendEmails({
       resend.emails.send({
         from: FROM_EMAIL,
         to: applicantEmail,
-        subject: getApplicantSubject(kind, mode),
+        subject: getApplicantSubject(kind, mode, serial),
         html: applicantHtml,
         ...(attachments?.length ? { attachments } : {}),
       }),
@@ -326,6 +329,7 @@ export async function submitBottleRegistration(
       kind: "bottle",
       applicantEmail: p.email,
       applicantName: p.name,
+      serial: p.serial ?? null,
       adminFields: {
         성함: p.name,
         "로마자 표기": [given, family].filter(Boolean).join(" ") || "—",

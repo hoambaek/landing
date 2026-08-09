@@ -41,6 +41,8 @@ interface ApplicantEmailProps {
   kind: FormKind;
   name?: string;
   mode?: EmailMode;
+  /** 병 번호 — bottle 메일의 헤드라인이 개체를 번호로 부른다. 없으면 부르지 않는다 */
+  serial?: number | null;
 }
 
 /** 발송 메일의 이미지(로고)용 절대 URL */
@@ -50,10 +52,13 @@ const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://musedemaree.com";
  * 신청자 확인 메일 — Paper v2 시안(프레임 + 카드 + 법적 푸터).
  * 외곽 연회색 프레임 안에 #C4BFBB 카드, 브랜드 로고 헤더, 본문, 다크 법적 푸터.
  */
-export function ApplicantEmail({ kind, name, mode = "send" }: ApplicantEmailProps) {
+export function ApplicantEmail({ kind, name, mode = "send", serial = null }: ApplicantEmailProps) {
   const t =
     kind === "brandbook" && mode === "ack" ? BRANDBOOK_ACK_COPY : COPY[kind];
   const greeting = name ? `${name} 님, 안녕하세요.` : "안녕하세요.";
+  /* 번호가 있으면 헤드라인이 개체를 부르고, 없으면 부르지 않는다(정본 규칙 2) */
+  const title =
+    kind === "bottle" && serial == null ? BOTTLE_TITLE_NO_SERIAL : t.title.replace("{serial}", String(serial));
 
   return (
     <Html lang="ko">
@@ -96,7 +101,7 @@ export function ApplicantEmail({ kind, name, mode = "send" }: ApplicantEmailProp
           <Section className="email-content" style={styles.content}>
             <Text style={styles.eyebrow}>{t.eyebrow}</Text>
             <Text className="email-title" style={styles.title}>
-              {t.title}
+              {title}
             </Text>
             <Text style={styles.hello}>{greeting}</Text>
             {/* 목록은 ul/li 대신 Text 반복이다 — 클라이언트마다 li 기본 여백이 달라
@@ -162,10 +167,20 @@ export function ApplicantEmail({ kind, name, mode = "send" }: ApplicantEmailProp
   );
 }
 
-export function getApplicantSubject(kind: FormKind, mode: EmailMode = "send"): string {
+export function getApplicantSubject(
+  kind: FormKind,
+  mode: EmailMode = "send",
+  serial: number | null = null
+): string {
   if (kind === "brandbook" && mode === "ack") return BRANDBOOK_ACK_SUBJECT;
-  return SUBJECT[kind];
+  /* 개체는 번호로 부른다. 번호가 없으면 부르지 않는다(정본 규칙 2) */
+  if (kind === "bottle" && serial == null) return BOTTLE_SUBJECT_NO_SERIAL;
+  return SUBJECT[kind].replace("{serial}", String(serial));
 }
+
+/** 번호 미부여 병 — 제목·헤드라인 모두 번호 없이 선다 */
+const BOTTLE_SUBJECT_NO_SERIAL = "소유자로 등록했습니다 | Muse de Marée";
+const BOTTLE_TITLE_NO_SERIAL = "소유자로 등록했습니다";
 
 /* 제목은 여섯 통이 한 벌이다 — 접수 사실은 본문 첫 줄이 담당하고, 제목은 브랜드가 말한다.
    정본 헌법 4조: "톤 일관성은 헤리티지의 대체재다." 같은 브랜드가 보내는 메일 중
@@ -177,7 +192,8 @@ const SUBJECT: Record<FormKind, string> = {
   /* 심사 전이므로 약속을 앞세우지 않고 받은 사실만 말한다 */
   partner: "파트너십 문의를 받았습니다 | Muse de Marée",
   brandbook: "바다의 시간을 한 권에 담았습니다 | Muse de Marée",
-  bottle: "병에 이름을 새겼습니다 | Muse de Marée",
+  /* {serial} 치환 — 번호 없는 병은 BOTTLE_SUBJECT_NO_SERIAL로 갈린다 */
+  bottle: "N° {serial}의 소유자로 등록했습니다 | Muse de Marée",
   /* 짧은 부사 뒤 쉼표는 영어 문두 부사구 관행이다 — 일곱 제목 중 여기만 쉼표가 있었다 */
   newsletter: "계절마다 바다의 소식을 전하겠습니다 | Muse de Marée",
 };
@@ -269,13 +285,15 @@ const COPY: Record<FormKind, EmailCopy> = {
   },
   bottle: {
     eyebrow: "OCEAN CELLAR™",
-    /* 2026-08-03 대표 확정 — "바다의 시간이 당신의 이름으로 남았습니다"에서 교체.
-       수사가 사실보다 앞서 오글거린다는 판정이었고, 본문 첫 줄("이름 아래 놓였습니다")이
-       같은 말을 되풀이해 그 수사가 두 번 반복됐다. 사실만 남긴다 — 실제로 인증서에
-       로마자 표기를 새기므로 "새겼습니다"는 은유가 아니다.
-       종전 규칙("제목은 물건을 세지 않는다 — '병 하나'는 재고 어감")은 수량 표현을 막은 것이고,
-       여기 "병에"는 수량이 아니라 손에 든 개체를 가리킨다. */
-    title: "병에 이름을 새겼습니다",
+    /* 2026-08-08 대표 확정 — "병에 이름을 새겼습니다"에서 교체.
+       인증서는 디지털이라 새기는 것이 없다. "새기다"는 물건에 붙는 동사고
+       "등록"은 명부에 붙는 동사라, 처소도 "병에"에서 "N° {serial}의 소유자로"로 함께 옮겼다
+       ("병에 등록"은 성립하지 않는다 — 등록되는 곳은 병이 아니라 기록부다).
+       피동("등록되었습니다") 대신 능동 완료를 쓴다 — 여섯 통 중 넷이 이 어형이고
+       ("올렸습니다"·"받았습니다"·"담았습니다") 피동은 결제·접수 알림 어조로 내려앉는다.
+       종전 판정("바다의 시간이 당신의 이름으로 남았습니다"가 오글거린다)은 그대로 유효하다 —
+       "남다"로 되돌아가지 않는 이유다. */
+    title: "N° {serial}의 소유자로 등록했습니다",
     /* 브랜드 보이스 정본(brand-guide.md 08) — "심연을 닮은 고요함".
        짧은 문장, 관찰 일기체, 과잉 수사 금지. 3단 명제의 1차 명제를 그대로 싣는다.
        "한 해"는 쓰지 않는다 — 숙성 기간은 퀴베마다 6개월에서 2년까지 다르다.
