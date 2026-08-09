@@ -7,11 +7,12 @@
  * 저장: 인증서 카드를 html-to-image로 고해상 PNG 렌더 → 다운로드. 공유: Web Share(파일) → 실패 시 다운로드 폴백.
  */
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { toPng } from "html-to-image";
 import KeyGlyph from "./KeyGlyph";
+import { useFitText } from "../_lib/use-fit-text";
 import styles from "./certificate.module.css";
 import BottleFooter from "./BottleFooter";
 import {
@@ -24,22 +25,62 @@ import {
 } from "../_lib/copy";
 import type { BottleRecordData, BottleOwner } from "../_lib/data";
 import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
-import { agingMonths } from "../_lib/duration";
+import { agingMonths, immersionYear } from "../_lib/duration";
 
-/* 문서명 영문 병기 — 여권처럼 자국어 위 영문을 함께 새긴다. 로케일 불변. */
-const CERT_TAG_LATIN = "CERTIFICATE OF OWNERSHIP";
+/* 문서명 영문 병기 — 여권처럼 자국어 위 영문을 함께 둔다. 로케일 불변.
+   OWNERSHIP → PROVENANCE(2026-08-08). 이 문서가 담는 것은 소유 사실만이 아니라
+   그 병이 지나온 시간(수심·기간·8개 관측항목)이고, PROVENANCE는 와인·미술이
+   그 뜻으로 써온 말이다. 국문 "숙성 이력 인증서"와 두 줄이 같은 말을 한다. */
+const CERT_TAG_LATIN = "CERTIFICATE OF PROVENANCE";
 
-/* 등록 각인 — 문서번호와 같은 성격이라 로케일을 타지 않는다 */
-const MONTHS_LATIN = [
+/* 등록 스탬프 — 날짜는 읽는 사람의 나라 표기를 따른다(2026-08-08 대표).
+   문서번호와 같은 성격이라 로케일 불변으로 두었었지만, 등록일은 사람이 읽는 날짜라
+   자국 관습대로 앉는 편이 맞다. 라벨(REGISTERED)은 그대로 불변이다.
+   Intl.DateTimeFormat을 쓰지 않는다 — 런타임·로케일 데이터에 따라 쉼표·마침표·
+   소문자 월이 갈리는데 인증서는 표기가 고정이어야 한다. 표를 들고 직접 조립한다.
+   copy.months는 약칭(JAN·JANV)이라 스탬프에는 못 쓴다. 전체 이름을 따로 둔다.
+   프랑스어는 대문자에서도 악센트를 유지한다(FÉVRIER·AOÛT·DÉCEMBRE) — 정서법 권장이고
+   악센트를 떼면 오식으로 읽힌다. */
+const MONTHS_EN = [
   "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
   "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER",
 ];
-function stampDate(iso: string | null | undefined): string | null {
+const MONTHS_FR = [
+  "JANVIER", "FÉVRIER", "MARS", "AVRIL", "MAI", "JUIN",
+  "JUILLET", "AOÛT", "SEPTEMBRE", "OCTOBRE", "NOVEMBRE", "DÉCEMBRE",
+];
+/* 스탬프 날짜의 활자는 스크립트를 따른다 — 기본값 Cormorant는 라틴 전용이라
+   한글·한자가 시스템 폰트로 떨어져 한 줄이 두 서체로 갈린다(2026-08-08 대표).
+   en·fr은 여기 없다 — 기본값이 이미 맞다. */
+const STAMP_SCRIPT_CLASS: Partial<Record<BottleLocale, string>> = {
+  ko: styles.ownerStampDateKo,
+  ja: styles.ownerStampDateJa,
+  zh: styles.ownerStampDateZh,
+};
+
+/* 라벨과 날짜를 나눠 반환한다 — 한 줄에 가운뎃점으로 잇지 않고 위아래로 쌓는다
+   (2026-08-08 대표). 스탬프는 도장처럼 읽히는 자리라 세로로 앉는 편이 맞다.
+   iso는 서버가 KST 달력 날짜로 확정해 넘긴 YYYY-MM-DD다(data.ts issuedDate).
+   여기서는 시간대를 다시 해석하지 않는다 — Date를 만들지 않으므로 SSR과
+   클라이언트가 같은 문자열을 낸다. */
+function stampDate(
+  iso: string | null | undefined,
+  locale: BottleLocale,
+): { label: string; date: string } | null {
   if (!iso) return null;
-  const [y, m, d] = iso.slice(0, 10).split("-");
+  const [y, m, d] = iso.split("-");
   const mi = Number(m) - 1;
-  if (!y || mi < 0 || mi > 11 || !d) return null;
-  return `REGISTERED · ${Number(d)} ${MONTHS_LATIN[mi]} ${y}`;
+  const day = Number(d);
+  /* 날짜 아닌 값이 들어오면 스탬프를 통째로 뺀다 — 인증서에 「NaN일」을 찍느니 없는 편이 낫다.
+     여기서 시각이 붙은 문자열을 다시 잘라 쓰지 않는 이유이기도 하다. 잘라 쓰면
+     UTC 달력 날짜가 조용히 되살아난다(고쳐낸 그 버그다). */
+  if (!y || mi < 0 || mi > 11 || !Number.isFinite(day)) return null;
+  /* 월·일에 0을 채우지 않는다 — 7월이지 07월이 아니다 */
+  const mon = mi + 1;
+  const label = "REGISTERED";
+  if (locale === "ko") return { label, date: `${y}년 ${mon}월 ${day}일` };
+  if (locale === "ja" || locale === "zh") return { label, date: `${y}年${mon}月${day}日` };
+  return { label, date: `${day} ${(locale === "fr" ? MONTHS_FR : MONTHS_EN)[mi]} ${y}` };
 }
 
 type SeasonKey = "winter" | "spring" | "summer" | "autumn";
@@ -80,11 +121,25 @@ export default function BottleCertificate({
   initialLocale?: BottleLocale;
 }) {
   const [locale, setLocale] = useState<BottleLocale>(initialLocale);
-  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "error">("idle");
+  /* 저장 확인 시트 (Paper 04A). 굽은 PNG를 그대로 미리보기로 쓴다 —
+     미리보기용 DOM을 따로 두면 보여준 것과 저장된 것이 갈린다. */
+  const [saveOpen, setSaveOpen] = useState(false);
+  const [pngUrl, setPngUrl] = useState<string | null>(null);
   /* 한 번 열면 다시 잠그지 않는다 — 감출 목적이 아니라 여는 동작을 남기려는 것이다 */
   const [signOpen, setSignOpen] = useState(false);
 
   const cardRef = useRef<HTMLDivElement>(null);
+  const saveDialogRef = useRef<HTMLDialogElement>(null);
+
+  /* top layer·포커스 트랩·Esc·배경 inert는 showModal()로만 켜진다.
+     open 속성을 React가 그리게 두면 그냥 블록 요소가 되고 그 넷이 전부 빠진다. */
+  useEffect(() => {
+    const dlg = saveDialogRef.current;
+    if (!dlg) return;
+    if (saveOpen && !dlg.open) dlg.showModal();
+    else if (!saveOpen && dlg.open) dlg.close();
+  }, [saveOpen]);
 
   const copy = BOTTLE_COPY[locale];
   const extra = RECORD_EXTRA[locale];
@@ -96,18 +151,28 @@ export default function BottleCertificate({
 
   /* 라틴 로케일은 문서 제목이 길어 한글과 같은 활자 크기를 쓸 수 없다 */
   const isLatinLocale = locale === "en" || locale === "fr";
+  /* ja·zh 지면의 CJK 세리프를 각 언어 서체로 돌린다. 규칙마다 modifier를 달지 않고
+     루트에서 --c-serif-cjk 토큰 하나를 갈아끼운다(certificate.module.css).
+     저장본(.printArea)도 이 루트 안에 있어 PNG에 구워지는 글자까지 같이 바뀐다. */
+  const scriptClass = locale === "ja" ? styles.pageJa : locale === "zh" ? styles.pageZh : "";
 
   const serial = data.bottle.serial;
   const serialTotal = meta.quantity;
   const immMonth = monthIdxOf(data.aging.immersion, 0);
   const retMonth = monthIdxOf(data.aging.retrieval, 11);
-  const year = data.aging.immersion ? data.aging.immersion.slice(0, 4) : String(new Date().getFullYear());
+  /* 인증서 ID(MDM-{입수연도}-{병번호})와 같은 기준이어야 한 문서에 연도가 둘이 되지 않는다 */
+  const year = immersionYear(data.aging.immersion);
 
   /* 이름은 등록자가 인증서용으로 정한 값이라 인증 없이도 그대로 쓴다 */
   const ownerName = ownerNameFull ?? owner?.name ?? extra.certOwnerFallback;
   /* 로마자가 있을 때만 서명체로 간다. 없으면 한글 하나로 세운다. */
   const latin = ownerNameLatin?.trim() || null;
-  const registeredStamp = stampDate(owner?.registeredAt);
+  const registeredStamp = stampDate(owner?.registeredAt, locale);
+  const stampScriptClass = STAMP_SCRIPT_CLASS[locale] ?? "";
+  /* 서명체는 한 줄로 세운다 — 이름 길이는 등록자가 정하므로 폭에 맞춰 크기를 내린다.
+     화면본(66px)과 저장본(62px)은 기준 크기가 달라 따로 잰다. */
+  const scriptRef = useFitText<HTMLParagraphElement>(latin ?? "", 66, 30);
+  const printScriptRef = useFitText<HTMLParagraphElement>(latin ?? "", 62, 28);
   /* 등록 전 병 — 이름 자리에 안내 문구가 들어간다. 이름 크기를 그대로 주면
      빈 자리가 채워진 것처럼 읽히므로 눌러서 보여준다. */
   const ownerUnset = !ownerNameFull && !owner?.name;
@@ -286,14 +351,49 @@ export default function BottleCertificate({
     a.click();
   }
 
-  async function onSave() {
-    if (saveState === "saving") return;
+  async function bakePng(): Promise<string | null> {
     setSaveState("saving");
     try {
       const url = await renderPng();
       if (!url) throw new Error("no-node");
+      setPngUrl(url);
+      setSaveState("idle");
+      return url;
+    } catch {
+      setSaveState("error");
+      return null;
+    }
+  }
+
+  /**
+   * 시트를 열면서 바로 굽는다.
+   *
+   * iOS Safari는 파일 공유 시트를 사용자 제스처 안에서만 연다. 렌더를 버튼 클릭
+   * 뒤로 미루면 그 사이에 제스처가 만료돼 share()가 거부될 수 있다(활성화 창은 수 초다).
+   * 여는 순간 구워두면 실행 버튼의 클릭은 deliver() 하나만 태우므로,
+   * 시트를 끼운 뒤가 끼우기 전보다 오히려 안전해진다.
+   * 다시 열 때는 새로 굽는다 — 그 사이 로케일이 바뀌었으면 카드가 다른 문서다.
+   */
+  async function openSave() {
+    setPngUrl(null);
+    setSaveOpen(true);
+    await bakePng();
+  }
+
+  async function onSaveAction() {
+    if (saveState === "saving") return;
+    /* 굽기가 실패했던 자리에서 다시 누르면 여기서 한 번 더 굽는다 */
+    const url = pngUrl ?? (await bakePng());
+    if (!url) return;
+    setSaveState("saving");
+    try {
       await deliver(url);
-      setSaveState("saved");
+      /* 저장이 끝나면 시트를 닫는다. OS가 자체 피드백을 주므로 우리가 결과 화면을
+         한 겹 더 두면 「완료」를 두 번 누르게 된다(2026-08-09 대표).
+         deliver()의 await 뒤라 공유 시트가 실제로 뜨고 닫힌 다음이다 —
+         전달이 pending인 채로 닫으면 배경이 먼저 사라진다. */
+      setSaveState("idle");
+      setSaveOpen(false);
     } catch (e) {
       /* 공유 시트에서 사용자가 취소한 것은 실패가 아니다 */
       if ((e as Error)?.name === "AbortError") setSaveState("idle");
@@ -304,7 +404,7 @@ export default function BottleCertificate({
 
   /* b-paper — 위아래가 전부 종이인 페이지다. 안전영역(상태바)까지 종이로 잇는다(globals.css) */
   return (
-    <main className={`${styles.page} b-paper`}>
+    <main className={`${styles.page} ${scriptClass} b-paper`}>
       <div className={styles.frame}>
         {/* ── 헤더: 심볼 → 문서명 국·영문 병기 ── */}
         <header className={styles.header}>
@@ -331,6 +431,10 @@ export default function BottleCertificate({
           {/* 무엇에 대한 증서인지가 도판 alt에만 있었다 — 저장본에서는 그마저 사라진다.
               번호 위에 제품명을 세운다: 무엇인가 → 그중 몇 번째인가 순서다. */}
           <p className={styles.productName}>{meta.name}</p>
+          {/* 입수 연차 — 큐베명만으로는 이듬해 입수분과 같은 이름이 된다.
+              숙성 기간은 붙이지 않는다: 아래 「해저 숙성」 표에 그 행이 있다.
+              배치가 없는 병은 세우지 않는다 — 없는 연도를 지어내지 않는다. */}
+          {data.aging.immersion && <p className={styles.productYear}>{year}</p>}
           {serial !== null && (
             <div className={styles.edition}>
               <span className={styles.edNo}>N°</span>
@@ -340,19 +444,27 @@ export default function BottleCertificate({
           )}
         </section>
 
-        {/* ── 선언: 헌정문 + 소유자 ──
-            "NFC 인증 완료"는 아래 진위 씰과 같은 말이라 뺐다. */}
+        {/* ── 선언: 소유자 ──
+            "NFC 인증 완료"는 아래 진위 씰과 같은 말이라 뺐다.
+            헌정문("바다의 기록을 이 이름이 소장합니다")도 걷어냈다(2026-08-08 대표) —
+            이름 위에 그 이름을 설명하는 문장을 두면 증서가 아니라 헌사가 된다. */}
         <section className={styles.declaration}>
-          <p className={styles.dedication}>{extra.certDedication}</p>
           {latin ? (
             <>
-              <p className={styles.ownerScript}>{latin}</p>
+              <p ref={scriptRef} className={styles.ownerScript}>
+                {latin}
+              </p>
               <p className={styles.ownerNative}>{ownerName}</p>
             </>
           ) : (
             <p className={`${styles.ownerName} ${ownerUnset ? styles.ownerNameEmpty : ""}`}>{ownerName}</p>
           )}
-          {registeredStamp && <span className={styles.ownerStamp}>{registeredStamp}</span>}
+          {registeredStamp && (
+            <span className={styles.ownerStamp}>
+              <span className={styles.ownerStampLabel}>{registeredStamp.label}</span>
+              <span className={`${styles.ownerStampDate} ${stampScriptClass}`}>{registeredStamp.date}</span>
+            </span>
+          )}
         </section>
 
         {/* ── 인증: 디지털 서명 + 문서번호 ──
@@ -370,7 +482,7 @@ export default function BottleCertificate({
               말보다 잘 전한다. 저장본(printSign)은 별개 블록이라 늘 펼쳐진 채 구워진다 —
               화면을 떠난 문서에서 대조 근거가 사라지면 안 된다. */}
           {signature && (
-            <div className={styles.signBox}>
+            <div className={`${styles.signBox} ${signOpen ? "" : styles.signBoxLocked}`}>
               {signOpen ? (
                 <>
                   <span className={styles.signAlgo}>
@@ -439,18 +551,14 @@ export default function BottleCertificate({
 
         {/* ── 액션 ── */}
         <section className={styles.actions}>
-          <button
-            type="button"
-            className={`${styles.saveBtn} ${saveState === "saving" ? styles.saveBtnBusy : ""}`}
-            onClick={onSave}
-            disabled={saveState === "saving"}
-            aria-busy={saveState === "saving"}
-          >
-            {saveState === "saving" ? extra.certSaving : extra.certSave}
+          {/* 저장은 곧바로 굽지 않는다 — 저장 시트(04A)를 먼저 연다.
+              저장되는 카드는 이 화면 어디에도 없다(.printArea는 오프스크린) —
+              무엇이 저장되는지 못 본 채 눌러야 했다. 진행도 시트 안에서 보여준다. */}
+          <button type="button" className={styles.saveBtn} onClick={openSave}>
+            {extra.certSave}
           </button>
           {/* "공유하기"는 삭제했다. 저장과 같은 deliver()를 타서 동작이 완전히 같았다.
               모바일은 공유 시트가 열려 그 안에서 저장·공유를 모두 고를 수 있다. */}
-          {saveState === "saved" && <p className={styles.saveNote}>{extra.certSaved}</p>}
           {/* 되돌아가기라 셰브론은 텍스트 왼쪽 — 방향이 곧 의미다 */}
           <Link href={`/b/${code}/record`} className={styles.backLink}>
             <svg className={styles.backArrow} width="5" height="9" viewBox="0 0 5 9" aria-hidden>
@@ -486,7 +594,11 @@ export default function BottleCertificate({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/images/logo/logo_trans.png" alt="" className={styles.printSymbol} />
           </div>
-          <span className={styles.printTag}>{extra.certTag}</span>
+          {/* 화면 표제와 같은 활자로 간다 — en·fr에만 붙는 라틴 modifier까지 옮긴다.
+              저장본은 화면을 그대로 옮긴 것이라 표제 서체가 갈리면 다른 문서로 읽힌다. */}
+          <span className={`${styles.printTag} ${isLatinLocale ? styles.printTagLatin : ""}`}>
+            {extra.certTag}
+          </span>
           {locale !== "en" && <span className={styles.printTagEn}>{CERT_TAG_LATIN}</span>}
           <div className={styles.printPlate}>
             {/* data-photo — renderPng가 이 이미지만 캔버스로 따로 합성한다 */}
@@ -500,19 +612,39 @@ export default function BottleCertificate({
           </div>
           {/* 저장본은 화면을 떠나 혼자 남는다 — 무엇에 대한 증서인지가 그 안에 있어야 한다 */}
           <p className={styles.printProductName}>{meta.name}</p>
+          {/* 저장본에는 표가 없다 — 제품 식별 세 조각(큐베명 · 입수 연차 · 숙성 기간)이
+              이 한 줄에서 다 끝나야 한다. 화면본은 표가 기간을 맡아 연차만 세운다. */}
+          {data.aging.immersion && (
+            <p className={styles.printProductYear}>{`${year} · ${fmtMonths(months)}`}</p>
+          )}
           <div className={styles.printEdition}>
             <span className={styles.printEdNo}>N°</span>
             <span className={styles.printEdNum}>{serial ?? "—"}</span>
             <span className={styles.printEdTotal}>/ {serialTotal}</span>
           </div>
-          <p className={styles.printDedication}>{extra.certDedication}</p>
           {latin ? (
             <>
-              <p className={styles.printScript}>{latin}</p>
+              <p ref={printScriptRef} className={styles.printScript}>
+                {latin}
+              </p>
               <p className={styles.printNative}>{ownerName}</p>
             </>
           ) : (
             <p className={`${styles.printOwner} ${ownerUnset ? styles.ownerNameEmpty : ""}`}>{ownerName}</p>
+          )}
+          {/* 등록 스탬프 — 소유자 이름과 문서번호 사이. 등록일은 소유가 시작된 시점이라
+              소유자 블록에 속한다. 위로 올리면 이름보다 날짜가 먼저 오고, 아래 MDM-ID·
+              서명판과 묶으면 검증 메타데이터로 내려앉는다.
+              구성·문자열·서체는 화면판 그대로 쓴다(간격과 크기만 .printStamp*가 조정). */}
+          {registeredStamp && (
+            <span className={`${styles.ownerStamp} ${styles.printStamp}`}>
+              <span className={styles.ownerStampLabel}>{registeredStamp.label}</span>
+              <span
+                className={`${styles.ownerStampDate} ${styles.printStampDate} ${stampScriptClass}`}
+              >
+                {registeredStamp.date}
+              </span>
+            </span>
           )}
           <span className={styles.printCertId}>{certId}</span>
           {/* 저장본은 화면을 떠나 혼자 남는다. 문서번호만 있고 서명이 없으면
@@ -528,6 +660,63 @@ export default function BottleCertificate({
           )}
         </div>
       </div>
+
+      {/* ── 저장 확인 시트 (04A) ──
+          시안 04B(저장 결과 화면)는 만들지 않는다. 저장 시트에서 「이미지로 저장」을
+          누르면 OS가 곧바로 저장하고 자체 피드백을 준다 — 그 뒤에 「PNG · 1080px /
+          사진 보관함에 저장됨 / 완료」를 또 띄우면 한 단계가 늘 뿐이다(2026-08-09 대표). */}
+      <dialog
+        ref={saveDialogRef}
+        className={styles.saveDialog}
+        aria-labelledby="cert-save-title"
+        onClose={() => setSaveOpen(false)}
+      >
+        <div className={styles.saveSheet}>
+          <header className={styles.saveHeader}>
+            <h2 id="cert-save-title" className={styles.saveTitle}>
+              {extra.certSave}
+            </h2>
+            <button
+              type="button"
+              className={styles.saveClose}
+              onClick={() => setSaveOpen(false)}
+              aria-label={extra.certSaveClose}
+            >
+              ×
+            </button>
+          </header>
+
+          {/* 미리보기는 굽은 결과물 그 자체다 — 보여준 것과 저장된 것이 같은 파일이다 */}
+          <div className={styles.savePreview}>
+            {pngUrl ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={pngUrl} alt="" className={styles.savePreviewImg} />
+            ) : (
+              <div className={styles.savePreviewWait} />
+            )}
+          </div>
+
+          <div className={styles.saveFoot}>
+            <div className={styles.saveMessage}>
+              <p className={styles.saveLead}>{extra.certSaveLead}</p>
+              {/* 실패는 이 자리에서 말한다 — 결과 화면은 없앴지만 오류 안내는 남는다.
+                  저장이 안 됐다는 사실은 사용자가 알아야 한다. */}
+              <p className={styles.saveSub}>
+                {saveState === "error" ? extra.ownErrGeneric : extra.certSaveSub}
+              </p>
+            </div>
+            <button
+              type="button"
+              className={`${styles.saveBtn} ${saveState === "saving" ? styles.saveBtnBusy : ""}`}
+              onClick={onSaveAction}
+              disabled={saveState === "saving"}
+              aria-busy={saveState === "saving"}
+            >
+              {saveState === "saving" ? extra.certSaving : extra.certSaveAction}
+            </button>
+          </div>
+        </div>
+      </dialog>
     </main>
   );
 }

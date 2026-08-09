@@ -26,7 +26,20 @@ export interface BottleCopy {
   planned: string;
   months: string[]; // index 0 = 1월
   seasons: { winter: string; spring: string; summer: string; autumn: string };
-  journey: { origin: string; originSub: string; aging: string; agingSub: string };
+  /* originDepth·agingDepth = S2 세로 목차의 깊이 열(육상 두 행).
+     해저 두 행(입수·인양)의 깊이는 data.aging.depth에서 온다.
+     「지하」·cave·カーヴ·酒窖는 큐베 스펙 원문의 "préservé en cave"를 옮긴 말이지
+     깊이 수치가 아니다 — 셀러 깊이 데이터가 없어 숫자를 쓰지 않는다.
+     육상 첫 행을 0m이 아니라 장소어(포도밭 계열)로 두는 것도 같은 이유다.
+     Surface·地上 계열은 기각됐다 — 해수면으로 읽히는 순간 0m이 뒷문으로 돌아온다. */
+  journey: {
+    origin: string;
+    originSub: string;
+    aging: string;
+    agingSub: string;
+    originDepth: string;
+    agingDepth: string;
+  };
   obsHead: string;
   obsHeadPartial: string; // 인양 전
   metrics: Record<MetricKey, string>;
@@ -53,7 +66,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     planned: "예정",
     months: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
     seasons: { winter: "겨울", spring: "봄", summer: "여름", autumn: "가을" },
-    journey: { origin: "샹파뉴", originSub: "VENTEUIL", aging: "병숙성", agingSub: "MAISON" },
+    journey: { origin: "샹파뉴", originSub: "VENTEUIL", aging: "병숙성", agingSub: "MAISON", originDepth: "지상", agingDepth: "지하" },
     obsHead: "해양 관측 · 1년 평균",
     obsHeadPartial: "해양 관측 · 입수 후 평균",
     metrics: {
@@ -81,7 +94,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     planned: "PLANNED",
     months: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
     seasons: { winter: "WINTER", spring: "SPRING", summer: "SUMMER", autumn: "AUTUMN" },
-    journey: { origin: "Champagne", originSub: "VENTEUIL", aging: "Bottle aging", agingSub: "MAISON" },
+    journey: { origin: "Champagne", originSub: "VENTEUIL", aging: "Bottle aging", agingSub: "MAISON", originDepth: "Vineyard", agingDepth: "Cellar" },
     obsHead: "OCEAN OBSERVATION · ANNUAL MEAN",
     obsHeadPartial: "OCEAN OBSERVATION · SINCE IMMERSION",
     metrics: {
@@ -109,7 +122,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     planned: "PRÉVUE",
     months: ["JANV", "FÉVR", "MARS", "AVR", "MAI", "JUIN", "JUIL", "AOÛT", "SEPT", "OCT", "NOV", "DÉC"],
     seasons: { winter: "HIVER", spring: "PRINTEMPS", summer: "ÉTÉ", autumn: "AUTOMNE" },
-    journey: { origin: "Champagne", originSub: "VENTEUIL", aging: "Élevage", agingSub: "MAISON" },
+    journey: { origin: "Champagne", originSub: "VENTEUIL", aging: "Élevage", agingSub: "MAISON", originDepth: "Vigne", agingDepth: "Cave" },
     obsHead: "OBSERVATION MARINE · MOYENNE ANNUELLE",
     obsHeadPartial: "OBSERVATION MARINE · DEPUIS L'IMMERSION",
     metrics: {
@@ -137,7 +150,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     planned: "予定",
     months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
     seasons: { winter: "冬", spring: "春", summer: "夏", autumn: "秋" },
-    journey: { origin: "シャンパーニュ", originSub: "VENTEUIL", aging: "瓶内熟成", agingSub: "MAISON" },
+    journey: { origin: "シャンパーニュ", originSub: "VENTEUIL", aging: "瓶内熟成", agingSub: "MAISON", originDepth: "ブドウ畑", agingDepth: "カーヴ" },
     obsHead: "海洋観測 · 年間平均",
     obsHeadPartial: "海洋観測 · 投入後の平均",
     metrics: {
@@ -165,7 +178,7 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     planned: "预定",
     months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
     seasons: { winter: "冬", spring: "春", summer: "夏", autumn: "秋" },
-    journey: { origin: "香槟区", originSub: "VENTEUIL", aging: "瓶中陈酿", agingSub: "MAISON" },
+    journey: { origin: "香槟区", originSub: "VENTEUIL", aging: "瓶中陈酿", agingSub: "MAISON", originDepth: "葡萄园", agingDepth: "酒窖" },
     obsHead: "海洋观测 · 年均值",
     obsHeadPartial: "海洋观测 · 入水后均值",
     metrics: {
@@ -283,8 +296,8 @@ export interface EntryCopy {
   nameLabel: string; // 자국어 이름
   namePlaceholder: string;
   /* 인증서에 새길 로마자 표기 — 등록자가 직접 정한다.
-     한글에서 기계로 옮기면 표기가 갈려(백 → Baek/Baik/Paek) 남의 이름이 새겨진다.
-     인증서에는 "이름 성" 순서로 새겨진다(서양 증서 어법). */
+     한글에서 기계로 옮기면 표기가 갈려(백 → Baek/Baik/Paek) 남의 이름이 올라간다.
+     인증서에는 "이름 성" 순서로 표기된다(서양 증서 어법). */
   latinGivenLabel: string;
   latinGivenPlaceholder: string;
   latinFamilyLabel: string;
@@ -298,10 +311,13 @@ export interface EntryCopy {
      이 버튼은 폼을 닫고 다음으로 넘기는 완결이라 명사형(-기). 무게가 아니라 역할로 가른다 */
   submitNoSerial: string; // 번호 없는 병 — 번호 호명 불가 시(정본 규칙 2: 부르지 않는다)
   submitting: string;
-  /* 각인 공개 (등록 완료 화면) */
+  /* 등록 공개 (등록 완료 화면) */
   inscribedEyebrow: string; // "등록 완료"
   inscribedTitle: string; // \n = 줄바꿈
+  /* 개체는 번호로 부른다({serial} 치환). 번호가 없으면 부르지 않는다(정본 규칙 2).
+     메일 제목이 "N° {serial}의 소유자로 등록했습니다"라 같은 말을 두 번 하지 않는다. */
   inscribedSub: string;
+  inscribedSubNoSerial: string;
   inscribedCta: string; // "바다의 기록 보기"
   inscribedCtaSub: string;
   /* 이미 등록된 병으로 들어왔을 때만 — 각인 화면에서 입장 화면으로 내려가는 길.
@@ -341,7 +357,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     ownTitleNoSerial: "기록에\n당신의 이름을 남기세요",
     ownBody: "N° {serial}의 첫 소유자로 기록되며,\n바다 아래에서 보낸 모든 시간이 열립니다.",
     ownBodyNoSerial: "첫 소유자로 기록되며,\n바다 아래에서 보낸 모든 시간이 열립니다.",
-    claimedTitle: "이름이 새겨진 병입니다",
+    claimedTitle: "이름이 등록된 병입니다",
     claimedBody: "기록은 누구에게나 열려 있습니다.",
     claimedCta: "바다의 기록 보기",
     nameLabel: "이름",
@@ -350,23 +366,24 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     latinGivenPlaceholder: "Given name",
     latinFamilyLabel: "영문 성",
     latinFamilyPlaceholder: "Surname",
-    latinNote: "인증서에는 이름 다음 성 순서로 새겨집니다.",
+    latinNote: "인증서에는 이름 다음 성 순서로 표기됩니다.",
     emailLabel: "이메일",
     emailPlaceholder: "디지털 인증서를 받을 주소",
     privacyNote:
-      "인증서에 새겨진 이름은 병을 태그하는 누구에게나 보입니다.\n이메일은 공개하지 않고 인증서 발급에만 씁니다.",
+      "등록한 이름은 병을 태그하는 누구에게나 보입니다.\n이메일은 공개하지 않고 인증서 발급에만 씁니다.",
     submit: "N° {serial}{acc} 소장하기",
     submitNoSerial: "소장하기",
     submitting: "기록하는 중",
     inscribedEyebrow: "등록 완료",
     inscribedTitle: "바다의 시간이\n당신의 것이 되었습니다",
-    inscribedSub: "소유자로 기록되었습니다.",
+    inscribedSub: "N° {serial}의 첫 소유자입니다.",
+    inscribedSubNoSerial: "첫 소유자로 등록되었습니다.",
     inscribedCta: "바다의 기록 보기",
     inscribedCtaSub: "바다가 남긴 사계절의 기록을 확인합니다.",
-    inscribedBrowse: "N° {serial}의 내력",
-    inscribedBrowseNoSerial: "내력 보기",
+    inscribedBrowse: "N° {serial}의 숙성 이력",
+    inscribedBrowseNoSerial: "숙성 이력 보기",
     errName: "이름을 입력해 주세요.",
-    errLatinName: "인증서에 새길 영문 이름과 성을 입력해 주세요.",
+    errLatinName: "인증서에 등록할 영문 이름과 성을 입력해 주세요.",
     errEmail: "이메일 주소를 확인해 주세요.",
     errGeneric: "잠시 후 다시 시도해 주세요.",
   },
@@ -404,7 +421,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     latinGivenPlaceholder: "Given name",
     latinFamilyLabel: "FAMILY NAME",
     latinFamilyPlaceholder: "Surname",
-    latinNote: "The certificate is engraved with your given name first.",
+    latinNote: "The certificate shows your given name first.",
     emailLabel: "EMAIL",
     emailPlaceholder: "Address to receive the certificate",
     privacyNote:
@@ -414,7 +431,8 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     submitting: "Recording",
     inscribedEyebrow: "REGISTERED",
     inscribedTitle: "The time of the sea\nis now yours",
-    inscribedSub: "You are recorded as the owner.",
+    inscribedSub: "You are the first owner of N° {serial}.",
+    inscribedSubNoSerial: "You are registered as the first owner.",
     inscribedCta: "View the sea's record",
     inscribedCtaSub: "See the four seasons the sea left behind.",
     inscribedBrowse: "Provenance of N° {serial}",
@@ -462,13 +480,14 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     emailLabel: "E-MAIL",
     emailPlaceholder: "Adresse pour recevoir le certificat",
     privacyNote:
-      "Le nom gravé sur le certificat est visible par toute personne qui scanne la bouteille.\nVotre e-mail reste privé et sert uniquement à émettre le certificat.",
+      "Le nom enregistré sur le certificat est visible par toute personne qui scanne la bouteille.\nVotre e-mail reste privé et sert uniquement à émettre le certificat.",
     submit: "Faire entrer le N° {serial} en collection",
     submitNoSerial: "Faire entrer cette bouteille en collection",
     submitting: "Enregistrement",
     inscribedEyebrow: "ENREGISTRÉ",
     inscribedTitle: "Le temps de la mer\nest désormais le vôtre",
-    inscribedSub: "Votre nom est inscrit comme propriétaire.",
+    inscribedSub: "Vous êtes le premier propriétaire du N° {serial}.",
+    inscribedSubNoSerial: "Vous êtes enregistré comme premier propriétaire.",
     inscribedCta: "Voir le relevé de la mer",
     inscribedCtaSub: "Découvrez les quatre saisons laissées par la mer.",
     inscribedBrowse: "Provenance du N° {serial}",
@@ -503,7 +522,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     ownTitleNoSerial: "この一本の記録に\nあなたの名前を",
     ownBody: "N° {serial} の最初の所有者として登録され、\nこの一本が海の底で過ごしたすべての記録を、ご覧いただけます。",
     ownBodyNoSerial: "この一本の最初の所有者として登録され、\n海の底で過ごしたすべての記録を、ご覧いただけます。",
-    claimedTitle: "すでに名が刻まれた一本です",
+    claimedTitle: "すでに登録された一本です",
     claimedBody: "記録は、どなたでもご覧いただけます。",
     claimedCta: "海の記録を見る",
     nameLabel: "お名前",
@@ -512,7 +531,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     latinGivenPlaceholder: "Given name",
     latinFamilyLabel: "ローマ字の姓",
     latinFamilyPlaceholder: "Surname",
-    latinNote: "証明書には名・姓の順で刻まれます。",
+    latinNote: "証明書には名・姓の順で表記されます。",
     emailLabel: "メールアドレス",
     emailPlaceholder: "デジタル証明書を受け取る宛先",
     privacyNote:
@@ -522,13 +541,14 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     submitting: "記録しています",
     inscribedEyebrow: "登録完了",
     inscribedTitle: "海の時間は\nあなたのものになりました",
-    inscribedSub: "所有者として記録されました。",
+    inscribedSub: "N° {serial} の最初の所有者です。",
+    inscribedSubNoSerial: "最初の所有者として登録されました。",
     inscribedCta: "海の記録を見る",
     inscribedCtaSub: "海が残した四季の記録をご覧ください。",
-    inscribedBrowse: "N° {serial} の来歴",
-    inscribedBrowseNoSerial: "来歴を見る",
+    inscribedBrowse: "N° {serial} の熟成履歴",
+    inscribedBrowseNoSerial: "熟成履歴を見る",
     errName: "お名前を入力してください。",
-    errLatinName: "証明書に刻むローマ字の名と姓を入力してください。",
+    errLatinName: "証明書に登録するローマ字の名と姓を入力してください。",
     errEmail: "メールアドレスをご確認ください。",
     errGeneric: "しばらくしてからもう一度お試しください。",
   },
@@ -557,7 +577,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     ownTitleNoSerial: "在这一瓶的记录上\n留下你的名字",
     ownBody: "作为 N° {serial} 的首位所有者被记录，\n它在海底度过的所有时间将向你开启。",
     ownBodyNoSerial: "作为此瓶的首位所有者被记录，\n它在海底度过的所有时间将向你开启。",
-    claimedTitle: "这一瓶已刻上名字",
+    claimedTitle: "这一瓶已登记姓名",
     claimedBody: "记录向所有人开放。",
     claimedCta: "查看大海的记录",
     nameLabel: "姓名",
@@ -566,23 +586,24 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     latinGivenPlaceholder: "Given name",
     latinFamilyLabel: "拼音姓",
     latinFamilyPlaceholder: "Surname",
-    latinNote: "证书上按名、姓的顺序镌刻。",
+    latinNote: "证书上按名、姓的顺序显示。",
     emailLabel: "邮箱",
     emailPlaceholder: "接收数字证书的地址",
     privacyNote:
-      "刻在证书上的姓名，轻触酒瓶的人都能看到。\n邮箱不公开，仅用于签发证书。",
+      "登记在证书上的姓名，轻触酒瓶的人都能看到。\n邮箱不公开，仅用于签发证书。",
     submit: "收藏 N° {serial}",
     submitNoSerial: "收藏这一瓶",
     submitting: "记录中",
     inscribedEyebrow: "登记完成",
     inscribedTitle: "大海的时间\n已属于你",
-    inscribedSub: "已记录为所有者。",
+    inscribedSub: "你是 N° {serial} 的首位拥有者。",
+    inscribedSubNoSerial: "已登记为首位拥有者。",
     inscribedCta: "查看大海的记录",
     inscribedCtaSub: "查看大海留下的四季记录。",
-    inscribedBrowse: "N° {serial} 的来历",
-    inscribedBrowseNoSerial: "查看来历",
+    inscribedBrowse: "N° {serial} 的陈酿履历",
+    inscribedBrowseNoSerial: "查看陈酿履历",
     errName: "请输入你的名字。",
-    errLatinName: "请输入证书上镌刻的拼音名与姓。",
+    errLatinName: "请输入证书上登记的拼音名与姓。",
     errEmail: "请检查你的邮箱地址。",
     errGeneric: "请稍后再试。",
   },
@@ -622,8 +643,13 @@ export interface RecordExtraCopy {
   ecBody: string; // \n = 줄바꿈
   ecLegend: string;
   /* 디지털 인증서 (04) */
-  certTag: string; // "소유 인증서"
-  certDedication: string; // \n = 줄바꿈
+  /* 문서명. "소유 인증서"에서 교체(2026-08-08 대표 확정) — 한국어에서 "소유+인증서"는
+     쓰지 않는 조합(영문 직역)이고, "인증서"만으로는 공동인증서 어조가 먼저 왔다.
+     "정품 인증서"는 물렸다 — 진품성 문서가 되면 소유자 이름의 근거가 사라지고,
+     "정품"은 위조가 흔한 카테고리의 언어라 40병짜리 한정 에디션의 격을 내린다.
+     진품성은 NFC AUTHENTICATED 배지와 Provenance 섹션이 이미 맡고 있다.
+     문서가 실제로 하는 일(지나온 시간의 제시)을 그대로 부른다. */
+  certTag: string; // "숙성 이력 인증서"
   certVerifiedShort: string; // "NFC 인증 완료"
   certSeal: string; // 진위 확인 문구
   certAuthHead: string; // "인증 정보"
@@ -643,17 +669,22 @@ export interface RecordExtraCopy {
      소비자 관습어 "정품 인증"은 쇼핑몰 배지처럼 읽힌다.
      열면 실제로 코드가 나오므로 본 대로 적는다 — 전문용어도 비유도 아니다.
      "보기"를 붙이는 이유: 명사만 두면 라벨로 읽혀 누를 수 있다는 것이 안 보인다.
-     화면을 여는 동작은 명사형이라는 종결형 규칙과도 맞는다(바다의 기록 보기·내력 보기). */
+     화면을 여는 동작은 명사형이라는 종결형 규칙과도 맞는다(바다의 기록 보기·숙성 이력 보기). */
   signLocked: string;
   certStatusLabel: string; // "인증 상태"
   certSignHead: string; // "디지털 서명"
-  certSave: string; // "인증서 저장"
-  certShare: string; // "공유하기"
+  certSave: string; // "인증서 저장" — 페이지 버튼 겸 저장 시트 표제
+  /* 저장 확인 시트 (Paper 04A). 저장은 되돌릴 수 없는 동작은 아니지만
+     "무엇이 저장되는가"를 먼저 보여주는 자리다 — 표제는 certSave를 그대로 쓰고
+     여기서는 시트 본문과 실행 버튼만 갖는다.
+     ⚠️ ja·zh는 기능 번역이다(2026-08-09). marketing 확정 전까지 임시. */
+  certSaveAction: string; // "이미지로 저장" — 시트의 실행 버튼
+  certSaveLead: string; // "인증서를 이미지로 저장합니다"
+  certSaveSub: string; // "사진 보관함에서 언제든 확인하고 공유할 수 있습니다."
+  certSaveClose: string; // 시트 닫기 (× 버튼 aria-label)
   certBack: string; // "바다의 기록으로 돌아가기"
   certOwnerFallback: string; // 소유자 미등록 표기
   certSaving: string; // 저장 진행 중
-  certSaved: string; // 저장 완료 안내
-  certSaveDone: string; // "완료"
   certShareText: string; // 공유 텍스트
   /* 소유 관리 (03A) */
   ownHead: string; // "등록된 소유자"
@@ -721,9 +752,8 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     ecEyebrow: "EIGHT CURRENTS",
     ecTitle: "여덟 개의 관측이\n한 병의 시간을 그립니다",
     ecBody: "사계절의 변화를 하나의 흐름으로 기록했습니다.",
-    ecLegend: "금빛 선 · 수온",
-    certTag: "소유 인증서",
-    certDedication: "바다의 기록을\n이 이름이 소장합니다",
+    ecLegend: "수온",
+    certTag: "숙성 이력 인증서",
     certVerifiedShort: "NFC 인증 완료",
     certSeal: "NFC 원본 태그와 등록 기록이 일치합니다.",
     certAuthHead: "인증 정보",
@@ -732,13 +762,14 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certStatusLabel: "인증 상태",
     certSignHead: "디지털 서명",
     certSave: "인증서 저장",
-    certShare: "공유하기",
+    certSaveAction: "이미지로 저장",
+    certSaveLead: "인증서를 이미지로 저장합니다",
+    certSaveSub: "사진 보관함에서 언제든 확인하고 공유할 수 있습니다.",
+    certSaveClose: "닫기",
     certBack: "바다의 기록으로 돌아가기",
     certOwnerFallback: "소유자 미등록",
     certSaving: "이미지 만드는 중",
-    certSaved: "사진 보관함에 저장됨",
-    certSaveDone: "완료",
-    certShareText: "뮤즈드마레 소유 인증서",
+    certShareText: "뮤즈드마레 숙성 이력 인증서",
     ownHead: "등록된 소유자",
     ownVerified: "소유 등록 완료",
     ownBottleHead: "소유한 병",
@@ -800,9 +831,8 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     ecEyebrow: "EIGHT CURRENTS",
     ecTitle: "Eight readings\ndraw the time of one bottle",
     ecBody: "Four seasons of change, kept as one continuous stream.",
-    ecLegend: "Golden line · temperature",
-    certTag: "CERTIFICATE OF OWNERSHIP",
-    certDedication: "The record of the sea,\nin the collection of this name",
+    ecLegend: "Temperature",
+    certTag: "CERTIFICATE OF PROVENANCE",
     certVerifiedShort: "NFC VERIFIED",
     certSeal: "The original NFC tag matches the registration record.",
     certAuthHead: "Certification",
@@ -811,13 +841,14 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certStatusLabel: "Status",
     certSignHead: "Digital signature",
     certSave: "Save certificate",
-    certShare: "Share",
+    certSaveAction: "Save as image",
+    certSaveLead: "Save this certificate as an image",
+    certSaveSub: "Keep it in your photos to view or share it any time.",
+    certSaveClose: "Close",
     certBack: "Back to the sea's record",
     certOwnerFallback: "Owner not registered",
     certSaving: "Rendering image",
-    certSaved: "Saved to your photos",
-    certSaveDone: "Done",
-    certShareText: "Muse de Marée certificate of ownership",
+    certShareText: "Muse de Marée certificate of provenance",
     ownHead: "Registered owner",
     ownVerified: "Ownership registered",
     ownBottleHead: "Your bottle",
@@ -879,9 +910,8 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     ecEyebrow: "EIGHT CURRENTS",
     ecTitle: "Huit relevés\ndessinent le temps d'une bouteille",
     ecBody: "Quatre saisons de variations, en un seul flux continu.",
-    ecLegend: "Ligne dorée · température",
-    certTag: "CERTIFICAT DE PROPRIÉTÉ",
-    certDedication: "Le relevé de la mer\nappartient à la collection de ce nom",
+    ecLegend: "Température",
+    certTag: "CERTIFICAT DE PROVENANCE",
     certVerifiedShort: "NFC VÉRIFIÉ",
     certSeal: "Le tag NFC d'origine correspond au relevé d'enregistrement.",
     certAuthHead: "Certification",
@@ -890,13 +920,14 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certStatusLabel: "Statut",
     certSignHead: "Signature numérique",
     certSave: "Enregistrer le certificat",
-    certShare: "Partager",
+    certSaveAction: "Enregistrer en image",
+    certSaveLead: "Enregistrer ce certificat en image",
+    certSaveSub: "Gardez-le dans vos photos pour le consulter ou le partager à tout moment.",
+    certSaveClose: "Fermer",
     certBack: "Retour au relevé de la mer",
     certOwnerFallback: "Propriétaire non enregistré",
     certSaving: "Rendu de l'image",
-    certSaved: "Enregistré dans vos photos",
-    certSaveDone: "Terminé",
-    certShareText: "Certificat de propriété Muse de Marée",
+    certShareText: "Certificat de provenance Muse de Marée",
     ownHead: "Propriétaire enregistré",
     ownVerified: "Propriété enregistrée",
     ownBottleHead: "Votre bouteille",
@@ -958,9 +989,8 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     ecEyebrow: "EIGHT CURRENTS",
     ecTitle: "八つの観測項目が\n一本の時間を描く",
     ecBody: "四季の変化を、ひとつの流れとして記録しました。",
-    ecLegend: "金色の線 · 水温",
-    certTag: "所有証明書",
-    certDedication: "海の記録は\nこの名のもとに",
+    ecLegend: "水温",
+    certTag: "熟成履歴証明書",
     certVerifiedShort: "NFC認証済み",
     certSeal: "ボトルのNFCタグと登録記録が一致しています。",
     certAuthHead: "認証情報",
@@ -969,13 +999,15 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certStatusLabel: "認証状態",
     certSignHead: "デジタル署名",
     certSave: "証明書を保存",
-    certShare: "共有する",
+    /* ⚠️ 임시 문안 — marketing 확정 전 */
+    certSaveAction: "画像として保存",
+    certSaveLead: "この証明書を画像として保存します",
+    certSaveSub: "写真アプリからいつでもご覧いただき、共有できます。",
+    certSaveClose: "閉じる",
     certBack: "海の記録へ戻る",
     certOwnerFallback: "所有者未登録",
     certSaving: "画像を作成中",
-    certSaved: "写真に保存しました",
-    certSaveDone: "完了",
-    certShareText: "ミューズ・ド・マレ 所有証明書",
+    certShareText: "ミューズ・ド・マレ 熟成履歴証明書",
     ownHead: "登録された所有者",
     ownVerified: "所有登録完了",
     ownBottleHead: "所有する一本",
@@ -1037,9 +1069,8 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     ecEyebrow: "EIGHT CURRENTS",
     ecTitle: "八项观测\n描绘一瓶的时间",
     ecBody: "四季变化，汇成一条连续的流。",
-    ecLegend: "金色线 · 水温",
-    certTag: "所有权证书",
-    certDedication: "大海的记录，\n由此名珍藏",
+    ecLegend: "水温",
+    certTag: "陈酿溯源证书",
     certVerifiedShort: "NFC认证完成",
     certSeal: "NFC原始标签与登记记录一致。",
     certAuthHead: "认证信息",
@@ -1048,13 +1079,15 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certStatusLabel: "认证状态",
     certSignHead: "数字签名",
     certSave: "保存证书",
-    certShare: "分享",
+    /* ⚠️ 임시 문안 — marketing 확정 전 */
+    certSaveAction: "保存为图片",
+    certSaveLead: "将这份证书保存为图片",
+    certSaveSub: "可随时在相册中查看和分享。",
+    certSaveClose: "关闭",
     certBack: "返回大海的记录",
     certOwnerFallback: "所有者未登记",
     certSaving: "正在生成图片",
-    certSaved: "已保存到相册",
-    certSaveDone: "完成",
-    certShareText: "缪斯德玛雷 所有权证书",
+    certShareText: "缪斯德玛雷 陈酿溯源证书",
     ownHead: "已登记所有者",
     ownVerified: "所有权登记完成",
     ownBottleHead: "所拥有的一瓶",

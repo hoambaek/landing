@@ -25,11 +25,56 @@
   --c-micro: rgba(20, 17, 14, 0.5);
   --c-rule: rgba(20, 17, 14, 0.14);
   /* 브랜드 정본은 DM Mono다. 이전에는 정의된 적 없는 --font-plex-mono를 참조해
-     기기 기본 고정폭으로 렌더되고 있었다. */
-  --c-mono: var(--font-mono), "DM Mono", monospace;
+     기기 기본 고정폭으로 렌더되고 있었다.
+     DM Mono에는 한글·한자 글립이 없다 — 라틴 서브셋만 받는다. 그래서 CJK가 섞인
+     자리는 뒤가 제네릭(monospace)이라 시스템 고정폭으로 떨어졌고, 한 요소 안에서
+     숫자와 글자가 다른 서체로 갈렸다(실측 2026-08-09, CSS.getPlatformFontsForNode:
+     ko 「남해 30m · 사계절의 기록」이 DM Mono ×8 + Apple SD Gothic Neo ×8,
+     ja 「1月 冬」은 일본어를 한국 시스템 서체가 그림, zh는 여기에 PingFang까지 셋).
+     제네릭 앞에 지면 산세리프를 받쳐 CJK를 그 지면 서체로 넘긴다 — 로케일이
+     --c-sans-page를 갈아끼우므로 ja는 JP, zh는 SC가 자동으로 받는다. 숫자·라틴은
+     앞의 DM Mono가 그대로 가져간다.
+     ⚠️ 제네릭(monospace)은 맨 끝에 한 번만. 중간에 두면 그 뒤가 전부 죽는다
+        (-face-·-sans- 토큰과 같은 규칙). */
+  --c-mono: var(--font-mono), "DM Mono", var(--c-sans-page), monospace;
   --c-serif: var(--font-heading), "Cormorant Garamond", serif;
-  --c-serif-kr: var(--font-serif-kr), "Noto Serif KR", serif;
-  --c-sans: var(--font-body), "Noto Sans KR", sans-serif;
+  /* 일본어·중국어 세리프 (2026-08-08). 한자는 KR·JP·SC 자형이 서로 다르므로
+     한국 폰트로 대신 그리지 않는다. 라틴(숫자)을 앞에 두지 않는 이유는
+     Cormorant가 숫자를 가져가면 한 줄에 두 서체가 섞이기 때문이다 — CJK 지면의
+     숫자는 그 지면 서체가 그린다.
+     ⚠️ -face- 토큰에는 제네릭(serif)을 붙이지 않는다. 제네릭은 모든 글자를 받아버려서
+        뒤에 무엇을 이어도 닿지 않는다 — 스택 중간에 두면 그 뒤가 전부 죽는다.
+        제네릭은 실제 font-family 값의 맨 끝에서 한 번만 붙인다. */
+  --c-face-jp: var(--font-serif-jp), "Noto Serif JP";
+  --c-face-sc: var(--font-serif-sc), "Noto Serif SC";
+  --c-face-kr: var(--font-serif-kr), "Noto Serif KR";
+  /* 이 지면의 말이 어느 얼굴로 그려지는가. 로케일이 아래에서 갈아끼운다. */
+  --c-face-page: var(--c-face-kr);
+  /* 지면의 말(표제·라벨·날짜)에 쓴다. -kr에서 -cjk로 이름을 바꿨다 —
+     값이 JP·SC가 되는 토큰을 -kr로 부르면 다음 사람이 한국어 전용으로 읽는다. */
+  --c-serif-cjk: var(--c-face-page), serif;
+  /* 소유자 이름 전용 — 이름의 스크립트는 지면 언어와 다르다.
+     한국인이 등록한 병의 인증서를 일본어로 열어도 이름은 「백호암」 그대로다.
+     지면 얼굴(JP)에는 한글 글립이 없어 지면 서체만 주면 시스템 서체로 떨어진다
+     (실측 2026-08-09: ja·zh 지면에서 「백호암」이 AppleMyungjo로 렌더).
+     지면 얼굴을 앞에 두고 한글 얼굴을 뒤에 받친다 — 일본어 이름은 JP가,
+     한글 이름은 뒤로 넘어가 Noto Serif KR이 그린다. 폴백은 "앞 얼굴에 없는 글자"만
+     넘기므로 두 이름이 각자 제 서체를 받는다. */
+  --c-serif-name: var(--c-face-page), var(--c-face-kr), serif;
+  /* 일본어·중국어 산세리프 (2026-08-09). 랜딩이 ja 본문에 쓰는 것과 같은 구성이다
+     (globals.css의 html[lang="ja"] body) — 웹폰트를 앞에 두고 시스템 서체를 대기 서체로
+     받친다. 일본어 웹폰트는 루트 layout이 이미 물고 있어 추가 바이트가 없고,
+     중국어만 /b 레이아웃에서 새로 잡는다.
+     ⚠️ -sans- 토큰에도 제네릭(sans-serif)을 붙이지 않는다 — 세리프와 같은 이유로
+        제네릭 뒤는 전부 죽는다. 제네릭은 맨 끝에서 한 번만. */
+  --c-sans-jp: var(--font-ja-body), "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic Medium", "Yu Gothic";
+  --c-sans-sc: var(--font-sans-sc), "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei";
+  --c-sans-kr: var(--font-body), "Noto Sans KR";
+  /* 이 지면의 본문이 어느 얼굴로 그려지는가. 로케일이 아래에서 갈아끼운다. */
+  --c-sans-page: var(--c-sans-kr);
+  --c-sans: var(--c-sans-page), sans-serif;
   /* 브랜드 Signature 목소리. DESIGN.md가 "used once, sparingly"로 묶어둔 활자라
      이 페이지에서는 소유자 이름 한 곳에만 쓴다. */
   --c-script: var(--font-delafield), "Mrs Saint Delafield", cursive;
@@ -40,6 +85,14 @@
   display: flex;
   justify-content: center;
 }
+/* 로케일별 CJK 세리프 — 규칙마다 modifier를 달지 않고 토큰 하나를 갈아끼운다.
+   var(--c-serif-cjk)를 쓰는 자리는 표제·소유자 이름·저장본까지 전부 따라 바뀌고,
+   새 규칙이 늘어도 로케일 대응을 따로 챙길 일이 없다.
+   저장본(.printArea)도 .page 안에 있으므로 PNG에 구워지는 글자도 같이 바뀐다.
+   ⚠️ 반드시 .page 뒤에 온다. 같은 단일 클래스라 명시도가 같고 순서가 승패를 가른다 —
+      위로 올리면 조용히 .page의 기본값(KR)에 진다. */
+.pageJa { --c-face-page: var(--c-face-jp); --c-sans-page: var(--c-sans-jp); }
+.pageZh { --c-face-page: var(--c-face-sc); --c-sans-page: var(--c-sans-sc); }
 .frame {
   width: min(430px, 100vw);
   overflow: hidden;
@@ -71,7 +124,7 @@
 }
 .certTag {
   margin-top: 26px;
-  font-family: var(--c-serif-kr);
+  font-family: var(--c-serif-cjk);
   font-weight: 400;
   font-size: 24px;
   line-height: 31px;
@@ -127,6 +180,18 @@
   text-align: center;
   color: rgba(20, 17, 14, 0.62);
 }
+/* 입수 연차 — 제품명보다 한 단 작고 흐리게(등록 완료 화면의 .iProductSub와 같은 조판).
+   저장본은 표가 없어 숙성 기간까지 함께 세운다(.printProductYear) — 그래서 본문 활자다:
+   기간 단위가 한글·일본어로 오는 로케일에서 고정폭은 폴백되어 뭉갠다. */
+.productYear {
+  margin-top: 5px;
+  font-family: var(--c-sans);
+  font-size: 11.5px;
+  line-height: 16px;
+  letter-spacing: 0.09em;
+  text-align: center;
+  color: var(--c-micro);
+}
 .edition {
   display: flex;
   align-items: baseline;
@@ -158,8 +223,8 @@
   object-fit: contain;
 }
 
-/* ── 선언: 헌정문 + 소유자 ──
-   이 페이지의 주인공은 이름이다. 소유 인증서에서 다른 무엇도 이름보다 클 이유가 없다.
+/* ── 선언: 소유자 ──
+   이 페이지의 주인공은 이름이다. 인증서에서 다른 무엇도 이름보다 클 이유가 없다.
    대담함은 여기 한 곳에만 쓰고 나머지는 조용히 둔다.
    (심볼 투과무늬와 빛무리를 배경에 깔아봤으나 둘 다 이름을 돕는 대신 경쟁했다.) */
 .declaration {
@@ -169,34 +234,29 @@
   padding: 66px 24px 60px;
   text-align: center;
 }
-.dedication {
-  font-family: var(--c-serif-kr);
-  font-weight: 400;
-  font-size: 13.5px;
-  line-height: 23px;
-  color: var(--c-dim-2);
-  white-space: pre-line;
-}
-
 /* 로마자 이름 — 브랜드 서명체.
    DESIGN.md의 대비 원리가 "heavy light-serif display against tiny tracked mono labels"라
    66px 서명체 곁에 10px 모노를 붙여 그 대비를 만든다. */
 .ownerScript {
-  margin-top: 28px;
+  /* 헌정문이 있던 자리의 간격이라 헌정문과 함께 걷었다(2026-08-08) —
+     이름 위 여백은 .declaration의 padding-top이 지고 있다 */
+  margin-top: 0;
   font-family: var(--c-script);
+  /* font-size는 useFitText가 폭에 맞춰 인라인으로 준다(기준 66px, 하한 30px).
+     서명은 한 덩이여야 해서 줄바꿈을 막고, 넘치면 크기를 내린다 */
   font-size: 66px;
   line-height: 1;
   letter-spacing: 0.01em;
   color: var(--c-ink);
   /* 커시브는 디센더가 깊어 다음 줄과 붙는다 */
   padding-bottom: 6px;
-  word-break: keep-all;
+  white-space: nowrap;
 }
 /* 로마자가 주가 되면 한국 소유자에게는 남의 이름처럼 읽힌다.
    본명을 아래에 정자로 받쳐 누구인지를 확정한다. */
 .ownerNative {
   margin-top: 6px;
-  font-family: var(--c-serif-kr);
+  font-family: var(--c-serif-name);
   font-weight: 300;
   font-size: 18px;
   line-height: 24px;
@@ -207,8 +267,8 @@
 /* 로마자 표기가 없는 소유자 — 서명체를 못 쓰므로 한글을 Display 목소리로 세운다.
    브랜드 규칙상 Display는 Light 전용이고 큰 활자에서 자간을 좁힌다. */
 .ownerName {
-  margin-top: 34px;
-  font-family: var(--c-serif-kr);
+  margin-top: 0;
+  font-family: var(--c-serif-name);
   font-weight: 300;
   font-size: 46px;
   line-height: 51px;
@@ -227,14 +287,111 @@
 }
 /* 등록 시각을 이름에 붙여 "언제부터 내 것인지"를 새긴다.
    숫자는 조용히 둔다 — 브랜드 규칙상 수치는 드라마를 위해 키우지 않는다. */
+/* 등록 스탬프 — 라벨 위, 날짜 아래로 쌓는다(2026-08-08 대표).
+   가운뎃점으로 이으면 한 줄이 길어져 문서 폭을 가로지르고, 도장의 결이 아니라
+   캡션처럼 읽혔다. text-indent는 letter-spacing이 마지막 글자 뒤에 남기는
+   여백을 상쇄해 가운데 정렬을 맞추는 장치다 — 두 줄 각각에 건다. */
 .ownerStamp {
-  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  /* stretch — 태그와 날짜가 같은 좌우 축을 쓰게 한다(2026-08-08 대표
+     "registered와 아래 날짜가 하나로 묶이면 좋겠는데"). 분리를 만들고 있던 것은
+     간격이 아니라 폭이었다 — 태그 101px vs 날짜 124px로 두 블록의 좌우 변이
+     어긋나 있었다. 대조 실측: 폭을 안 맞추고 gap만 12 → 6px로 좁힌 안은
+     여전히 두 덩이로 남았고, 폭을 맞추자 한 덩이가 됐다.
+     컨테이너는 .declaration의 align-items:center가 잡아 shrink-to-fit이라,
+     stretch를 걸면 둘 다 넓은 쪽(날짜) 폭으로 맞춰진다 — 고정 px을 박지 않아
+     로케일별 날짜 길이가 바뀌어도 따라간다. */
+  align-items: stretch;
+  /* 12 → 6px. 폭이 맞은 뒤에는 간격이 넓으면 다시 두 줄로 갈라진다.
+     0px(태그 아랫변이 날짜에 닿는 안)은 날짜 위에 괘선이 그어진 꼴이 되어
+     반려된 ③ 괘선안을 절반 되밟는다 — 그래서 붙이지 않고 6px만 띄운다. */
+  gap: 6px;
+  margin-top: 30px;
+}
+/* 라벨 태그 — 틀은 라벨에만 두른다(2026-08-08 대표 제안).
+   아래 .ownerStampDate 주석의 「이름 아래 닫힌 도형 금지」와 부딪히는 것처럼 보이나
+   위계가 반대다. 반려된 셋은 전부 주 정보(날짜)를 틀로 감쌌고, 그때 틀은 정보를
+   UI 부품으로 만들어 이름과 경쟁시켰다. 부차 요소인 라벨에 붙은 틀은 반대로
+   그 요소를 분류표로 확정지어 주 정보 밖으로 밀어낸다 — 증서·여권 스탬프가
+   머리글을 박스로 묶고 본값을 그 아래 활자로 크게 두는 어법 그대로다.
+   실측으로도 확인했다: 태그 101×22px vs 날짜 124px 폭 16px 세리프로 날짜가 이긴다.
+   다만 라벨을 9.5px·opacity 0.85·padding 5/12로 올린 안(H)에서는 태그가 110×25px가
+   되어 날짜와 무게가 붙고 시선이 먼저 갔다 — 위계 역전이 실제로 일어난다.
+   그래서 라벨은 8.5px·0.72 그대로 두고 테두리만 0.42 → 0.36으로 눌렀다.
+   면은 깔지 않는다 — 아래 잠긴 서명판이 이미 잉크 알파 면이라, 여기에도 면을 두면
+   한 지면에 회색 칩이 둘 생긴다. 모서리는 각지게(브랜드 flat, 둥근 태그는 스티커다). */
+.ownerStampLabel {
   font-family: var(--c-mono);
-  font-size: 10px;
-  line-height: 14px;
-  letter-spacing: 0.22em;
-  text-indent: 0.22em;
+  font-size: 8.5px;
+  line-height: 12px;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
   color: var(--c-bronze);
+  opacity: 0.72;
+  padding: 4px 10px;
+  border: 0.5px solid rgba(138, 106, 58, 0.36);
+  text-align: center;
+}
+/* 날짜 — 틀 없이 활자로만 세운다.
+   이 자리에서 반려된 것이 셋이다(전부 2026-08-08 대표):
+     ① 활자만 흘린 모노 10px — "디자인을 넣어라, 날짜가 중요하다"
+     ② 면 + 사방 테두리 명판 — "디자인이 너무 별로다"
+     ③ 위·아래 브론즈 괘선 — "텍스트는 이쁜데 위아래 라인으로 한 건 좀 안 이뻐"
+   ①은 아무것도 안 한 것이고 ②③은 둘 다 날짜에 「틀」을 두른 것이다. 세 번의 공통
+   원인은 격을 틀로 만들려 한 것 — 이 지면은 위아래가 전부 종이고 그 위에 서명체
+   이름이 서 있어서, 이름 바로 아래 닫힌 도형이 생기면 그게 무엇이든 UI 부품으로
+   읽히고 이름과 경쟁한다. ③에서 대표가 "텍스트는 이쁘다"고 따로 짚은 것이
+   활자는 맞고 틀이 틀렸다는 신호다.
+   그래서 테두리·괘선·면을 전부 걷고 활자·크기·자간·간격만 남긴다.
+   활자는 모노 대신 브랜드 라틴 디스플레이 — 바로 위 에디션 번호(.edNum)가 같은 조합
+   (모노 라벨 + 세리프 값)이라 두 각인이 한 벌로 읽힌다.
+   크기는 괘선안의 18px에서 16px로 내렸다("크기를 좀 더 줄이던지"). 틀이 사라지면
+   같은 크기도 커 보이고, 이름(46px급)과의 거리도 벌려야 위계가 유지된다. */
+.ownerStampDate {
+  font-family: var(--c-serif);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 21px;
+  /* 각인체의 트래킹. 모노 시절 0.24em은 세리프에서 글자가 흩어지고,
+     틀이 없어진 만큼 0.16em보다 조금 더 열어 날짜가 한 줄로 눕게 둔다 */
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+  text-align: center;
+  /* 브랜드 브론즈 텍스트 파생(2026-07-30 확정) — 종이 위 5.5:1.
+     --c-bronze(5.4:1)와 같은 급이되 반 톤 깊어 각인처럼 앉는다 */
+  color: #6e5a2f;
+}
+/* 스탬프 날짜의 스크립트별 활자 (2026-08-08 대표 "한국폰트 그대로 사용해줘",
+   이어서 "다른 언어들도 마찬가지야").
+   위 기본값의 Cormorant Garamond는 라틴 전용이라 한글·한자 글립이 없다. 그래서
+   「2026년 7월 27일」에서 숫자만 Cormorant로 그려지고 한글은 시스템 세리프로 떨어져
+   한 줄 안에 두 서체가 섞였다(실측: 「년」이 Cormorant 13.84px가 아니라 제네릭
+   세리프 15.98px로 렌더). ja·zh도 같은 이유로 갈렸다.
+   각 스크립트의 세리프 하나로 통일한다 — 숫자까지 그 서체가 그려야 한 줄이 한 벌이 된다.
+   ⚠️ 아래 규칙은 반드시 .ownerStampDate 뒤에 온다. 명시도가 같아(단일 클래스)
+      순서가 승패를 가른다 — 위로 올리면 조용히 기본값에 진다.
+   ⚠️ en·fr은 여기 없다. 라틴은 Cormorant가 정본이고 인증서 라틴 지면의 격식이
+      그 활자에 걸려 있다 — 건드리지 않는다.
+   트래킹은 따로 잡는다. 0.2em은 라틴 기준값이고, CJK는 글자마다 좌우 여백을
+   이미 품고 있어 같은 값을 주면 글자가 흩어져 한 낱말로 안 읽힌다.
+   한글(음절 사이 띄어쓰기 있음) 0.08em, 한자(띄어쓰기 없이 붙음) 0.06em.
+   text-indent는 letter-spacing과 같은 값을 준다 — 마지막 글자 뒤에만 붙는 자간을
+   앞에서 같은 만큼 밀어 가운데맞춤을 되돌리는 것으로, 위 라벨과 같은 처리다. */
+.ownerStampDateKo {
+  font-family: var(--c-serif-cjk);
+  letter-spacing: 0.08em;
+  text-indent: 0.08em;
+}
+.ownerStampDateJa {
+  font-family: var(--c-face-jp), serif;
+  letter-spacing: 0.06em;
+  text-indent: 0.06em;
+}
+.ownerStampDateZh {
+  font-family: var(--c-face-sc), serif;
+  letter-spacing: 0.06em;
+  text-indent: 0.06em;
 }
 
 /* ── 인증: 진위 씰 + 디지털 서명 + 문서번호 ──
@@ -310,6 +467,56 @@
   padding: 20px 16px 18px;
   border: 0.5px solid rgba(138, 106, 58, 0.42);
   text-align: center;
+}
+/* 잠긴 상태의 면 — 금색을 버리고 잉크 그늘로 간다(2026-08-08).
+   경위: 테두리만 → "가려진 면"으로 안 읽힘 → #f2e8d5 "없어 보인다" → #e2cda2
+   "페이지 컬러와 안 어울린다". 농도만 오르내렸을 뿐 문제는 색상(hue)이었다.
+   금색은 이 문서에서 강조의 색(에디션 번호·주 버튼·괘선)이라, 금색 면을 깔면
+   "가려짐"이 아니라 "여기가 제일 중요함"으로 읽혀 소유자 이름과 경쟁했다.
+   가려진 면의 자연스러운 은유는 그늘이다. --c-ink의 알파 파생이라
+   --c-rule·--c-label과 같은 방식으로 팔레트 안에서 나오고, 종이 위에 새 색상이
+   들어오지 않는다. 열면 해시가 주인공이라 판을 걷는다. */
+/* 보안 용지 해칭(2026-08-08 대표 "사선으로 선같은게 있거나 특정 패턴이 들어가 있어서
+   뭔가 보호된 부분이라는 느낌"). 평면 알파는 "비어 있는 면"이지 "덮여 있는 면"이
+   아니었다 — 수표·여권 보안면이 쓰는 어법을 빌려 결을 넣는다.
+   스펙: 45° · 0.5px 선 · 5px 주기 · 잉크 알파 0.042. 값의 근거는 둘이다.
+   ① 무늬화 하한: 1px/7px/0.045는 사선이 또렷해 장식으로 읽혔고, 교차 해칭(±45°)은
+      격자가 생겨 보안 용지가 아니라 직물 텍스처가 됐다. 0.5px 서브픽셀 선은
+      안티에일리어싱으로 풀려 "자세히 보면 결이 있다"에 머문다.
+   ② 대비 하한: 선 픽셀 위에서 라벨 #6e5a2f의 대비가 내려간다. 실계산으로
+      알파 0.055는 4.40:1(AA 미달), 0.042는 4.53:1이다. 0.042가 상한이다.
+   열린 상태(.signBox)에는 배경 자체가 없어 패턴도 함께 걷힌다 — 해시가 주인공이고
+   보호는 이미 해제됐다. 저장본(.printSign)에는 잠금 카드가 없어 무관하다. */
+.signBoxLocked {
+  background-color: rgba(20, 17, 14, 0.058);
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(20, 17, 14, 0.042) 0 0.5px,
+    transparent 0.5px 5px
+  );
+  border-color: rgba(138, 106, 58, 0.42);
+}
+/* 면이 깔리면 유효 배경이 #e0ddd7로 내려간다. 그 위 --c-bronze(#8a6a3a)는 3.7:1로
+   9.5px 활자에는 모자란다(종이 위에서는 5.4:1이었다) — 브랜드 브론즈 텍스트
+   파생(#6e5a2f, 2026-07-30 확정)으로 한 단 내려 4.9:1을 회복한다.
+   위 날짜 명판과 같은 색이라 이번에 손본 두 요소가 한 벌로 읽히기도 한다.
+   숨쉬기 하한도 올린다(0.42는 면 위에서 글자가 사라지는 농도였다). */
+.signBoxLocked .signKey {
+  color: #6e5a2f;
+  opacity: 0.92;
+}
+.signBoxLocked .signLockLabel {
+  color: #6e5a2f;
+  animation-name: signBreathOnPlate;
+}
+@keyframes signBreathOnPlate {
+  0%,
+  100% {
+    opacity: 0.62;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 /* 알고리즘은 라벨 — 자물쇠와 한 줄로 묶어 "무엇으로 잠갔는가"를 먼저 말한다 */
 .signAlgo {
@@ -451,13 +658,7 @@
   composes: busy from "./busy.module.css";
 }
 
-.saveNote {
-  margin-top: 14px;
-  font-family: var(--c-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  color: var(--c-bronze);
-}
+/* .saveNote는 걷어냈다 — 저장 결과는 이제 저장 시트(04B) 안에서 끝난다 */
 .backLink {
   display: inline-flex;
   align-items: center;
@@ -508,12 +709,27 @@
 .printSymbol { width: 94px; height: 78px; object-fit: contain; }
 .printTag {
   margin-top: 26px;
-  font-family: var(--c-serif-kr);
+  font-family: var(--c-serif-cjk);
   font-weight: 400;
   font-size: 24px;
   line-height: 31px;
   letter-spacing: 0.08em;
   color: var(--c-ink);
+}
+/* en·fr 저장본 표제 — 화면(.certTagLatin)과 같은 활자로 맞춘다(2026-08-09).
+   저장본은 화면을 그대로 옮긴 것이어야 하는데, modifier가 없어 --c-serif-cjk의
+   라틴(Noto Serif KR)으로 그려지고 있었다 — en·fr에서만 화면과 저장본의 표제 서체가
+   달랐다. ja·zh는 여기 오지 않는다: 그쪽은 --c-serif-cjk가 이미 JP·SC를 물고 있고
+   Cormorant로 바꾸면 한자 글립이 없어 시스템 서체로 떨어진다.
+   ⚠️ 반드시 .printTag 뒤에 온다 — 같은 단일 클래스라 순서가 승패를 가른다.
+   가져오는 것은 활자와 트래킹뿐이다. 화면판 .certTagLatin의 25px는 안 따라간다 —
+   저장본은 요소마다 한 단 내려잡는 관계이고(서명체 66→62, 한글명 18→17), 표제는
+   이미 그 관계의 아래쪽 값인 24px에 있다. 폭 때문도 아니다: 실측으로 24px·25px 둘 다
+   288px 단에서 두 줄로 같게 선다. line-height도 안 준다 — .printTag의 31px가
+   24px 기준 1.29라 화면의 1.3과 결과가 같고, 두 번 적는 값이 된다. */
+.printTagLatin {
+  font-family: var(--c-serif);
+  letter-spacing: 0.1em;
 }
 .printTagEn {
   margin-top: 9px;
@@ -532,18 +748,11 @@
   margin-top: 40px;
 }
 .printBottleImg { width: 138px; height: 256px; object-fit: contain; }
-.printDedication {
-  margin-top: 40px;
-  font-family: var(--c-serif-kr);
-  font-weight: 400;
-  font-size: 13.5px;
-  line-height: 23px;
-  color: var(--c-dim-2);
-  white-space: pre-line;
-}
 .printScript {
   margin-top: 24px;
   font-family: var(--c-script);
+  /* 화면본과 같은 규칙 — font-size는 useFitText가 준다(기준 62px, 하한 28px) */
+  white-space: nowrap;
   font-size: 62px;
   line-height: 1;
   letter-spacing: 0.01em;
@@ -552,7 +761,7 @@
 }
 .printNative {
   margin-top: 6px;
-  font-family: var(--c-serif-kr);
+  font-family: var(--c-serif-name);
   font-weight: 300;
   font-size: 17px;
   line-height: 23px;
@@ -562,7 +771,7 @@
 }
 .printOwner {
   margin-top: 30px;
-  font-family: var(--c-serif-kr);
+  font-family: var(--c-serif-name);
   font-weight: 300;
   font-size: 44px;
   line-height: 49px;
@@ -577,6 +786,15 @@
   line-height: 20px;
   letter-spacing: 0.02em;
   color: rgba(20, 17, 14, 0.62);
+}
+/* 화면본의 .productYear와 같은 조판. 저장본은 표를 안 싣기 때문에 숙성 기간까지 여기서 세운다 */
+.printProductYear {
+  margin-top: 5px;
+  font-family: var(--c-sans);
+  font-size: 11.5px;
+  line-height: 16px;
+  letter-spacing: 0.09em;
+  color: var(--c-micro);
 }
 .printEdition {
   display: flex;
@@ -597,6 +815,24 @@
   font-size: 34px;
   line-height: 36px;
   color: var(--c-bronze);
+}
+/* 등록 스탬프 (저장본) — 구성은 화면판과 같은 것을 그대로 쓴다(.ownerStamp ·
+   .ownerStampLabel · .ownerStampDate + 로케일 클래스). 여기서는 두 값만 다르다.
+   ① 위 여백 30 → 20px. 저장 카드는 화면보다 폭이 좁고 위아래 여백이 촘촘해
+      같은 30px을 주면 이름과 스탬프 사이만 벌어져 보인다.
+      아래 26px(.printCertId)은 그대로 둬 스탬프가 소유자 쪽에 붙는 비대칭을 만든다 —
+      등록일은 소유가 시작된 시점이라 소유자 블록에 속한다.
+   ② 날짜 16 → 15px. 저장본이 이미 요소마다 한 단 내려잡는 관계를 따른다
+      (서명체 66→62, 한글명 18→17, 소유자명 46→44). 16px이면 바로 위 한글명 17px과
+      1px 차로 붙어 위계가 사라진다.
+   ⚠️ 둘 다 .ownerStamp*의 뒤에 와야 이긴다. 이 블록은 파일 끝 저장본 절에 있어
+      순서가 보장되지만, 위로 옮기면 조용히 화면판 값에 진다. */
+.printStamp {
+  margin-top: 20px;
+}
+.printStampDate {
+  font-size: 15px;
+  line-height: 20px;
 }
 .printCertId {
   margin-top: 26px;
@@ -621,4 +857,112 @@
 .printSign svg {
   flex-shrink: 0;
   color: var(--c-bronze);
+}
+
+/* ── 저장 시트 (Paper 04A · 04B) ──
+   저장 버튼과 파일 사이에 한 칸을 둔다. 저장되는 것은 화면이 아니라 카드 한 장이고,
+   그 카드는 이 화면 어디에도 보이지 않는다(.printArea는 오프스크린이다) —
+   무엇이 저장되는지 못 본 채 눌러야 했다.
+   시트를 열 때 실제 PNG를 굽고 그것을 그대로 보여준다. 미리보기와 저장물이 다른
+   DOM이면 둘이 갈라지므로, 미리보기 자체를 결과물로 쓴다.
+   저장이 끝나면 같은 시트가 04B(결과)로 바뀐다 — 사진앱 크롬은 OS 화면이라 만들지 않는다.
+
+   <dialog>를 쓴다. 포커스 트랩·Esc·배경 inert·top layer가 전부 브라우저 것이라
+   같은 것을 손으로 다시 짜지 않는다(Safari 15.4+). */
+.saveDialog {
+  width: min(430px, 100vw);
+  max-width: none;
+  height: 100svh;
+  max-height: 100svh;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: var(--c-paper);
+  color: var(--c-ink);
+}
+/* 배경 막은 토큰을 쓰지 않는다 — ::backdrop의 상속 원점이 브라우저마다 갈려
+   (구현에 따라 루트에서 상속) var(--c-ink)가 안 닿는 경우가 있다. 값을 직접 적는다. */
+.saveDialog::backdrop {
+  background: rgba(20, 17, 14, 0.55);
+}
+.saveSheet {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: env(safe-area-inset-top) 24px max(26px, env(safe-area-inset-bottom));
+}
+.saveHeader {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  height: 58px;
+  border-bottom: 1px solid var(--c-rule);
+}
+.saveTitle {
+  margin: 0;
+  font-family: var(--c-sans);
+  font-weight: 400;
+  font-size: 14.5px;
+  line-height: 20px;
+  color: var(--c-ink);
+}
+.saveClose {
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  font-family: var(--c-sans);
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 22px;
+  color: var(--c-faint);
+  cursor: pointer;
+}
+/* 카드가 화면보다 길다 — 미리보기만 스크롤하고 표제·버튼은 자리를 지킨다.
+   전체를 스크롤로 두면 실행 버튼이 1000px 아래에 숨는다. */
+.savePreview {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.savePreviewImg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* 굽는 동안의 자리 — 버튼과 같은 스캔 패스를 종이 위에서 쓴다.
+   바탕은 주지 않는다. 카드 바탕(.printCard의 그라데이션)을 흉내 내면 같은 값이
+   파일 두 곳에 살고 한쪽만 바뀐다 — 시트 종이 위를 띠 하나가 훑는 것으로 족하다. */
+.savePreviewWait {
+  composes: busy from "./busy.module.css";
+  --busy-sheen: rgba(20, 17, 14, 0.06);
+  width: 100%;
+  min-height: 60svh;
+}
+.saveFoot {
+  flex-shrink: 0;
+}
+.saveMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 76px;
+  text-align: center;
+}
+.saveLead {
+  font-family: var(--c-serif-cjk);
+  font-weight: 300;
+  font-size: 14.5px;
+  line-height: 20px;
+  color: var(--c-ink);
+}
+.saveSub {
+  font-family: var(--c-sans);
+  font-weight: 300;
+  font-size: 12.5px;
+  line-height: 18px;
+  color: var(--c-label);
 }
