@@ -15,13 +15,29 @@
   --f-dim: rgba(20, 17, 14, 0.7);
   --f-micro: rgba(20, 17, 14, 0.5);
   --f-rule: rgba(20, 17, 14, 0.14);
-  --f-mono: var(--font-mono), "DM Mono", monospace;
-  --f-sans: var(--font-body), "Noto Sans KR", sans-serif;
+  /* DM Mono에 CJK 글립이 없어 제네릭 앞에 지면 산세리프를 받친다 — 근거는
+     인증서 모듈 주석(certificate.module.css의 --c-mono). 이 푸터는 페이지 토큰을
+     상속받지 않으므로 자기 --f-sans-page를 쓴다(위 머리주석). */
+  --f-mono: var(--font-mono), "DM Mono", var(--f-sans-page), monospace;
+  /* 일본어·중국어 산세리프 — 인증서 모듈과 같은 관례(certificate.module.css 주석에 근거).
+     이 푸터는 페이지 토큰(--b-*, --c-*)을 상속받지 않으므로(위 머리주석) 로케일도
+     스스로 받는다 — BottleFooter가 이미 locale prop을 들고 있어 클래스만 붙이면 된다.
+     ⚠️ -sans- 토큰에 제네릭(sans-serif)을 붙이지 않는다 — 붙이면 그 뒤가 전부 죽는다. */
+  --f-sans-jp: var(--font-ja-body), "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic Medium", "Yu Gothic";
+  --f-sans-sc: var(--font-sans-sc), "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei";
+  --f-sans-kr: var(--font-body), "Noto Sans KR";
+  --f-sans-page: var(--f-sans-kr);
+  --f-sans: var(--f-sans-page), sans-serif;
   padding: 48px 24px max(30px, env(safe-area-inset-bottom));
   background: var(--f-paper);
   border-top: 0.5px solid var(--f-rule);
   color: var(--f-ink);
 }
+/* ⚠️ 반드시 .footer 뒤에 온다 — 같은 단일 클래스라 순서가 승패를 가른다 */
+.footerJa { --f-sans-page: var(--f-sans-jp); }
+.footerZh { --f-sans-page: var(--f-sans-sc); }
 
 /* 브랜드 줄 — 언어 선택은 하단으로 내렸다.
    정체성과 기능을 같은 층에 두면 푸터가 헤더처럼 읽힌다. */

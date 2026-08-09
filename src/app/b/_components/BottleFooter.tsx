@@ -46,8 +46,12 @@ export default function BottleFooter({
     </svg>
   );
 
+  /* 푸터는 페이지 토큰을 상속받지 않으므로(footer.module.css 머리주석) 지면 서체도
+     스스로 고른다 — 다른 화면의 .pageJa/.pageZh와 같은 자리다. */
+  const scriptClass = locale === "ja" ? styles.footerJa : locale === "zh" ? styles.footerZh : "";
+
   return (
-    <footer className={styles.footer}>
+    <footer className={`${styles.footer} ${scriptClass}`}>
       {/* 브랜드 줄 — 언어 선택은 하단으로 내렸다. 정체성과 기능을 같은 층에 두면
           푸터가 헤더처럼 읽힌다. */}
       <div className={styles.logoRow}>
