@@ -39,3 +39,16 @@ export function agingMonths(immersion: string | null, retrieval: string | null):
 export function agingYears(immersion: string | null, retrieval: string | null): number {
   return Math.max(1, Math.round(agingMonths(immersion, retrieval) / 12));
 }
+
+/**
+ * 입수 연차 — 제품 식별의 두 번째 조각(큐베명 · 입수 연차 · 숙성 기간).
+ *
+ * 해저 숙성은 매년 반복되므로 연차가 없으면 2027년 1년물이 2026년 1년물과 같은 이름이 된다.
+ * 기준은 인양이 아니라 입수 연도다. 페이지가 숙성 중에도 열려 인양 연도는 그때 미래 날짜이고,
+ * 인증서 ID가 이미 입수 연도로 만들어진다(MDM-{입수연도}-{병번호}) — 어긋나면 한 문서에 연도가 둘이 된다.
+ *
+ * record·certificate 두 곳과 인증서 ID 생성부에 같은 식이 복제돼 있었다. 여기 하나만 둔다.
+ */
+export function immersionYear(immersion: string | null): string {
+  return immersion?.slice(0, 4) || String(new Date().getFullYear());
+}

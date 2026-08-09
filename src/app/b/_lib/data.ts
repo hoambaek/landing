@@ -1,5 +1,6 @@
 import "server-only";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { formatOwnerLatin } from "./owner-name";
 
 /**
  * /b 병 기록 조회 — service_role 서버 전용.
@@ -120,6 +121,29 @@ export async function fetchBottleIdentity(code: string): Promise<BottleIdentity 
   return null;
 }
 
+/**
+ * 숙성 창만 조회 (경량) — 제품 식별 캡션(입수 연차 · 숙성 기간)에 필요한 최소치.
+ * 입장 페이지는 해양 집계를 쓰지 않으므로 fetchBottleRecord를 부르지 않는다.
+ * 배치가 없는 병은 기본 수심으로 되돌린다(record와 같은 규칙).
+ */
+export async function fetchAgingBatch(
+  productId: string
+): Promise<{ immersion: string | null; retrieval: string | null; depth: number }> {
+  const fallback = { immersion: null, retrieval: null, depth: 30 };
+  if (!supabaseAdmin) return fallback;
+  const { data } = await supabaseAdmin
+    .from("inventory_batches")
+    .select("immersion_date, retrieval_date, aging_depth")
+    .eq("product_id", productId)
+    .maybeSingle();
+  if (!data) return fallback;
+  return {
+    immersion: data.immersion_date ?? null,
+    retrieval: data.retrieval_date ?? null,
+    depth: data.aging_depth ?? 30,
+  };
+}
+
 /* ── 소유자 조회 (인증서·소유 관리용) ──────────────────────────
  * /b/[code]는 NFC 태그로 열리는 공개 URL이다. 병은 선물·접대 자리에 놓이므로
  * "태그할 수 있는 사람 = 소유자"가 아니다. 그래서 노출 범위를 둘로 나눈다.
@@ -137,11 +161,42 @@ export interface BottleOwner {
      등록자가 직접 입력한 값만 담기며, 없으면 null이라 인증서는 자국어 이름만 세운다. */
   nameLatin: string | null;
   emailMasked: string;
-  registeredAt: string | null; // YYYY-MM-DD
+  /** 발행일 YYYY-MM-DD — KST 달력 날짜로 확정된 값이다(issuedDate 참조) */
+  registeredAt: string | null;
 }
 
 /* maskName은 제거했다. 이름은 등록자가 인증서용으로 정한 공개값이라 가리지 않는다.
    되살릴 일이 생기면 노출 정책부터 다시 정할 것. */
+
+/**
+ * 등록 시각(timestamptz) → 발행일(KST 달력 날짜).
+ *
+ * bottle_registrations.created_at은 timestamptz라 저장된 값이 UTC 순간이다.
+ * 앞서 String(created_at).slice(0, 10)으로 잘랐는데 그건 UTC 달력 날짜라,
+ * 한국 시간 아침 9시 이전에 등록한 병은 인증서에 하루 전 날짜가 찍혔다
+ * (07-28 00:30 KST 등록 → 07-27T15:30Z 저장 → 「27일」).
+ *
+ * 인증서는 문서다. 발행일이 보는 사람·보는 곳에 따라 달라지면 안 된다.
+ * 그래서 뷰어의 로컬 시간대가 아니라 발행 주체의 시간대(KST)로 고정한다 —
+ * 소유자가 파리에서 열어도 서울에서 열어도 같은 날짜가 나온다.
+ * 인증서 ID(MDM-{입수연도}-…)의 입수 연도가 date 컬럼(시간대 없음)에서 오므로
+ * 두 값이 어긋날 여지도 없다.
+ *
+ * ⚠️ 실행 환경의 로컬 시간대에 기대지 않는다. Date.parse는 오프셋이 붙은 문자열을
+ *    절대 시각으로 읽고 toISOString은 항상 UTC로 쓴다 — 둘 다 TZ 무관이다.
+ *    KST는 서머타임이 없어 고정 +9h 이동이면 정확하다.
+ *    (toLocaleDateString("ko-KR", { timeZone })은 런타임의 ICU 유무에 걸린다.)
+ * ⚠️ 서버에서 이 문자열로 확정해 클라이언트로 넘긴다. 클라이언트는 표기만 조립하므로
+ *    SSR·하이드레이션이 같은 값을 낸다.
+ */
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
+function issuedDate(ts: string | null | undefined): string | null {
+  if (!ts) return null;
+  const t = Date.parse(ts);
+  if (!Number.isFinite(t)) return null;
+  return new Date(t + KST_OFFSET_MS).toISOString().slice(0, 10);
+}
 
 export function maskEmail(email: string): string {
   const e = email.trim();
@@ -179,15 +234,11 @@ export async function fetchBottleOwner(code: string): Promise<BottleOwner | null
     .maybeSingle();
 
   if (!data || !data.name) return null;
-  const latin = [data.given_name_latin, data.family_name_latin]
-    .map((v) => (typeof v === "string" ? v.trim() : ""))
-    .filter(Boolean)
-    .join(" ");
   return {
     name: data.name,
-    nameLatin: latin || null,
+    nameLatin: formatOwnerLatin(data.given_name_latin, data.family_name_latin),
     emailMasked: data.email ? maskEmail(data.email) : "",
-    registeredAt: data.created_at ? String(data.created_at).slice(0, 10) : null,
+    registeredAt: issuedDate(data.created_at),
   };
 }
 
@@ -212,7 +263,7 @@ export async function fetchBottleOwnerRaw(code: string): Promise<BottleOwnerRaw 
   return {
     name: data.name,
     email: data.email ?? "",
-    registeredAt: data.created_at ? String(data.created_at).slice(0, 10) : null,
+    registeredAt: issuedDate(data.created_at),
   };
 }
 
@@ -225,16 +276,9 @@ export async function fetchBottleRecord(code: string): Promise<BottleRecordData 
   if (!bottle) return null;
 
   // 2) 숙성 창 — inventory_batches
-  const { data: batch } = await supabaseAdmin
-    .from("inventory_batches")
-    .select("immersion_date, retrieval_date, aging_depth")
-    .eq("product_id", bottle.productId)
-    .maybeSingle();
+  const { immersion, retrieval, depth } = await fetchAgingBatch(bottle.productId);
 
   const today = new Date().toISOString().slice(0, 10);
-  const immersion: string | null = batch?.immersion_date ?? null;
-  const retrieval: string | null = batch?.retrieval_date ?? null;
-  const depth: number = batch?.aging_depth ?? 30;
   // 배치 미등록 병은 NFC 발급(판매·증정) 시점상 이미 인양된 병으로 본다
   const retrieved = immersion ? Boolean(retrieval && retrieval <= today) : true;
 
@@ -397,7 +441,7 @@ export async function fetchOwnedBottles(email: string): Promise<OwnedBottle[]> {
         depth: b?.aging_depth ?? 30,
         immersion: b?.immersion_date ?? null,
         retrieval: b?.retrieval_date ?? null,
-        registeredAt: latest.get(code)?.createdAt?.slice(0, 10) ?? null,
+        registeredAt: issuedDate(latest.get(code)?.createdAt),
       };
     })
     /* 번호 순으로 세운다 — 소장품은 등록한 날짜가 아니라 병 번호로 기억된다 */
