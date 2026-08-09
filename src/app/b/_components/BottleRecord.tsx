@@ -25,7 +25,7 @@ import {
 } from "../_lib/copy";
 import type { BottleRecordData } from "../_lib/data";
 import { submitNewsletter } from "@/lib/forms";
-import { agingMonths } from "../_lib/duration";
+import { agingMonths, immersionYear } from "../_lib/duration";
 import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -47,16 +47,22 @@ function monthIdxOf(date: string | null, fallback: number): number {
   return m >= 0 && m < 12 ? m : fallback;
 }
 
-/* S3 여덟 줄기 — Paper 확정 지오메트리 (viewBox 390×1290, 시작 높이는 0~43px 안에서만 미세하게 다르게) */
-const FLOW_PATHS: { d: string; stroke: string; width: number; amber?: boolean }[] = [
-  { d: "M 120 16 C 120 110, 95 210, 95 300 S 145 500, 145 600 S 120 800, 120 900 S 110 1100, 110 1200 L 110 1290", stroke: "rgba(241,239,235,0.35)", width: 0.9 },
-  { d: "M 145 33 C 145 123, 180 220, 180 300 S 90 500, 90 600 S 165 800, 165 900 S 135 1100, 135 1200 L 135 1290", stroke: "rgba(241,239,235,0.3)", width: 0.8 },
-  { d: "M 170 8 C 170 104, 155 200, 155 300 S 165 500, 165 600 S 180 800, 180 900 S 160 1100, 160 1200 L 160 1290", stroke: "rgba(241,239,235,0.25)", width: 0.7 },
-  { d: "M 195 38 C 195 127, 198 230, 198 300 S 192 500, 192 600 S 195 800, 195 900 S 185 1100, 185 1200 L 185 1290", stroke: "rgba(241,239,235,0.45)", width: 1 },
-  { d: "M 220 22 C 220 115, 255 220, 255 300 S 175 500, 175 600 S 235 800, 235 900 S 210 1100, 210 1200 L 210 1290", stroke: "rgba(241,239,235,0.35)", width: 0.9 },
-  { d: "M 245 43 C 245 131, 220 240, 220 300 S 265 500, 265 600 S 205 800, 205 900 S 235 1100, 235 1200 L 235 1290", stroke: "rgba(241,239,235,0.3)", width: 0.8 },
-  { d: "M 270 28 C 270 119, 285 225, 285 300 S 240 500, 240 600 S 260 800, 260 900 S 260 1100, 260 1200 L 260 1290", stroke: "rgba(241,239,235,0.25)", width: 0.7 },
-  { d: "M 95 0 C 95 100, 120 200, 120 300 S 225 500, 225 600 S 150 800, 150 900 S 85 1100, 85 1200 L 85 1290", stroke: "#CCAD7B", width: 1.4, amber: true },
+/* S3 여덟 줄기 — Paper 확정 지오메트리 (viewBox 390×1290, 시작 높이는 0~43px 안에서만 미세하게 다르게)
+   섹션 상단이 종이색에서 시작하도록 바뀌면서, 획도 위쪽은 잉크로 시작해 아래에서 원래 색으로 넘어간다.
+   전환 구간(y 74~134, 섹션 y로 80~140)이 바탕이 뒤집히는 자리와 겹쳐야 넘어가는 지점이 보이지 않는다.
+   top/bottom은 같은 농도 서열의 잉크·아이보리 짝이다 — 서열(25/30/35/45%)은 그대로 두고
+   잉크 쪽만 밝은 바탕 대응으로 1.2배 올렸다. d·좌표·strokeWidth는 건드리지 않는다. */
+const FLOW_PATHS: { d: string; top: string; bottom: string; width: number; amber?: boolean }[] = [
+  { d: "M 120 16 C 120 110, 95 210, 95 300 S 145 500, 145 600 S 120 800, 120 900 S 110 1100, 110 1200 L 110 1290", top: "rgba(20,17,14,0.42)", bottom: "rgba(241,239,235,0.35)", width: 0.9 },
+  { d: "M 145 33 C 145 123, 180 220, 180 300 S 90 500, 90 600 S 165 800, 165 900 S 135 1100, 135 1200 L 135 1290", top: "rgba(20,17,14,0.36)", bottom: "rgba(241,239,235,0.3)", width: 0.8 },
+  { d: "M 170 8 C 170 104, 155 200, 155 300 S 165 500, 165 600 S 180 800, 180 900 S 160 1100, 160 1200 L 160 1290", top: "rgba(20,17,14,0.3)", bottom: "rgba(241,239,235,0.25)", width: 0.7 },
+  { d: "M 195 38 C 195 127, 198 230, 198 300 S 192 500, 192 600 S 195 800, 195 900 S 185 1100, 185 1200 L 185 1290", top: "rgba(20,17,14,0.52)", bottom: "rgba(241,239,235,0.45)", width: 1 },
+  { d: "M 220 22 C 220 115, 255 220, 255 300 S 175 500, 175 600 S 235 800, 235 900 S 210 1100, 210 1200 L 210 1290", top: "rgba(20,17,14,0.42)", bottom: "rgba(241,239,235,0.35)", width: 0.9 },
+  { d: "M 245 43 C 245 131, 220 240, 220 300 S 265 500, 265 600 S 205 800, 205 900 S 235 1100, 235 1200 L 235 1290", top: "rgba(20,17,14,0.36)", bottom: "rgba(241,239,235,0.3)", width: 0.8 },
+  { d: "M 270 28 C 270 119, 285 225, 285 300 S 240 500, 240 600 S 260 800, 260 900 S 260 1100, 260 1200 L 260 1290", top: "rgba(20,17,14,0.3)", bottom: "rgba(241,239,235,0.25)", width: 0.7 },
+  /* 금빛은 밝은 구간에서 브라스(1.8:1)로 두면 사라진다 — 위쪽은 브론즈(--b-bronze와 같은 값)로 내려 받는다.
+     SVG presentation attribute는 var()를 못 받아 hex를 그대로 쓴다. bottle.module.css의 --b-bronze와 함께 고칠 것. */
+  { d: "M 95 0 C 95 100, 120 200, 120 300 S 225 500, 225 600 S 150 800, 150 900 S 85 1100, 85 1200 L 85 1290", top: "#8A6A3A", bottom: "#CCAD7B", width: 1.4, amber: true },
 ];
 
 const CONVERGE_XS = [85, 110, 135, 160, 185, 210, 235, 260];
@@ -98,8 +104,10 @@ export default function BottleRecord({
 }) {
   /* 서버가 쿠키에서 읽어 넘긴 값으로 시작 — 앞 화면의 선택이 이어진다 */
   const [locale, setLocale] = useState<BottleLocale>(initialLocale);
+  /* ja·zh 지면의 CJK 세리프를 각 언어 서체로 돌린다. 규칙마다 modifier를 달지 않고
+     루트에서 --b-serif-cjk 토큰 하나를 갈아끼운다(bottle.module.css). */
+  const scriptClass = locale === "ja" ? styles.pageJa : locale === "zh" ? styles.pageZh : "";
   const [flowScale, setFlowScale] = useState(1);
-  const [journeyScale, setJourneyScale] = useState(1);
   const [nlOpen, setNlOpen] = useState(false);
   const [nlEmail, setNlEmail] = useState("");
   const [nlStatus, setNlStatus] = useState<"idle" | "submitting" | "done">("idle");
@@ -108,7 +116,6 @@ export default function BottleRecord({
   const rootRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const heroSerialRef = useRef<HTMLDivElement>(null);
-  const journeySectionRef = useRef<HTMLElement>(null);
   const flowSectionRef = useRef<HTMLElement>(null);
   const flowSvgRef = useRef<SVGSVGElement>(null);
   const convergeSvgRef = useRef<SVGSVGElement>(null);
@@ -129,7 +136,7 @@ export default function BottleRecord({
 
   const immMonth = monthIdxOf(data.aging.immersion, 0);
   const retMonth = monthIdxOf(data.aging.retrieval, 11);
-  const year = data.aging.immersion ? data.aging.immersion.slice(0, 4) : String(new Date().getFullYear());
+  const year = immersionYear(data.aging.immersion);
 
   const monthSeason = (m: number) => `${copy.months[m]} ${copy.seasons[seasonOf(m)]}`;
 
@@ -181,24 +188,31 @@ export default function BottleRecord({
     { label: extra.seaLabels.coords, value: "34°N 126°E" },
   ];
 
+  /* S2 세로 목차 4행 — 위에서 아래로 샹파뉴 → 병숙성 → 입수 → 인양.
+     sea = 이 병의 시간이 실제로 흐른 두 행(잉크 원색 · 브론즈 노드).
+     above/below = 노드 위아래 획의 성질. 입수에서 잉크가 브론즈로 바뀌고,
+     인양 아래는 끝점이 보이지 않게 흘러 사라진다(fade).
+     육상 두 행의 깊이는 정본 문구를 그대로 쓴다 — 셀러 깊이 수치가 없어 숫자를 만들지 않는다. */
+  const depthValue = `${data.aging.depth}m`;
+  const journeyRows: {
+    name: string;
+    sub: string;
+    depth: string;
+    sea: boolean;
+    above: "ink" | "bronze" | null;
+    below: "ink" | "bronze" | "fade";
+  }[] = [
+    { name: copy.journey.origin, sub: copy.journey.originSub, depth: copy.journey.originDepth, sea: false, above: null, below: "ink" },
+    { name: copy.journey.aging, sub: copy.journey.agingSub, depth: copy.journey.agingDepth, sea: false, above: "ink", below: "ink" },
+    { name: copy.immersion, sub: monthSeason(immMonth), depth: depthValue, sea: true, above: "ink", below: "bronze" },
+    { name: copy.retrieval, sub: monthSeason(retMonth), depth: depthValue, sea: true, above: "bronze", below: "fade" },
+  ];
+
   /* S3 스케일 (390px 고정 지오메트리 → 좁은 화면 축소) */
   useEffect(() => {
     const el = flowSectionRef.current;
     if (!el) return;
     const update = () => setFlowScale(Math.min(1, el.clientWidth / 390));
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
-  /* S2 여정 스케일 (342px 고정 지오메트리 → 좁은 화면 축소) */
-  useEffect(() => {
-    const el = journeySectionRef.current;
-    if (!el) return;
-    const update = () => {
-      const inner = el.clientWidth - 48; // 좌우 padding 24
-      setJourneyScale(Math.min(1, inner / 342));
-    };
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
@@ -327,27 +341,6 @@ export default function BottleRecord({
               scrollTrigger: { trigger: heroRef.current, start: "top -40", end: "top -200", scrub: true },
             },
           );
-        }
-      }
-
-      /* S2 여정 곡선 드로잉 — 뷰 진입 시 선이 그려지고 점이 순차 등장 */
-      if (journeySectionRef.current) {
-        const jsvg = journeySectionRef.current.querySelector("svg");
-        if (jsvg) {
-          const jpaths = Array.from(jsvg.querySelectorAll("path"));
-          jpaths.forEach((p) => {
-            const len = p.getTotalLength();
-            p.style.strokeDasharray = `${len}`;
-            p.style.strokeDashoffset = `${len}`;
-          });
-          const jcircles = Array.from(jsvg.querySelectorAll("circle"));
-          gsap.set(jcircles, { opacity: 0, transformOrigin: "center" });
-          const jtl = gsap.timeline({
-            scrollTrigger: { trigger: journeySectionRef.current, start: "top 78%", once: true },
-          });
-          jtl.to(jpaths, { strokeDashoffset: 0, duration: 1.25, ease: "expo.out", stagger: 0.16 });
-          /* 오버슈트 바운스는 장난감 톤 — 무게 있게 안착시킨다 */
-          jtl.to(jcircles, { opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.08 }, "-=0.7");
         }
       }
 
@@ -553,7 +546,7 @@ export default function BottleRecord({
        히어로만 어둡고 그 아래는 전부 종이인 화면이라, 검정으로 두면 스크롤한 대부분의 시간 동안
        위아래 띠만 검게 남는다. 처음 한 화면에서 종이 띠가 어두운 히어로를 감싸는 것은 감수한다 —
        이 페이지는 종이 문서이고 히어로가 그 안에 끼워 넣은 도판이라는 구조와도 맞는다. */
-    <main className={`${styles.page} b-paper`} ref={rootRef}>
+    <main className={`${styles.page} ${scriptClass} b-paper`} ref={rootRef}>
       <div className={styles.frame}>
         {/* ── S1 병사진 히어로 ── */}
         <section className={styles.hero} ref={heroRef}>
@@ -628,58 +621,47 @@ export default function BottleRecord({
           </div>
         </section>
 
-        {/* ── S2 여정 (depth profile) ── */}
-        <section className={styles.journey} ref={journeySectionRef}>
-          <div
-            className={styles.journeyScaler}
-            style={{ transform: `scale(${journeyScale})`, height: 150 * journeyScale }}
-            data-reveal
-          >
-            <div className={styles.journeyInner}>
-              {/* 종이 위 도표다 — 잉크(#14110E)와 브론즈(#8A6A3A)로 그린다.
-                  아래 여덟 줄기 도판의 앰버(#CCAD7B)를 여기 쓰면 종이 위 1.8:1이라 사라진다.
-                  값은 CSS 변수로 못 뺀다 — presentation attribute는 var()를 받지 않는다. */}
-              <svg className={styles.journeySvg} width="342" height="110" viewBox="0 0 342 110" aria-hidden>
-                <defs>
-                  <linearGradient id="bJourneyEmerge" gradientUnits="userSpaceOnUse" x1="333" y1="90" x2="333" y2="28">
-                    <stop offset="0" stopColor="#8A6A3A" stopOpacity="0.9" />
-                    <stop offset="1" stopColor="#8A6A3A" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                <line x1="0" y1="24" x2="342" y2="24" stroke="#14110E" strokeWidth="0.5" strokeDasharray="1 5" opacity="0.22" />
-                <line x1="0" y1="90" x2="342" y2="90" stroke="#8A6A3A" strokeWidth="0.5" strokeDasharray="1 5" opacity="0.34" />
-                <text x="0" y="14" fontSize="8" fontFamily="IBM Plex Mono, monospace" letterSpacing="1" fill="rgba(20,17,14,0.45)">0m</text>
-                <text x="0" y="105" fontSize="8" fontFamily="IBM Plex Mono, monospace" letterSpacing="1" fill="rgba(138,106,58,0.9)">30m</text>
-                {/* 육상 구간 — 이 병의 시간이 아직 시작하지 않은 자리라 흐리게 둔다 */}
-                <path d="M 37 24 L 126 24 C 166 24 182 90 216 90" fill="none" stroke="rgba(20,17,14,0.5)" strokeWidth="1.4" strokeLinecap="round" />
-                {/* 해저 구간 — 기록이 만들어진 자리 */}
-                <path d="M 216 90 L 305 90" fill="none" stroke="#8A6A3A" strokeWidth="1.8" strokeLinecap="round" />
-                <path d="M 305 90 C 322 86 331 58 333 30" fill="none" stroke="url(#bJourneyEmerge)" strokeWidth="1.7" strokeLinecap="round" />
-                {/* 육상 노드는 속이 빈 원 — 종이색으로 채워 선을 끊는다 */}
-                <circle cx="37" cy="24" r="5" fill="#EDEAE3" stroke="rgba(20,17,14,0.62)" strokeWidth="1.4" />
-                <circle cx="126" cy="24" r="5" fill="#EDEAE3" stroke="rgba(20,17,14,0.62)" strokeWidth="1.4" />
-                <circle cx="216" cy="90" r="9" fill="rgba(138,106,58,0.16)" />
-                <circle cx="216" cy="90" r="5.5" fill="#8A6A3A" />
-                <circle cx="305" cy="90" r="9" fill="rgba(138,106,58,0.16)" />
-                <circle cx="305" cy="90" r="5.5" fill="#8A6A3A" />
-              </svg>
-              <div className={styles.jStop} style={{ left: 0, top: 40 }}>
-                <span className={styles.jName}>{copy.journey.origin}</span>
-                <span className={styles.jSub}>{copy.journey.originSub}</span>
+        {/* ── S2 여정 (세로 목차) ──
+            [ 이름 ][ 획 레인 22 ][ 깊이 ] 한 행 84px, 네 행이 하나의 세로 획으로 꿰인다.
+            획은 컨테이너 정중앙에 서고 좌우 블록은 같은 폭을 나눠 갖는다(좁은 화면에서도).
+            종이 위 도표라 잉크(#14110E)와 브론즈(#8A6A3A)로 그린다 —
+            아래 여덟 줄기의 브라스(#CCAD7B)는 종이 위 1.8:1이라 여기 쓰면 사라진다. */}
+        <section className={styles.journey}>
+          <div className={styles.journeyChain} data-reveal>
+            {journeyRows.map((r) => (
+              <div key={r.name} className={`${styles.jRow} ${r.below === "fade" ? styles.jRowTail : ""}`}>
+                {/* 이름은 네 행 모두 잉크 원색이다 — 위계는 아래 출처·깊이 열이 진다 */}
+                <div className={styles.jSide}>
+                  <span className={styles.jName}>{r.name}</span>
+                  <span className={`${styles.jSub} ${r.sea ? styles.jSubOn : ""}`}>{r.sub}</span>
+                </div>
+                {/* 획 레인 — 세그먼트를 먼저 깔고 노드를 그 위에 올려 이음매를 덮는다.
+                    입수 노드에서 잉크 1.4px가 브론즈 1.8px로 바뀌는데, 두 세그먼트가
+                    같은 중심선(left 50% + translateX(-50%))을 쓰므로 축이 흔들리지 않는다. */}
+                <div className={styles.jLane} aria-hidden>
+                  {r.above && (
+                    <span className={`${styles.jSeg} ${r.above === "bronze" ? styles.jSegBronze : styles.jSegInk}`} />
+                  )}
+                  <span
+                    className={`${styles.jSeg} ${styles.jSegDown} ${
+                      r.below === "bronze" ? styles.jSegBronze : r.below === "fade" ? styles.jSegFade : styles.jSegInk
+                    }`}
+                  />
+                  {r.sea ? (
+                    <>
+                      <span className={styles.jHalo} />
+                      <span className={styles.jNodeSea} />
+                    </>
+                  ) : (
+                    /* 육상 노드는 속이 빈 원 — 종이색으로 채워 획을 끊는다 */
+                    <span className={styles.jNodeLand} />
+                  )}
+                </div>
+                <div className={styles.jDepth}>
+                  <span className={`${styles.jDepthText} ${r.sea ? styles.jDepthOn : ""}`}>{r.depth}</span>
+                </div>
               </div>
-              <div className={styles.jStop} style={{ left: 89, top: 40 }}>
-                <span className={styles.jName}>{copy.journey.aging}</span>
-                <span className={styles.jSub}>{copy.journey.agingSub}</span>
-              </div>
-              <div className={styles.jStop} style={{ left: 179, top: 106 }}>
-                <span className={`${styles.jName} ${styles.jNameOn}`}>{copy.immersion}</span>
-                <span className={`${styles.jSub} ${styles.jSubAmber}`}>{monthSeason(immMonth)}</span>
-              </div>
-              <div className={styles.jStop} style={{ left: 268, top: 106 }}>
-                <span className={`${styles.jName} ${styles.jNameOn}`}>{copy.retrieval}</span>
-                <span className={`${styles.jSub} ${styles.jSubAmber}`}>{monthSeason(retMonth)}</span>
-              </div>
-            </div>
+            ))}
           </div>
         </section>
 
@@ -702,12 +684,24 @@ export default function BottleRecord({
           <div className={styles.flowScaler} style={{ transform: `scale(${flowScale})`, height: FLOW_HEIGHT * flowScale }}>
             <div className={styles.flow}>
               <svg ref={flowSvgRef} className={styles.flowSvg} width="390" height="1290" viewBox="0 0 390 1290" aria-hidden>
+                <defs>
+                  {FLOW_PATHS.map((p, i) => (
+                    <linearGradient key={i} id={`bFlow${i}`} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="170">
+                      <stop offset="0" stopColor={p.top} />
+                      <stop offset="0.435" stopColor={p.top} />
+                      <stop offset="0.79" stopColor={p.bottom} />
+                      <stop offset="1" stopColor={p.bottom} />
+                    </linearGradient>
+                  ))}
+                </defs>
                 {FLOW_PATHS.map((p, i) => (
-                  <path key={i} d={p.d} fill="none" stroke={p.stroke} strokeWidth={p.width} opacity={p.amber ? 0.95 : 1} />
+                  <path key={i} d={p.d} fill="none" stroke={`url(#bFlow${i})`} strokeWidth={p.width} opacity={p.amber ? 0.95 : 1} />
                 ))}
               </svg>
 
-              <span className={`${styles.seasonLabel} ${styles.seasonLabelOn}`} style={{ top: SEASON_TOPS[0] }}>{`${copy.months[0]} ${copy.seasons.winter}`}</span>
+              {/* 첫 라벨만 잉크다 — 이 높이(y 18~30)는 이제 종이색 위다.
+                  나머지 넷은 y 300 아래라 이미 남색·심해 구간이므로 그대로 둔다. */}
+              <span className={`${styles.seasonLabel} ${styles.seasonLabelInk}`} style={{ top: SEASON_TOPS[0] }}>{`${copy.months[0]} ${copy.seasons.winter}`}</span>
               <span className={styles.seasonLabel} style={{ top: SEASON_TOPS[1] }}>{`${copy.months[3]} ${copy.seasons.spring}`}</span>
               <span className={styles.seasonLabel} style={{ top: SEASON_TOPS[2] }}>{`${copy.months[6]} ${copy.seasons.summer}`}</span>
               <span className={styles.seasonLabel} style={{ top: SEASON_TOPS[3] }}>{`${copy.months[9]} ${copy.seasons.autumn}`}</span>
@@ -806,6 +800,10 @@ export default function BottleRecord({
             </p>
           )}
           <h2 className={styles.bottleName}>{meta.name}</h2>
+          {/* 입수 연차 — 큐베명만으로는 이듬해 입수분과 같은 이름이 된다.
+              숙성 기간은 붙이지 않는다: 바로 아래 해저 숙성 표에 「숙성 기간」 행이 있다.
+              배치가 없는 병은 세우지 않는다 — 없는 연도를 지어내지 않는다. */}
+          {data.aging.immersion && <p className={styles.bottleYear}>{year}</p>}
 
           {/* --i = 리빌 순번. 캡션·행이 한 줄씩 순차 기입된다. */}
           <div className={styles.tables} data-reveal>

@@ -27,17 +27,60 @@
   --b-p-micro: rgba(20, 17, 14, 0.5);
   --b-p-rule: rgba(20, 17, 14, 0.14);
   /* 브랜드 정본은 DM Mono다. --font-plex-mono는 정의된 적이 없어
-     기기 기본 고정폭으로 렌더되고 있었다. */
-  --b-mono: var(--font-mono), "DM Mono", monospace;
+     기기 기본 고정폭으로 렌더되고 있었다.
+     DM Mono에 CJK 글립이 없어 제네릭 앞에 지면 산세리프를 받친다 — 근거는
+     인증서 모듈 주석(certificate.module.css의 --c-mono). 이 화면이 실측에서
+     가장 많이 갈렸던 자리다(.subLabel·.seasonLabel·.jSub·.stationLabel). */
+  --b-mono: var(--font-mono), "DM Mono", var(--b-sans-page), monospace;
   /* 모션 곡선 — 브라우저 기본 ease(0.25,0.1,0.25,1)는 "무보정" 느낌을 준다.
      expo-out 계열은 빠르게 도착해 길게 안착해서 무게감이 생긴다. */
   --b-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* 이 지면의 CJK 세리프 — 인증서 모듈과 같은 관례(certificate.module.css 주석 참조).
+     이 화면에서 세리프를 쓰는 곳은 히어로 표제(.titleText) 하나뿐이다. 그 자리는
+     Cormorant(라틴 전용)로 잡혀 있어 ja·zh에서 「海が刻んだ四季」가 시스템 세리프로
+     떨어졌다 — 맥은 히라기노 명조, 윈도우는 다른 얼굴이라 인상이 갈린다. */
+  --b-face-jp: var(--font-serif-jp), "Noto Serif JP";
+  --b-face-sc: var(--font-serif-sc), "Noto Serif SC";
+  --b-face-kr: var(--font-serif-kr), "Noto Serif KR";
+  /* 이 지면의 말이 어느 얼굴로 그려지는가. 로케일이 아래에서 갈아끼운다.
+     ⚠️ -face- 토큰에 제네릭(serif)을 붙이지 않는다 — 붙이면 그 뒤가 전부 죽는다. */
+  --b-face-page: var(--b-face-kr);
+  --b-serif-cjk: var(--b-face-page), serif;
+  /* 일본어·중국어 산세리프 — 인증서 모듈과 같은 관례(certificate.module.css 주석에 근거).
+     이 화면은 세리프가 표제 하나뿐이고 나머지가 전부 산세리프라, 지면 언어가 바뀌면
+     읽는 글자 대부분이 여기서 갈린다. 랜딩 ja 본문과 같은 구성이고 일본어 웹폰트는
+     루트 layout이 이미 물고 있다.
+     ⚠️ -sans- 토큰에 제네릭(sans-serif)을 붙이지 않는다 — 붙이면 그 뒤가 전부 죽는다. */
+  --b-sans-jp: var(--font-ja-body), "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic Medium", "Yu Gothic";
+  --b-sans-sc: var(--font-sans-sc), "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei";
+  --b-sans-kr: var(--font-body), "Noto Sans KR";
+  /* 이 지면의 본문이 어느 얼굴로 그려지는가. 로케일이 아래에서 갈아끼운다. */
+  --b-sans-page: var(--b-sans-kr);
+  --b-sans: var(--b-sans-page), sans-serif;
+  /* 소유자 이름 전용 — 이름의 스크립트는 지면 언어와 다르다(인증서 모듈 주석 참조).
+     한국어 지면의 이름 활자는 Pretendard로 확정돼 있어 그대로 두고, ja·zh에서만
+     지면 얼굴이 앞에 선다. 뒤에 한글 얼굴을 받쳐 앞 얼굴에 없는 글자만 넘긴다. */
+  --b-name-face: var(--font-pretendard);
+  --b-sans-name: var(--b-name-face), var(--b-sans-kr), sans-serif;
   min-height: 100svh;
   background: var(--b-void);
   color: var(--b-ivory);
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   display: flex;
   justify-content: center;
+}
+/* ⚠️ 반드시 .page 뒤에 온다 — 같은 단일 클래스라 순서가 승패를 가른다 */
+.pageJa {
+  --b-face-page: var(--b-face-jp);
+  --b-sans-page: var(--b-sans-jp);
+  --b-name-face: var(--b-sans-jp);
+}
+.pageZh {
+  --b-face-page: var(--b-face-sc);
+  --b-sans-page: var(--b-sans-sc);
+  --b-name-face: var(--b-sans-sc);
 }
 .frame {
   width: min(430px, 100vw);
@@ -140,7 +183,7 @@
 /* 소유자 이름 — Plex Mono에 한글 글리프가 없어 본문 폰트로 폴백된다.
    크기·자간은 OWNED BY와 같게 두고 굵기만 올려 얇은 획이 사진 위에서 뭉개지는 것만 막는다. */
 .heroOwnerName {
-  font-family: var(--font-pretendard), var(--font-body), sans-serif;
+  font-family: var(--b-sans-name);
   font-weight: 500;
 }
 .heroVerified {
@@ -178,8 +221,11 @@
   width: min(266px, 74vw);
   height: auto;
 }
+/* ko는 PNG라 이 자리에 오지 않는다 — en·fr(라틴)과 ja·zh(한자·가나)가 한 규칙을 나눠 쓴다.
+   Cormorant를 앞에 두고 CJK 세리프를 뒤에 받친다. 라틴 지면은 Cormorant가 전부 덮어
+   뒤 서체를 한 글자도 내려받지 않고, ja·zh 표제는 글자가 전부 CJK라 뒤 서체가 그린다. */
 .titleText {
-  font-family: var(--font-heading), serif;
+  font-family: var(--font-heading), var(--b-serif-cjk);
   font-weight: 300;
   font-size: 28px;
   line-height: 1.3;
@@ -208,59 +254,164 @@
   color: var(--b-ink);
   overflow: hidden;
 }
-.journeyScaler {
-  transform-origin: top center;
-  width: 342px;
+/* 네 행(샹파뉴·병숙성·입수·인양)이 하나의 세로 획으로 꿰인 목차.
+   폭 고정 스트립을 scale()로 줄이던 걸 걷어냈다 — 좁은 화면에서 활자가 8.5px까지 눌렸다.
+   대신 좌우 블록이 남은 폭을 반씩 나눠 갖고 획 레인만 22px로 고정한다.
+   어느 폭에서도 획은 정중앙에 서고 좌우는 대칭이다. */
+.journeyChain {
+  width: 100%;
+  max-width: 342px;
 }
-.journeyInner {
-  position: relative;
-  width: 342px;
-  height: 150px;
+.jRow {
+  display: flex;
+  height: 84px;
 }
-.journeySvg {
-  position: absolute;
-  left: 0;
-  top: 0;
+/* 인양 행만 아래로 84px 더 잡는다 — 그 안에서 획이 끝점 없이 흘러 사라진다 */
+.jRowTail {
+  height: 168px;
 }
-.jStop {
-  position: absolute;
-  width: 74px;
+.jRowTail .jSide,
+.jRowTail .jDepth {
+  height: 84px;
+}
+/* flex-basis를 0에서 시작해야 내용 길이(Vineyard 대 30m)가 축을 밀지 않는다.
+   auto면 긴 쪽이 더 가져가서 획이 가운데를 벗어난다. */
+.jSide {
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  padding-right: 14px;
+  text-align: right;
+}
+.jDepth {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
   align-items: center;
-  gap: 3px;
+  padding-left: 14px;
 }
 .jName {
-  font-family: var(--font-body), sans-serif;
-  font-size: 11px;
-  color: rgba(20, 17, 14, 0.72);
-}
-/* 입수·인양 — 이 병의 시간이 실제로 시작하고 끝난 두 지점만 잉크 원색이다 */
-.jNameOn {
+  font-family: var(--b-sans);
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 22px;
+  letter-spacing: -0.01em;
   color: var(--b-ink);
 }
 .jSub {
   font-family: var(--b-mono);
-  font-size: 8.5px;
+  font-size: 12px;
+  line-height: 13px;
   letter-spacing: 0.06em;
-  color: var(--b-p-micro);
+  color: var(--b-p-dim);
 }
-/* 종이 위에서는 앰버(1.8:1)를 글자로 못 쓴다 — 브론즈로 내린다 */
-.jSubAmber {
+/* 입수·인양의 출처는 월·계절이다 — 한글이라 mono가 본문 폰트로 폴백되고,
+   종이 위에서 앰버(1.8:1)는 글자로 못 쓰므로 브론즈로 내린다 */
+.jSubOn {
+  letter-spacing: 0.02em;
   color: var(--b-bronze);
+}
+.jDepthText {
+  font-family: var(--b-sans);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+  color: var(--b-p-dim);
+}
+/* 해저 두 행만 실측값(30m)이다 — 수치라 고정폭으로 세운다 */
+.jDepthOn {
+  font-family: var(--b-mono);
+  letter-spacing: 0.08em;
+  color: var(--b-bronze);
+}
+
+/* 획 레인 — 세로 획이 네 노드를 관통한다.
+   위아래 세그먼트가 같은 중심선(left 50% + translateX(-50%))을 쓰므로,
+   입수 노드에서 잉크 1.4px가 브론즈 1.8px로 굵어져도 축이 흔들리지 않는다. */
+.jLane {
+  position: relative;
+  flex: 0 0 22px;
+  width: 22px;
+}
+.jSeg {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 42px;
+  transform: translateX(-50%);
+}
+/* 노드 아래 세그먼트 — 노드 중심(42px)에서 시작한다 */
+.jSegDown {
+  top: 42px;
+}
+.jSegInk {
+  width: 1.4px;
+  background: rgba(20, 17, 14, 0.5);
+}
+.jSegBronze {
+  width: 1.8px;
+  background: var(--b-bronze);
+}
+/* 인양 아래 — 선형으로 빼면 끝난 자리가 눈에 잡힌다.
+   위쪽에서 획의 존재를 붙들고 아래 4분의 1을 길게 흘려 끝점을 지운다. */
+.jSegFade {
+  width: 1.8px;
+  height: 126px;
+  background: linear-gradient(
+    180deg,
+    rgba(138, 106, 58, 0.9) 0%,
+    rgba(138, 106, 58, 0.8) 20%,
+    rgba(138, 106, 58, 0.62) 40%,
+    rgba(138, 106, 58, 0.42) 58%,
+    rgba(138, 106, 58, 0.22) 74%,
+    rgba(138, 106, 58, 0.08) 88%,
+    rgba(138, 106, 58, 0) 100%
+  );
+}
+.jHalo,
+.jNodeLand,
+.jNodeSea {
+  position: absolute;
+  left: 50%;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+.jNodeLand,
+.jNodeSea {
+  top: 36.5px;
+  width: 11px;
+  height: 11px;
+}
+/* 육상 노드는 속이 빈 원 — 종이색으로 채워 획을 끊는다 */
+.jNodeLand {
+  box-sizing: border-box;
+  border: 1.4px solid rgba(20, 17, 14, 0.62);
+  background: var(--b-paper);
+}
+.jNodeSea {
+  background: var(--b-bronze);
+}
+.jHalo {
+  top: 33px;
+  width: 18px;
+  height: 18px;
+  background: rgba(138, 106, 58, 0.16);
 }
 
 /* ── S3 여덟 줄기 ─────────────────────────── */
 /* ── Eight Currents 인트로 ───────────────────── */
 /* 아래 도판(여덟 줄기)의 캡션 자리다 — 도판은 물속이지만 설명은 종이 위에 있다.
-   아래 여백 54 → 62: 여기서 바로 다크로 끊기므로 그 앞에 숨 쉴 자리가 필요하다. */
+   아래 여백 54 → 62: 여기서 바로 다크로 끊기므로 그 앞에 숨 쉴 자리가 필요하다.
+   상단 구분선은 걷어냈다 — 위 여정도 같은 종이 위 한 장이라 가르는 선이 필요 없다. */
 .ecIntro {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 68px 24px 62px;
   background: var(--b-paper);
-  border-top: 0.5px solid var(--b-p-rule);
   color: var(--b-ink);
   text-align: center;
   word-break: keep-all;
@@ -275,7 +426,7 @@
 /* 아이브로우를 걷어내 제목이 섹션의 첫 요소가 됐다 — 위 여백은 섹션 padding이 맡는다 */
 .ecTitle {
   margin-top: 0;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-weight: 300;
   font-size: 25px;
   line-height: 38px;
@@ -285,7 +436,7 @@
 }
 .ecBody {
   margin-top: 16px;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-weight: 300;
   font-size: 12.5px;
   line-height: 22px;
@@ -300,9 +451,10 @@
   gap: 10px;
   margin-top: 28px;
 }
-/* 이 선은 장식이 아니라 아래 도판의 범례다 — "금빛 선"이 가리키는 그 선과
-   같은 색이어야 한다. 그래서 종이 위에서도 브론즈로 내리지 않고 앰버로 둔다.
-   대신 1px → 2px. 앰버는 종이 위 1.8:1이라 hairline이면 사라진다. */
+/* 이 막대는 장식이 아니라 아래 도판의 범례다 — 여덟 줄기 중 수온 획과 같은 색을 내보인다.
+   그래서 종이 위에서도 브론즈로 내리지 않고 앰버로 둔다(도판 획이 앰버다).
+   대신 1px → 2px. 앰버는 종이 위 1.8:1이라 hairline이면 사라진다.
+   옆 문구는 색을 부르지 않고 대상만 부르므로("수온"), 무엇을 가리키는지는 이 색이 말한다. */
 .ecLegendLine {
   width: 36px;
   height: 2px;
@@ -336,7 +488,7 @@
 }
 .passportTitle {
   margin-top: 18px;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-weight: 400;
   font-size: 20px;
   line-height: 32px;
@@ -345,7 +497,7 @@
 }
 .passportBody {
   margin-top: 12px;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-weight: 400;
   font-size: 13px;
   line-height: 21px;
@@ -363,7 +515,7 @@
   margin-top: 32px;
   background: var(--b-bronze);
   color: var(--b-paper);
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-size: 14.5px;
   letter-spacing: 0.04em;
   text-decoration: none;
@@ -381,16 +533,35 @@
   justify-content: center;
   height: 48px;
   border: 0.5px solid rgba(20, 17, 14, 0.28);
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-weight: 400;
   font-size: 13px;
   color: var(--b-p-dim);
   text-decoration: none;
 }
 
-/* Paper 67X-0 — 상단 심해 블루에서 시작해 22%에서 blue1로 가라앉는다 */
+/* Paper 67X-0 — 위 서문(종이)에서 이어받아 18.5%(390px 기준 240px)에 걸쳐 남색에 도달하고,
+   그 아래로 심해까지 계속 내려간다. 정지점 14개는 Paper 값 그대로다.
+   알파를 쓰지 않는 이유: 투명으로 처리하면 뒤의 --b-void가 비쳐 검은 띠가 생긴다.
+   색으로 전환한다 — 0%는 종이(#edeae3), 18.52%는 blue2, 100%는 blue1이다. */
 .flowSection {
-  background: linear-gradient(180deg, var(--b-blue2) 0%, var(--b-blue1) 22%, var(--b-blue1) 100%);
+  background: linear-gradient(
+    180deg,
+    #edeae3 0%,
+    #e3e1db 1.93%,
+    #d0cfcc 3.86%,
+    #afb1b2 5.79%,
+    #82878d 7.72%,
+    #4d5662 9.65%,
+    #263140 11.57%,
+    #172333 13.58%,
+    #101c2d 15.82%,
+    #0e1a2b 18.52%,
+    #0d1623 26.23%,
+    #0b111b 40.12%,
+    #0a0f15 61.73%,
+    #0a0d12 100%
+  );
   overflow: hidden;
 }
 .flowScaler {
@@ -429,6 +600,11 @@
 }
 .seasonLabelOn {
   color: rgba(241, 239, 235, 0.92);
+}
+/* 첫 라벨(1월 겨울)만 종이색 구간에 걸린다 — 근백색 92%를 잉크 92%로 승계한다.
+   나머지 넷은 y 300 아래라 이미 남색·심해 위이므로 seasonLabelOn/기본값 그대로다. */
+.seasonLabelInk {
+  color: rgba(20, 17, 14, 0.92);
 }
 /* 스테이션 = 라벨 + 값을 담는 라운드 태그.
    여백·라운드는 상시 유지하고 배경만 켜서 점등 시 글자가 밀리지 않게 한다. */
@@ -558,6 +734,17 @@
   color: var(--b-ink);
   text-align: center;
 }
+/* 입수 연차 — 큐베명 아래 한 단 작고 흐리게. 큐베명이 먼저 읽혀야 한다.
+   숙성 기간은 바로 아래 「해저 숙성」 표가 맡는다. */
+.bottleYear {
+  margin-top: 8px;
+  font-family: var(--b-sans);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.14em;
+  color: var(--b-p-micro);
+  text-align: center;
+}
 
 /* 표 — 다크에서는 라벨 9px·값 11px였다. 읽는 구간으로 넘어왔으니 활자를 올린다. */
 .tables {
@@ -616,7 +803,7 @@
   background: var(--b-void);
 }
 .newsletterLine {
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-weight: 300;
   font-size: 12px;
   line-height: 21px;
@@ -632,7 +819,7 @@
   margin-top: 24px;
   background: var(--b-amber);
   color: var(--b-void);
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-size: 13px;
   font-weight: 400;
   letter-spacing: 0.06em;
@@ -660,7 +847,7 @@
   border: none;
   border-bottom: 0.5px solid rgba(241, 239, 235, 0.25);
   border-radius: 0;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-weight: 300;
   /* 16px 미만이면 iOS Safari가 포커스 시 화면을 확대함 — 16px로 방지 */
   font-size: 16px;
@@ -685,7 +872,7 @@
   background: var(--b-amber);
   color: var(--b-void);
   border: none;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-size: 13px;
   letter-spacing: 0.06em;
   cursor: pointer;
@@ -700,7 +887,7 @@
   margin-top: 24px;
   padding: 16px;
   border: 0.5px solid rgba(204, 173, 123, 0.4);
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-weight: 300;
   font-size: 13px;
   line-height: 21px;
@@ -751,7 +938,7 @@
   padding: 6px 0;
   background: transparent;
   border: none;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-weight: 400;
   font-size: 12.5px;
   color: var(--b-bronze);
@@ -783,7 +970,7 @@
   border: 0.5px solid rgba(20, 17, 14, 0.26);
   border-right: none;
   border-radius: 0;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-size: 16px;
   color: var(--b-ink);
   outline: none;
@@ -804,13 +991,13 @@
   color: var(--b-paper);
   border: none;
   border-radius: 0;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-size: 13px;
   cursor: pointer;
 }
 .passportNewsDone {
   margin-top: 28px;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--b-sans);
   font-size: 13px;
   color: var(--b-bronze);
 }
@@ -892,12 +1079,12 @@
 }
 
 /* 여정 리빌 (data-reveal) */
-.journeyScaler {
+.journeyChain {
   opacity: 0;
   transform: translateY(14px);
   transition: opacity 0.9s var(--b-out), transform 0.9s var(--b-out);
 }
-.journeyScaler.revealIn {
+.journeyChain.revealIn {
   opacity: 1;
   transform: translateY(0);
 }
@@ -964,5 +1151,5 @@
   .passportNewsSubmit { transition: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .tables,
-  .journeyScaler { opacity: 1; transform: none; transition: none; }
+  .journeyChain { opacity: 1; transform: none; transition: none; }
 }
