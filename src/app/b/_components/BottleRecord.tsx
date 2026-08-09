@@ -21,6 +21,7 @@ import {
   PRODUCT_META,
   recordExtra,
   PROVENANCE,
+  TWO_YEAR_FROM_MONTHS,
   type BottleLocale,
 } from "../_lib/copy";
 import type { BottleRecordData } from "../_lib/data";
@@ -648,7 +649,15 @@ export default function BottleRecord({
                   고밀도 화면에서 글자가 흐려진다 — 활자 이미지라 특히 눈에 띈다. */}
               {locale === "ko" ? (
                 <Image
-                  src="/images/b-record-title-ko.png"
+                  /* 기간이 문구에 박혀 있어 파일도 갈린다 — 「바다가 새긴 사계절」 / 「바다가 새긴 두 해」.
+                     글자 수는 다르지만 두 PNG 모두 같은 266×32 슬롯에 가운데 정렬로 앉아 있다
+                     (798×96 3x). 짧은 쪽을 타이트 크롭하면 폭 고정 슬롯에서 글자만 커진다 —
+                     그래서 캔버스가 같다. 여기서 크기를 다시 계산하지 말 것. */
+                  src={
+                    durationMonths >= TWO_YEAR_FROM_MONTHS
+                      ? "/images/b-record-title-2y-ko.png"
+                      : "/images/b-record-title-ko.png"
+                  }
                   alt={copy.titleText}
                   width={266}
                   height={32}

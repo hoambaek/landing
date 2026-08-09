@@ -1176,35 +1176,52 @@ export const PROVENANCE: Record<string, ProvenanceData> = {
  * 문장을 조각내 조립하지 않고(로케일마다 어순이 달라 퍼즐이 된다) 기간이 박힌 문장만
  * 통째로 갈아 끼운다. 여기 없는 키는 1년 문안을 그대로 쓴다 — 기간과 무관한 문장이다.
  */
-const TWO_YEAR_FROM_MONTHS = 24;
+export const TWO_YEAR_FROM_MONTHS = 24;
 
-/* ⚠️ ko는 정본 어휘(2년 · 여덟 계절)로 맞춘 임시값이고, en·fr·ja·zh는 marketing 문안을 기다린다.
-   비어 있는 동안 그 네 로케일의 2년물은 1년 문장을 그대로 세운다(배포 전 채울 것). */
+/* converging(인양 전)은 다섯 로케일 모두 연 표기가 없어 여기 없다 — 1년 문장을 그대로 쓴다. */
 export const BOTTLE_COPY_2Y: Record<BottleLocale, Partial<BottleCopy>> = {
   ko: {
-    subLabel: "남해 30m · 여덟 계절의 기록",
+    /* ko 타이틀은 PNG다(BottleRecord의 locale 분기). 여기 문자열은 그 alt로 쓰인다. */
+    titleText: "바다가 새긴 두 해",
+    subLabel: "남해 30m · 두 번의 사계절",
     converged: "2년의 바다가 한 병에 담겼습니다",
   },
-  en: {},
-  fr: {},
-  ja: {},
-  zh: {},
+  en: {
+    titleText: "Two Years the Sea Inscribed",
+    subLabel: "NAMHAE 30M · EIGHT SEASONS ON RECORD",
+    converged: "Two years of the sea, held in this bottle",
+  },
+  fr: {
+    titleText: "Deux années gravées par la mer",
+    subLabel: "NAMHAE 30M · HUIT SAISONS DE RELEVÉS",
+    converged: "Deux années de mer, recueillies dans cette bouteille",
+  },
+  ja: {
+    titleText: "海が刻んだ二年",
+    subLabel: "南海（ナムヘ）水深30m · 二度の四季",
+    converged: "二年の海が、この一本に宿る。",
+  },
+  zh: {
+    titleText: "大海刻下的两年",
+    subLabel: "南海 30m · 两轮四季",
+    converged: "两年的大海，都封存在这瓶酒中",
+  },
 };
 
 export const RECORD_EXTRA_2Y: Record<BottleLocale, Partial<RecordExtraCopy>> = {
-  ko: { ecBody: "여덟 계절의 변화를 하나의 흐름으로 기록했습니다." },
-  en: {},
-  fr: {},
-  ja: {},
-  zh: {},
+  ko: { ecBody: "스물네 달의 변화를 하나의 흐름으로 기록했습니다." },
+  en: { ecBody: "Twenty-four months of change, kept as one continuous stream." },
+  fr: { ecBody: "Vingt-quatre mois de variations, en un seul flux continu." },
+  ja: { ecBody: "二年間の変化を、ひとつの流れとして記録しました。" },
+  zh: { ecBody: "两载变化，汇成一条连续的流。" },
 };
 
 export const ENTRY_COPY_2Y: Record<BottleLocale, Partial<EntryCopy>> = {
-  ko: { inscribedCtaSub: "바다가 남긴 여덟 계절의 기록을 확인합니다." },
-  en: {},
-  fr: {},
-  ja: {},
-  zh: {},
+  ko: { inscribedCtaSub: "바다가 두 해 동안 남긴 기록을 확인합니다." },
+  en: { inscribedCtaSub: "See what the sea left behind over two years." },
+  fr: { inscribedCtaSub: "Découvrez ce que la mer a laissé en deux années." },
+  ja: { inscribedCtaSub: "海が残した二年の記録をご覧ください。" },
+  zh: { inscribedCtaSub: "查看大海留下的两年记录。" },
 };
 
 function forDuration<T extends object>(base: T, longer: Partial<T>, months: number): T {
