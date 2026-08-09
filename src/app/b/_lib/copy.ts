@@ -676,8 +676,7 @@ export interface RecordExtraCopy {
   certSave: string; // "인증서 저장" — 페이지 버튼 겸 저장 시트 표제
   /* 저장 확인 시트 (Paper 04A). 저장은 되돌릴 수 없는 동작은 아니지만
      "무엇이 저장되는가"를 먼저 보여주는 자리다 — 표제는 certSave를 그대로 쓰고
-     여기서는 시트 본문과 실행 버튼만 갖는다.
-     ⚠️ ja·zh는 기능 번역이다(2026-08-09). marketing 확정 전까지 임시. */
+     여기서는 시트 본문과 실행 버튼만 갖는다. */
   certSaveAction: string; // "이미지로 저장" — 시트의 실행 버튼
   certSaveLead: string; // "인증서를 이미지로 저장합니다"
   certSaveSub: string; // "사진 보관함에서 언제든 확인하고 공유할 수 있습니다."
@@ -842,8 +841,8 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certSignHead: "Digital signature",
     certSave: "Save certificate",
     certSaveAction: "Save as image",
-    certSaveLead: "Save this certificate as an image",
-    certSaveSub: "Keep it in your photos to view or share it any time.",
+    certSaveLead: "This is the image that will be saved.",
+    certSaveSub: "You can view or share it from your photos any time.",
     certSaveClose: "Close",
     certBack: "Back to the sea's record",
     certOwnerFallback: "Owner not registered",
@@ -921,8 +920,8 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certSignHead: "Signature numérique",
     certSave: "Enregistrer le certificat",
     certSaveAction: "Enregistrer en image",
-    certSaveLead: "Enregistrer ce certificat en image",
-    certSaveSub: "Gardez-le dans vos photos pour le consulter ou le partager à tout moment.",
+    certSaveLead: "Ce certificat sera enregistré en image.",
+    certSaveSub: "Vous le retrouverez à tout moment dans vos photos, à consulter ou à partager.",
     certSaveClose: "Fermer",
     certBack: "Retour au relevé de la mer",
     certOwnerFallback: "Propriétaire non enregistré",
@@ -999,10 +998,9 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certStatusLabel: "認証状態",
     certSignHead: "デジタル署名",
     certSave: "証明書を保存",
-    /* ⚠️ 임시 문안 — marketing 확정 전 */
     certSaveAction: "画像として保存",
-    certSaveLead: "この証明書を画像として保存します",
-    certSaveSub: "写真アプリからいつでもご覧いただき、共有できます。",
+    certSaveLead: "この内容で画像として保存します",
+    certSaveSub: "写真アプリからいつでも見返したり、共有したりできます。",
     certSaveClose: "閉じる",
     certBack: "海の記録へ戻る",
     certOwnerFallback: "所有者未登録",
@@ -1079,10 +1077,9 @@ export const RECORD_EXTRA: Record<BottleLocale, RecordExtraCopy> = {
     certStatusLabel: "认证状态",
     certSignHead: "数字签名",
     certSave: "保存证书",
-    /* ⚠️ 임시 문안 — marketing 확정 전 */
     certSaveAction: "保存为图片",
-    certSaveLead: "将这份证书保存为图片",
-    certSaveSub: "可随时在相册中查看和分享。",
+    certSaveLead: "这份证书将保存为图片",
+    certSaveSub: "图片会存入相册，可随时查看和分享。",
     certSaveClose: "关闭",
     certBack: "返回大海的记录",
     certOwnerFallback: "所有者未登记",
