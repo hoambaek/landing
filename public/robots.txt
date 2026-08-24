@@ -19,6 +19,12 @@ User-agent: Baiduspider
 Allow: /
 
 # AI Search Engines & Crawlers
+User-agent: OAI-AdsBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
 User-agent: GPTBot
 Allow: /
 
