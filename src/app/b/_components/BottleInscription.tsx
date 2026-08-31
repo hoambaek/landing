@@ -62,11 +62,9 @@ export default function BottleInscription({
       )}
 
       <div className={styles.inscribeBottle}>
-        {/* CSS가 height 기준(최대 268px, 작은 화면에서는 그보다 작게)으로 그리므로
-            실제 렌더 폭은 width prop보다 크다. width만 주면 그 값으로 srcset이 만들어져
-            고밀도 화면에서 흐려진다 — sizes로 최대 표시 폭(268 × 158/264 ≈ 160px)을 알려
-            원본에 가까운 크기를 받게 한다. 화면이 작아지면 렌더 폭은 이보다 작아질 뿐이라
-            흐려지는 쪽으로는 어긋나지 않는다. width/height prop은 종횡비 선언 몫이다. */}
+        {/* CSS가 height 기준(264px)으로 그리므로 실제 렌더 폭은 width prop보다 크다.
+            width만 주면 그 값으로 srcset이 만들어져 고밀도 화면에서 흐려진다 —
+            sizes로 실제 표시 폭을 알려 원본에 가까운 크기를 받게 한다. */}
         <Image
           src={image}
           alt=""
