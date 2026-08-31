@@ -21,8 +21,6 @@ export interface BottleCopy {
   verified: string;
   titleText: string; // ko는 PNG(alt로 사용), 나머지는 텍스트 렌더
   subLabel: string; // {year} 치환
-  immersion: string;
-  retrieval: string;
   planned: string;
   months: string[]; // index 0 = 1월
   seasons: { winter: string; spring: string; summer: string; autumn: string };
@@ -30,20 +28,6 @@ export interface BottleCopy {
      해를 넘겨 숙성한 병은 월만으로는 어느 해인지 갈리지 않는다(2년물은 1월이 두 번 온다).
      어순은 인증서의 입수·인양 표기(seaWhen)와 같게 둔다 — 두 화면이 같은 말을 해야 한다. */
   yearMonth: string;
-  /* originDepth·agingDepth = S2 세로 목차의 깊이 열(육상 두 행).
-     해저 두 행(입수·인양)의 깊이는 data.aging.depth에서 온다.
-     「지하」·cave·カーヴ·酒窖는 큐베 스펙 원문의 "préservé en cave"를 옮긴 말이지
-     깊이 수치가 아니다 — 셀러 깊이 데이터가 없어 숫자를 쓰지 않는다.
-     육상 첫 행을 0m이 아니라 장소어(포도밭 계열)로 두는 것도 같은 이유다.
-     Surface·地上 계열은 기각됐다 — 해수면으로 읽히는 순간 0m이 뒷문으로 돌아온다. */
-  journey: {
-    origin: string;
-    originSub: string;
-    aging: string;
-    agingSub: string;
-    originDepth: string;
-    agingDepth: string;
-  };
   obsHead: string;
   obsHeadPartial: string; // 인양 전
   metrics: Record<MetricKey, string>;
@@ -65,13 +49,10 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     verified: "NFC 인증 완료 · RECORD AUTHENTICATED",
     titleText: "바다가 새긴 사계절",
     subLabel: "남해 30m · 사계절의 기록",
-    immersion: "입수",
-    retrieval: "인양",
     planned: "예정",
     months: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
     seasons: { winter: "겨울", spring: "봄", summer: "여름", autumn: "가을" },
     yearMonth: "{y}년 {m}",
-    journey: { origin: "샹파뉴", originSub: "VENTEUIL", aging: "병숙성", agingSub: "MAISON", originDepth: "지상", agingDepth: "지하" },
     obsHead: "해양 관측 · 1년 평균",
     obsHeadPartial: "해양 관측 · 입수 후 평균",
     metrics: {
@@ -94,13 +75,10 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     verified: "RECORD AUTHENTICATED · NFC",
     titleText: "Four Seasons the Sea Inscribed",
     subLabel: "NAMHAE 30M · FOUR SEASONS ON RECORD",
-    immersion: "IMMERSION",
-    retrieval: "RETRIEVAL",
     planned: "PLANNED",
     months: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
     seasons: { winter: "WINTER", spring: "SPRING", summer: "SUMMER", autumn: "AUTUMN" },
     yearMonth: "{m} {y}",
-    journey: { origin: "Champagne", originSub: "VENTEUIL", aging: "Bottle aging", agingSub: "MAISON", originDepth: "Vineyard", agingDepth: "Cellar" },
     obsHead: "OCEAN OBSERVATION · ANNUAL MEAN",
     obsHeadPartial: "OCEAN OBSERVATION · SINCE IMMERSION",
     metrics: {
@@ -123,13 +101,10 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     verified: "ENREGISTREMENT AUTHENTIFIÉ · NFC",
     titleText: "Quatre saisons gravées par la mer",
     subLabel: "NAMHAE 30M · QUATRE SAISONS DE RELEVÉS",
-    immersion: "IMMERSION",
-    retrieval: "REMONTÉE",
     planned: "PRÉVUE",
     months: ["JANV", "FÉVR", "MARS", "AVR", "MAI", "JUIN", "JUIL", "AOÛT", "SEPT", "OCT", "NOV", "DÉC"],
     seasons: { winter: "HIVER", spring: "PRINTEMPS", summer: "ÉTÉ", autumn: "AUTOMNE" },
     yearMonth: "{m} {y}",
-    journey: { origin: "Champagne", originSub: "VENTEUIL", aging: "Élevage", agingSub: "MAISON", originDepth: "Vigne", agingDepth: "Cave" },
     obsHead: "OBSERVATION MARINE · MOYENNE ANNUELLE",
     obsHeadPartial: "OBSERVATION MARINE · DEPUIS L'IMMERSION",
     metrics: {
@@ -152,13 +127,10 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     verified: "NFC認証済み · RECORD AUTHENTICATED",
     titleText: "海が刻んだ四季",
     subLabel: "南海（ナムヘ）水深30m · 四季の記録",
-    immersion: "海中投入",
-    retrieval: "引き揚げ",
     planned: "予定",
     months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
     seasons: { winter: "冬", spring: "春", summer: "夏", autumn: "秋" },
     yearMonth: "{y}年 {m}",
-    journey: { origin: "シャンパーニュ", originSub: "VENTEUIL", aging: "瓶内熟成", agingSub: "MAISON", originDepth: "ブドウ畑", agingDepth: "カーヴ" },
     obsHead: "海洋観測 · 年間平均",
     obsHeadPartial: "海洋観測 · 投入後の平均",
     metrics: {
@@ -181,13 +153,10 @@ export const BOTTLE_COPY: Record<BottleLocale, BottleCopy> = {
     verified: "NFC认证完成 · RECORD AUTHENTICATED",
     titleText: "大海刻下的四季",
     subLabel: "南海 30m · 四季记录",
-    immersion: "入水",
-    retrieval: "打捞",
     planned: "预定",
     months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
     seasons: { winter: "冬", spring: "春", summer: "夏", autumn: "秋" },
     yearMonth: "{y}年 {m}",
-    journey: { origin: "香槟区", originSub: "VENTEUIL", aging: "瓶中陈酿", agingSub: "MAISON", originDepth: "葡萄园", agingDepth: "酒窖" },
     obsHead: "海洋观测 · 年均值",
     obsHeadPartial: "海洋观测 · 入水后均值",
     metrics: {

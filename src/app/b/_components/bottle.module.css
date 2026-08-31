@@ -1,7 +1,7 @@
 /* /b 병 기록 페이지 — Paper "NFC 병 페이지 v2 — 여덟 줄기의 수렴" 시안 1:1 (Abyssal Amber) */
 
 /* 2026-07-27 — 이 페이지는 종이 문서이고, 심해는 그 안에 끼워 넣은 도판 한 장이다.
-   히어로(다크) → 여정·서문(종이) → 여덟 줄기 하강·수렴(다크) → 개체 기록·인증서 안내(종이).
+   히어로(다크) → 서문(종이) → 여덟 줄기 하강·수렴(다크) → 개체 기록·인증서 안내(종이).
    히어로 바로 아래에서 빛 아래로 올라오고, 여덟 줄기 구간에서만 다시 물속으로 내려간다.
    그 구간을 뒤집지 않는 이유는 하나다 — 수렴 시각화가 hairline 곡선과 발광점으로
    그려져 있어 밝은 바탕에서 성립하지 않는다. 나머지는 전부 읽는 화면이므로 종이가 맞다.
@@ -30,7 +30,7 @@
      기기 기본 고정폭으로 렌더되고 있었다.
      DM Mono에 CJK 글립이 없어 제네릭 앞에 지면 산세리프를 받친다 — 근거는
      인증서 모듈 주석(certificate.module.css의 --c-mono). 이 화면이 실측에서
-     가장 많이 갈렸던 자리다(.subLabel·.seasonLabel·.jSub·.stationLabel). */
+     가장 많이 갈렸던 자리다(.subLabel·.seasonLabel·.stationLabel). */
   --b-mono: var(--font-mono), "DM Mono", var(--b-sans-page), monospace;
   /* 모션 곡선 — 브라우저 기본 ease(0.25,0.1,0.25,1)는 "무보정" 느낌을 준다.
      expo-out 계열은 빠르게 도착해 길게 안착해서 무게감이 생긴다. */
@@ -242,170 +242,11 @@
   color: rgba(241, 239, 235, 0.72);
 }
 
-/* ── S2 여정 (depth profile) ────────────────── */
-/* 종이 구간의 첫 장 — 히어로의 void에서 여기서 딱 끊는다.
-   위 여백을 40 → 56으로 올렸다. 어두운 바탕은 여백을 흡수하지만
-   종이는 반사해서, 같은 40px가 종이 위에서는 눌린 것처럼 보인다. */
-.journey {
-  display: flex;
-  justify-content: center;
-  padding: 56px 24px 60px;
-  background: var(--b-paper);
-  color: var(--b-ink);
-  overflow: hidden;
-}
-/* 네 행(샹파뉴·병숙성·입수·인양)이 하나의 세로 획으로 꿰인 목차.
-   폭 고정 스트립을 scale()로 줄이던 걸 걷어냈다 — 좁은 화면에서 활자가 8.5px까지 눌렸다.
-   대신 좌우 블록이 남은 폭을 반씩 나눠 갖고 획 레인만 22px로 고정한다.
-   어느 폭에서도 획은 정중앙에 서고 좌우는 대칭이다. */
-.journeyChain {
-  width: 100%;
-  max-width: 342px;
-}
-.jRow {
-  display: flex;
-  height: 84px;
-}
-/* 인양 행만 아래로 84px 더 잡는다 — 그 안에서 획이 끝점 없이 흘러 사라진다 */
-.jRowTail {
-  height: 168px;
-}
-.jRowTail .jSide,
-.jRowTail .jDepth {
-  height: 84px;
-}
-/* flex-basis를 0에서 시작해야 내용 길이(Vineyard 대 30m)가 축을 밀지 않는다.
-   auto면 긴 쪽이 더 가져가서 획이 가운데를 벗어난다. */
-.jSide {
-  flex: 1 1 0;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
-  padding-right: 14px;
-  text-align: right;
-}
-.jDepth {
-  flex: 1 1 0;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  padding-left: 14px;
-}
-.jName {
-  font-family: var(--b-sans);
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 22px;
-  letter-spacing: -0.01em;
-  color: var(--b-ink);
-}
-.jSub {
-  font-family: var(--b-mono);
-  font-size: 12px;
-  line-height: 13px;
-  letter-spacing: 0.06em;
-  color: var(--b-p-dim);
-}
-/* 입수·인양의 출처는 월·계절이다 — 한글이라 mono가 본문 폰트로 폴백되고,
-   종이 위에서 앰버(1.8:1)는 글자로 못 쓰므로 브론즈로 내린다 */
-.jSubOn {
-  letter-spacing: 0.02em;
-  color: var(--b-bronze);
-}
-.jDepthText {
-  font-family: var(--b-sans);
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.02em;
-  color: var(--b-p-dim);
-}
-/* 해저 두 행만 실측값(30m)이다 — 수치라 고정폭으로 세운다 */
-.jDepthOn {
-  font-family: var(--b-mono);
-  letter-spacing: 0.08em;
-  color: var(--b-bronze);
-}
-
-/* 획 레인 — 세로 획이 네 노드를 관통한다.
-   위아래 세그먼트가 같은 중심선(left 50% + translateX(-50%))을 쓰므로,
-   입수 노드에서 잉크 1.4px가 브론즈 1.8px로 굵어져도 축이 흔들리지 않는다. */
-.jLane {
-  position: relative;
-  flex: 0 0 22px;
-  width: 22px;
-}
-.jSeg {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  height: 42px;
-  transform: translateX(-50%);
-}
-/* 노드 아래 세그먼트 — 노드 중심(42px)에서 시작한다 */
-.jSegDown {
-  top: 42px;
-}
-.jSegInk {
-  width: 1.4px;
-  background: rgba(20, 17, 14, 0.5);
-}
-.jSegBronze {
-  width: 1.8px;
-  background: var(--b-bronze);
-}
-/* 인양 아래 — 선형으로 빼면 끝난 자리가 눈에 잡힌다.
-   위쪽에서 획의 존재를 붙들고 아래 4분의 1을 길게 흘려 끝점을 지운다. */
-.jSegFade {
-  width: 1.8px;
-  height: 126px;
-  background: linear-gradient(
-    180deg,
-    rgba(138, 106, 58, 0.9) 0%,
-    rgba(138, 106, 58, 0.8) 20%,
-    rgba(138, 106, 58, 0.62) 40%,
-    rgba(138, 106, 58, 0.42) 58%,
-    rgba(138, 106, 58, 0.22) 74%,
-    rgba(138, 106, 58, 0.08) 88%,
-    rgba(138, 106, 58, 0) 100%
-  );
-}
-.jHalo,
-.jNodeLand,
-.jNodeSea {
-  position: absolute;
-  left: 50%;
-  border-radius: 50%;
-  transform: translateX(-50%);
-}
-.jNodeLand,
-.jNodeSea {
-  top: 36.5px;
-  width: 11px;
-  height: 11px;
-}
-/* 육상 노드는 속이 빈 원 — 종이색으로 채워 획을 끊는다 */
-.jNodeLand {
-  box-sizing: border-box;
-  border: 1.4px solid rgba(20, 17, 14, 0.62);
-  background: var(--b-paper);
-}
-.jNodeSea {
-  background: var(--b-bronze);
-}
-.jHalo {
-  top: 33px;
-  width: 18px;
-  height: 18px;
-  background: rgba(138, 106, 58, 0.16);
-}
-
 /* ── S3 여덟 줄기 ─────────────────────────── */
 /* ── Eight Currents 인트로 ───────────────────── */
 /* 아래 도판(여덟 줄기)의 캡션 자리다 — 도판은 물속이지만 설명은 종이 위에 있다.
    아래 여백 54 → 62: 여기서 바로 다크로 끊기므로 그 앞에 숨 쉴 자리가 필요하다.
-   상단 구분선은 걷어냈다 — 위 여정도 같은 종이 위 한 장이라 가르는 선이 필요 없다. */
+   상단 구분선은 걷어냈다 — 히어로 위로 올라오는 종이의 첫 장이라 가를 것이 없다. */
 .ecIntro {
   display: flex;
   flex-direction: column;
@@ -562,12 +403,30 @@
     #0a0f15 61.73%,
     #0a0d12 100%
   );
+  /* 스케일러를 flex로 가운데 세운다 — margin: 0 auto가 아니라. 이유는 .flowScaler 주석 참고 */
+  display: flex;
+  justify-content: center;
   overflow: hidden;
 }
-.flowScaler {
-  transform-origin: top center;
-  margin: 0 auto;
+/* S3(여덟 줄기)와 S4(수렴)를 태우는 같은 규격의 스케일러.
+   두 SVG는 곡선 끝점 x좌표를 공유한다(CONVERGE_XS ↔ FLOW_PATHS의 끝 x).
+   그래서 폭을 정하는 방식이 하나여야 한다 — 규칙을 한 자리에 묶어 갈라지지 못하게 한다.
+   전에는 S4만 width: min(390px, 100vw)로 따로 잡았다.
+
+   가운데 세우는 것도 margin: 0 auto가 아니라 부모의 flex 정렬에 맡긴다.
+   화면이 390px보다 좁으면 390px 상자가 부모를 넘치는데, 그때 margin auto는 CSS2.1
+   과잉제약 규칙대로 0으로 접혀 상자가 왼쪽에 붙는다. transform-origin이 top center라
+   scale 뒤 상자는 (195 − 화면폭/2)만큼 오른쪽으로 밀린다 — 360px에서 15px, 344px에서 23px.
+   margin auto를 쓰던 S3만 밀리고 flex 가운데 정렬이던 S4는 제자리라, 둘이 그만큼 갈라졌다
+   (대표가 본 「S4가 왼쪽으로 평행 이동」이 이것이다. 아이폰은 CSS 폭이 390·393·430이라
+   축소가 걸리지 않아 증상이 안 났다).
+   flex 가운데 정렬은 넘칠 때도 좌우 대칭으로 넘치므로 scale 뒤 폭이 정확히 들어맞는다.
+   flex: none — 주축(가로)에서 390px가 줄어들면 지오메트리가 통째로 어긋난다. */
+.flowScaler,
+.convergeScaler {
+  flex: none;
   width: 390px;
+  transform-origin: top center;
 }
 .flow {
   position: relative;
@@ -672,10 +531,10 @@
   /* Paper 69N-0 — S3의 blue1을 이어받아 55%부터 void로 가라앉는다 */
   background: linear-gradient(180deg, var(--b-blue1) 0%, var(--b-blue1) 55%, var(--b-void) 100%);
 }
+/* 크기는 SVG 속성(width·height)이 든다 — .flowSvg와 같다.
+   전에 여기 있던 width: min(390px, 100vw)가 S3와 폭 결정을 갈라놓은 자리다. */
 .convergeSvg {
   display: block;
-  width: min(390px, 100vw);
-  height: auto;
 }
 /* 무한 루프는 기본 금지지만, 이 점은 "기록이 계속된다"를 뜻하므로 근거가 있다.
    다만 45% 스윙은 깜빡임으로 읽힌다 — 호흡에 가깝게 진폭을 눌렀다. */
@@ -1078,17 +937,6 @@
   to { opacity: 1; translate: 0 0; }
 }
 
-/* 여정 리빌 (data-reveal) */
-.journeyChain {
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.9s var(--b-out), transform 0.9s var(--b-out);
-}
-.journeyChain.revealIn {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 /* 표 리빌 — 컨테이너를 통째로 띄우지 않고 행 단위로 순차 기입한다.
    기록이 한 줄씩 적히는 서사와 맞고, 통짜 페이드보다 위계가 생긴다. */
 .tables .tableCaption,
@@ -1150,6 +998,5 @@
   .langOpt,
   .passportNewsSubmit { transition: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
-  .tables,
-  .journeyChain { opacity: 1; transform: none; transition: none; }
+  .tables { opacity: 1; transform: none; transition: none; }
 }

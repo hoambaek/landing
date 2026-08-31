@@ -81,3 +81,4 @@ docs/design/
 
 # 로컬 미리보기 — 실제 소유자 이름·서명 해시가 들어간다. PUBLIC 레포이므로 추적 금지.
 public/_preview/
+.gstack/

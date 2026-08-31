@@ -2,8 +2,10 @@
 
 /**
  * /b 병 기록 페이지 — Paper "NFC 병 페이지 v2 — 여덟 줄기의 수렴" 시안 구현.
- * S1 병사진 히어로 → S2 여정(depth profile) → S3 여덟 줄기 하강 → S4 수렴 →
+ * S1 병사진 히어로 → S3 여덟 줄기 하강 → S4 수렴 →
  * S5 개체 선언 + 원산지/해저 2개 표 → S6 뉴스레터 → 푸터(언어 선택 포함).
+ * S2 여정(depth profile)은 Paper 캔버스에서 지워져 코드에서도 걷어냈다 —
+ * 번호는 Paper 아트보드와 맞춰 그대로 둔다(S2 자리는 비어 있다).
  * 표기 규칙: 입수·인양은 월·계절만(날짜·일수 금지), 좌표는 도 단위. 용어는 "입수".
  * 모션: S3 8줄기 스크럽 성장 + 연평균 카운트업, S4 수렴 스크럽, S5 N° 카운트업.
  */
@@ -83,6 +85,9 @@ type MetricKey = "temp" | "salinity" | "tide" | "current" | "pressure" | "tidal"
 /* Paper 03 좌표 — SVG는 섹션 top 6px, 스테이션·계절 라벨은 아트보드 절대 좌표 그대로 */
 const FLOW_SVG_TOP = 6;
 const FLOW_HEIGHT = 1296;
+/* S4 수렴 SVG의 viewBox 높이. S3와 같은 스케일러에 태우므로 높이를 코드가 세운다 —
+   height:auto에 맡기면 폭 결정이 CSS(100vw)로 갈라져 S3와 좌표계가 어긋난다. */
+const CONVERGE_HEIGHT = 320;
 /* 왼쪽 세로축의 계절 눈금 자리 — 1년물은 Paper가 확정한 다섯 좌표를 그대로 쓴다.
    더 긴 배치만 같은 상하한 안에서 균등 분할한다(아래 seasonMarks). */
 const SEASON_TOPS_1Y = [18, 300, 600, 900, 1200];
@@ -155,7 +160,6 @@ export default function BottleRecord({
   const retYear = data.aging.retrieval?.slice(0, 4) || year;
   const crossesYear = retYear !== year;
 
-  const monthSeason = (m: number) => `${copy.months[m]} ${copy.seasons[seasonOf(m)]}`;
   const yearMonth = (y: string, m: number) => copy.yearMonth.replace("{y}", y).replace("{m}", copy.months[m]);
 
   const serialTotal = meta.quantity;
@@ -181,7 +185,8 @@ export default function BottleRecord({
         ...(meta.cepage ? [{ label: extra.provLabels.cepage, value: meta.cepage }] : []),
       ];
 
-  /* 해저 숙성 표 — Paper 03은 숙성 기간·숙성 환경·위치 3행. 입수·인양 시점은 S2 여정이 담당.
+  /* 해저 숙성 표 — Paper 03은 숙성 기간·숙성 환경·위치 3행.
+     입수·인양 시점은 아래 숙성 기간 행이 함께 세운다(S2 여정은 걷어냈다).
      해를 넘긴 병은 연도를 하나만 세울 수 없다 — durationFmt는 「{y}년 {m1}–{m2}」라
      입수 연도 하나에 두 해치 개월 수를 얹어, 2년물이 「2026년 1월–12월 · 24개월」이 됐다.
      한 해에 24개월이 흐르지 않고, 같은 병의 인증서는 인양을 2027년 12월로 쓴다.
@@ -205,26 +210,6 @@ export default function BottleRecord({
       value: extra.envFmt.replace("{site}", extra.wando).replace("{d}", String(data.aging.depth)),
     },
     { label: extra.seaLabels.coords, value: "34°N 126°E" },
-  ];
-
-  /* S2 세로 목차 4행 — 위에서 아래로 샹파뉴 → 병숙성 → 입수 → 인양.
-     sea = 이 병의 시간이 실제로 흐른 두 행(잉크 원색 · 브론즈 노드).
-     above/below = 노드 위아래 획의 성질. 입수에서 잉크가 브론즈로 바뀌고,
-     인양 아래는 끝점이 보이지 않게 흘러 사라진다(fade).
-     육상 두 행의 깊이는 정본 문구를 그대로 쓴다 — 셀러 깊이 수치가 없어 숫자를 만들지 않는다. */
-  const depthValue = `${data.aging.depth}m`;
-  const journeyRows: {
-    name: string;
-    sub: string;
-    depth: string;
-    sea: boolean;
-    above: "ink" | "bronze" | null;
-    below: "ink" | "bronze" | "fade";
-  }[] = [
-    { name: copy.journey.origin, sub: copy.journey.originSub, depth: copy.journey.originDepth, sea: false, above: null, below: "ink" },
-    { name: copy.journey.aging, sub: copy.journey.agingSub, depth: copy.journey.agingDepth, sea: false, above: "ink", below: "ink" },
-    { name: copy.immersion, sub: monthSeason(immMonth), depth: depthValue, sea: true, above: "ink", below: "bronze" },
-    { name: copy.retrieval, sub: monthSeason(retMonth), depth: depthValue, sea: true, above: "bronze", below: "fade" },
   ];
 
   /* S3 왼쪽 세로축의 계절 눈금 — 입수 달부터 세 달마다 하나, 마지막은 숙성 마지막 달.
@@ -253,15 +238,31 @@ export default function BottleRecord({
     });
   })();
 
-  /* S3 스케일 (390px 고정 지오메트리 → 좁은 화면 축소) */
+  /* S3·S4 공통 스케일 (390px 고정 지오메트리 → 좁은 화면 축소).
+     이 값 하나를 두 섹션이 같이 쓴다 — 이음매가 어긋나지 않는 근거는 bottle.module.css의
+     .flowScaler 주석에 있다(정렬 규칙까지 함께 묶어야 맞는다).
+     clientWidth가 아니라 getBoundingClientRect().width로 잰다: clientWidth는 정수로
+     반올림돼, CSS 뷰포트 폭이 소수인 안드로이드(1080/2.75 = 392.7…)에서 배율이 실제 폭과
+     최대 0.5px 어긋난다. 이음매 어긋남의 주원인은 아니었지만, 축소가 걸리는 구간에서
+     그만큼 도판이 밀리거나 삐져나온다.
+     리사이즈도 window가 아니라 ResizeObserver로 본다 — 이 섹션의 폭은 뷰포트 폭만이 아니라
+     .frame(min(430px,100vw))·스크롤바 출현으로도 바뀐다. */
   useEffect(() => {
     const el = flowSectionRef.current;
     if (!el) return;
-    const update = () => setFlowScale(Math.min(1, el.clientWidth / 390));
+    const update = () => setFlowScale(Math.min(1, el.getBoundingClientRect().width / 390));
     update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
+
+  /* 스케일이 바뀌면 두 스케일러의 인라인 높이가 바뀐다 = 그 아래 지면이 통째로 올라온다.
+     ScrollTrigger는 만들어질 때의 좌표를 들고 있어, 갱신하지 않으면 S3·S4 스크럽 구간이
+     실제 지면과 어긋난 채로 남는다(리사이즈가 한 번도 없으면 스스로 낫지 않는다). */
+  useEffect(() => {
+    ScrollTrigger.refresh();
+  }, [flowScale]);
 
   /* IO 리빌 */
   useEffect(() => {
@@ -674,50 +675,6 @@ export default function BottleRecord({
           </div>
         </section>
 
-        {/* ── S2 여정 (세로 목차) ──
-            [ 이름 ][ 획 레인 22 ][ 깊이 ] 한 행 84px, 네 행이 하나의 세로 획으로 꿰인다.
-            획은 컨테이너 정중앙에 서고 좌우 블록은 같은 폭을 나눠 갖는다(좁은 화면에서도).
-            종이 위 도표라 잉크(#14110E)와 브론즈(#8A6A3A)로 그린다 —
-            아래 여덟 줄기의 브라스(#CCAD7B)는 종이 위 1.8:1이라 여기 쓰면 사라진다. */}
-        <section className={styles.journey}>
-          <div className={styles.journeyChain} data-reveal>
-            {journeyRows.map((r) => (
-              <div key={r.name} className={`${styles.jRow} ${r.below === "fade" ? styles.jRowTail : ""}`}>
-                {/* 이름은 네 행 모두 잉크 원색이다 — 위계는 아래 출처·깊이 열이 진다 */}
-                <div className={styles.jSide}>
-                  <span className={styles.jName}>{r.name}</span>
-                  <span className={`${styles.jSub} ${r.sea ? styles.jSubOn : ""}`}>{r.sub}</span>
-                </div>
-                {/* 획 레인 — 세그먼트를 먼저 깔고 노드를 그 위에 올려 이음매를 덮는다.
-                    입수 노드에서 잉크 1.4px가 브론즈 1.8px로 바뀌는데, 두 세그먼트가
-                    같은 중심선(left 50% + translateX(-50%))을 쓰므로 축이 흔들리지 않는다. */}
-                <div className={styles.jLane} aria-hidden>
-                  {r.above && (
-                    <span className={`${styles.jSeg} ${r.above === "bronze" ? styles.jSegBronze : styles.jSegInk}`} />
-                  )}
-                  <span
-                    className={`${styles.jSeg} ${styles.jSegDown} ${
-                      r.below === "bronze" ? styles.jSegBronze : r.below === "fade" ? styles.jSegFade : styles.jSegInk
-                    }`}
-                  />
-                  {r.sea ? (
-                    <>
-                      <span className={styles.jHalo} />
-                      <span className={styles.jNodeSea} />
-                    </>
-                  ) : (
-                    /* 육상 노드는 속이 빈 원 — 종이색으로 채워 획을 끊는다 */
-                    <span className={styles.jNodeLand} />
-                  )}
-                </div>
-                <div className={styles.jDepth}>
-                  <span className={`${styles.jDepthText} ${r.sea ? styles.jDepthOn : ""}`}>{r.depth}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* ── Eight Currents 인트로 ── */}
         <section className={styles.ecIntro}>
           <div className={styles.reveal} data-reveal>
@@ -791,49 +748,62 @@ export default function BottleRecord({
 
         {/* ── S4 수렴 (스크럽 드로잉 + 점 등장) ── */}
         <section className={styles.converge}>
-          <svg ref={convergeSvgRef} className={styles.convergeSvg} viewBox="0 0 390 320" aria-hidden>
-            <defs>
-              {/* 금빛이 수렴점을 지나며 흰색으로 바뀐다 — 색만 바뀔 뿐 한 획이다.
-                  수렴점(y=200)에서 흰 줄기 7개가 한꺼번에 끝나 밝기가 떨어지므로,
-                  그 구간은 밝게 유지하고 색 전환은 더 아래(y 214~250)에서 끝낸다. */}
-              <linearGradient id="bConvergeTail" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="268">
-                <stop offset="0" stopColor="#CCAD7B" stopOpacity="0.95" />
-                <stop offset="0.70" stopColor="#CCAD7B" stopOpacity="0.95" />
-                <stop offset="0.80" stopColor="#E4D7BF" stopOpacity="0.95" />
-                <stop offset="0.93" stopColor="#F1EFEB" stopOpacity="0.8" />
-                <stop offset="1" stopColor="#F1EFEB" stopOpacity="0.8" />
-              </linearGradient>
-            </defs>
-            {/* 흰 줄기 7 — 금빛보다 먼저 그려 아래에 깔린다.
-                butt 캡이면 수렴점에 납작한 가로 단면이 생겨 단차로 보인다 → round */}
-            {CONVERGE_XS.slice(1).map((x, i) => (
+          {/* S3와 같은 스케일러에 태운다 — 근거는 bottle.module.css의 .flowScaler 주석 */}
+          <div
+            className={styles.convergeScaler}
+            style={{ transform: `scale(${flowScale})`, height: CONVERGE_HEIGHT * flowScale }}
+          >
+            <svg
+              ref={convergeSvgRef}
+              className={styles.convergeSvg}
+              width="390"
+              height={CONVERGE_HEIGHT}
+              viewBox={`0 0 390 ${CONVERGE_HEIGHT}`}
+              aria-hidden
+            >
+              <defs>
+                {/* 금빛이 수렴점을 지나며 흰색으로 바뀐다 — 색만 바뀔 뿐 한 획이다.
+                    수렴점(y=200)에서 흰 줄기 7개가 한꺼번에 끝나 밝기가 떨어지므로,
+                    그 구간은 밝게 유지하고 색 전환은 더 아래(y 214~250)에서 끝낸다. */}
+                <linearGradient id="bConvergeTail" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="268">
+                  <stop offset="0" stopColor="#CCAD7B" stopOpacity="0.95" />
+                  <stop offset="0.70" stopColor="#CCAD7B" stopOpacity="0.95" />
+                  <stop offset="0.80" stopColor="#E4D7BF" stopOpacity="0.95" />
+                  <stop offset="0.93" stopColor="#F1EFEB" stopOpacity="0.8" />
+                  <stop offset="1" stopColor="#F1EFEB" stopOpacity="0.8" />
+                </linearGradient>
+              </defs>
+              {/* 흰 줄기 7 — 금빛보다 먼저 그려 아래에 깔린다.
+                  butt 캡이면 수렴점에 납작한 가로 단면이 생겨 단차로 보인다 → round */}
+              {CONVERGE_XS.slice(1).map((x, i) => (
+                <path
+                  key={x}
+                  d={`M ${x} 0 C ${x} 80, 195 140, 195 200`}
+                  fill="none"
+                  stroke={CONVERGE_STYLE[i + 1].stroke}
+                  strokeWidth={CONVERGE_STYLE[i + 1].width}
+                  strokeLinecap="round"
+                />
+              ))}
+              {/* 금빛 — 맨 위에 그려 흰 줄기에 가려지지 않는다.
+                  수렴점에서 끊고 별도 선을 잇던 걸 없애고, 원까지 한 획으로 내려온다. */}
               <path
-                key={x}
-                d={`M ${x} 0 C ${x} 80, 195 140, 195 200`}
+                /* 코어 원(cy 278 · r 3.5)의 윗변에 맞춰 끝낸다. round 캡이 0.7 더 나가 맞닿는다.
+                   268은 헤일로에만 걸쳐 애매했고, 중심(278)까지 넣으면 코어가 호흡으로
+                   옅어질 때 안쪽 선 끝이 비친다. */
+                d={`M ${CONVERGE_XS[0]} 0 C ${CONVERGE_XS[0]} 80, 195 140, 195 200 L 195 274.5`}
                 fill="none"
-                stroke={CONVERGE_STYLE[i + 1].stroke}
-                strokeWidth={CONVERGE_STYLE[i + 1].width}
+                stroke="url(#bConvergeTail)"
+                strokeWidth="1.4"
                 strokeLinecap="round"
               />
-            ))}
-            {/* 금빛 — 맨 위에 그려 흰 줄기에 가려지지 않는다.
-                수렴점에서 끊고 별도 선을 잇던 걸 없애고, 원까지 한 획으로 내려온다. */}
-            <path
-              /* 코어 원(cy 278 · r 3.5)의 윗변에 맞춰 끝낸다. round 캡이 0.7 더 나가 맞닿는다.
-                 268은 헤일로에만 걸쳐 애매했고, 중심(278)까지 넣으면 코어가 호흡으로
-                 옅어질 때 안쪽 선 끝이 비친다. */
-              d={`M ${CONVERGE_XS[0]} 0 C ${CONVERGE_XS[0]} 80, 195 140, 195 200 L 195 274.5`}
-              fill="none"
-              stroke="url(#bConvergeTail)"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-            />
-            <g ref={convergeDotRef}>
-              <circle cx="195" cy="278" r="13" fill="rgba(204,173,123,0.08)" />
-              <circle cx="195" cy="278" r="7" fill="rgba(204,173,123,0.2)" />
-              <circle cx="195" cy="278" r="3.5" fill="#CCAD7B" className={styles.glowDot} />
-            </g>
-          </svg>
+              <g ref={convergeDotRef}>
+                <circle cx="195" cy="278" r="13" fill="rgba(204,173,123,0.08)" />
+                <circle cx="195" cy="278" r="7" fill="rgba(204,173,123,0.2)" />
+                <circle cx="195" cy="278" r="3.5" fill="#CCAD7B" className={styles.glowDot} />
+              </g>
+            </svg>
+          </div>
           {/* data-reveal(IO) 대신 수렴 점에 묶는다 — 점보다 먼저 뜨면 병 사진처럼 순서가 뒤집힌다 */}
           <p className={`${styles.convergeText} ${styles.reveal}`} ref={convergeTextRef}>
             {/* 인양이 끝나 고객 손에 있는 병에서 열리는 페이지다 —
