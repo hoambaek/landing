@@ -3,6 +3,7 @@
 
 User-agent: *
 Allow: /
+Disallow: /preview/
 Sitemap: https://www.musedemaree.com/sitemap.xml
 
 # Traditional Search Engines

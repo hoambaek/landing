@@ -5,6 +5,7 @@ import { exitCopy } from "@/content/age-gate";
 export const metadata: Metadata = {
   title: exitCopy.en.metaTitle,
   description: exitCopy.en.metaDesc,
+  alternates: { canonical: "/en/exit" },
   robots: { index: false, follow: false },
 };
 

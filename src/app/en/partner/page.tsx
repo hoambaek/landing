@@ -3,7 +3,7 @@ import PartnerLetter from "@/components/forms/PartnerLetter";
 import { buildFormMetadata } from "@/i18n/metadata";
 
 export function generateMetadata(): Promise<Metadata> {
-  return buildFormMetadata("en", "partner");
+  return buildFormMetadata("en", "partner", "/en/partner");
 }
 
 export default function PartnerPageEn() {

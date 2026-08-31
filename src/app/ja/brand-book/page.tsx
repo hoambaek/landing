@@ -3,7 +3,7 @@ import BrandBookLetter from "@/components/forms/BrandBookLetter";
 import { buildFormMetadata } from "@/i18n/metadata";
 
 export function generateMetadata(): Promise<Metadata> {
-  return buildFormMetadata("ja", "brandBook");
+  return buildFormMetadata("ja", "brandBook", "/ja/brand-book");
 }
 
 export default function BrandBookPageJa() {

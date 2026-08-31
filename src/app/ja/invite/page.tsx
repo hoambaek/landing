@@ -3,7 +3,7 @@ import InviteLetter from "@/components/forms/InviteLetter";
 import { buildFormMetadata } from "@/i18n/metadata";
 
 export function generateMetadata(): Promise<Metadata> {
-  return buildFormMetadata("ja", "invite");
+  return buildFormMetadata("ja", "invite", "/ja/invite");
 }
 
 export default function InvitePageJa() {

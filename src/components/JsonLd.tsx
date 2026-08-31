@@ -1,12 +1,17 @@
-export default function JsonLd() {
-  const baseUrl = "https://www.musedemaree.com";
+const baseUrl = "https://www.musedemaree.com";
 
+/**
+ * 전역 스키마 — 사이트 어디서나 참인 사실(Organization·WebSite)만 담는다.
+ * ItemList·FAQPage·Place·Event는 그 내용을 실제로 담은 홈 랜딩에서만
+ * <HomeJsonLd />로 별도 렌더한다 (privacy·terms·cookies·b/[code]에는 무관한 스키마라 뺐다).
+ */
+export default function JsonLd() {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "Muse de Marée",
     url: baseUrl,
-    logo: `${baseUrl}/images/og.webp`,
+    logo: `${baseUrl}/opengraph-image`,
     description:
       "샴페인 하우스가 아니라, 바다의 시간을 기록하는 브랜드. 프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 30m에서 숙성하며, 모든 병에 그 시간의 기록을 동봉합니다.",
     foundingDate: "2026",
@@ -28,6 +33,28 @@ export default function JsonLd() {
       "프랑스 샹파뉴에서 태어난 샴페인을 한국 남해 수심 30m에서 숙성합니다. 입수부터 인양까지 바다의 시간을 측정하고, 그 기록과 함께 병을 건넵니다.",
   };
 
+  const schemas = [organizationSchema, websiteSchema];
+
+  return (
+    <>
+      {schemas.map((schema, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
+    </>
+  );
+}
+
+/**
+ * 홈 랜딩 전용 스키마 — 컬렉션·FAQ·촬영 장소·런칭 이벤트는 실제로 그 내용을
+ * 담은 페이지(ko·en·fr·ja 홈)에서만 렌더한다. /privacy·/terms·/cookies·/b/[code]에는
+ * 넣지 않는다 — 개인 병 인증서 페이지에 브랜드 FAQ·Event가 찍히는 건 그 페이지의
+ * 실제 내용과 무관하다.
+ */
+export function HomeJsonLd() {
   const collectionSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -177,23 +204,16 @@ export default function JsonLd() {
       price: "0",
       validFrom: "2026-01-01",
     },
-    image: `${baseUrl}/images/og.webp`,
+    image: `${baseUrl}/opengraph-image`,
   };
 
-  const schemas = [
-    organizationSchema,
-    websiteSchema,
-    collectionSchema,
-    faqSchema,
-    placeSchema,
-    eventSchema,
-  ];
+  const schemas = [collectionSchema, faqSchema, placeSchema, eventSchema];
 
   return (
     <>
       {schemas.map((schema, i) => (
         <script
-          key={i}
+          key={`home-${i}`}
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />

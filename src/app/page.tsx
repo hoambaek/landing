@@ -1,5 +1,11 @@
 import LandingPage from "@/components/LandingPage";
+import { HomeJsonLd } from "@/components/JsonLd";
 
 export default function Home() {
-  return <LandingPage locale="ko" />;
+  return (
+    <>
+      <HomeJsonLd />
+      <LandingPage locale="ko" />
+    </>
+  );
 }
