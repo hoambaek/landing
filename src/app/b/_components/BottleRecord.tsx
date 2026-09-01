@@ -433,10 +433,18 @@ export default function BottleRecord({
           if (num) paint(num, 0);
         });
 
+        /* 시작을 늦춘다 — 65%면 서문 제목이 아직 화면 한가운데(하단 48.5%)일 때 첫 획이 그려졌다.
+           50%로 내리면 제목 하단이 화면 위 1/3(33.4%)에 올라온 뒤에 시작한다.
+           끝도 같은 폭(15%p)만큼 함께 내려 스크럽 구간의 픽셀 길이를 보존한다 —
+           시작만 늦추면 구간이 짧아져 그리는 속도가 빨라진다. 390×844에서 1042.8px로 전후 동일.
+
+           제목을 트리거로 삼지 않고 섹션 top을 그대로 쓰는 이유: .ecIntro의 제목 아래로는
+           본문·범례·패딩이 고정 높이라, 제목 "하단"은 줄 수가 늘어도 섹션 top 위 139px에 그대로 있다.
+           제목이 길어질 때 밀리는 것은 상단뿐이므로, 이 기준에 한해 섹션 top이 제목 하단의 대리값이다. */
         const trigger = {
           trigger: flowSectionRef.current,
-          start: "top 65%",
-          end: "bottom 95%",
+          start: "top 50%",
+          end: "bottom 80%",
           scrub: 0.8,
         } as const;
 
