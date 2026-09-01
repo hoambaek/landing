@@ -356,42 +356,41 @@ export default function BottleRecord({
         });
       }
 
-      /* 히어로 시차 — 히어로는 제자리에 붙어 있고(sticky) 아래 지면이 그 위로 올라온다.
-         그런데 붙어만 있으면 덮이는 내내 사진의 가장 어두운 윗부분만 화면에 남는다.
-         스크롤의 42%만큼 속을 위로 밀어, 덮이는 동안 병목·병몸이 계속 올라오게 한다.
-         (모션 감축이면 이 블록 전체가 실행되지 않는다 — 정지한 히어로도 레이아웃은 온전하다) */
-      if (heroRef.current) {
-        const layers = Array.from(heroRef.current.children);
-        gsap.to(layers, {
-          y: () => -window.innerHeight * 0.42,
-          ease: "none",
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: "top top",
-            end: () => `+=${window.innerHeight}`,
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        });
+      /* 히어로 디졸브 — 히어로는 일반 흐름이라 아래 지면과 함께 화면 전체가 위로
+         슬라이드된다. 덮는 모서리가 없어진 자리를 사진의 소멸이 대신한다: 스크롤이
+         진행될수록 사진과 글자가 옅어지고, 히어로 본체의 void(#0a0908)만 남는다.
+         스크림(.heroScrim)은 태우지 않는다 — 근거는 bottle.module.css의 그 규칙 주석.
 
-        /* 제목은 서문 모서리가 닿기 전에 비운다 — 안 그러면 올라오는 지면이 글자를
-           가로로 썰고 지나가는 순간이 생긴다. 모서리가 검정으로 바뀐 뒤에도 글자는
-           근백색이라 이 보정은 그대로 필요하다. 모서리가 제목에 닿는 지점이 ≈160px라
-           그 전에 끝낸다.
-           opacity 대신 filter를 쓰는 이유: 이 요소의 등장 애니메이션(settle)이
-           forwards라 opacity: 1을 계속 주장해서 인라인 opacity가 먹지 않는다. */
-        const heroText = heroRef.current.querySelector<HTMLElement>(`.${styles.heroContent}`);
-        if (heroText) {
-          gsap.fromTo(
-            heroText,
-            { filter: "opacity(1)" },
-            {
-              filter: "opacity(0)",
-              ease: "none",
-              scrollTrigger: { trigger: heroRef.current, start: "top -40", end: "top -200", scrub: true },
+         구간은 뷰포트의 62%다. 그 지점이면 화면 아래 62%를 서문이 채우고 히어로는
+         위 38%만 남는데, 그 면이 이미 순수 검정이라 서문 0%(같은 void)와 이어져
+         한 박자 검은 화면을 지나 서문으로 넘어간다. 더 짧으면 사진을 볼 새가 없고,
+         더 길면 제목이 화면 위로 빠질 때까지 글자가 남아 서문과 겹친다
+         (제목 아래끝이 화면 top에 닿는 지점이 100svh − 92px다).
+
+         opacity가 아니라 filter를 쓰는 이유: heroContent·heroStatus의 등장
+         애니메이션(settle)이 forwards라 opacity: 1을 계속 주장해서 인라인 opacity가
+         먹지 않는다. 세 층을 한 트윈에 묶으려면 사진도 같은 속성을 써야 한다.
+         (모션 감축이면 이 블록 전체가 실행되지 않는다 — 사진이 남아 있는 히어로도
+          레이아웃은 온전하다. 함께 밀려 올라갈 뿐이다) */
+      if (heroRef.current) {
+        const fading = heroRef.current.querySelectorAll<HTMLElement>(
+          `.${styles.heroPhoto}, .${styles.heroStatus}, .${styles.heroContent}`,
+        );
+        gsap.fromTo(
+          fading,
+          { filter: "opacity(1)" },
+          {
+            filter: "opacity(0)",
+            ease: "none",
+            scrollTrigger: {
+              trigger: heroRef.current,
+              start: "top top",
+              end: () => `+=${window.innerHeight * 0.62}`,
+              scrub: true,
+              invalidateOnRefresh: true,
             },
-          );
-        }
+          },
+        );
       }
 
       /* S3 금빛 줄기의 진행도 — S4 수렴이 이 값에 종속된다(아래 게이트 참조) */
@@ -593,6 +592,9 @@ export default function BottleRecord({
 
   return (
     /* b-root — 안전영역(상태바·하단바)을 void로. globals.css의 html:has(.b-root)와 짝이다.
+       히어로의 sticky를 걷어낸 뒤로 이 지면에는 fixed/sticky 요소가 하나도 없어서,
+       Safari 26이 바를 칠할 때 읽는 것이 이 루트 배경뿐이다 — 폴백이 아니라 유일한 경로다.
+       값은 --color-void-bg(#0a0908)이고 히어로의 --b-void와 같다(bottle.module.css .hero 주석).
        도입 당시에는 b-paper였다. 히어로만 어둡고 그 아래는 전부 종이라, 검정으로 두면 스크롤한
        대부분의 시간 동안 위아래 띠만 검게 남는 화면이었기 때문이다. 배경을 블랙→네이비로 바꾸면서
        그 전제가 뒤집혔다 — 어두운 면적이 화면의 다수가 됐고, 종이 띠가 검은 화면을 감싸는 모양이
