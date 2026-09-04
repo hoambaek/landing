@@ -94,8 +94,8 @@ export default function HeroSection({
         {brand}
       </div>
 
-      {/* 모토 서명 — 우하단 (푸터와 수미상관). 고정 모토라 전 로케일 공통 */}
-      <span className="s-void__signature" aria-hidden="true">Written by the Sea.</span>
+      {/* 좌표 서명 — 우하단. 숙성 지점을 밝히는 내용이라 로케일별 문구 */}
+      <span className="s-void__signature">{dict.signature}</span>
 
       {/* Descent Veil — 수면→심해 하강 전환 막. 기본 opacity 0,
           데스크톱에서 DescentEffect(GSAP 스크럽)가 제어 */}

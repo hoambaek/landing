@@ -181,6 +181,19 @@ function DaysCounter({
         ) : (
           <span className="s-living__counter-unit-text">{dict.counterUnit}</span>
         )}
+        {/* 측정 장소 — 단위의 절반 크기. ko는 '일째'와 같은 J1950 PNG */}
+        {locale === "ko" ? (
+          <Image
+            src="/text/counter-place.png"
+            alt={dict.place}
+            width={76}
+            height={25}
+            unoptimized
+            className="s-living__counter-place-img"
+          />
+        ) : (
+          <span className="s-living__counter-place-text">{dict.place}</span>
+        )}
       </div>
       {/* 지금 이 순간의 측정값 (카운팅 + 우측 라이브 인디케이터) */}
       <div className="s-living__log">

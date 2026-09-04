@@ -125,7 +125,7 @@ export default function TheMakerSection({
             <Image
               src="/text/maker-subtitle.png"
               alt={dict.subtitle}
-              width={302}
+              width={312}
               height={72}
               unoptimized
               className="s-maker__subtitle-img"

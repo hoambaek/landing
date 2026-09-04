@@ -1047,17 +1047,17 @@ input:focus-visible,
 
 /* 스크롤 힌트 */
 
-/* 모토 서명 — 우하단, 푸터와 동일 필기체(Mrs Saint Delafield) */
+/* 좌표 서명 — 우하단, 계측 라인과 동일 모노(DM Mono) */
 .s-void__signature {
   position: absolute;
   z-index: 3;
   right: 80px;
   bottom: 40px;
-  font-family: var(--font-motto);
-  font-weight: 400;
-  font-size: 22px;
-  letter-spacing: 0.04em;
-  line-height: 26px;
+  font-family: var(--font-mono);
+  font-weight: 300;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  line-height: 16px;
   color: rgba(241, 239, 235, 0.82);
 }
 
@@ -1148,9 +1148,11 @@ input:focus-visible,
     font-size: 20px;
   }
 
-  /* 모바일은 히어로 여백이 좁아 코너 서명 숨김 (푸터 모토로 대체) */
+  /* 모바일 좌표 서명 — 여백이 좁아 안쪽으로 붙이고 한 단계 축소 */
   .s-void__signature {
-    display: none;
+    right: 20px;
+    bottom: 54px;
+    font-size: 12px;
   }
 }
 
@@ -1254,6 +1256,16 @@ input:focus-visible,
   display: block;
   width: 59px;
   height: auto;
+  transform: translateY(7px);
+}
+
+/* '한국 남해' 라벨 (J1950 → PNG) — '일째' 옆, 단위의 절반 크기.
+   두 PNG는 잉크 아래 여백이 같아서(원본 11px @3x) 같은 transform이면 하단선이 한 줄에 놓인다. */
+.s-living__counter-place-img {
+  display: block;
+  width: 76px;
+  height: auto;
+  opacity: 0.7;
   transform: translateY(7px);
 }
 
@@ -1444,6 +1456,10 @@ input:focus-visible,
 
   .s-living__counter-unit {
     width: 35px;
+  }
+
+  .s-living__counter-place-img {
+    width: 58px;
   }
 
   /* 모바일에선 클로징 문장 미노출 */
@@ -2894,7 +2910,7 @@ input:focus-visible,
 /* 서브타이틀 텍스트 이미지 (J1950 → PNG) */
 .s-maker__subtitle-img {
   display: block;
-  width: 302px;
+  width: 312px;
   height: auto;
 }
 
@@ -3138,7 +3154,7 @@ input:focus-visible,
     line-height: 24px;
   }
 
-  .s-maker__subtitle-img { width: 211px; }
+  .s-maker__subtitle-img { width: 218px; }
 
   .s-maker__viewport {
     height: 520px;
@@ -4950,6 +4966,15 @@ html:has(.b-paper) body {
   letter-spacing: 0.02em;
   color: var(--color-amber);
 }
+/* 카운터 장소 라벨 (단위 옆) — 단위의 절반 크기 */
+.s-living__counter-place-text {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: var(--color-amber);
+  opacity: 0.7;
+}
 
 /* S3 The First Record — 헤드라인 / 클로징 */
 .s-first__headline .s-first__headline-text {
@@ -4998,6 +5023,7 @@ html:has(.b-paper) body {
 @media (max-width: 768px) {
   .s-living__copy .s-living__copy-text { font-size: 26px; max-width: 300px; }
   .s-living__counter-unit-text { font-size: 24px; }
+  .s-living__counter-place-text { font-size: 12px; }
   .s-first__headline .s-first__headline-text { font-size: 28px; max-width: 320px; }
   .s-first__closing-line .s-first__closing-text { font-size: 23px; max-width: 300px; }
   .s-col__sub .s-col__sub-text { font-size: 19px; max-width: 320px; }
@@ -5018,6 +5044,7 @@ html:has(.b-paper) body {
 .s-void__brand-name-text,
 .s-living__copy .s-living__copy-text,
 .s-living__counter-unit-text,
+.s-living__counter-place-text,
 .s-first__headline .s-first__headline-text,
 .s-first__closing-line .s-first__closing-text,
 .s-col__sub .s-col__sub-text,
@@ -5037,6 +5064,7 @@ html[lang="ja"] .s-void__h1-text,
 html[lang="ja"] .s-void__brand-name-text,
 html[lang="ja"] .s-living__copy-text,
 html[lang="ja"] .s-living__counter-unit-text,
+html[lang="ja"] .s-living__counter-place-text,
 html[lang="ja"] .s-first__headline-text,
 html[lang="ja"] .s-first__closing-text,
 html[lang="ja"] .s-col__sub-text,

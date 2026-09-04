@@ -3,6 +3,7 @@
     "headline": "지금 이 순간에도, 한 병의 샴페인이 바다 아래에서 시간을 기록하고 있습니다",
     "brandLabel": "해저숙성 샴페인",
     "brandName": "뮤즈드마레",
+    "signature": "한국 남해 34°N · 126°E",
     "bgAlt": "남해 수심 30m, 케이지에 든 한 병의 샴페인 · Muse de Marée"
   },
   "header": {
@@ -19,6 +20,7 @@
     "bgAlt": "남해 수심 30m, 인양 케이지, 측정 현장",
     "copy": "깊은 바다 속 빛이 사라진 곳에서, 기록이 시작됩니다",
     "counterUnit": "일째",
+    "place": "한국 남해",
     "methodLink": "자세히 보기",
     "log": {
       "temp": "수온 13.5°C",
@@ -73,7 +75,7 @@
   },
   "maker": {
     "title": "the maker.",
-    "subtitle": "샴페인은 샹파뉴가 만들었습니다, 기록은 남해에서 시작됩니다",
+    "subtitle": "샴페인은 샹파뉴가 만들었습니다, 기록은 한국 남해에서 시작됩니다",
     "imgAlt": "Champagne Mignon Boulard, 샹파뉴 메종",
     "boulard": {
       "desc": "1911년부터 4세대, 49개의 서로 다른 토양.\n균일화할 복잡함을 고스란히 살리는 메종."

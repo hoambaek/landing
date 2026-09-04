@@ -3,6 +3,7 @@
     "headline": "En ce moment même, une bouteille de champagne inscrit le temps au fond de la mer.",
     "brandLabel": "Champagne vieilli en mer",
     "brandName": "Muse de Marée",
+    "signature": "Namhae, Corée 34°N · 126°E",
     "bgAlt": "Une bouteille de champagne dans une cage à 30 m de profondeur au large de Namhae · Muse de Marée"
   },
   "header": {
@@ -19,6 +20,7 @@
     "bgAlt": "Une cage de remontée à 30 m de profondeur au large de Namhae, le site de mesure",
     "copy": "Là où la lumière s'efface dans les profondeurs, le relevé commence.",
     "counterUnit": "jours",
+    "place": "Namhae, Corée",
     "methodLink": "En savoir plus",
     "log": {
       "temp": "Temp. 13,5°C",
@@ -73,7 +75,7 @@
   },
   "maker": {
     "title": "the maker.",
-    "subtitle": "Le champagne est né en Champagne ; le relevé commence à Namhae.",
+    "subtitle": "Le champagne est né en Champagne ; le relevé commence à Namhae, en Corée.",
     "imgAlt": "Champagne Mignon Boulard, une maison de Champagne",
     "boulard": {
       "desc": "Quatre générations depuis 1911, 49 sols distincts.\nUne maison qui préserve intacte la complexité que d'autres chercheraient à uniformiser."

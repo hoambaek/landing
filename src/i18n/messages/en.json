@@ -3,6 +3,7 @@
     "headline": "Even now, a bottle of champagne is recording time beneath the sea.",
     "brandLabel": "Undersea-aged champagne",
     "brandName": "Muse de Marée",
+    "signature": "Namhae, Korea 34°N · 126°E",
     "bgAlt": "A bottle of champagne in a cage at 30 m depth off Namhae · Muse de Marée"
   },
   "header": {
@@ -19,6 +20,7 @@
     "bgAlt": "A recovery cage at 30 m depth off Namhae, the site of measurement",
     "copy": "Where light fades in the deep, the record begins.",
     "counterUnit": "days",
+    "place": "Namhae, Korea",
     "methodLink": "Learn more",
     "log": {
       "temp": "Temp 13.5°C",
@@ -73,7 +75,7 @@
   },
   "maker": {
     "title": "the maker.",
-    "subtitle": "Champagne was made in Champagne; the record begins in Namhae.",
+    "subtitle": "Champagne was made in Champagne; the record begins in Namhae, Korea.",
     "imgAlt": "Champagne Mignon Boulard, a Champagne maison",
     "boulard": {
       "desc": "Four generations since 1911, 49 distinct soils.\nA maison that keeps intact the complexity others would smooth away."
