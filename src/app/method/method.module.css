@@ -55,7 +55,7 @@
 .h2Img { display: block; width: auto; height: 39px; max-width: 100%; }
 @media (max-width: 768px) {
   .h2 { margin-bottom: 28px; }
-  .h2Img { height: 26px; }
+  .h2Img { height: auto; max-height: 26px; }
 }
 .h3 {
   font-family: var(--font-serif-kr);
@@ -93,6 +93,8 @@
   display: flex;
   flex-direction: column;
   min-height: 100svh;
+  /* 배경 void-settle/void-drift scale이 섹션 밖으로 삐져나와 모바일 가로 스크롤을 만든다 — 랜딩 .s-void와 같은 클립 */
+  overflow: clip;
   background: linear-gradient(180deg, #191713 0%, #0a0908 78%);
 }
 .heroBg {
