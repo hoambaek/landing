@@ -38,6 +38,8 @@ export default function BrandBookForm({
         name: name.trim(),
         affiliation: affiliation.trim(),
         email: email.trim(),
+        /* 신청자에게 언어를 묻지 않는다 — 지금 읽고 있는 지면의 언어가 답이다 */
+        locale,
       });
       if (res.ok) {
         setStatus("done");

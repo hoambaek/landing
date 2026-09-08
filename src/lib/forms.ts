@@ -15,11 +15,13 @@ import {
   getApplicantSubject,
   type FormKind,
   type EmailMode,
+  type EmailLocale,
 } from "./resend/templates/ApplicantEmail";
 import {
   AdminNotifyEmail,
   getAdminSubject,
 } from "./resend/templates/AdminNotifyEmail";
+import type { Locale } from "@/i18n/config";
 
 /**
  * 서브 페이지 폼 제출 — 서버 액션.
@@ -36,7 +38,14 @@ export type PartnerPayload = {
   message: string;
   referralSource?: string;
 };
-export type BrandBookPayload = { name: string; affiliation: string; email: string };
+/* 신청 언어를 그대로 남긴다 — 발송 언어(ko·en 두 벌)를 고르는 근거이자,
+   fr·ja 신청이 얼마나 들어오는지 보는 재료다. 두 값을 한 컬럼에 뭉치면 후자가 사라진다. */
+export type BrandBookPayload = {
+  name: string;
+  affiliation: string;
+  email: string;
+  locale: Locale;
+};
 /**
  * 로마자 표기의 첫 글자만 대문자로 올린다.
  *
@@ -81,6 +90,8 @@ type NotifyArgs = {
   mode?: EmailMode;
   /** 병 번호 — bottle 메일에서만 쓴다. 개체는 번호로 부르고, 없으면 부르지 않는다 */
   serial?: number | null;
+  /** 신청자 메일의 언어. 운영자 알림(AdminNotifyEmail)은 이 값과 무관하게 한국어다 */
+  locale?: EmailLocale;
 };
 
 /** insert 성공 후 이메일 2종 발송(병렬, 실패 무시) */
@@ -117,6 +128,7 @@ async function sendEmails({
   attachments,
   mode = "send",
   serial = null,
+  locale = "ko",
 }: NotifyArgs): Promise<void> {
   if (!isResendConfigured() || !resend) {
     console.warn("[forms] Resend 미설정 — 이메일 발송 건너뜀");
@@ -130,8 +142,9 @@ async function sendEmails({
   }).format(new Date());
 
   try {
+    /* 언어를 타는 것은 신청자 메일뿐이다 — 운영자 알림은 대표가 읽으므로 한국어 한 벌이다 */
     const [applicantHtml, adminHtml] = await Promise.all([
-      render(ApplicantEmail({ kind, name: applicantName, mode, serial })),
+      render(ApplicantEmail({ kind, name: applicantName, mode, serial, locale })),
       render(AdminNotifyEmail({ kind, fields: adminFields, receivedAt })),
     ]);
 
@@ -139,7 +152,7 @@ async function sendEmails({
       resend.emails.send({
         from: FROM_EMAIL,
         to: applicantEmail,
-        subject: getApplicantSubject(kind, mode, serial),
+        subject: getApplicantSubject(kind, mode, serial, locale),
         html: applicantHtml,
         ...(attachments?.length ? { attachments } : {}),
       }),
@@ -171,26 +184,36 @@ async function sendEmails({
  * 신청자에게만 발송(운영자 알림 없음).
  * 발송 성공 여부와 함께 Resend message id를 돌려준다 —
  * 이 id가 없으면 이후 전달·반송 웹훅을 신청 행에 붙일 수 없다.
+ *
+ * locale은 첨부 PDF 판본과 메일 제목·본문을 함께 고른다 — 영문판을 보내면서
+ * 본문만 한국어로 나가지 않게 한다.
  */
 export async function sendBrandBookDelivery(p: {
   email: string;
   name?: string;
+  /** 발송 언어 — 첨부할 소개서 판본과 메일 문안을 고른다. ko·en 두 벌뿐이다 */
+  locale: EmailLocale;
 }): Promise<SubmitResult & { messageId?: string }> {
   if (!isResendConfigured() || !resend) {
     return { ok: false, error: "이메일 발송이 설정되지 않았습니다." };
   }
-  const attachments = await loadBrandBookPdf();
+  const attachments = await loadBrandBookPdf(p.locale);
   if (!attachments?.length) {
     return { ok: false, error: "브랜드 소개서 PDF를 찾을 수 없습니다." };
   }
   try {
     const html = await render(
-      ApplicantEmail({ kind: "brandbook", name: p.name, mode: "send" })
+      ApplicantEmail({
+        kind: "brandbook",
+        name: p.name,
+        mode: "send",
+        locale: p.locale,
+      })
     );
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: p.email,
-      subject: getApplicantSubject("brandbook", "send"),
+      subject: getApplicantSubject("brandbook", "send", null, p.locale),
       html,
       attachments,
     });
@@ -251,20 +274,28 @@ export async function submitPartner(p: PartnerPayload): Promise<SubmitResult> {
   );
 }
 
-/** 브랜드 소개서 PDF를 base64로 로드 (없으면 첨부 없이 graceful) */
-async function loadBrandBookPdf(): Promise<Attachment[] | undefined> {
+/**
+ * 브랜드 소개서 PDF를 base64로 로드 — 발송 언어에 맞는 파일과 첨부 이름을 고른다.
+ * 소개서는 한국어판·영문판 두 벌뿐이다(fr·ja 신청도 영문판으로 나간다).
+ * 파일이 없으면 undefined — 호출부가 발송을 중단한다. 소개서 없는 "소개서 전달" 메일은 보내지 않는다.
+ */
+async function loadBrandBookPdf(
+  locale: "ko" | "en"
+): Promise<Attachment[] | undefined> {
+  const file =
+    locale === "en"
+      ? "musedemaree-brandbook-en.pdf"
+      : "musedemaree-brandbook.pdf";
+  /* 첨부 이름은 받는 사람이 읽을 언어로 붙인다 — 파일명이 메일 본문 다음으로 먼저 읽힌다 */
+  const filename =
+    locale === "en"
+      ? "Muse de Marée — Brand Book.pdf"
+      : "뮤즈드마레 브랜드 소개서.pdf";
   try {
-    const buf = await readFile(
-      path.join(process.cwd(), "private-assets/musedemaree-brandbook.pdf")
-    );
-    return [
-      {
-        filename: "Muse de Marée — Brand Book.pdf",
-        content: buf.toString("base64"),
-      },
-    ];
+    const buf = await readFile(path.join(process.cwd(), "private-assets", file));
+    return [{ filename, content: buf.toString("base64") }];
   } catch {
-    console.warn("[forms] 브랜드 소개서 PDF 없음 — 첨부 없이 발송");
+    console.warn(`[forms] 브랜드 소개서 PDF 없음(${locale}: ${file}) — 발송 중단`);
     return undefined;
   }
 }
@@ -274,15 +305,25 @@ export async function submitBrandBook(
 ): Promise<SubmitResult> {
   // 수집형 전환: 제출 시 PDF 자동첨부 없음. pending으로 저장하고 접수 확인 메일만 발송.
   // 실제 소개서(PDF)는 관리자 승인 시 sendBrandBookDelivery로 전달.
+  /* 접수 확인 메일도 신청 언어를 따른다. 메일 문안은 ko·en 두 벌뿐이므로
+     한국어가 아닌 신청(en·fr·ja)은 전부 영문으로 보낸다 — 첨부 PDF 판본을 고르는 규칙과 같다.
+     원래 신청 언어(fr·ja)는 request_locale 컬럼에 그대로 남는다. */
+  const mailLocale: EmailLocale = p.locale === "ko" ? "ko" : "en";
   return insertAndNotify(
     "brandbook_requests",
-    { name: p.name, affiliation: p.affiliation, email: p.email },
+    {
+      name: p.name,
+      affiliation: p.affiliation,
+      email: p.email,
+      request_locale: p.locale,
+    },
     {
       kind: "brandbook",
       applicantEmail: p.email,
       applicantName: p.name,
       adminFields: { 이름: p.name, 소속: p.affiliation, 이메일: p.email },
       mode: "ack",
+      locale: mailLocale,
     }
   );
 }

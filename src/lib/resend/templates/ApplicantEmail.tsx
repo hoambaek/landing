@@ -37,12 +37,19 @@ type EmailCopy = {
  */
 export type EmailMode = "ack" | "send";
 
+/**
+ * 메일 언어 — 소개서 판본과 같이 ko·en 두 벌뿐이다(fr·ja 신청도 영문으로 나간다).
+ * 기본값은 ko다. 호출부가 언어를 넘기지 않으면 종전대로 한국어 한 벌로 동작한다.
+ */
+export type EmailLocale = "ko" | "en";
+
 interface ApplicantEmailProps {
   kind: FormKind;
   name?: string;
   mode?: EmailMode;
   /** 병 번호 — bottle 메일의 헤드라인이 개체를 번호로 부른다. 없으면 부르지 않는다 */
   serial?: number | null;
+  locale?: EmailLocale;
 }
 
 /** 발송 메일의 이미지(로고)용 절대 URL */
@@ -52,16 +59,32 @@ const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://musedemaree.com";
  * 신청자 확인 메일 — Paper v2 시안(프레임 + 카드 + 법적 푸터).
  * 외곽 연회색 프레임 안에 #C4BFBB 카드, 브랜드 로고 헤더, 본문, 다크 법적 푸터.
  */
-export function ApplicantEmail({ kind, name, mode = "send", serial = null }: ApplicantEmailProps) {
-  const t =
-    kind === "brandbook" && mode === "ack" ? BRANDBOOK_ACK_COPY : COPY[kind];
-  const greeting = name ? `${name} 님, 안녕하세요.` : "안녕하세요.";
+export function ApplicantEmail({
+  kind,
+  name,
+  mode = "send",
+  serial = null,
+  locale = "ko",
+}: ApplicantEmailProps) {
+  const t = pickCopy(kind, mode, locale);
+  const greeting =
+    locale === "en"
+      ? name
+        ? `Dear ${name},`
+        : "Hello,"
+      : name
+        ? `${name} 님, 안녕하세요.`
+        : "안녕하세요.";
   /* 번호가 있으면 헤드라인이 개체를 부르고, 없으면 부르지 않는다(정본 규칙 2) */
   const title =
     kind === "bottle" && serial == null ? BOTTLE_TITLE_NO_SERIAL : t.title.replace("{serial}", String(serial));
+  /* wordBreak: keep-all은 한국어 줄바꿈 규칙(어절 단위로 끊는다)이다. 영문에 걸면
+     긴 단어가 줄 끝에서 통째로 다음 줄로 밀려 오른쪽이 크게 비므로 영문에서는 뺀다.
+     빈 객체를 펼치는 것이므로 다른 값(색·크기·여백)은 그대로다. */
+  const keepAll = locale === "ko" ? KEEP_ALL : {};
 
   return (
-    <Html lang="ko">
+    <Html lang={locale}>
       <Head>
         {/* 모바일: 인라인 스타일보다 우선하도록 !important 필수 (지원 안 하는 클라이언트는 상향된 기본값으로 동작) */}
         <style>{`
@@ -100,7 +123,7 @@ export function ApplicantEmail({ kind, name, mode = "send", serial = null }: App
           {/* ── 본문 ── */}
           <Section className="email-content" style={styles.content}>
             <Text style={styles.eyebrow}>{t.eyebrow}</Text>
-            <Text className="email-title" style={styles.title}>
+            <Text className="email-title" style={{ ...styles.title, ...keepAll }}>
               {title}
             </Text>
             <Text style={styles.hello}>{greeting}</Text>
@@ -109,19 +132,19 @@ export function ApplicantEmail({ kind, name, mode = "send", serial = null }: App
                 뒤따르는 문단이 목록에 붙지 않게 한다(문단 para는 margin-top이 0이다). */}
             {t.body.map((line, i) =>
               typeof line === "string" ? (
-                <Text key={i} style={styles.para}>
+                <Text key={i} style={{ ...styles.para, ...keepAll }}>
                   {line}
                 </Text>
               ) : (
                 <Fragment key={i}>
-                  <Text style={styles.listHeading}>{line.heading}</Text>
+                  <Text style={{ ...styles.listHeading, ...keepAll }}>{line.heading}</Text>
                   {line.items.map((item, j) => (
                     <Text
                       key={item.name}
                       style={
                         j === line.items.length - 1
-                          ? { ...styles.listItem, marginBottom: "26px" }
-                          : styles.listItem
+                          ? { ...styles.listItem, ...keepAll, marginBottom: "26px" }
+                          : { ...styles.listItem, ...keepAll }
                       }
                     >
                       {"· "}
@@ -151,12 +174,13 @@ export function ApplicantEmail({ kind, name, mode = "send", serial = null }: App
               alt="MUSE DE MARÉE"
               style={styles.fName}
             />
-            <Text style={styles.fInfo}>
-              주식회사 오크니 · 대표 정설화 · 사업자등록번호 859-85-03139
-            </Text>
-            <Text style={styles.fInfo}>서울특별시 강남구 압구정로 306, B1 #6-J14</Text>
-            <Text style={styles.fInfo}>고객 문의 info@musedemaree.com</Text>
+            {FOOTER_INFO[locale].map((line) => (
+              <Text key={line} style={styles.fInfo}>
+                {line}
+              </Text>
+            ))}
             <Hr style={styles.fRule} />
+            {/* 카피라이트 줄은 지금도 영문이라 언어를 타지 않는다 */}
             <Text style={styles.fCopy}>
               © 2026 MUSE DE MARÉE. ALL RIGHTS RESERVED.
             </Text>
@@ -170,13 +194,54 @@ export function ApplicantEmail({ kind, name, mode = "send", serial = null }: App
 export function getApplicantSubject(
   kind: FormKind,
   mode: EmailMode = "send",
-  serial: number | null = null
+  serial: number | null = null,
+  locale: EmailLocale = "ko"
 ): string {
-  if (kind === "brandbook" && mode === "ack") return BRANDBOOK_ACK_SUBJECT;
+  if (kind === "brandbook" && mode === "ack")
+    return locale === "en" ? BRANDBOOK_ACK_SUBJECT_EN : BRANDBOOK_ACK_SUBJECT;
   /* 개체는 번호로 부른다. 번호가 없으면 부르지 않는다(정본 규칙 2) */
   if (kind === "bottle" && serial == null) return BOTTLE_SUBJECT_NO_SERIAL;
-  return SUBJECT[kind].replace("{serial}", String(serial));
+  /* 영문 제목이 없는 kind는 한국어로 폴백한다 — 아래 pickCopy와 같은 규칙이다 */
+  const subject = (locale === "en" ? SUBJECT_EN[kind] : undefined) ?? SUBJECT[kind];
+  return subject.replace("{serial}", String(serial));
 }
+
+/**
+ * 언어에 맞는 본문 한 벌을 고른다.
+ *
+ * ⚠️ 영문 문안이 있는 것은 브랜드 소개서 2통(brandbook × ack·send)뿐이다.
+ * 나머지 네 통(invite·partner·bottle·newsletter)은 영문 카피가 아직 없어
+ * locale="en"으로 불려도 한국어 한 벌로 폴백한다 — 승인되지 않은 영문을 지어내는 것보다
+ * 한국어가 나가는 편이 낫다. 문안이 승인되면 COPY_EN·SUBJECT_EN에 채우기만 하면
+ * 이 분기는 그대로 두고 자동으로 영문이 나간다.
+ */
+function pickCopy(
+  kind: FormKind,
+  mode: EmailMode,
+  locale: EmailLocale
+): EmailCopy {
+  if (kind === "brandbook" && mode === "ack") {
+    return locale === "en" ? BRANDBOOK_ACK_COPY_EN : BRANDBOOK_ACK_COPY;
+  }
+  return (locale === "en" ? COPY_EN[kind] : undefined) ?? COPY[kind];
+}
+
+/** 푸터 회사정보 — 카피라이트 줄을 뺀 세 줄. 언어를 따른다 */
+const FOOTER_INFO: Record<EmailLocale, string[]> = {
+  ko: [
+    "주식회사 오크니 · 대표 정설화 · 사업자등록번호 859-85-03139",
+    "서울특별시 강남구 압구정로 306, B1 #6-J14",
+    "고객 문의 info@musedemaree.com",
+  ],
+  en: [
+    "Orkney Corp. · CEO Seolhwa Jeong · Reg. No. 859-85-03139",
+    "306 Apgujeong-ro, Gangnam-gu, Seoul, Korea · B1 #6-J14",
+    "Enquiries info@musedemaree.com",
+  ],
+};
+
+/** 한국어 렌더에만 얹는 줄바꿈 규칙 — 어디에 왜 얹는지는 컴포넌트의 keepAll 주석에 있다 */
+const KEEP_ALL = { wordBreak: "keep-all" as const };
 
 /** 번호 미부여 병 — 제목·헤드라인 모두 번호 없이 선다 */
 const BOTTLE_SUBJECT_NO_SERIAL = "소유자로 등록했습니다 | Muse de Marée";
@@ -198,9 +263,21 @@ const SUBJECT: Record<FormKind, string> = {
   newsletter: "계절마다 바다의 소식을 전하겠습니다 | Muse de Marée",
 };
 
+/**
+ * 영문 제목 — 브랜드 소개서 전달(send) 한 자리뿐이다.
+ * 나머지 네 kind는 영문 문안이 없어 비워 둔다(getApplicantSubject가 한국어로 폴백한다).
+ * Partial로 두는 이유: 빈 문자열로 채우면 폴백이 아니라 제목 없는 메일이 나간다.
+ */
+const SUBJECT_EN: Partial<Record<FormKind, string>> = {
+  brandbook: "We put the time of the sea into one book | Muse de Marée",
+};
+
 /** 브랜드 소개서 접수 확인(ack) 전용 제목·본문 */
 const BRANDBOOK_ACK_SUBJECT =
   "소개서를 준비하고 있습니다 | Muse de Marée";
+
+const BRANDBOOK_ACK_SUBJECT_EN =
+  "We're preparing the book | Muse de Marée";
 
 /* ack도 COPY와 같은 렌더 경로를 타므로 같은 타입을 붙인다 — 두 값의 body가
    서로 다른 배열 타입으로 추론되면 t.body.map() 자리에서 합집합이 되어 호출이 막힌다 */
@@ -217,6 +294,17 @@ const BRANDBOOK_ACK_COPY: EmailCopy = {
        "다시 인사드리겠습니다"가 초대 메일과 겹쳐 세트 안에서 상투구가 되고 있었다.
        두 문단으로 서는 건 문제가 아니다 — 전할 사실이 둘뿐이다. */
     "보내 주신 정보를 확인한 뒤 이 메일로 소개서를 전해 드리겠습니다.",
+  ],
+};
+
+/* 영문판 ack — 한국어판과 같은 두 문단 구성이다(감사 → 확인 뒤 전달).
+   문안은 2026-09-08 대표 승인본을 그대로 쓴다. */
+const BRANDBOOK_ACK_COPY_EN: EmailCopy = {
+  eyebrow: "BRAND",
+  title: "We're preparing the book",
+  body: [
+    "Thank you for requesting the Muse de Marée Brand Book.",
+    "Once we've reviewed the details you sent, we'll send the book to this address.",
   ],
 };
 
@@ -364,6 +452,26 @@ const COPY: Record<FormKind, EmailCopy> = {
   },
 };
 
+/**
+ * 영문 본문 — 브랜드 소개서 전달(send) 한 통뿐이다.
+ * invite·partner·bottle·newsletter는 아직 영문 문안이 없어 여기 없다. 없는 kind는
+ * pickCopy가 한국어(COPY)로 폴백한다 — 지어낸 영문보다 한국어가 낫다는 판단이다.
+ * 문안은 2026-09-08 대표 승인본을 그대로 쓴다.
+ */
+const COPY_EN: Partial<Record<FormKind, EmailCopy>> = {
+  brandbook: {
+    eyebrow: "BRAND",
+    title: "The book is ready",
+    body: [
+      "Thank you for requesting the Muse de Marée Brand Book.",
+      /* 한국어판과 같이 수심·해역을 숫자로 적는다(헌법 1조: 숫자는 형용사보다 조용하다).
+         목차를 부르는 말은 "edition lineup"이다 — 퀴베 폐기·에디션 통일(2026-08-02 대표 확정). */
+      "It holds the philosophy behind the champagne and the way we record its ageing 30 metres down off Namhae in Korea. The edition lineup and partnership terms are included as well.",
+      "If you have any questions, reply to this email any time.",
+    ],
+  },
+};
+
 /* ── 스타일 (Paper v2 토큰, 이메일 인라인) ── */
 /* 제목 전용 스택. 메일 제목은 현재 전부 한글이라 실질적으로 한글 세리프가 결정한다.
    이메일은 웹폰트(@font-face)가 Gmail·Outlook에서 막히므로 수신자 기기에 설치된 것만 잡힌다.
@@ -426,7 +534,6 @@ const styles = {
     lineHeight: "40px",
     letterSpacing: "-0.01em",
     color: "#312E2A",
-    wordBreak: "keep-all" as const,
   },
   hello: {
     margin: "0 0 18px",
@@ -443,7 +550,6 @@ const styles = {
     fontWeight: 400,
     lineHeight: "28px",
     color: "#4A453F",
-    wordBreak: "keep-all" as const,
   },
   /* 목록 소제목 — 세리프 제목과 구분되게 sans를 쓰고, 굵기(500)와 본문색(#312E2A)으로만
      문단과 층위를 가른다. 위 여백이 문단 간격(14px)보다 넓어야 목록이 앞 문단에 딸려 붙지 않는다 */
@@ -454,7 +560,6 @@ const styles = {
     fontWeight: 500,
     lineHeight: "26px",
     color: "#312E2A",
-    wordBreak: "keep-all" as const,
   },
   listItem: {
     margin: "0 0 8px",
@@ -463,7 +568,6 @@ const styles = {
     fontWeight: 400,
     lineHeight: "28px",
     color: "#4A453F",
-    wordBreak: "keep-all" as const,
   },
   /* 항목명만 본문색으로 올린다 — 굵기를 건드리면 소제목과 무게가 겹친다 */
   listName: {

@@ -8,9 +8,13 @@ import { sendBrandBookDelivery } from "@/lib/forms";
  *
  * POST /api/admin/brandbook/send
  *   headers: x-admin-secret: <ADMIN_API_SECRET>
- *   body: { id: string }   // brandbook_requests.id
+ *   body: { id: string, locale: "ko" | "en" }   // id = brandbook_requests.id
  *
- * 동작: 신청 행 조회 → PDF 첨부 메일 발송 → status='sent', sent_at 기록.
+ * 동작: 신청 행 조회 → 해당 언어 PDF 첨부 메일 발송 → status='sent', sent_at, sent_locale 기록.
+ *
+ * locale은 필수로 받되 누락·이상값이면 400이 아니라 "ko"로 폴백한다 —
+ * locale을 모르는 구 클라이언트가 아직 호출할 수 있고, 그때 발송이 막히는 것보다
+ * 종전대로 한국어판이 나가는 편이 낫다.
  */
 export async function POST(req: Request) {
   const secret = process.env.ADMIN_API_SECRET?.trim();
@@ -27,9 +31,11 @@ export async function POST(req: Request) {
   }
 
   let id: string | undefined;
+  let locale: "ko" | "en" = "ko";
   try {
     const body = await req.json();
     id = typeof body?.id === "string" ? body.id : undefined;
+    if (body?.locale === "en") locale = "en";
   } catch {
     /* ignore */
   }
@@ -50,6 +56,7 @@ export async function POST(req: Request) {
   const result = await sendBrandBookDelivery({
     email: row.email as string,
     name: (row.name as string | null) ?? undefined,
+    locale,
   });
 
   if (!result.ok) {
@@ -65,6 +72,8 @@ export async function POST(req: Request) {
     .update({
       status: "sent",
       sent_at: now,
+      /* 실제로 나간 판본. 재발송으로 언어가 바뀌면 마지막 발송 기준으로 덮인다 */
+      sent_locale: locale,
       // 전달 추적은 승인 워크플로와 별개 축이다. 재발송이면 앞선 메일의
       // 전달 결과를 지우고 이번 메일 기준으로 다시 센다.
       resend_message_id: result.messageId ?? null,
