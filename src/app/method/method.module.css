@@ -457,7 +457,13 @@
 .axisBar i { position: absolute; left: 0; top: 0; bottom: 0; width: 62%; border-radius: 3px; background: linear-gradient(90deg, rgba(184, 152, 104, 0.95), rgba(184, 152, 104, 0.4)); filter: blur(3px); }
 .axisVal { width: 40px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: rgba(49, 46, 42, 0.35); flex-shrink: 0; }
 @media (max-width: 768px) {
-  .phone { width: 100%; max-width: 360px; margin: 0 auto; border-radius: 48px; padding: 10px; box-shadow: inset 0 0 0 5px #16181d, 0 16px 40px rgba(0, 0, 0, 0.5); }
+  /* 모바일: 하단 라운드·그림자 윤곽이 남지 않게 페이드를 일찍 끝내고 바깥 그림자는 뺀다 */
+  .phone {
+    width: 100%; max-width: 360px; margin: 0 auto; border-radius: 48px; padding: 10px;
+    box-shadow: inset 0 0 0 5px #16181d;
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 82%);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent 82%);
+  }
   .phoneIsland { top: 22px; width: 100px; height: 28px; }
   .card { border-radius: 40px; padding: 60px 20px 34px; }
   .cardTitle strong { font-size: 19px; }
@@ -484,7 +490,7 @@
   color: rgba(204, 173, 123, 0.6);
 }
 @media (max-width: 768px) {
-  .retrieval { margin-top: 40px; height: 260px; }
+  .retrieval { margin-top: 72px; width: 100%; height: auto; aspect-ratio: 1 / 1; }
   .retrievalCap { bottom: 14px; right: 20px; font-size: 9px; }
 }
 
