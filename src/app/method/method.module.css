@@ -631,6 +631,9 @@
 .archivePhoto { margin: 24px 0 0; position: relative; overflow: hidden; }
 @media (max-width: 768px) {
   .archiveEyebrow { font-size: 10px; }
+  /* 병 몸통 가로 중심 x=1196/2400(49.8%) → 50% */
+  .archivePhoto { aspect-ratio: 4 / 3; }
+  .archivePhoto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
 }
 
 /* ═══ Closing ═══ */
