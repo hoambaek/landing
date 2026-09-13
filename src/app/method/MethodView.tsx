@@ -723,15 +723,6 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
               className={s.photoFill}
             />
           </figure>
-          <div className={s.archiveRows}>
-            {t.archive.rows.map((r) => (
-              <div key={r.date} className={s.archiveRow}>
-                <span className={s.archiveDate}>{r.date}</span>
-                <span className={s.archiveTitle}>{r.title}</span>
-                <span className={r.accent ? s.archiveStatusAccent : s.archiveStatus}>{r.status}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

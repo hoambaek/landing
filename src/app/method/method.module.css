@@ -629,32 +629,8 @@
 }
 .archiveSection .h2 { margin-bottom: 0; }
 .archivePhoto { margin: 24px 0 0; position: relative; overflow: hidden; }
-.archiveRows { display: flex; flex-direction: column; border-top: 1px solid rgba(49, 46, 42, 0.18); margin-top: 24px; }
-.archiveRow {
-  display: flex;
-  align-items: center;
-  padding: 26px 8px;
-  border-bottom: 1px solid rgba(49, 46, 42, 0.12);
-}
-.archiveRow:last-child { border-bottom: 1px solid rgba(49, 46, 42, 0.18); }
-.archiveDate { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.1em; color: rgba(49, 46, 42, 0.55); width: 200px; flex-shrink: 0; }
-.archiveTitle { font-family: var(--font-serif-kr); font-weight: 400; font-size: 17px; color: #312e2a; flex: 1; }
-.archiveStatus, .archiveStatusAccent {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  width: 120px;
-  text-align: right;
-  flex-shrink: 0;
-  color: rgba(49, 46, 42, 0.45);
-}
-.archiveStatusAccent { color: #b89868; }
 @media (max-width: 768px) {
   .archiveEyebrow { font-size: 10px; }
-  .archiveRow { flex-wrap: wrap; gap: 6px 0; padding: 18px 4px; }
-  .archiveDate { width: auto; flex: 1; font-size: 11px; }
-  .archiveStatus, .archiveStatusAccent { width: auto; font-size: 10px; }
-  .archiveTitle { flex-basis: 100%; order: 3; font-size: 14px; }
 }
 
 /* ═══ Closing ═══ */

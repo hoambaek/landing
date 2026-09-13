@@ -88,7 +88,6 @@ export interface MethodCopy {
     h2: string;
     lead: string;
     photoAlt: string;
-    rows: { date: string; title: string; status: string; accent: boolean }[];
   };
   closing: { title: string; sub: [string, string]; cta: string; secondary: string };
 }
@@ -196,11 +195,6 @@ const ko: MethodCopy = {
     h2: "이 기록은 매년 발표됩니다.",
     lead: "입수한 데이터, 바다의 조건, 검증 결과까지 날짜와 함께 남깁니다.\n꾸미는 말이 아니라, 있었던 그대로의 기록입니다.",
     photoAlt: "수면 위로 올라온 따개비 붙은 병",
-    rows: [
-      { date: "2026 · 겨울", title: "다음 인양, 예측과 실측의 대조", status: "예정", accent: true },
-      { date: "2025 ~ 2026", title: "남해 실측 해양 데이터, 월별 환경 모델", status: "기록 중", accent: false },
-      { date: "2023 ~ 2026", title: "열 번이 넘는 입수와 인양, 예측과 확인의 반복", status: "누적", accent: false },
-    ],
   },
   closing: {
     title: "우리는 예측을 마쳤습니다. 이제 바다가 답할 차례입니다.",
@@ -313,11 +307,6 @@ const en: MethodCopy = {
     h2: "This record is published every year.",
     lead: "Immersion data, the sea's conditions, the verification results — all kept with their dates. Not words meant to impress, but a record of what actually happened.",
     photoAlt: "A barnacle-covered bottle just raised from the sea",
-    rows: [
-      { date: "2026 · Winter", title: "Next retrieval — prediction meets measurement", status: "Upcoming", accent: true },
-      { date: "2025 ~ 2026", title: "Measured ocean data off Namhae, monthly environmental model", status: "Recording", accent: false },
-      { date: "2023 ~ 2026", title: "More than ten immersions and retrievals — prediction and confirmation, repeated", status: "Accumulated", accent: false },
-    ],
   },
   closing: {
     title: "Our prediction is written. Now it is the sea's turn to answer.",
@@ -430,11 +419,6 @@ const fr: MethodCopy = {
     h2: "Ce relevé est publié chaque année.",
     lead: "Les données d'immersion, les conditions de la mer, les résultats de vérification, tout est consigné avec sa date. Non pas des mots pour séduire, mais le relevé de ce qui a réellement eu lieu.",
     photoAlt: "Une bouteille couverte de balanes tout juste remontée de la mer",
-    rows: [
-      { date: "2026 · Hiver", title: "Prochaine remontée — la prévision rencontre la mesure", status: "À venir", accent: true },
-      { date: "2025 ~ 2026", title: "Données marines mesurées au large de Namhae, modèle mensuel", status: "En cours", accent: false },
-      { date: "2023 ~ 2026", title: "Plus de dix immersions et remontées — prévision et confirmation, répétées", status: "Cumulé", accent: false },
-    ],
   },
   closing: {
     title: "Notre prévision est écrite. À la mer de répondre, désormais.",
@@ -547,11 +531,6 @@ const ja: MethodCopy = {
     h2: "記録を、毎年公開する。",
     lead: "観測データ、海の条件、検証の結果まで、日付とともに残します。\n飾った言葉ではなく、あったことをそのまま記した記録です。",
     photoAlt: "水面へ上がってきたフジツボのついたボトル",
-    rows: [
-      { date: "2026 · 冬", title: "次の引き揚げ、予測と実測の照合", status: "予定", accent: true },
-      { date: "2025 ~ 2026", title: "南海（ナムヘ）の海洋観測データ、月別の環境モデル", status: "記録中", accent: false },
-      { date: "2023 ~ 2026", title: "十回を超える海中投入と引き揚げ、予測と検証の繰り返し", status: "累積", accent: false },
-    ],
   },
   closing: {
     title: "私たちは予測を終えた。あとは、海が答える番。",
