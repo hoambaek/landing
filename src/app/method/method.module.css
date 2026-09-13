@@ -492,6 +492,8 @@
 @media (max-width: 768px) {
   .retrieval { margin-top: 72px; width: 100%; height: auto; aspect-ratio: 1 / 1; }
   .retrievalCap { bottom: 14px; right: 20px; font-size: 9px; }
+  /* Paper: 케이지 중심을 390×390 cover 프레임 중앙에 맞춘 값 */
+  .retrieval .coverImg { object-position: 53.2% 50%; }
 }
 
 .principles { padding-top: 30px; display: flex; flex-direction: column; gap: 14px; }
@@ -553,6 +555,8 @@
 .certPhone {
   margin: 0 0 24px; width: 100%; height: 280px; overflow: hidden; position: relative;
   display: flex; justify-content: center; align-items: flex-start; padding-top: 14px; box-sizing: border-box;
+  -webkit-mask-image: linear-gradient(180deg, #000 58%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 58%, transparent 100%);
 }
 .certPhoneFrame {
   width: 300px; height: 540px; flex-shrink: 0; padding: 9px; box-sizing: border-box;
@@ -579,7 +583,7 @@
 .certLab { font-family: var(--font-body); font-size: 11px; letter-spacing: 0.02em; color: rgba(236, 234, 230, 0.42); }
 .certVal { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.02em; color: rgba(236, 234, 230, 0.92); }
 .certValGold { color: #c8a878; }
-.certFade { position: absolute; left: 0; right: 0; bottom: 0; height: 30px; background: linear-gradient(180deg, transparent, #eceae6 92%); pointer-events: none; }
+.certFade { display: none; }
 
 @media (max-width: 768px) {
   .learnGrid { flex-direction: column; gap: 48px; padding-top: 40px; }
