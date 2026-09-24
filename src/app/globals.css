@@ -1222,9 +1222,11 @@ input:focus-visible,
       oklab(14.1% 0.001 0.003 / 66%) 0%,
       oklab(14.1% 0.001 0.003 / 30%) 38%,
       oklab(14.1% 0.001 0.003 / 8%) 60%),
+    /* 하단은 기본색(#0A0908)까지 완전히 페이드 — 다음 섹션(First Record)과 경계 없이 (2026-09-24) */
     linear-gradient(0deg in oklab,
-      oklab(14.1% 0.001 0.003 / 60%) 0%,
-      oklab(14.1% 0.001 0.003 / 0%) 30%);
+      oklab(14.1% 0.001 0.003 / 100%) 0%,
+      oklab(14.1% 0.001 0.003 / 55%) 12%,
+      oklab(14.1% 0.001 0.003 / 0%) 32%);
 }
 
 /* 카피 + 카운터 묶음 — 좌상단 */
@@ -1454,8 +1456,9 @@ input:focus-visible,
     background: linear-gradient(180deg in oklab,
       oklab(14.1% 0.001 0.003 / 30%) 0%,
       oklab(14.1% 0.001 0.003 / 0%) 24%,
-      oklab(14.1% 0.001 0.003 / 0%) 70%,
-      oklab(14.1% 0.001 0.003 / 55%) 100%);
+      oklab(14.1% 0.001 0.003 / 0%) 66%,
+      oklab(14.1% 0.001 0.003 / 55%) 88%,
+      oklab(14.1% 0.001 0.003 / 100%) 100%);
   }
 
   .s-living__text {
@@ -1539,7 +1542,7 @@ input:focus-visible,
   padding-top: 110px;
   overflow: clip;
   background: linear-gradient(180deg in oklab,
-    oklab(15.1% 0.002 0.005) 0%,
+    oklab(14.1% 0.001 0.003) 0%, /* = #0A0908, 위 Living Record와 이음새 없이 */
     oklab(19% 0.005 0.008) 30%,
     oklab(39.4% 0.004 0.010) 58%,
     oklab(93.7% 0.0005 0.006) 82%,

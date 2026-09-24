@@ -462,7 +462,7 @@
 .retrieval {
   margin: 96px 0 0;
   height: 560px;
-  background: #0e0c0a;
+  background: var(--color-void-bg, #0a0908);
   position: relative;
   overflow: hidden;
 }
@@ -634,7 +634,8 @@
   gap: 52px;
   min-height: 820px;
   padding: 96px 24px;
-  background: linear-gradient(180deg, #0a0908 0%, #14110d 100%);
+  /* 푸터(#0A0908)와 이음새 없이 — 기본 바닥색 단색 (2026-09-24 어두운 배경 통일) */
+  background: var(--color-void-bg, #0a0908);
   text-align: center;
 }
 .closingTitle { margin: 0; }
