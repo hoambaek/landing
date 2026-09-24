@@ -77,12 +77,14 @@ function blocked(ip: string, code: string | null): boolean {
 }
 
 /* ─────────────────────────────────────────────
- * 언어 자동 전환 (2026-09-24)
+ * 언어 자동 전환 (2026-09-24, v2)
  *
- * 한국어 주소(prefix 없음)로 처음 온 사람을 브라우저 언어(Accept-Language)에 맞는 로케일로 보낸다.
+ * 외부에서 한국어 주소(prefix 없음)로 **처음 들어온** 사람만 브라우저 언어에 맞는 로케일로 보낸다.
  *  - en·fr·ja는 해당 로케일로, 그 밖의 비한국어는 /en으로. 한국어 브라우저는 그대로.
- *  - 한 번 고른 언어는 쿠키로 기억한다. /en·/fr·/ja 페이지를 열면 그 로케일,
- *    KR 링크(/?lang=ko)를 누르면 ko가 박힌다. 쿠키가 있으면 브라우저 언어보다 우선한다.
+ *  - **사이트 안 이동은 건드리지 않는다**(Referer가 같은 사이트). 한국어 페이지에서 누른 링크는
+ *    한국어로 가야 한다 — v1은 링크마다 다시 판정해서 한국어 홈 → /method가 /fr/method로 튀었다.
+ *  - 언어는 **언어 버튼(?lang=)을 눌렀을 때만** 쿠키로 기억한다. 쿠키가 있으면 브라우저 언어보다 우선.
+ *    v1은 /fr 페이지를 한 번 열기만 해도 fr로 박혀서, 확인차 들른 사람이 계속 끌려갔다.
  *  - 검색·미리보기 봇은 보내지 않는다. 보내면 한국어 페이지가 색인에서 빠진다.
  *  - 307(임시)로 보낸다. 301이면 브라우저가 "/"를 영구히 /en으로 기억해 KR로 못 돌아온다.
  * 로케일 변형이 있는 페이지만 대상이다(약관류는 한국어 정본뿐이라 제외).
@@ -110,37 +112,45 @@ function preferredLocale(header: string | null): Locale | null {
   return (hit?.lang as Locale | undefined) ?? "en";
 }
 
-function withLocaleCookie(res: NextResponse, locale: Locale): NextResponse {
-  res.cookies.set(LOCALE_COOKIE, locale, { path: "/", maxAge: COOKIE_MAX_AGE, sameSite: "lax" });
-  return res;
+function isLocale(v: string | null | undefined): v is Locale {
+  return v === "ko" || (PREFIXED as readonly string[]).includes(v ?? "");
+}
+
+/** 같은 사이트 안에서 넘어온 요청인가 (링크 클릭·Next 라우터 fetch 모두 Referer를 보낸다) */
+function fromSameSite(req: NextRequest): boolean {
+  const ref = req.headers.get("referer");
+  if (!ref) return false;
+  try {
+    return new URL(ref).host === req.nextUrl.host;
+  } catch {
+    return false;
+  }
 }
 
 function routeLocale(req: NextRequest): NextResponse {
   const { pathname, searchParams } = req.nextUrl;
-  const saved = req.cookies.get(LOCALE_COOKIE)?.value;
 
-  /* /en·/fr·/ja 방문 = 그 언어를 고른 것으로 본다 */
-  const seg = pathname.split("/")[1];
-  if ((PREFIXED as readonly string[]).includes(seg)) {
-    const res = NextResponse.next();
-    return saved === seg ? res : withLocaleCookie(res, seg as Locale);
-  }
-
-  /* KR 링크 → ko 기억 후 파라미터 없는 주소로 */
-  if (searchParams.get("lang") === "ko") {
+  /* 언어 버튼 → 기억 후 파라미터 없는 주소로 */
+  const picked = searchParams.get("lang");
+  if (isLocale(picked)) {
     const clean = req.nextUrl.clone();
     clean.searchParams.delete("lang");
-    return withLocaleCookie(NextResponse.redirect(clean, 307), "ko");
+    const res = NextResponse.redirect(clean, 307);
+    res.cookies.set(LOCALE_COOKIE, picked, { path: "/", maxAge: COOKIE_MAX_AGE, sameSite: "lax" });
+    return res;
   }
 
+  /* 로케일 주소·비대상 페이지·사이트 안 이동은 그대로 */
+  if ((PREFIXED as readonly string[]).includes(pathname.split("/")[1])) return NextResponse.next();
   if (!LOCALIZED_PATHS.has(pathname)) return NextResponse.next();
+  if (fromSameSite(req)) return NextResponse.next();
 
-  const target: Locale | null =
-    saved === "ko" || (PREFIXED as readonly string[]).includes(saved ?? "")
-      ? (saved as Locale)
-      : BOT_UA.test(req.headers.get("user-agent") ?? "")
-        ? null
-        : preferredLocale(req.headers.get("accept-language"));
+  const saved = req.cookies.get(LOCALE_COOKIE)?.value;
+  const target: Locale | null = isLocale(saved)
+    ? saved
+    : BOT_UA.test(req.headers.get("user-agent") ?? "")
+      ? null
+      : preferredLocale(req.headers.get("accept-language"));
 
   if (!target || target === "ko") return NextResponse.next();
 

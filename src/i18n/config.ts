@@ -31,12 +31,14 @@ export const ogLocaleMap: Record<Locale, string> = {
   ja: "ja_JP",
 };
 
-/** 언어 자동 전환 쿠키 — 사용자가 고른(또는 방문한) 로케일을 기억한다. src/proxy.ts가 읽고 쓴다 */
-export const LOCALE_COOKIE = "mdm_locale";
+/** 언어 자동 전환 쿠키 — 사용자가 언어 버튼으로 **직접 고른** 로케일만 기억한다. src/proxy.ts가 읽고 쓴다.
+ *  (2026-09-24 v2: 페이지 방문만으로 기억하던 v1 `mdm_locale`을 버리고 이름을 바꿨다 — 옛 쿠키 무시용) */
+export const LOCALE_COOKIE = "mdm_lang";
 
-/** 언어 스위처의 KR 링크. proxy가 ?lang=ko를 보고 쿠키를 ko로 박은 뒤 깨끗한 "/"로 보낸다.
- *  이게 없으면 브라우저 언어가 fr인 사람이 KR을 눌러도 "/"에서 다시 /fr로 튕긴다. */
-export const LANG_KO_HREF = "/?lang=ko";
+/** 언어 스위처 링크. proxy가 ?lang=을 보고 쿠키를 박은 뒤 파라미터 없는 주소로 보낸다. */
+export function langSwitchHref(locale: Locale): string {
+  return `${localePrefixMap[locale]}?lang=${locale}`;
+}
 
 export function isLocale(value: string): value is Locale {
   return (locales as readonly string[]).includes(value);
