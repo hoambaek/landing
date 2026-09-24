@@ -585,10 +585,6 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
             </div>
           </div>
         </div>
-        <div className={`${s.footnote} ${s.dOnly}`}>
-          <span>SIX AXES · WSET 0–100</span>
-          <span>ARRHENIUS · HENRY</span>
-        </div>
       </section>
 
       {/* ═══ S4. CH.03 검증받는다 ═══ */}

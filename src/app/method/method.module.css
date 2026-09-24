@@ -333,20 +333,6 @@
   .radarChart { width: 100%; }
 }
 
-.footnote {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 1200px;
-  margin: 96px auto 0;
-  padding: 24px 24px 0;
-  border-top: 1px solid rgba(49, 46, 42, 0.15);
-  font-family: var(--font-eb-garamond, "EB Garamond"), serif;
-  font-size: 13px;
-  letter-spacing: 0.14em;
-  color: rgba(49, 46, 42, 0.55);
-}
-
 /* ═══ CH.03 검증받는다 ═══ */
 /* 인양 이미지가 섹션 끝에 붙도록 하단 여백 제거(이미지 아래 블랙 공간 없앰) */
 .verifySection { padding-bottom: 0; }
