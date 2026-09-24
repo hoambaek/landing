@@ -97,6 +97,9 @@ export default function HeroSection({
       {/* 좌표 서명 — 우하단. 숙성 지점을 밝히는 내용이라 로케일별 문구 */}
       <span className="s-void__signature">{dict.signature}</span>
 
+      {/* 스크롤 큐 — 하단 중앙. 장식이라 스크린리더 제외 */}
+      <span className="s-void__scroll" aria-hidden="true">↓</span>
+
       {/* Descent Veil — 수면→심해 하강 전환 막. 기본 opacity 0,
           데스크톱에서 DescentEffect(GSAP 스크럽)가 제어 */}
       <div className="s-void__veil" aria-hidden="true" />

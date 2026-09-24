@@ -1063,6 +1063,22 @@ input:focus-visible,
   text-shadow: 0 1px 8px rgba(10, 9, 8, 0.8);
 }
 
+/* 스크롤 큐 — 하단 중앙 화살표. 사진 위에서 묻히지 않게 대비 + 그림자 */
+.s-void__scroll {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 20px;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 8px rgba(10, 9, 8, 0.7);
+  pointer-events: none;
+}
+
 /* ── Hero 모바일 ── */
 @media (max-width: 768px) {
   /* 카피 컨테이너 — 모바일 중앙 정렬 (데스크톱용 translateY 해제) */
@@ -1155,6 +1171,12 @@ input:focus-visible,
     right: 20px;
     bottom: 54px;
     font-size: 12px;
+  }
+
+  .s-void__scroll {
+    bottom: 28px;
+    font-size: 14px;
+    line-height: 18px;
   }
 }
 
@@ -5408,6 +5430,18 @@ html[lang="ja"] .s-letter__title {
 
   .s-void__signature {
     animation: void-fade 1.4s ease 1.7s backwards;
+  }
+
+  /* 서명과 함께 등장한 뒤 은은하게 숨쉬기 */
+  .s-void__scroll {
+    animation:
+      void-fade 1.4s ease 1.7s backwards,
+      scroll-breathe 2.4s ease-in-out 3.1s infinite;
+  }
+
+  @keyframes scroll-breathe {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
   }
 
   @keyframes void-settle {
