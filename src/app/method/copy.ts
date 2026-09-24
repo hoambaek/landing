@@ -175,7 +175,7 @@ const ko: MethodCopy = {
     certCopy: "검증을 마친 이력은 병마다 증서가 됩니다. 휴대폰을 가까이 대면 입수 좌표와 수심, 수온, 바다에서 살아낸 시간이 열립니다. 같은 기록은 하나도 없습니다.",
     certPhone: {
       aria: "휴대폰을 대면 열리는 병별 기록 화면",
-      graphTitle: "당신의 병이 지나온 바다",
+      graphTitle: "N° 0147이 지나온 바다",
       graphMeta: "12 MONTHS AT SEA",
       seasons: ["2026 겨울", "봄", "가을", "겨울"],
       rows: [
@@ -511,7 +511,7 @@ const ja: MethodCopy = {
     certCopy: "検証を終えた履歴は、一本ごとの証書になります。スマートフォンをかざせば、沈めた地点の座標、水深、水温、そして海で過ごした時間をたどれます。同じ記録は、ひとつとしてありません。",
     certPhone: {
       aria: "スマートフォンをかざすとひらく、ボトルごとの記録画面",
-      graphTitle: "あなたのボトルが過ごした海",
+      graphTitle: "N° 0147が過ごした海",
       graphMeta: "12 MONTHS AT SEA",
       seasons: ["2026 冬", "春", "秋", "冬"],
       rows: [
