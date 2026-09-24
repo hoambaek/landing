@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { locales, localePrefixMap, type Locale } from "@/i18n/config";
+import { LANG_KO_HREF, locales, localePrefixMap, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import koDict from "@/i18n/messages/ko.json";
 
@@ -170,7 +170,7 @@ export default function Footer({
               {locales.map((lc) => (
                 <Link
                   key={lc}
-                  href={localePrefixMap[lc]}
+                  href={lc === "ko" ? LANG_KO_HREF : localePrefixMap[lc]}
                   className={lc === locale ? "s-footer__lang-active" : undefined}
                 >
                   {lc === "ko" ? "KR" : lc === "ja" ? "JP" : lc.toUpperCase()}

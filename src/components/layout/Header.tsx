@@ -7,7 +7,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useHeaderScroll, useIndicatorScroll } from "@/hooks/useScrollSection";
 import { useIsMounted, useClientValue } from "@/hooks/useClientEnv";
-import { locales, localePrefixMap, type Locale } from "@/i18n/config";
+import { LANG_KO_HREF, locales, localePrefixMap, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { computeMeasureDays } from "@/lib/measurement";
 
@@ -325,7 +325,7 @@ export default function Header({
             {locales.map((lc) => (
               <Link
                 key={lc}
-                href={localePrefixMap[lc]}
+                href={lc === "ko" ? LANG_KO_HREF : localePrefixMap[lc]}
                 className={lc === locale ? "menu-overlay__lang-active" : ""}
                 onClick={close}
               >

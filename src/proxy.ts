@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { LOCALE_COOKIE, localePrefixMap, type Locale } from "@/i18n/config";
 
 /**
  * /b 요청 레이트 리밋 — NFC 코드 대량 탐색 차단.
@@ -75,7 +76,82 @@ function blocked(ip: string, code: string | null): boolean {
   return entry.codes.size > MAX_CODES || entry.hits.length > MAX_HITS;
 }
 
+/* ─────────────────────────────────────────────
+ * 언어 자동 전환 (2026-09-24)
+ *
+ * 한국어 주소(prefix 없음)로 처음 온 사람을 브라우저 언어(Accept-Language)에 맞는 로케일로 보낸다.
+ *  - en·fr·ja는 해당 로케일로, 그 밖의 비한국어는 /en으로. 한국어 브라우저는 그대로.
+ *  - 한 번 고른 언어는 쿠키로 기억한다. /en·/fr·/ja 페이지를 열면 그 로케일,
+ *    KR 링크(/?lang=ko)를 누르면 ko가 박힌다. 쿠키가 있으면 브라우저 언어보다 우선한다.
+ *  - 검색·미리보기 봇은 보내지 않는다. 보내면 한국어 페이지가 색인에서 빠진다.
+ *  - 307(임시)로 보낸다. 301이면 브라우저가 "/"를 영구히 /en으로 기억해 KR로 못 돌아온다.
+ * 로케일 변형이 있는 페이지만 대상이다(약관류는 한국어 정본뿐이라 제외).
+ * ───────────────────────────────────────────── */
+
+const LOCALIZED_PATHS = new Set(["/", "/method", "/invite", "/partner", "/brand-book"]);
+const PREFIXED = ["en", "fr", "ja"] as const;
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+const BOT_UA = /bot|crawl|spider|slurp|yeti|daum|facebookexternalhit|kakaotalk-scrap|embedly|preview|lighthouse|headless/i;
+
+/** Accept-Language에서 q값 순으로 첫 지원 언어. 비한국어인데 지원 목록에 없으면 en */
+function preferredLocale(header: string | null): Locale | null {
+  if (!header) return null;
+  const langs = header
+    .split(",")
+    .map((part) => {
+      const [tag, ...params] = part.trim().split(";");
+      const q = params.find((p) => p.trim().startsWith("q="));
+      return { lang: tag.trim().toLowerCase().split("-")[0], q: q ? Number(q.trim().slice(2)) || 0 : 1 };
+    })
+    .filter((l) => l.lang && l.lang !== "*" && l.q > 0)
+    .sort((a, b) => b.q - a.q);
+  if (langs.length === 0) return null;
+  const hit = langs.find((l) => l.lang === "ko" || (PREFIXED as readonly string[]).includes(l.lang));
+  return (hit?.lang as Locale | undefined) ?? "en";
+}
+
+function withLocaleCookie(res: NextResponse, locale: Locale): NextResponse {
+  res.cookies.set(LOCALE_COOKIE, locale, { path: "/", maxAge: COOKIE_MAX_AGE, sameSite: "lax" });
+  return res;
+}
+
+function routeLocale(req: NextRequest): NextResponse {
+  const { pathname, searchParams } = req.nextUrl;
+  const saved = req.cookies.get(LOCALE_COOKIE)?.value;
+
+  /* /en·/fr·/ja 방문 = 그 언어를 고른 것으로 본다 */
+  const seg = pathname.split("/")[1];
+  if ((PREFIXED as readonly string[]).includes(seg)) {
+    const res = NextResponse.next();
+    return saved === seg ? res : withLocaleCookie(res, seg as Locale);
+  }
+
+  /* KR 링크 → ko 기억 후 파라미터 없는 주소로 */
+  if (searchParams.get("lang") === "ko") {
+    const clean = req.nextUrl.clone();
+    clean.searchParams.delete("lang");
+    return withLocaleCookie(NextResponse.redirect(clean, 307), "ko");
+  }
+
+  if (!LOCALIZED_PATHS.has(pathname)) return NextResponse.next();
+
+  const target: Locale | null =
+    saved === "ko" || (PREFIXED as readonly string[]).includes(saved ?? "")
+      ? (saved as Locale)
+      : BOT_UA.test(req.headers.get("user-agent") ?? "")
+        ? null
+        : preferredLocale(req.headers.get("accept-language"));
+
+  if (!target || target === "ko") return NextResponse.next();
+
+  const dest = req.nextUrl.clone();
+  dest.pathname = pathname === "/" ? localePrefixMap[target] : `${localePrefixMap[target]}${pathname}`;
+  return NextResponse.redirect(dest, 307);
+}
+
 export default function proxy(req: NextRequest) {
+  if (!req.nextUrl.pathname.startsWith("/b/") && req.nextUrl.pathname !== "/b") return routeLocale(req);
+
   const code = bottleCode(req.nextUrl.pathname);
   if (!blocked(clientIp(req), code)) return NextResponse.next();
 
@@ -91,6 +167,20 @@ export default function proxy(req: NextRequest) {
 }
 
 export const config = {
-  /* /b 아래만. 정적 자산은 매처에서 빠져 카운터를 낭비하지 않는다. */
-  matcher: ["/b/:path*"],
+  /* /b는 레이트 리밋, 나머지는 언어 전환. 정적 자산·API는 매처에서 빠진다. */
+  matcher: [
+    "/b/:path*",
+    /* 언어 자동 전환 — 로케일 변형이 있는 페이지와 로케일 prefix 경로만 */
+    "/",
+    "/method",
+    "/invite",
+    "/partner",
+    "/brand-book",
+    "/en/:path*",
+    "/fr/:path*",
+    "/ja/:path*",
+    "/en",
+    "/fr",
+    "/ja",
+  ],
 };
