@@ -37,7 +37,8 @@ export default async function LandingPage({ locale }: { locale: Locale }) {
      정규식에 쉼표가 빠지면 "13,"을 남기고 뒷자리만 바뀐다(Temp. 13,15.9°C). */
   const fmt = (n: number) => (locale === "fr" ? n.toFixed(1).replace(".", ",") : n.toFixed(1));
   const liveLog = {
-    temp: setNum(l.temp, /[\d.,]+°C/, `${fmt(ocean?.seaTemp?.latest ?? 14.8)}°C`),
+    /* fr은 숫자와 °C 사이 불가분 공백(13,5 °C) — 사전 문자열에도 공백이 있어 정규식이 공백을 허용해야 한다 */
+    temp: setNum(l.temp, /[\d.,]+\s?°C/, `${fmt(ocean?.seaTemp?.latest ?? 14.8)}${locale === "fr" ? "\u00a0" : ""}°C`),
     current: setNum(l.current, /[\d.,]+ m\/s/, `${fmt(currentMs)} m/s`),
     depth: l.depth,
   };

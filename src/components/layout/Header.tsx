@@ -92,8 +92,8 @@ export default function Header({
   const recLine =
     liveTemp !== null
       ? dict.recLine.replace(
-          /[\d.,]+°C/,
-          `${locale === "fr" ? liveTemp.toFixed(1).replace(".", ",") : liveTemp.toFixed(1)}°C`,
+          /[\d.,]+\s?°C/,
+          locale === "fr" ? `${liveTemp.toFixed(1).replace(".", ",")}\u00a0°C` : `${liveTemp.toFixed(1)}°C`,
         )
       : dict.recLine;
 

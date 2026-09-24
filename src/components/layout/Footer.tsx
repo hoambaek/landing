@@ -37,6 +37,10 @@ const NAV_COLS = [
   },
 ];
 
+/* fr은 영어가 섞이지 않게 모토·RECORD 헤드만 현지화 (모토 정본: Écrit par la mer). 나머지 라벨은 브랜드 고유명 */
+const MOTTO: Partial<Record<Locale, string>> = { fr: "Écrit par la mer." };
+const NAV_HEAD_OVERRIDE: Partial<Record<Locale, Record<string, string>>> = { fr: { RECORD: "RELEVÉ" } };
+
 const LEGAL = [
   "주식회사 오크니",
   "대표 정설화",
@@ -89,7 +93,7 @@ export default function Footer({
           height={278}
           className="s-footer__logo"
         />
-        <p className="s-footer__motto">Written by the Sea.</p>
+        <p className="s-footer__motto">{MOTTO[locale] ?? "Written by the Sea."}</p>
         <span className="s-footer__motto-rule" aria-hidden="true" />
       </div>
 
@@ -99,7 +103,7 @@ export default function Footer({
       <nav className="s-footer__nav">
         {NAV_COLS.map((col) => (
           <div key={col.head} className="s-footer__nav-col">
-            <span className="s-footer__nav-head">{col.head}</span>
+            <span className="s-footer__nav-head">{NAV_HEAD_OVERRIDE[locale]?.[col.head] ?? col.head}</span>
             <ul className="s-footer__nav-items">
               {col.items.map((it) => (
                 <li key={it.label}>

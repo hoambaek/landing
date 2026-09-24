@@ -18,6 +18,17 @@ import s from "./method.module.css";
    ──────────────────────────────────────────────────────────── */
 
 const MARKER_LABELS = ["MEASURE", "PREDICT", "VERIFY", "LEARN"];
+/* fr 페이지는 영어가 섞이지 않게 현지화 (프랑스어 원어민 교정 2026-09-24) */
+const MARKER_LABELS_FR = ["MESURER", "PRÉDIRE", "VÉRIFIER", "APPRENDRE"];
+
+/** fr 수치 표기: 소수점 쉼표, 숫자와 단위 사이 불가분 공백(16,9 °C), 좌표 34° N */
+function frNum(v: string): string {
+  return v
+    .replace(/(\d)\.(\d)/g, "$1,$2")
+    .replace(/(\d)°C/g, "$1\u00a0°C")
+    .replace(/(\d)°([NE])/g, "$1°\u00a0$2")
+    .replace(/(\d) (‰|cm|m\/s|atm|m|s)(?=$|\s)/g, "$1\u00a0$2");
+}
 
 /** 히어로 서브카피에서 시스템명(OCEAN CELLAR™)을 강조 스팬으로 감싼다.
  *  ko는 "AI OCEAN CELLAR™", en/fr은 "OCEAN CELLAR™"가 대상. */
@@ -34,7 +45,7 @@ function highlightBrand(text: string, brandClass: string) {
   );
 }
 
-function ChapterMarker({ step, tone }: { step: number; tone: "dark" | "light" }) {
+function ChapterMarker({ step, tone, labels = MARKER_LABELS }: { step: number; tone: "dark" | "light"; labels?: string[] }) {
   return (
     <div className={s.marker} data-marker-tone={tone}>
       <div className={s.markerSegs}>
@@ -42,7 +53,7 @@ function ChapterMarker({ step, tone }: { step: number; tone: "dark" | "light" })
           <span key={n} className={s.markerSeg} data-active={n === step} />
         ))}
       </div>
-      <span className={s.markerLabel}>{MARKER_LABELS[step - 1]}</span>
+      <span className={s.markerLabel}>{labels[step - 1]}</span>
     </div>
   );
 }
@@ -397,9 +408,12 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
   const href = (path: string) => (base === "/" ? path : `${base}${path}`);
 
   const ocean = await getOceanObservations().catch(() => null);
-  const obs = buildObs(ocean, t.ch01.obsNames);
+  const isFr = locale === "fr";
+  const num = (v: string) => (isFr ? frNum(v) : v);
+  const markerLabels = isFr ? MARKER_LABELS_FR : MARKER_LABELS;
+  const obs = buildObs(ocean, t.ch01.obsNames).map((o) => ({ ...o, value: num(o.value) }));
   const lp = t.ch01.livePrefix;
-  const live = {
+  const liveRaw = {
     temp: ocean?.seaTemp ? `${lp.temp} ${ocean.seaTemp.latest.toFixed(1)}°C` : `${lp.temp} 14.8°C`,
     // 해류: Open-Meteo가 자주 null이라 KHOA 조류(tidalCurrent) 실측을 다음 우선 (plan data-log와 동일 계단식)
     current: `${lp.current} ${(ocean?.oceanCurrent?.latest ?? ocean?.tidalCurrent?.latest ?? 1.2).toFixed(1)} m/s`,
@@ -407,6 +421,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
     pressure: ocean?.pressure ? `${lp.pressure} ${ocean.pressure.latest.toFixed(2)} atm` : `${lp.pressure} 3.97 atm`,
     salinity: ocean?.salinity ? `${lp.salinity} ${ocean.salinity.latest.toFixed(1)} ‰` : `${lp.salinity} 31.1 ‰`,
   };
+  const live = Object.fromEntries(Object.entries(liveRaw).map(([k, v]) => [k, num(v)])) as typeof liveRaw;
 
   /** ko는 J1950 PNG, en/fr은 텍스트 챕터 타이틀 */
   const h2 = (png: { src: string; width: number }, text: string) =>
@@ -469,7 +484,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
       {/* ═══ S2. CH.01 기록한다 ═══ */}
       <section className={`${s.chapter} ${s.dark}`} data-tone="dark">
         <div className={`${s.inner} reveal`}>
-          <ChapterMarker step={1} tone="dark" />
+          <ChapterMarker step={1} tone="dark" labels={markerLabels} />
           <h2 className={s.h2}>{h2({ src: "/text/method/h-measure.png", width: 533 }, t.ch01.h2)}</h2>
         </div>
         <div className={`${s.inner} ${s.measureBody}`}>
@@ -509,7 +524,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
       {/* ═══ S3. CH.02 예측한다 ═══ */}
       <section className={`${s.chapter} ${s.light}`} data-tone="light">
         <div className={`${s.inner} reveal`}>
-          <ChapterMarker step={2} tone="light" />
+          <ChapterMarker step={2} tone="light" labels={markerLabels} />
           <h2 className={s.h2}>{h2({ src: "/text/method/h-predict.png", width: 574 }, t.ch02.h2)}</h2>
           <p className={s.lead}>{t.ch02.lead}</p>
         </div>
@@ -580,7 +595,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
       <section className={`${s.chapter} ${s.dark} ${s.verifySection}`} data-tone="dark">
         <div className={`${s.inner} ${s.verifyGrid}`}>
           <div className={`${s.verifyCopy} reveal`}>
-            <ChapterMarker step={3} tone="dark" />
+            <ChapterMarker step={3} tone="dark" labels={markerLabels} />
             <h2 className={s.h2}>{h2({ src: "/text/method/h-verify.png", width: 545 }, t.ch03.h2)}</h2>
             <p>{t.ch03.p1}</p>
             <p>{t.ch03.p2}</p>
@@ -645,7 +660,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
             unoptimized
             className={s.coverImg}
           />
-          <figcaption className={s.retrievalCap}>RETRIEVAL · 34°N · 126°E</figcaption>
+          <figcaption className={s.retrievalCap}>{isFr ? "REMONTÉE · 34°\u00a0N · 126°\u00a0E" : "RETRIEVAL · 34°N · 126°E"}</figcaption>
         </figure>
 
       </section>
@@ -653,7 +668,7 @@ export default async function MethodView({ locale = "ko" }: { locale?: Locale })
       {/* ═══ S5. CH.04 보정한다 ═══ */}
       <section className={`${s.chapter} ${s.light}`} data-tone="light">
         <div className={`${s.inner} reveal`}>
-          <ChapterMarker step={4} tone="light" />
+          <ChapterMarker step={4} tone="light" labels={markerLabels} />
           <h2 className={s.h2}>{h2({ src: "/text/method/h-learn.png", width: 546 }, t.ch04.h2)}</h2>
           <p className={s.lead}>{t.ch04.lead}</p>
         </div>

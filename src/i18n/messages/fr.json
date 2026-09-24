@@ -3,14 +3,14 @@
     "headline": "En ce moment même, une bouteille de champagne inscrit le temps au fond de la mer.",
     "brandLabel": "Champagne vieilli en mer",
     "brandName": "Muse de Marée",
-    "signature": "Namhae, Corée 34°N · 126°E",
+    "signature": "Namhae, Corée 34°\u00a0N · 126°\u00a0E",
     "bgAlt": "Une bouteille de champagne dans une cage à 30 m de profondeur au large de Namhae · Muse de Marée"
   },
   "header": {
-    "recLine": "Namhae 34°N · Temp. 13,5°C",
-    "recDays": "{n}e jour d'observation",
+    "recLine": "Namhae 34°\u00a0N · Temp. 13,5\u00a0°C",
+    "recDays": "{n}e jour d’observation",
     "aria": {
-      "home": "Aller à l'accueil",
+      "home": "Aller à l’accueil",
       "menuOpen": "Ouvrir le menu",
       "menuLabel": "Menu de navigation",
       "close": "Fermer"
@@ -18,20 +18,20 @@
   },
   "living": {
     "bgAlt": "Une cage de remontée à 30 m de profondeur au large de Namhae, le site de mesure",
-    "copy": "Là où la lumière s'efface dans les profondeurs, le relevé commence.",
+    "copy": "Là où la lumière s’efface dans les profondeurs, le relevé commence.",
     "counterUnit": "jours",
     "place": "Namhae, Corée",
     "methodLink": "En savoir plus",
     "log": {
-      "temp": "Temp. 13,5°C",
+      "temp": "Temp. 13,5\u00a0°C",
       "current": "Courant 2,46 m/s",
       "depth": "Profondeur 30 m"
     }
   },
   "first": {
-    "eyebrow": "THE FIRST RECORD",
+    "eyebrow": "LE PREMIER RELEVÉ",
     "headline": "Le premier relevé a émergé.",
-    "closing": "À chaque bouteille son empreinte de la mer ; aucune n'est identique.",
+    "closing": "À chaque bouteille son empreinte de la mer ; aucune n’est identique.",
     "plateAlt": {
       "light": "La première lumière rencontrée à la surface",
       "manuscript": "Balanes et cristaux de sel à la surface de la bouteille, un manuscrit écrit par la mer"
@@ -39,12 +39,12 @@
   },
   "collection": {
     "title": "collection.",
-    "sub": "Chaque cuvée est un relevé, veiller sur le temps que la mer a façonné.",
+    "sub": "Chaque cuvée est un relevé\u00a0: elle préserve le temps façonné par la mer.",
     "heroAlt": "La gamme de cuvées remontée au large de Namhae",
     "cuvees": {
       "enLieuSur": "Une première rencontre avec le temps de la mer",
-      "enLieuSurMagnum": "La même mer, deux fois le volume · 1500 ml",
-      "elementDeSurprise": "Chardonnay seul, sans dosage\nTel que la mer l'a façonné",
+      "enLieuSurMagnum": "La même mer, deux fois le volume · 1\u00a0500\u00a0ml",
+      "elementDeSurprise": "Chardonnay seul, sans dosage\nTel que la mer l’a façonné",
       "editionZero": "La première bouteille, où tout a commencé",
       "atomesCrochus1yr": "Petit Meslier, un cépage rare\nUne première année passée sous la mer",
       "atomesCrochus2yr": "Encore en train de mûrir sous la mer\nUn relevé au fil de huit saisons",
@@ -74,15 +74,15 @@
     }
   },
   "maker": {
-    "title": "the maker.",
+    "title": "la maison.",
     "subtitle": "Le champagne est né en Champagne ; le relevé commence à Namhae, en Corée.",
     "imgAlt": "Champagne Mignon Boulard, une maison de Champagne",
     "boulard": {
       "desc": "Quatre générations depuis 1911, 49 sols distincts.\nUne maison qui laisse à chaque sol son caractère."
     },
     "comingSoon": {
-      "name": "coming soon",
-      "desc": "De nouveaux producteurs adaptés au vieillissement sous-marin,\nprésentés l'un après l'autre."
+      "name": "à venir",
+      "desc": "De nouveaux producteurs adaptés au vieillissement sous-marin\nseront présentés l’un après l’autre."
     },
     "teaser": "La deuxième signature · 2027, dévoilée avec la prochaine immersion",
     "aria": {
@@ -91,19 +91,19 @@
     }
   },
   "oceanCellar": {
-    "eyebrow": "membership",
+    "eyebrow": "sur invitation",
     "title": "Ocean Cellar Privé",
-    "sub": "Les premiers à découvrir chaque sortie",
+    "sub": "Les premiers à découvrir chaque nouvelle cuvée",
     "tags": {
-      "schedule": "Les sorties en avant-première",
-      "attend": "Seulement autant que de bouteilles préparées",
-      "archive": "Le relevé de votre bouteille, à vie"
+      "schedule": "Les nouvelles cuvées en avant-première",
+      "attend": "Autant de places que de bouteilles préparées",
+      "archive": "Le relevé de votre bouteille, conservé à vie"
     },
     "link": "Demander une invitation"
   },
   "partnership": {
-    "eyebrow": "Professional",
-    "title": "Partnership",
+    "eyebrow": "Professionnels",
+    "title": "Partenariat",
     "sub": "Le temps que la mer a inscrit, que prolonge votre table",
     "tags": {
       "fineDining": "Haute gastronomie",
@@ -111,7 +111,7 @@
       "cellar": "Caves privées"
     },
     "links": {
-      "partner": "Contact partenaire",
+      "partner": "Devenir partenaire",
       "brandBook": "Dossier de marque"
     }
   },
@@ -119,11 +119,11 @@
     "common": {
       "sending": "Envoi",
       "errNetwork": "Veuillez vérifier votre connexion et réessayer.",
-      "errFailed": "Une erreur s'est produite. Veuillez réessayer dans un instant.",
+      "errFailed": "Une erreur s’est produite. Veuillez réessayer dans un instant.",
       "placeholder": {
         "name": "Nom complet",
         "email": "Adresse e-mail",
-        "venue": "Nom de l'établissement",
+        "venue": "Nom de l’établissement",
         "contact": "Personne à contacter",
         "affiliation": "Affiliation · Société",
         "referral": "Comment nous avez-vous connus ? (facultatif)"
@@ -132,7 +132,7 @@
         "open": "Ouvrir le menu",
         "label": "Menu de navigation",
         "close": "Fermer",
-        "home": "Aller à l'accueil"
+        "home": "Aller à l’accueil"
       },
       "referralOptions": [
         "Recherche IA (ChatGPT, Perplexity, etc.)",
@@ -162,16 +162,16 @@
           "desc": "Consultez à tout moment le relevé du temps passé à 30 mètres de profondeur."
         }
       ],
-      "scarcity": "Les places n'ouvrent qu'à hauteur des bouteilles préparées.",
+      "scarcity": "Les places n’ouvrent qu’à hauteur des bouteilles préparées.",
       "submit": "Demander une invitation",
-      "note": "Laissez vos coordonnées : nous vous écrirons en premier à l'ouverture des adhésions.",
+      "note": "Laissez vos coordonnées : nous vous écrirons en premier à l’ouverture des adhésions.",
       "errValidation": "Veuillez saisir votre nom et une adresse e-mail valide.",
       "successLine": "Votre demande a bien été reçue.",
-      "successNote": "L'invitation vous parviendra avec les nouvelles de la prochaine remontée."
+      "successNote": "L’invitation vous parviendra avec les nouvelles de la prochaine remontée."
     },
     "partner": {
       "metaTitle": "Contact partenaire | Partnership | Muse de Marée",
-      "metaDesc": "Le temps que la mer a inscrit, prolongé à votre table. Contact partenaire pour la haute gastronomie, les bars d'hôtel et les caves privées.",
+      "metaDesc": "Le temps que la mer a inscrit, prolongé à votre table. Contact partenaire pour la haute gastronomie, les bars d’hôtel et les caves privées.",
       "eyebrow": "PARTNERSHIP",
       "title": "Contact partenaire",
       "sub": "Poser le temps de la mer sur la table.",
@@ -183,7 +183,7 @@
         },
         {
           "title": "Une proposition adaptée à votre lieu",
-          "desc": "Haute gastronomie, bars d'hôtel, caves privées. Nous préparons une proposition à la hauteur."
+          "desc": "Haute gastronomie, bars d’hôtel, caves privées. Nous préparons une proposition à la hauteur."
         }
       ],
       "catLabel": "PARTNERSHIP TYPE",
@@ -199,7 +199,7 @@
         },
         "cellar": {
           "label": "Cave · Collection",
-          "desc": "Cave privée · collection d'adhésion"
+          "desc": "Cave privée · collection d’adhésion"
         },
         "other": {
           "label": "Autres propositions",
@@ -209,7 +209,7 @@
       "submit": "Envoyer la demande",
       "note": "Nous étudierons votre message et vous répondrons par une proposition sous deux jours ouvrés.",
       "errCategory": "Veuillez sélectionner un type de partenariat.",
-      "errValidation": "Veuillez saisir le nom de l'établissement, la personne à contacter et une adresse e-mail valide.",
+      "errValidation": "Veuillez saisir le nom de l’établissement, la personne à contacter et une adresse e-mail valide.",
       "successLine": "Votre demande a bien été reçue.",
       "successNote": "Un membre de notre équipe vous répondra sous deux jours ouvrés."
     },
@@ -238,7 +238,7 @@
   },
   "footer": {
     "policies": {
-      "terms": "Conditions d'utilisation",
+      "terms": "Conditions d’utilisation",
       "privacy": "Politique de confidentialité",
       "cookies": "Politique relative aux cookies"
     },
