@@ -64,7 +64,7 @@
     },
     "gift": {
       "eyebrow": "En cadeau",
-      "head": "Le temps, gravé à leur nom",
+      "head": "Remis avec son relevé",
       "body": "La bouteille se vide, le relevé demeure."
     },
     "note": {
@@ -78,7 +78,7 @@
     "subtitle": "Le champagne est né en Champagne ; le relevé commence à Namhae, en Corée.",
     "imgAlt": "Champagne Mignon Boulard, une maison de Champagne",
     "boulard": {
-      "desc": "Quatre générations depuis 1911, 49 sols distincts.\nUne maison qui préserve intacte la complexité que d'autres chercheraient à uniformiser."
+      "desc": "Quatre générations depuis 1911, 49 sols distincts.\nUne maison qui laisse à chaque sol son caractère."
     },
     "comingSoon": {
       "name": "coming soon",

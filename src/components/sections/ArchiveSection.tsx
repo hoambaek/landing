@@ -92,10 +92,10 @@ export default function ArchiveSection({
         ))}
       </ul>
 
-      {/* 기록 병 쇼케이스 — 병 단독 중앙 */}
+      {/* 기록 카드 쇼케이스 — 병마다 동봉되는 기록 카드 사진 (데스크톱·모바일 공통) */}
       <div className="s-col__showcase">
-        <div className="s-col__showcase-bottle">
-          <Image src="/images/01.webp" alt={dict.cert.showcaseAlt} fill sizes="260px" className="s-col__showcase-img" />
+        <div className="s-col__showcase-card">
+          <Image src="/images/record-card.webp" alt={dict.cert.showcaseAlt} fill sizes="(max-width: 768px) 100vw, 640px" className="s-col__showcase-img" />
         </div>
       </div>
 

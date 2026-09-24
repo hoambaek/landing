@@ -1053,12 +1053,14 @@ input:focus-visible,
   z-index: 3;
   right: 80px;
   bottom: 40px;
-  font-family: var(--font-mono);
-  font-weight: 300;
+  /* mono에 한글 글리프가 없어 '한국 남해'가 가는 시스템 폰트로 떨어짐 → 본문 서체 폴백 */
+  font-family: var(--font-mono), var(--font-body);
+  font-weight: 400;
   font-size: 13px;
   letter-spacing: 0.06em;
   line-height: 16px;
-  color: rgba(241, 239, 235, 0.82);
+  color: rgba(241, 239, 235, 0.95);
+  text-shadow: 0 1px 8px rgba(10, 9, 8, 0.8);
 }
 
 /* ── Hero 모바일 ── */
@@ -1171,6 +1173,15 @@ input:focus-visible,
   position: absolute;
   inset: 0;
   z-index: 0;
+}
+
+/* 데스크톱 — 사진을 우측으로 밀고 좌측은 페이드. 카피·카운터가 케이지와 겹치지 않게 */
+@media (min-width: 769px) {
+  .s-living__bg {
+    left: 20.8%;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+  }
 }
 
 .s-living__bg-img {
@@ -1596,7 +1607,7 @@ input:focus-visible,
 /* Connector */
 .s-first__connector {
   width: 1px;
-  height: 120px;
+  height: 72px;
   flex-shrink: 0;
   background-color: rgba(140, 133, 122, 0.55);
 }
@@ -1609,8 +1620,8 @@ input:focus-visible,
   overflow: clip;
 }
 
-.s-first__plate--03 { width: 580px; aspect-ratio: 920 / 1227; }
-.s-first__plate--04 { width: 580px; aspect-ratio: 1 / 1; }
+.s-first__plate--03 { width: 680px; aspect-ratio: 920 / 1227; }
+.s-first__plate--04 { width: 680px; aspect-ratio: 1 / 1; }
 
 .s-first__img {
   object-fit: cover;
@@ -1636,8 +1647,8 @@ input:focus-visible,
   flex-direction: column;
   align-items: center;
   gap: 30px;
-  padding-top: 96px;
-  padding-bottom: 110px;
+  padding-top: 80px;
+  padding-bottom: 120px;
 }
 
 .s-first__closing-line {
@@ -1902,7 +1913,7 @@ input:focus-visible,
   font-size: 11px;
   letter-spacing: 0.22em;
   line-height: 14px;
-  color: #8C857A;
+  color: #6E675D;
 }
 
 .s-col__card-name {
@@ -1922,11 +1933,12 @@ input:focus-visible,
 
 .s-col__card-desc {
   font-family: var(--font-body);
-  font-weight: 300;
-  font-size: 13px;
-  line-height: 16px;
-  color: #6E675D;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: #4F4943;
   white-space: pre-line; /* \n 줄바꿈 반영 */
+  word-break: keep-all;
 }
 
 /* SOLD OUT — 설명 맨 아래, mono 미묘하게 */
@@ -1935,7 +1947,7 @@ input:focus-visible,
   font-size: 11px;
   letter-spacing: 0.16em;
   line-height: 14px;
-  color: #8C857A;
+  color: #6E675D;
 }
 
 /* ── 퀴베 카드 호버 — 시네마틱 줌(ken burns) affordance ──
@@ -1982,15 +1994,16 @@ input:focus-visible,
   padding-bottom: 110px;
 }
 
-.s-col__showcase-bottle {
+.s-col__showcase-card {
   position: relative;
-  width: 260px;
-  height: 560px;
+  width: 640px;
+  max-width: 100%;
+  aspect-ratio: 4 / 3;
   flex-shrink: 0;
 }
 
 .s-col__showcase-img {
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
 }
 
@@ -2195,7 +2208,7 @@ input:focus-visible,
   }
 
   .s-col__card-n {
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.18em;
     line-height: 12px;
   }
@@ -2211,19 +2224,19 @@ input:focus-visible,
   }
 
   .s-col__card-desc {
-    font-size: 11px;
-    line-height: 14px;
+    font-size: 12px;
+    line-height: 18px;
   }
 
-  /* 쇼케이스 — 증서만 */
+  /* 쇼케이스 — 기록 카드 사진 풀폭 */
   .s-col__showcase {
     width: 100%;
-    padding: 8px 24px 80px;
+    padding: 8px 24px 48px;
     gap: 0;
   }
 
-  .s-col__showcase-bottle {
-    display: none;
+  .s-col__showcase-card {
+    width: 100%;
   }
 
   .s-col__cert {
@@ -2330,7 +2343,8 @@ input:focus-visible,
   font-weight: 300;
   font-size: 15px;
   line-height: 1.8;
-  color: rgba(241, 239, 235, 0.6);
+  color: rgba(241, 239, 235, 0.85);
+  text-shadow: 0 1px 8px rgba(10, 9, 8, 0.6);
 }
 
 .s-prive__tags {
@@ -2354,7 +2368,7 @@ input:focus-visible,
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: #8C857A;
+  background: var(--color-amber);
   flex-shrink: 0;
   margin-left: 12px;
 }
@@ -2365,11 +2379,12 @@ input:focus-visible,
 
 .s-prive__tags span:not(.s-prive__tag-dot) {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 13px;
   letter-spacing: 0.04em;
   line-height: 16px;
-  color: rgba(241, 239, 235, 0.7);
+  color: rgba(241, 239, 235, 0.9);
+  text-shadow: 0 1px 8px rgba(10, 9, 8, 0.6);
 }
 
 .s-prive__links {
@@ -2535,8 +2550,8 @@ input:focus-visible,
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 26px;
-  padding: 82px 120px 60px;
+  gap: 10px;
+  padding: 82px 120px 20px;
 }
 
 .s-footer__logo {
@@ -2551,7 +2566,7 @@ input:focus-visible,
   letter-spacing: 0.04em;
   line-height: 26px;
   color: #ECEAE6;
-  margin-top: 34px;
+  margin-top: 0;
 }
 
 .s-footer__motto-rule {
@@ -2917,7 +2932,7 @@ input:focus-visible,
 .s-maker__viewport {
   position: relative;
   width: 100%;
-  height: 522px;
+  height: 462px;
   overflow: clip;
   cursor: grab;
   /* 세로 스크롤은 브라우저에 양보, 가로 제스처만 JS가 처리 */
@@ -2935,7 +2950,7 @@ input:focus-visible,
   --slide-gap: 28px;
   display: flex;
   gap: var(--slide-gap);
-  height: 520px;
+  height: 460px;
   padding-left: calc((100% - var(--slide-w)) / 2);
   transform: translateX(calc(-1 * var(--idx, 0) * (var(--slide-w) + var(--slide-gap)) + var(--drag, 0px)));
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2957,7 +2972,7 @@ input:focus-visible,
 .s-maker__slide {
   display: flex;
   width: var(--slide-w);
-  height: 520px;
+  height: 460px;
   flex-shrink: 0;
   margin: 0;
   box-sizing: border-box;
@@ -3157,18 +3172,18 @@ input:focus-visible,
   .s-maker__subtitle-img { width: 218px; }
 
   .s-maker__viewport {
-    height: 520px;
+    height: 482px;
   }
 
   .s-maker__track {
     --slide-w: min(330px, calc(100vw - 60px));
     --slide-gap: 14px;
-    height: 518px;
+    height: 480px;
   }
 
   .s-maker__slide {
     flex-direction: column;
-    height: 518px;
+    height: 480px;
   }
 
   .s-maker__slide-img {

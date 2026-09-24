@@ -64,7 +64,7 @@
     },
     "gift": {
       "eyebrow": "A Gift",
-      "head": "Time, engraved with their name",
+      "head": "Given with its record",
       "body": "The bottle empties, the record remains."
     },
     "note": {
@@ -78,7 +78,7 @@
     "subtitle": "Champagne was made in Champagne; the record begins in Namhae, Korea.",
     "imgAlt": "Champagne Mignon Boulard, a Champagne maison",
     "boulard": {
-      "desc": "Four generations since 1911, 49 distinct soils.\nA maison that keeps intact the complexity others would smooth away."
+      "desc": "Four generations since 1911, 49 distinct soils.\nA maison that leaves each soil's character as it is."
     },
     "comingSoon": {
       "name": "coming soon",
