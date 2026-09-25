@@ -273,6 +273,9 @@ export interface EntryCopy {
   claimedCta: string;
   /* 01B — 소유자 본인이 다른 기기에서 태그했을 때 본인 인증(03B)으로 가는 길 */
   claimedVerify: string;
+  /* 01B → 01C 필름 다시 보기 입구, 필름이 끝난 뒤 01B로 돌아가는 링크 */
+  claimedFilm: string;
+  filmBack: string;
   nameLabel: string; // 자국어 이름
   namePlaceholder: string;
   /* 인증서에 새길 로마자 표기 — 등록자가 직접 정한다.
@@ -335,6 +338,8 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedBody: "기록은 누구에게나 열려 있습니다.",
     claimedCta: "바다의 기록 보기",
     claimedVerify: "소유자이신가요? 본인 인증",
+    claimedFilm: "필름 보기",
+    filmBack: "돌아가기",
     nameLabel: "이름",
     namePlaceholder: "인증서에 남길 이름",
     latinGivenLabel: "영문 이름",
@@ -388,6 +393,8 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedBody: "The record stays open to everyone.",
     claimedCta: "View the sea's record",
     claimedVerify: "Are you the owner? Verify",
+    claimedFilm: "Watch the film",
+    filmBack: "Back",
     nameLabel: "Name",
     namePlaceholder: "Name for the certificate",
     latinGivenLabel: "Given name",
@@ -441,6 +448,8 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedBody: "Le relevé reste ouvert à tous.",
     claimedCta: "Voir le relevé de la mer",
     claimedVerify: "Vous en êtes le propriétaire ? Vérifier",
+    claimedFilm: "Voir le film",
+    filmBack: "Retour",
     nameLabel: "Nom",
     namePlaceholder: "Nom pour le certificat",
     latinGivenLabel: "Prénom",
@@ -494,6 +503,8 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedBody: "記録は、どなたでもご覧いただけます。",
     claimedCta: "海の記録を見る",
     claimedVerify: "所有者の方ですか？ 本人確認",
+    claimedFilm: "フィルムを見る",
+    filmBack: "戻る",
     nameLabel: "お名前",
     namePlaceholder: "証明書に残すお名前",
     latinGivenLabel: "ローマ字の名",
@@ -547,6 +558,8 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedBody: "记录向所有人开放。",
     claimedCta: "查看大海的记录",
     claimedVerify: "您是所有者吗？本人验证",
+    claimedFilm: "观看影片",
+    filmBack: "返回",
     nameLabel: "姓名",
     namePlaceholder: "留在证书上的名字",
     latinGivenLabel: "拼音名",

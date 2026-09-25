@@ -8,7 +8,7 @@
  * 표기 규칙: 병 번호 N°/총량. 커머스 문구 금지.
  */
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import styles from "./entry.module.css";
 import ui from "./ui.module.css";
 import { entryCopy, PRODUCT_META, BOTTLE_LOCALES, type BottleLocale } from "../_lib/copy";
@@ -17,6 +17,7 @@ import { agingMonths, immersionYear } from "../_lib/duration";
 import { submitBottleRegistration } from "@/lib/forms";
 import BottleClaimed from "./BottleClaimed";
 import BottleIssued from "./BottleIssued";
+import BottleFilm from "./BottleFilm";
 import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
 
 type FieldKey = "name" | "latin" | "email";
@@ -91,6 +92,8 @@ export default function BottleEntry({
   const [sheetUp, setSheetUp] = useState(false);
   /* 필름 소리 — 모바일 브라우저는 소리 있는 자동재생을 막아 무음으로 시작한다. */
   const [soundOn, setSoundOn] = useState(false);
+  /* 01B에서 "필름 보기"로 연 필름(01C) */
+  const [filmOpen, setFilmOpen] = useState(false);
   /* 시트 위로 남는 필름 조각의 높이 — 다시 보기 버튼을 그 조각의 가운데에 둔다.
      시트 높이는 내용(언어·오류 줄)에 따라 달라 CSS만으로는 정할 수 없다. */
   const [stripH, setStripH] = useState<number | null>(null);
@@ -264,8 +267,10 @@ export default function BottleEntry({
             year={immersion ? immersionYear(immersion) : null}
             name={registeredTo ?? ""}
             nameLatin={registeredToLatin}
+            onWatchFilm={ENTRY_VIDEO_SRC ? () => setFilmOpen(true) : undefined}
           />
         </div>
+        {ENTRY_VIDEO_SRC && filmOpen && <BottleFilm src={ENTRY_VIDEO_SRC} copy={copy} onClose={() => setFilmOpen(false)} />}
       </main>
     );
   }
@@ -308,7 +313,7 @@ export default function BottleEntry({
             <button
               type="button"
               className={styles.replayBtn}
-              style={{ top: stripH / 2 }}
+              style={{ "--strip": `${stripH}px` } as CSSProperties}
               onClick={replayFilm}
               aria-label={copy.filmCaption}
             >
@@ -346,47 +351,6 @@ export default function BottleEntry({
               </span>
             </button>
           )}
-
-          <div className={styles.langSelect}>
-            <button
-              type="button"
-              className={styles.langChip}
-              onClick={() => setLangOpen((v) => !v)}
-              aria-expanded={langOpen}
-              aria-label="Language"
-            >
-              <span>{activeLocale.short}</span>
-              <svg width="7" height="5" viewBox="0 0 7 5" fill="none">
-                <polyline points="1,1 3.5,4 6,1" fill="none" stroke="rgba(241,239,235,0.55)" strokeWidth="1" />
-              </svg>
-            </button>
-            {langOpen && (
-              <div className={styles.langPanel} role="listbox">
-                {BOTTLE_LOCALES.map((l) => (
-                  <button
-                    key={l.code}
-                    type="button"
-                    role="option"
-                    aria-selected={l.code === locale}
-                    className={`${styles.langOpt} ${l.code === locale ? styles.langOptActive : ""}`}
-                    onClick={() => {
-                      setLocale(l.code);
-                      persistBottleLocale(l.code);
-                      setLangOpen(false);
-                    }}
-                  >
-                    <span className={styles.langOptCode}>{l.short}</span>
-                    <span className={styles.langOptNative}>{l.native}</span>
-                    {l.code === locale && (
-                      <svg className={styles.langCheck} width="9" height="7" viewBox="0 0 9 7" aria-hidden>
-                        <polyline points="1,3.5 3.5,6 8,1" fill="none" stroke="currentColor" strokeWidth="1" />
-                      </svg>
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
 
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/logo/logo_trans_W_lg.png" alt="Muse de Marée" className={styles.filmLogo} />
@@ -428,6 +392,49 @@ export default function BottleEntry({
           <p className={styles.claimBody}>{ownBody}</p>
 
           <form className={styles.form} onSubmit={onSubmit} noValidate>
+            {/* 언어 선택 — 필름 위가 아니라 첫 입력 행 오른쪽(Paper SPEC B v2).
+                재생 중 필름 위에는 사운드 칩 하나만 둔다 */}
+            {/* 라틴 지면은 첫 행이 두 칸(이름·성)이라 칩이 오른쪽 칸 라벨과 붙는다 — 칸 위 한 줄로 내린다 */}
+            <div className={`${styles.langSelect} ${isLatinLocale ? styles.langSelectRow : ""}`}>
+              <button
+                type="button"
+                className={styles.langChip}
+                onClick={() => setLangOpen((v) => !v)}
+                aria-expanded={langOpen}
+                aria-label="Language"
+              >
+                <span>{activeLocale.short}</span>
+                <svg width="7" height="5" viewBox="0 0 7 5" fill="none" aria-hidden>
+                  <polyline points={langOpen ? "1,4 3.5,1 6,4" : "1,1 3.5,4 6,1"} fill="none" stroke="currentColor" strokeWidth="1" />
+                </svg>
+              </button>
+              {langOpen && (
+                <div className={styles.langPanel} role="listbox">
+                  {BOTTLE_LOCALES.map((l) => (
+                    <button
+                      key={l.code}
+                      type="button"
+                      role="option"
+                      aria-selected={l.code === locale}
+                      className={`${styles.langOpt} ${l.code === locale ? styles.langOptActive : ""}`}
+                      onClick={() => {
+                        setLocale(l.code);
+                        persistBottleLocale(l.code);
+                        setLangOpen(false);
+                      }}
+                    >
+                      <span className={styles.langOptCode}>{l.short}</span>
+                      <span className={styles.langOptNative}>{l.native}</span>
+                      {l.code === locale && (
+                        <svg className={styles.langCheck} width="9" height="7" viewBox="0 0 9 7" aria-hidden>
+                          <polyline points="1,3.5 3.5,6 8,1" fill="none" stroke="currentColor" strokeWidth="1" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             {/* 라틴 로케일은 아래 로마자 칸이 곧 이름이라 자국어 칸을 두지 않는다 */}
             {!isLatinLocale && (
               <>

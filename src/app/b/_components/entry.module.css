@@ -140,85 +140,102 @@
     #0a0908 100%
   );
 }
+/* 언어 선택 — 등록 시트 안, 첫 입력 행 오른쪽(Paper SPEC B v2).
+   필름 위에서 걷어 왔다: 재생 중 필름 위에는 사운드 칩 하나만 둔다.
+   top 9px = 첫 칸 라벨(위 여백 13 · 줄높이 16)의 가운데에 칩(높이 약 23) 가운데를 맞춘 값 */
 .langSelect {
   position: absolute;
-  top: max(22px, calc(env(safe-area-inset-top) + 2px));
-  right: 22px;
-  z-index: 4;
+  top: 9px;
+  right: 0;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+}
+.langSelectRow {
+  position: relative;
+  top: auto;
+  align-self: flex-end;
+  margin-bottom: -6px;
+}
+.langSelectRow .langPanel {
+  position: absolute;
+  top: 100%;
+  right: 0;
 }
 .langChip {
   display: inline-flex;
   align-items: center;
   gap: 7px;
   padding: 5px 11px;
-  background: rgba(10, 9, 8, 0.35);
-  border: 0.5px solid rgba(241, 239, 235, 0.25);
+  background: transparent;
+  border: 0.5px solid rgba(42, 38, 33, 0.28);
   border-radius: 999px;
   font-family: var(--e-mono);
   font-size: 10px;
   letter-spacing: 0.14em;
-  color: rgba(241, 239, 235, 0.85);
+  color: rgba(42, 38, 33, 0.78);
   cursor: pointer;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  -webkit-tap-highlight-color: transparent;
+}
+.langChip[aria-expanded="true"] {
+  border-color: rgba(42, 38, 33, 0.45);
+  background: rgba(42, 38, 33, 0.04);
+}
+.langChip:focus-visible {
+  outline: 1px solid rgba(42, 38, 33, 0.6);
+  outline-offset: 2px;
 }
 
 .langPanel {
   margin-top: 8px;
-  min-width: 150px;
-  padding: 6px;
-  background: rgba(15, 13, 11, 0.96);
-  border: 0.5px solid rgba(241, 239, 235, 0.14);
-  border-radius: 4px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  width: 196px;
+  padding: 4px 0;
+  background: #f6f4ef;
+  border: 0.5px solid rgba(42, 38, 33, 0.16);
+  border-radius: 6px;
+  box-shadow: 0 12px 32px rgba(42, 38, 33, 0.12);
 }
 .langOpt {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  padding: 9px 10px;
+  padding: 11px 16px;
   background: transparent;
   border: none;
-  border-radius: 3px;
   cursor: pointer;
   text-align: left;
 }
-.langOpt:active {
-  background: rgba(241, 239, 235, 0.06);
+.langOpt + .langOpt {
+  border-top: 0.5px solid rgba(42, 38, 33, 0.08);
 }
-.langOptActive {
-  color: var(--e-amber);
+.langOpt:active {
+  background: rgba(42, 38, 33, 0.04);
 }
 .langOptCode {
-  width: 22px;
+  width: 24px;
   flex-shrink: 0;
   font-family: var(--e-mono);
   font-size: 10px;
-  letter-spacing: 0.1em;
-  color: rgba(241, 239, 235, 0.5);
-}
-.langOptActive .langOptCode {
-  color: var(--e-amber);
+  letter-spacing: 0.12em;
+  color: rgba(49, 46, 42, 0.55);
 }
 .langOptNative {
   flex: 1;
   font-family: var(--e-sans);
-  font-weight: 300;
-  font-size: 12.5px;
-  color: rgba(241, 239, 235, 0.9);
+  font-size: 13px;
+  line-height: 16px;
+  color: #312e2a;
 }
-.langOptActive .langOptNative {
-  color: var(--e-amber);
+/* 선택된 언어 — 밝은 종이 위에서는 앰버(#CCAD7B)가 흐려 라벨과 같은 갈색으로 */
+.langOptActive .langOptCode,
+.langOptActive .langOptNative,
+.langCheck {
+  color: #8c6f49;
 }
 .langCheck {
   flex-shrink: 0;
-  color: var(--e-amber);
 }
 .filmLogo {
   position: relative;
@@ -274,7 +291,8 @@
 
 /* 필름이 있을 때 — 로고·재생 버튼은 필름 속 로고와 겹치므로 숨기고,
    재생 버튼은 화면 전체를 덮는 투명한 탭 영역(건너뛰기)으로 남긴다 */
-.filmWithVideo .filmLogo {
+.filmWithVideo .filmLogo,
+.filmWithVideo .filmFade {
   display: none;
 }
 .filmWithVideo .filmCenter {
@@ -292,6 +310,8 @@
    딤 레이어(::after, z 3) 위에 둔다 */
 .replayBtn {
   position: absolute;
+  /* 상태 표시줄(안전영역) 아래 남은 필름 조각의 가운데. --strip은 조각 높이(인라인) */
+  top: calc((env(safe-area-inset-top, 0px) + var(--strip, 0px)) / 2);
   left: 50%;
   z-index: 4;
   transform: translate(-50%, -50%);
@@ -319,11 +339,11 @@
   outline-offset: 3px;
 }
 
-/* 사운드 토글 — 언어 칩과 같은 얼굴, 왼쪽 위. 칩은 작아도 터치 영역은 44px */
+/* 사운드 토글 — 항상 오른쪽 위(입장 필름·01C 공통, Paper SPEC C). 칩은 작아도 터치 영역은 44px */
 .soundToggle {
   position: absolute;
   top: max(12px, calc(env(safe-area-inset-top) - 8px));
-  left: 10px;
+  right: 10px;
   z-index: 4;
   display: flex;
   align-items: center;
@@ -351,6 +371,83 @@
 .soundToggle:focus-visible .soundChip {
   outline: 1px solid rgba(241, 239, 235, 0.7);
   outline-offset: 2px;
+}
+
+/* 01B "필름 보기" — 본인 인증 링크와 같은 밑줄 링크, 앞에 앰버 재생 표시 */
+.filmLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 01C — 필름 보기(등록된 병). 01B 위에 화면 전체로 뜬다 */
+.filmOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #0a0908;
+}
+.filmOverlayFrame {
+  position: relative;
+  width: min(430px, 100vw);
+  height: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.filmOverlayVideoEnded {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+/* 닫기 — 항상 왼쪽 위. 사운드 토글과 같은 칩·터치 영역 */
+.filmClose {
+  position: absolute;
+  top: max(12px, calc(env(safe-area-inset-top) - 8px));
+  left: 10px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 12px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.filmClose:focus-visible .soundChip {
+  outline: 1px solid rgba(241, 239, 235, 0.7);
+  outline-offset: 2px;
+}
+/* 01C-나 — 필름이 끝난 뒤: 가운데 다시 보기, 그 아래 돌아가기 */
+.filmEnd {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  animation: replayFade 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.3s both;
+}
+.filmEndReplay {
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.filmEndReplay:focus-visible .playBtn {
+  outline: 1px solid rgba(241, 239, 235, 0.7);
+  outline-offset: 3px;
+}
+@keyframes replayFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .filmEnd { animation: none; }
+  .filmOverlayVideoEnded { transition: none; }
 }
 
 /* 인트로 정착 — 로고 디졸브가 걷히며 히어로 요소가 순차로 떠오른다 */
@@ -671,6 +768,7 @@
 }
 
 .form {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: min(334px, 100%);
