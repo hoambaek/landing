@@ -21,8 +21,10 @@ import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
 
 type FieldKey = "name" | "latin" | "email";
 
-/** 실제 풀필름 소스가 확보되면 지정 (예: "/videos/entry-loop.mp4"). null이면 포스터 상태로 렌더. */
-const ENTRY_VIDEO_SRC: string | null = null;
+/** 풀필름 소스. null이면 포스터 상태로 렌더.
+ *  28초 세로 필름(입수 → 바다의 1년 → 인양). 필름 안에 월 표기(2026. 01 → 12)가
+ *  구워져 있다 — 2027년 입수분이 생기면 월 표기를 코드 오버레이로 옮겨야 한다. */
+const ENTRY_VIDEO_SRC: string | null = "/videos/nfc-entry-film.mp4";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -84,17 +86,18 @@ export default function BottleEntry({
   /* 방금 등록을 마쳤다 — 02(인증서 발급)로 넘어간다 */
   const [issued, setIssued] = useState(false);
   /* 등록 시트 — 필름이 끝나면 히어로 위로 올라온다.
-     위로 남은 필름 조각을 누르면 다시 내려가고(다시 보기), 끝나면 또 올라온다 */
+     필름은 한 번만 튼다. 위로 남은 필름 조각의 재생 버튼(또는 조각 자체)을 누르면
+     시트가 내려가고 처음부터 다시 틀며, 끝나면 또 올라온다 */
   const [sheetUp, setSheetUp] = useState(false);
+  /* 필름 소리 — 모바일 브라우저는 소리 있는 자동재생을 막아 무음으로 시작한다. */
+  const [soundOn, setSoundOn] = useState(false);
+  /* 시트 위로 남는 필름 조각의 높이 — 다시 보기 버튼을 그 조각의 가운데에 둔다.
+     시트 높이는 내용(언어·오류 줄)에 따라 달라 CSS만으로는 정할 수 없다. */
+  const [stripH, setStripH] = useState<number | null>(null);
 
   const frameRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  /* 영상 기준 등판 예약 — 다시 보기 때 재예약하므로 이전 것을 지워야 한다 */
-  const sheetTimerRef = useRef<number | null>(null);
-  const scheduleSheetUp = (ms: number) => {
-    if (sheetTimerRef.current !== null) window.clearTimeout(sheetTimerRef.current);
-    sheetTimerRef.current = window.setTimeout(() => setSheetUp(true), ms);
-  };
+  const sheetRef = useRef<HTMLDivElement>(null);
 
   /* 안전영역은 한 페이지에 한 색이다(use-safe-area-tint.ts 참고).
      필름 화면·01B·02 모두 위아래가 검정이다. */
@@ -110,8 +113,8 @@ export default function BottleEntry({
 
   /* 등록 시트 등판 — 필름이 끝나는 시점에 올린다.
      지금은 실영상이 없어(ENTRY_VIDEO_SRC=null) 인트로 디졸브(1.7s)가 걷히고
-     화면이 한 박자 가라앉은 뒤(합계 3.2s)를 "끝"으로 삼는다. 영상이 생기면
-     video의 onLoadedMetadata가 실제 길이로 이 타이머를 대체한다(아래 JSX).
+     화면이 한 박자 가라앉은 뒤(합계 3.2s)를 "끝"으로 삼는다. 영상이 있으면
+     video의 onEnded가 이 타이머를 대신한다(아래 JSX).
      reduced-motion은 기다림 자체가 연출이므로 즉시 올린다. */
   useEffect(() => {
     if (registered || issued || sheetUp) return;
@@ -122,30 +125,53 @@ export default function BottleEntry({
     return () => clearTimeout(t);
   }, [registered, issued, sheetUp]);
 
-  /* 영상 예약 타이머는 언마운트 때만 정리한다 — sheetUp 변화에 정리하면 예약이 죽는다 */
+  /* 시트가 올라오면 필름을 멈춘다 — 건너뛰기로 올렸을 때 뒤에서 계속 돌며 소리를 내지 않게.
+     다시 보기는 처음부터 튼다(replayFilm). */
   useEffect(() => {
-    return () => {
-      if (sheetTimerRef.current !== null) window.clearTimeout(sheetTimerRef.current);
-    };
-  }, []);
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !soundOn;
+    if (sheetUp) v.pause();
+  }, [soundOn, sheetUp]);
 
-  /* 필름 다시 보기 — 시트 위로 남은 필름 조각을 눌렀을 때.
-     영상이 있으면 처음부터 다시 틀고 그 길이만큼, 없으면 no-video 이펙트가
-     (sheetUp이 false로 돌아가며) 3.2초 타이머를 다시 건다. */
+  /* 다시 보기 버튼 자리 — 시트가 올라와 있는 동안 남은 필름 조각의 높이를 잰다 */
+  useEffect(() => {
+    if (!sheetUp || !ENTRY_VIDEO_SRC) return;
+    const measure = () => {
+      const sheet = sheetRef.current;
+      if (sheet) setStripH(window.innerHeight - sheet.offsetHeight);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [sheetUp]);
+
+  /* 소리 켜기는 클릭 핸들러 안에서 직접 unmute·play 한다 — iOS는 사용자 동작 안에서만 소리를 허락한다 */
+  const toggleSound = () => {
+    const next = !soundOn;
+    setSoundOn(next);
+    const v = videoRef.current;
+    if (v && next && !sheetUp) {
+      v.muted = false;
+      void v.play().catch(() => {});
+    }
+  };
+
+  /* 필름 다시 보기 — 시트 위로 남은 필름 조각이나 그 위의 재생 버튼을 눌렀을 때.
+     영상이 있으면 처음부터 다시 틀고 끝나면(onEnded) 시트가 다시 올라온다.
+     없으면 no-video 이펙트가(sheetUp이 false로 돌아가며) 3.2초 타이머를 다시 건다.
+     사용자 동작 안에서 play()를 불러야 iOS가 소리를 허락한다. */
   const replayFilm = () => {
     if (!sheetUp) return;
     setSheetUp(false);
     const v = videoRef.current;
     if (v) {
-      try {
-        v.currentTime = 0;
-        void v.play();
-      } catch {
-        /* 자동재생 거부 등 — 시트 등판 예약은 그대로 간다 */
-      }
-      if (Number.isFinite(v.duration) && v.duration > 0) {
-        scheduleSheetUp(v.duration * 1000);
-      }
+      v.currentTime = 0;
+      v.muted = !soundOn;
+      void v.play().catch(() => {
+        /* 재생 거부 — 시트를 다시 올려 폼으로 돌려보낸다 */
+        setSheetUp(true);
+      });
     }
   };
   const ownBody =
@@ -257,7 +283,7 @@ export default function BottleEntry({
             시트가 올라온 뒤 위로 남은 필름 조각을 누르면 시트가 내려가 필름을
             다시 볼 수 있다. 언어 선택기·재생 버튼 등 버튼 클릭은 건드리지 않는다. */}
         <section
-          className={`${styles.film} ${sheetUp ? styles.filmDimmed : ""}`}
+          className={`${styles.film} ${ENTRY_VIDEO_SRC ? styles.filmWithVideo : ""} ${sheetUp ? styles.filmDimmed : ""}`}
           onClick={(e) => {
             if ((e.target as HTMLElement).closest("button")) return;
             replayFilm();
@@ -270,18 +296,55 @@ export default function BottleEntry({
               src={ENTRY_VIDEO_SRC}
               autoPlay
               muted
-              loop
               playsInline
               preload="auto"
-              /* 첫 재생이 끝나는 시점에 등록 시트를 올린다. loop 중이라 ended가
-                 오지 않으므로 길이를 읽어 예약한다 — 영상은 시트 뒤에서 계속 돈다 */
-              onLoadedMetadata={(e) => {
-                const v = e.currentTarget;
-                if (Number.isFinite(v.duration) && v.duration > 0) {
-                  scheduleSheetUp(v.duration * 1000);
-                }
-              }}
+              /* 한 번만 튼다 — 끝나면 등록 시트를 올리고 마지막 프레임에 멈춰 있는다 */
+              onEnded={() => setSheetUp(true)}
             />
+          )}
+
+          {/* 다시 보기 — 시트 위로 남은 필름 조각의 가운데 */}
+          {ENTRY_VIDEO_SRC && sheetUp && stripH !== null && stripH > 90 && (
+            <button
+              type="button"
+              className={styles.replayBtn}
+              style={{ top: stripH / 2 }}
+              onClick={replayFilm}
+              aria-label={copy.filmCaption}
+            >
+              <span className={styles.playBtn}>
+                <svg width="18" height="20" viewBox="0 0 18 20" aria-hidden>
+                  <path d="M2 1.5 L16.5 10 L2 18.5 Z" fill="rgba(241,239,235,0.82)" />
+                </svg>
+              </span>
+            </button>
+          )}
+
+          {/* 시트가 올라와 있는 동안은 소리를 끄므로 토글도 숨긴다 — 눌러도 들리지 않는 버튼이 된다 */}
+          {ENTRY_VIDEO_SRC && !sheetUp && (
+            <button
+              type="button"
+              className={styles.soundToggle}
+              onClick={toggleSound}
+              aria-pressed={soundOn}
+              aria-label={soundOn ? "Sound off" : "Sound on"}
+            >
+              <span className={styles.soundChip}>
+                <svg width="14" height="12" viewBox="0 0 14 12" fill="none" aria-hidden>
+                  <path d="M1 4.2h2.4L6.6 1.5v9L3.4 7.8H1z" fill="rgba(241,239,235,0.85)" />
+                  {soundOn ? (
+                    <path
+                      d="M9 3.6c.8.7 1.2 1.5 1.2 2.4S9.8 7.7 9 8.4M10.8 1.8c1.3 1.1 2 2.6 2 4.2s-.7 3.1-2 4.2"
+                      stroke="rgba(241,239,235,0.85)"
+                      strokeWidth="1"
+                      strokeLinecap="round"
+                    />
+                  ) : (
+                    <path d="M9 4l3.5 4M12.5 4L9 8" stroke="rgba(241,239,235,0.55)" strokeWidth="1" strokeLinecap="round" />
+                  )}
+                </svg>
+              </span>
+            </button>
           )}
 
           <div className={styles.langSelect}>
@@ -328,7 +391,9 @@ export default function BottleEntry({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/logo/logo_trans_W_lg.png" alt="Muse de Marée" className={styles.filmLogo} />
 
-          {/* 기다리지 않을 사람의 길 — 누르면 시트가 바로 올라온다 */}
+          {/* 기다리지 않을 사람의 길 — 누르면 시트가 바로 올라온다.
+              필름이 있으면 로고·재생 버튼은 필름 속 로고와 겹쳐 숨기고,
+              이 버튼을 화면 전체의 투명한 탭 영역으로 바꾼다(.filmWithVideo). */}
           <button
             type="button"
             className={styles.filmCenter}
@@ -353,6 +418,7 @@ export default function BottleEntry({
             병 정보·세 가지 증거 섹션은 걷어냈다(2026-07-27 대표 지시: 히어로만
             남기고 바로 등록). 그 내용은 등록 뒤 기록 페이지가 다 보여준다. */}
         <div
+          ref={sheetRef}
           className={`${styles.sheet} ${sheetUp ? styles.sheetUp : ""}`}
           aria-hidden={!sheetUp}
         >

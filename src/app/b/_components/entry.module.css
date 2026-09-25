@@ -272,6 +272,87 @@
   height: 1px;
 }
 
+/* 필름이 있을 때 — 로고·재생 버튼은 필름 속 로고와 겹치므로 숨기고,
+   재생 버튼은 화면 전체를 덮는 투명한 탭 영역(건너뛰기)으로 남긴다 */
+.filmWithVideo .filmLogo {
+  display: none;
+}
+.filmWithVideo .filmCenter {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  opacity: 0;
+  animation: none;
+}
+.filmWithVideo.filmDimmed .filmCenter {
+  pointer-events: none;
+}
+
+/* 다시 보기 버튼 — 시트 위로 남은 필름 조각의 가운데(top은 인라인으로 조각 높이의 절반).
+   딤 레이어(::after, z 3) 위에 둔다 */
+.replayBtn {
+  position: absolute;
+  left: 50%;
+  z-index: 4;
+  transform: translate(-50%, -50%);
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  animation: replayIn 0.9s cubic-bezier(0.23, 1, 0.32, 1) 0.6s both;
+}
+@keyframes replayIn {
+  from { opacity: 0; transform: translate(-50%, -40%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .replayBtn { animation: none; }
+}
+.replayBtn .playBtn {
+  background: rgba(10, 9, 8, 0.3);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.replayBtn:focus-visible .playBtn {
+  outline: 1px solid rgba(241, 239, 235, 0.7);
+  outline-offset: 3px;
+}
+
+/* 사운드 토글 — 언어 칩과 같은 얼굴, 왼쪽 위. 칩은 작아도 터치 영역은 44px */
+.soundToggle {
+  position: absolute;
+  top: max(12px, calc(env(safe-area-inset-top) - 8px));
+  left: 10px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 12px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.soundChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 24px;
+  background: rgba(10, 9, 8, 0.35);
+  border: 0.5px solid rgba(241, 239, 235, 0.25);
+  border-radius: 999px;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.soundToggle:focus-visible .soundChip {
+  outline: 1px solid rgba(241, 239, 235, 0.7);
+  outline-offset: 2px;
+}
+
 /* 인트로 정착 — 로고 디졸브가 걷히며 히어로 요소가 순차로 떠오른다 */
 .filmLogo,
 .filmCenter {

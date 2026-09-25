@@ -241,7 +241,7 @@ export const OWNER_CONTACT_EMAIL = "info@musedemaree.com";
 export interface EntryCopy {
   /* 히어로 · 풀필름 */
   filmCaption: string; // "바다 아래의 시간이 깨어납니다"
-  filmMeta: string; // "FULL FILM · 00:08"
+  filmMeta: string; // "FULL FILM · 00:28"
   /* 01 Bottle Identity */
   identityEyebrow: string; // "NFC AUTHENTICATED"
   identityTagline: string; // "OCEAN AGED · FOUR SEASONS"
@@ -308,7 +308,7 @@ export interface EntryCopy {
 export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
   ko: {
     filmCaption: "바다 아래의 시간이 깨어납니다",
-    filmMeta: "FULL FILM · 00:08",
+    filmMeta: "FULL FILM · 00:28",
     identityEyebrow: "NFC AUTHENTICATED",
     identityTagline: "OCEAN AGED · FOUR SEASONS",
     identityBody: "오직 {total}병만 존재하는 첫 번째 해저 숙성 에디션.\n당신이 태그한 병은 그중 {serial}번째 기록입니다.",
@@ -361,7 +361,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
   },
   en: {
     filmCaption: "The time beneath the sea awakens",
-    filmMeta: "FULL FILM · 00:08",
+    filmMeta: "FULL FILM · 00:28",
     identityEyebrow: "NFC AUTHENTICATED",
     identityTagline: "OCEAN AGED · FOUR SEASONS",
     identityBody: "The first ocean-aged edition, only {total} bottles in existence.\nThe bottle you tapped is record N° {serial} of them.",
@@ -414,7 +414,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
   },
   fr: {
     filmCaption: "Le temps sous la mer s'éveille",
-    filmMeta: "FULL FILM · 00:08",
+    filmMeta: "FULL FILM · 00:28",
     identityEyebrow: "NFC AUTHENTICATED",
     identityTagline: "OCEAN AGED · FOUR SEASONS",
     identityBody: "La première édition élevée en mer, seulement {total} bouteilles existantes.\nLa bouteille que vous avez scannée en est le relevé N° {serial}.",
@@ -467,7 +467,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
   },
   ja: {
     filmCaption: "海の底で、時間が目を覚ます。",
-    filmMeta: "FULL FILM · 00:08",
+    filmMeta: "FULL FILM · 00:28",
     identityEyebrow: "NFC AUTHENTICATED",
     identityTagline: "OCEAN AGED · FOUR SEASONS",
     identityBody: "世界にわずか{total}本、最初の海底熟成エディション。\nいまかざした一本が、その{serial}番目の記録です。",
@@ -520,7 +520,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
   },
   zh: {
     filmCaption: "海底的时间正在苏醒",
-    filmMeta: "FULL FILM · 00:08",
+    filmMeta: "FULL FILM · 00:28",
     identityEyebrow: "NFC AUTHENTICATED",
     identityTagline: "OCEAN AGED · FOUR SEASONS",
     identityBody: "仅存 {total} 瓶的首个海底熟成版本。\n你所轻触的这一瓶，是其中第 {serial} 号记录。",
