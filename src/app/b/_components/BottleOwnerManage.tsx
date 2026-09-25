@@ -1,28 +1,37 @@
 "use client";
 
 /**
- * /b 소유 정보 관리 (Paper "03A — 소유 정보 관리") + 소유자 인증(phase-3).
- * 미인증: 마스킹된 소유자 표시 + "본인 인증"(등록 이메일 OTP).
- * 인증(세션 유효): 이름 전체 표시 + 이름·이메일 수정.
- * 변경은 서버 액션에서 세션을 재확인한 뒤에만 실행된다.
+ * /b 소유 정보 관리 — Paper "03A 소유 정보 관리" · "03B 본인 인증" · "03C 이름 수정" · "03D 언어 선택".
+ *
+ * 03A: 필기체 이름 · 가린 이메일 · 소유한 병(병 사진 + 번호 · 큐베명 · 인증서 보기) ·
+ *      이름 수정 · 언어 · 이메일(읽기 전용, 변경은 문의). 소유권 이전 경로는 없다.
+ * 03B: 등록 이메일로 6자리 코드(5분 유효). 전체 보기와 수정은 본인 인증 뒤에만 열린다.
+ * 03C: 입력하는 동안 인증서에 표기될 이름을 위에 미리 보인다.
+ * 03D: 설정 위로 올라오는 하단 시트(각 언어 네이티브 표기, 활성 항목은 앰버 점, 국기 없음).
+ *
+ * 변경은 서버 액션에서 세션을 재확인한 뒤에만 실행된다(owner-actions.ts).
  */
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styles from "./owner.module.css";
+import ui from "./ui.module.css";
 import {
   PRODUCT_META,
   RECORD_EXTRA,
+  ENTRY_COPY,
   BOTTLE_LOCALES,
-  OWNER_CONTACT_EMAIL,
   type BottleLocale,
 } from "../_lib/copy";
 import { persistBottleLocale } from "../_lib/locale";
 import type { BottleRecordData, BottleOwner, OwnedBottle } from "../_lib/data";
 import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
 import { agingMonths, immersionYear } from "../_lib/duration";
+import { formatOwnerLatin } from "../_lib/owner-name";
+import { registeredDate } from "../_lib/cert-text";
+import { useFitText } from "../_lib/use-fit-text";
 import {
   requestOwnerOtp,
   verifyOwnerOtp,
@@ -30,7 +39,16 @@ import {
   updateOwnerName,
 } from "../_lib/owner-actions";
 
-type Panel = "none" | "otp" | "edit" | "lang";
+type View = "main" | "otp" | "edit";
+
+/** 인증 코드 유효 시간 — owner-actions.ts의 expires(5분)와 같아야 한다 */
+const OTP_TTL_MS = 5 * 60 * 1000;
+const OTP_LEN = 6;
+
+/* 섹션 라벨 — 브랜드 라틴(번역하지 않는다) + 지면 언어. 영어 지면은 같은 말이라 한 번만 쓴다 */
+function sectionLabel(latin: string, local: string, locale: BottleLocale): string {
+  return locale === "en" ? latin : `${latin} · ${local}`;
+}
 
 export default function BottleOwnerManage({
   code,
@@ -40,34 +58,35 @@ export default function BottleOwnerManage({
   ownerFull,
   ownedBottles = [],
   locale = "ko",
+  startVerify = false,
 }: {
   code: string;
   data: BottleRecordData;
   ownerMasked: BottleOwner | null;
   authed: boolean;
-  ownerFull: { name: string; email: string } | null;
+  ownerFull: { name: string; email: string; givenLatin: string | null; familyLatin: string | null } | null;
   /* 같은 이메일로 등록된 병 전부. 인증과 무관하게 채워져 온다 */
   ownedBottles?: OwnedBottle[];
   locale?: BottleLocale;
+  /** 01B 「본인 인증」에서 왔다 — 03B부터 연다 */
+  startVerify?: boolean;
 }) {
   const router = useRouter();
-  /* 언어 선택기는 두지 않는다. /b 공통 쿠키(b_lang)를 서버가 읽어 넘겨주고,
-     전환은 입장·기록·인증서에서 한다. 여기서 또 고르게 하면 선택 지점만 늘어난다. */
   const extra = RECORD_EXTRA[locale];
+  const entry = ENTRY_COPY[locale];
   const activeLocale = BOTTLE_LOCALES.find((l) => l.code === locale)!;
-  /* ja·zh 지면의 CJK 세리프를 각 언어 서체로 돌린다. 규칙마다 modifier를 달지 않고
-     루트에서 --o-serif-cjk 토큰 하나를 갈아끼운다(owner.module.css). */
+  const isLatinLocale = locale === "en" || locale === "fr";
+  /* ja·zh 지면의 CJK 서체를 각 언어 서체로 돌린다(owner.module.css 토큰) */
   const scriptClass = locale === "ja" ? styles.pageJa : locale === "zh" ? styles.pageZh : "";
-  /* 위아래가 전부 종이인 화면 — 안전영역도 종이로 잇는다(마크업의 b-paper와 짝) */
-  useSafeAreaTint(true);
+  /* 위아래가 전부 검정인 화면 */
+  useSafeAreaTint(false);
 
   const meta = PRODUCT_META[data.bottle.productId] ?? PRODUCT_META.atomes_crochus_1y;
   const serial = data.bottle.serial;
 
-  /* 숙성 개월 수 — 기록·인증서와 같은 계산 (duration.ts) */
   const durationMonths = useMemo(
     () => agingMonths(data.aging.immersion, data.aging.retrieval),
-    [data.aging.immersion, data.aging.retrieval]
+    [data.aging.immersion, data.aging.retrieval],
   );
 
   /* 소장품 목록 — 같은 이메일로 등록된 병이 전부 온다(인증 불필요).
@@ -80,7 +99,7 @@ export default function BottleOwnerManage({
         serial: b.serial,
         depth: b.depth,
         months: agingMonths(b.immersion, b.retrieval),
-        /* 같은 큐베가 해마다 들어가므로 목록에서는 연차가 있어야 카드끼리 구분된다.
+        /* 같은 큐베가 해마다 들어가므로 목록에서는 연차가 있어야 행끼리 구분된다.
            배치가 없는 병은 null — 없는 연도를 지어내지 않는다. */
         year: b.immersion ? immersionYear(b.immersion) : null,
       }));
@@ -99,27 +118,56 @@ export default function BottleOwnerManage({
 
   /* 이름은 공개값이므로 인증 여부와 무관하게 같다. 이메일만 인증 후 전체가 열린다. */
   const displayName = ownerFull?.name ?? ownerMasked?.name ?? extra.certOwnerFallback;
+  const displayLatin = ownerMasked?.nameLatin ?? null;
   const displayEmail = authed && ownerFull ? ownerFull.email : ownerMasked?.emailMasked ?? "";
+  const showNative = !displayLatin || displayName.trim().toLowerCase() !== displayLatin.toLowerCase();
+  const registered = registeredDate(ownerMasked?.registeredAt, locale);
 
-  const [panel, setPanel] = useState<Panel>("none");
+  const [view, setView] = useState<View>(startVerify ? "otp" : "main");
+  const [langOpen, setLangOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  // OTP
-  const [otpStage, setOtpStage] = useState<"request" | "code">("request");
-  const [otpEmail, setOtpEmail] = useState("");
+  /* 서버 액션의 오류 문구는 한국어다 — 다른 지면에서는 그 지면의 일반 문구로 바꿔 낸다 */
+  const localized = (msg: string | undefined, fallback: string) => (locale === "ko" && msg ? msg : fallback);
+
+  // ── 03B OTP
+  const [otpEmail, setOtpEmail] = useState<string | null>(null);
   const [otpCode, setOtpCode] = useState("");
+  const [otpFocused, setOtpFocused] = useState(false);
+  const [expiresAt, setExpiresAt] = useState<number | null>(null);
+  const [now, setNow] = useState(() => Date.now());
+  const otpInputRef = useRef<HTMLInputElement>(null);
 
-  // edit — 이름만. 이메일은 인증 근거라 편집 대상이 아니다.
-  const [editName, setEditName] = useState(ownerFull?.name ?? "");
+  useEffect(() => {
+    if (expiresAt === null) return;
+    const t = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(t);
+  }, [expiresAt]);
+  const remaining = expiresAt !== null ? Math.max(0, expiresAt - now) : 0;
+  const remainingLabel = `${Math.floor(remaining / 60000)}:${String(Math.floor((remaining % 60000) / 1000)).padStart(2, "0")}`;
 
-  function openAuth() {
+  // ── 03C 이름 수정
+  const [editName, setEditName] = useState("");
+  const [editGiven, setEditGiven] = useState("");
+  const [editFamily, setEditFamily] = useState("");
+  const [editErrField, setEditErrField] = useState<"name" | "latin" | null>(null);
+  /* 라틴 지면에서 등록한 이름은 자국어 이름이 곧 로마자다 — 그 경우만 이름 칸을 두지 않는다 */
+  const nameIsLatin =
+    !!ownerFull &&
+    formatOwnerLatin(ownerFull.givenLatin, ownerFull.familyLatin)?.toLowerCase() === ownerFull.name.trim().toLowerCase();
+  const showNameField = !(isLatinLocale && nameIsLatin);
+  const previewLatin = formatOwnerLatin(editGiven, editFamily);
+  const previewNative = showNameField ? editName.trim() : "";
+  const previewScriptRef = useFitText<HTMLParagraphElement>(previewLatin ?? "", 44, 24);
+  const ownerScriptRef = useFitText<HTMLParagraphElement>(displayLatin ?? "", 52, 28);
+
+  function goMain() {
     setErr(null);
-    setOtpStage("request");
-    setPanel("otp");
+    setView("main");
   }
 
-  async function onRequestCode() {
+  async function sendCode() {
     if (busy) return;
     setBusy(true);
     setErr(null);
@@ -127,25 +175,37 @@ export default function BottleOwnerManage({
     setBusy(false);
     if (res.ok) {
       setOtpEmail(res.emailMasked ?? "");
-      setOtpStage("code");
+      setOtpCode("");
+      setExpiresAt(Date.now() + OTP_TTL_MS);
+      setNow(Date.now());
+      otpInputRef.current?.focus();
     } else {
-      setErr(res.error ?? extra.ownErrGeneric);
+      setErr(localized(res.error, extra.ownErrGeneric));
     }
+  }
+
+  /* 「본인 인증하고 전체 보기」 — 누른 동작이 곧 코드 요청이다(사용자 제스처 안에서 보낸다) */
+  function openAuth() {
+    setErr(null);
+    setView("otp");
+    if (otpEmail === null || remaining === 0) void sendCode();
   }
 
   async function onVerifyCode(e: FormEvent) {
     e.preventDefault();
-    if (busy) return;
+    if (busy || otpCode.length !== OTP_LEN) return;
     setBusy(true);
     setErr(null);
     const res = await verifyOwnerOtp(code, otpCode);
     setBusy(false);
     if (res.ok) {
-      setPanel("none");
       setOtpCode("");
+      setExpiresAt(null);
+      setOtpEmail(null);
+      setView("main");
       router.refresh();
     } else {
-      setErr(res.error ?? extra.ownErrCode);
+      setErr(localized(res.error, extra.ownErrCode));
     }
   }
 
@@ -155,302 +215,437 @@ export default function BottleOwnerManage({
   }
 
   function openEdit() {
-    if (!authed) return openAuth();
-    setEditName(ownerFull?.name ?? "");
+    if (!authed || !ownerFull) return openAuth();
+    setEditName(ownerFull.name);
+    setEditGiven(ownerFull.givenLatin ?? "");
+    setEditFamily(ownerFull.familyLatin ?? "");
+    setEditErrField(null);
     setErr(null);
-    setPanel("edit");
+    setView("edit");
   }
 
   async function onSaveEdit(e: FormEvent) {
     e.preventDefault();
     if (busy) return;
+    const given = editGiven.trim();
+    const family = editFamily.trim();
+    const latin = formatOwnerLatin(given, family) ?? "";
+    const name = showNameField ? editName.trim() : latin;
+    if (showNameField && !name) {
+      setEditErrField("name");
+      setErr(entry.errName);
+      return;
+    }
+    if (!given || !family) {
+      setEditErrField("latin");
+      setErr(entry.errLatinName);
+      return;
+    }
+    setEditErrField(null);
     setBusy(true);
     setErr(null);
-    const res = await updateOwnerName(code, editName);
+    const res = await updateOwnerName(code, name, { given, family });
     setBusy(false);
     if (res.ok) {
-      setPanel("none");
+      setView("main");
       router.refresh();
     } else {
-      setErr(res.error ?? extra.ownErrSave);
+      setErr(localized(res.error, extra.ownErrSave));
     }
   }
 
   /* 쿠키에 쓰고 서버를 다시 태운다 — 이 화면의 언어는 서버 prop이라 refresh 없이는 안 바뀐다 */
   function chooseLocale(next: BottleLocale) {
-    setPanel("none");
+    setLangOpen(false);
     if (next === locale) return;
     persistBottleLocale(next);
     router.refresh();
   }
 
-  return (
-    <main className={`${styles.page} ${scriptClass} b-paper`}>
-      <div className={styles.frame}>
-        {/* ── 헤더 ── */}
-        <header className={styles.header}>
-          <Link href={`/b/${code}/record`} className={styles.back} aria-label="Back">‹</Link>
-          <div className={styles.headerLogo}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_trans.png" alt="" className={styles.headerSymbol} />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/logo_text_trans.png" alt="Muse de Marée" className={styles.headerWordmark} />
-          </div>
-          <span className={styles.headerSpacer} aria-hidden />
-        </header>
+  /* 03D 하단 시트 — <dialog>로 연다. 포커스 트랩·Esc·배경 inert가 브라우저 것이다 */
+  const langRef = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const dlg = langRef.current;
+    if (!dlg) return;
+    if (langOpen && !dlg.open) dlg.showModal();
+    else if (!langOpen && dlg.open) dlg.close();
+  }, [langOpen]);
 
-        {/* ── 등록된 소유자 ──
-            이 페이지의 이름은 "인증서에 새길 이름"이다. 그래서 폼 출력값이 아니라
-            각인으로 보이게 한다 — 인장 획 → 라벨 → 세리프 이름(인증서 .ownerName과 같은 언어). */}
-        <section className={styles.identity}>
-          <span className={styles.identityRule} aria-hidden />
-          <span className={styles.identityHead}>{extra.ownHead}</span>
-          <p className={styles.identityName}>{displayName}</p>
-          {displayEmail && <p className={styles.identityEmail}>{displayEmail}</p>}
-          {/* 두 상태는 뜻이 다르다. 자물쇠는 "본인임을 증명했다"는 뜻이라 인증됐을 때만 붙인다.
-              미인증의 "소유 등록 완료"는 사실 진술이라 조용한 칩으로 둔다. */}
-          <span className={`${styles.identityStatus} ${authed ? styles.identityStatusOn : ""}`}>
-            {authed && (
-              <svg className={styles.statusLock} width="8" height="10" viewBox="0 0 8 10" aria-hidden>
-                <path d="M2.4 4.4 V3 a1.6 1.6 0 0 1 3.2 0 V4.4" fill="none" stroke="currentColor" strokeWidth="0.9" />
-                <rect x="1" y="4.4" width="6" height="4.7" rx="0.9" fill="currentColor" />
-              </svg>
-            )}
-            <span>{authed ? extra.ownAuthed : extra.ownVerified}</span>
-          </span>
-          {authed ? (
-            <button type="button" className={styles.textAction} onClick={onSignOut}>{extra.ownSignOut}</button>
+  const chevron = (
+    <svg className={styles.rowChevron} width="8" height="14" viewBox="0 0 8 14" aria-hidden>
+      <path d="M1 1 L7 7 L1 13" fill="none" stroke="currentColor" strokeWidth="1" />
+    </svg>
+  );
+
+  const header = (
+    <header className={styles.header}>
+      {view === "main" ? (
+        <Link href={`/b/${code}/record`} className={styles.back} aria-label={extra.certBackNoSerial}>
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden>
+            <path d="M12.5 4 L6.5 10 L12.5 16" fill="none" stroke="currentColor" strokeWidth="1.2" />
+          </svg>
+        </Link>
+      ) : (
+        <button type="button" className={styles.back} onClick={goMain} aria-label={extra.ownCancel}>
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden>
+            <path d="M12.5 4 L6.5 10 L12.5 16" fill="none" stroke="currentColor" strokeWidth="1.2" />
+          </svg>
+        </button>
+      )}
+      <span className={styles.brand}>MUSE DE MARÉE</span>
+      <span className={styles.headerSpacer} aria-hidden />
+    </header>
+  );
+
+  /* ── 03B 본인 인증 ── */
+  if (view === "otp") {
+    const sent = otpEmail !== null;
+    return (
+      <main className={`${styles.page} ${scriptClass}`}>
+        <div className={styles.frame}>
+          {header}
+          <section className={styles.subHead}>
+            <span className={styles.label}>{sectionLabel("Verification", extra.ownVerifyHead, locale)}</span>
+            {sent && <h1 className={styles.subTitle}>{extra.ownOtpTitle}</h1>}
+            <p className={styles.subBody}>
+              {sent ? extra.ownOtpSent.replace("{email}", otpEmail || "") : extra.ownOtpLead}
+            </p>
+          </section>
+
+          {sent ? (
+            <form className={styles.otpForm} onSubmit={onVerifyCode}>
+              {/* 칸 여섯은 그림이다 — 실제 입력은 그 위에 투명하게 얹은 한 칸이 받는다
+                  (붙여넣기·SMS 자동 채움·지우기가 한 칸에서 그대로 동작한다) */}
+              <div className={styles.otpCells}>
+                {Array.from({ length: OTP_LEN }, (_, i) => {
+                  const ch = otpCode[i];
+                  const active = otpFocused && i === Math.min(otpCode.length, OTP_LEN - 1) && otpCode.length < OTP_LEN;
+                  return (
+                    <span
+                      key={i}
+                      className={`${styles.otpCell} ${ch ? styles.otpCellFilled : ""} ${active ? styles.otpCellActive : ""}`}
+                      aria-hidden
+                    >
+                      {ch ?? (active ? <span className={styles.otpCaret} /> : null)}
+                    </span>
+                  );
+                })}
+                <input
+                  ref={otpInputRef}
+                  className={styles.otpInput}
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  pattern="[0-9]*"
+                  maxLength={OTP_LEN}
+                  value={otpCode}
+                  onChange={(ev) => setOtpCode(ev.target.value.replace(/\D/g, "").slice(0, OTP_LEN))}
+                  onFocus={() => setOtpFocused(true)}
+                  onBlur={() => setOtpFocused(false)}
+                  aria-label={extra.ownOtpPlaceholder}
+                  aria-invalid={!!err}
+                  autoFocus
+                />
+              </div>
+              {err && <p className={`${ui.error} ${styles.otpError}`}>{err}</p>}
+              <div className={styles.otpActions}>
+                <button
+                  type="submit"
+                  className={`${ui.primaryD} ${busy ? styles.busy : ""}`}
+                  disabled={busy || otpCode.length !== OTP_LEN}
+                  aria-busy={busy}
+                >
+                  <span>{busy ? extra.ownOtpVerifying : extra.ownOtpVerify}</span>
+                  {!busy && <span className={ui.chev} aria-hidden>›</span>}
+                </button>
+                <button type="button" className={ui.linkD} onClick={sendCode} disabled={busy}>
+                  {remaining > 0 ? `${extra.ownOtpResend} · ${remainingLabel}` : extra.ownOtpResend}
+                </button>
+              </div>
+            </form>
           ) : (
-            <button type="button" className={styles.authCta} onClick={openAuth}>{extra.ownAuthOpen}</button>
-          )}
-
-          {panel === "otp" && (
-            <div className={styles.authPanel}>
-              {otpStage === "request" ? (
-                <>
-                  <p className={styles.authLead}>{extra.ownOtpLead}</p>
-                  <button
-                    type="button"
-                    className={`${styles.panelBtn} ${busy ? styles.panelBtnBusy : ""}`}
-                    onClick={onRequestCode}
-                    disabled={busy}
-                    aria-busy={busy}
-                  >
-                    {busy ? extra.ownOtpSending : extra.ownOtpSend}
-                  </button>
-                </>
-              ) : (
-                <form onSubmit={onVerifyCode}>
-                  <p className={styles.authLead}>{extra.ownOtpSent.replace("{email}", otpEmail)}</p>
-                  <input
-                    className={styles.panelInput}
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    maxLength={6}
-                    placeholder={extra.ownOtpPlaceholder}
-                    value={otpCode}
-                    onChange={(ev) => setOtpCode(ev.target.value.replace(/\D/g, ""))}
-                    autoFocus
-                  />
-                  <button
-                    type="submit"
-                    className={`${styles.panelBtn} ${busy ? styles.panelBtnBusy : ""}`}
-                    disabled={busy}
-                    aria-busy={busy}
-                  >
-                    {busy ? extra.ownOtpVerifying : extra.ownOtpVerify}
-                  </button>
-                  <button type="button" className={styles.textAction} onClick={onRequestCode} disabled={busy}>
-                    {extra.ownOtpResend}
-                  </button>
-                </form>
-              )}
-              {err && <p className={styles.panelErr}>{err}</p>}
+            <div className={styles.otpActions}>
+              {err && <p className={ui.error}>{err}</p>}
+              <button
+                type="button"
+                className={`${ui.primaryD} ${busy ? styles.busy : ""}`}
+                onClick={sendCode}
+                disabled={busy}
+                aria-busy={busy}
+              >
+                <span>{busy ? extra.ownOtpSending : extra.ownOtpSend}</span>
+                {!busy && <span className={ui.chev} aria-hidden>›</span>}
+              </button>
             </div>
+          )}
+        </div>
+      </main>
+    );
+  }
+
+  /* ── 03C 이름 수정 ── */
+  if (view === "edit") {
+    return (
+      <main className={`${styles.page} ${scriptClass}`}>
+        <div className={styles.frame}>
+          {header}
+          <section className={`${styles.subHead} ${styles.subHeadTight}`}>
+            <span className={styles.label}>{sectionLabel("Name", extra.ownEditName, locale)}</span>
+            <p className={styles.subBody}>{extra.ownEditNameSub}</p>
+          </section>
+
+          {/* 인증서에 표기될 모습 — 입력하는 동안 그대로 따라 바뀐다 */}
+          <div className={styles.preview}>
+            <div className={styles.previewPlate}>
+              <div className={styles.previewInner}>
+                <span className={styles.previewLabel}>{extra.certOwnerLabel}</span>
+                <div className={styles.previewScriptBox}>
+                  <p ref={previewScriptRef} className={styles.previewScript}>
+                    {previewLatin ?? " "}
+                  </p>
+                </div>
+                <span className={styles.previewRule} aria-hidden />
+                {previewNative && previewNative.toLowerCase() !== (previewLatin ?? "").toLowerCase() && (
+                  <p className={styles.previewNative}>{previewNative}</p>
+                )}
+              </div>
+            </div>
+            <p className={styles.previewCaption}>{extra.ownEditPreview}</p>
+          </div>
+
+          <form className={styles.editForm} onSubmit={onSaveEdit} noValidate>
+            <div className={styles.editFields}>
+              {showNameField && (
+                <div>
+                  <label className={`${ui.field} ${editErrField === "name" ? ui.fieldError : ""}`}>
+                    <span className={ui.fieldLabel}>{entry.nameLabel}</span>
+                    <input
+                      className={ui.input}
+                      value={editName}
+                      onChange={(ev) => setEditName(ev.target.value)}
+                      autoComplete="name"
+                      maxLength={60}
+                      aria-invalid={editErrField === "name"}
+                    />
+                  </label>
+                  {editErrField === "name" && err && <p className={`${ui.error} ${styles.fieldErr}`}>{err}</p>}
+                </div>
+              )}
+              <div>
+                <div className={styles.editRow}>
+                  <label
+                    className={`${ui.field} ${editErrField === "latin" && !editGiven.trim() ? ui.fieldError : ""}`}
+                  >
+                    <span className={ui.fieldLabel}>{entry.latinGivenLabel}</span>
+                    <input
+                      className={ui.input}
+                      value={editGiven}
+                      onChange={(ev) => setEditGiven(ev.target.value)}
+                      autoComplete="given-name"
+                      maxLength={40}
+                      aria-invalid={editErrField === "latin" && !editGiven.trim()}
+                    />
+                  </label>
+                  <label
+                    className={`${ui.field} ${editErrField === "latin" && !editFamily.trim() ? ui.fieldError : ""}`}
+                  >
+                    <span className={ui.fieldLabel}>{entry.latinFamilyLabel}</span>
+                    <input
+                      className={ui.input}
+                      value={editFamily}
+                      onChange={(ev) => setEditFamily(ev.target.value)}
+                      autoComplete="family-name"
+                      maxLength={40}
+                      aria-invalid={editErrField === "latin" && !editFamily.trim()}
+                    />
+                  </label>
+                </div>
+                {editErrField === "latin" && err && <p className={`${ui.error} ${styles.fieldErr}`}>{err}</p>}
+              </div>
+            </div>
+            {err && editErrField === null && <p className={`${ui.error} ${styles.fieldErr}`}>{err}</p>}
+
+            <div className={styles.editActions}>
+              {/* 취소 — 앞으로 가는 동작이 아니라 ›가 없다 */}
+              <button type="button" className={`${ui.secondaryD} ${styles.editCancel}`} onClick={goMain}>
+                {extra.ownCancel}
+              </button>
+              <button
+                type="submit"
+                className={`${ui.primaryD} ${styles.editSave} ${busy ? styles.busy : ""}`}
+                disabled={busy}
+                aria-busy={busy}
+              >
+                <span>{busy ? extra.ownSaving : extra.ownSave}</span>
+                {!busy && <span className={ui.chev} aria-hidden>›</span>}
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    );
+  }
+
+  /* ── 03A 소유 정보 관리 ── */
+  return (
+    <main className={`${styles.page} ${scriptClass}`}>
+      <div className={styles.frame}>
+        {header}
+
+        {/* ── 등록된 소유자 ── */}
+        <section className={styles.owner}>
+          <span className={styles.label}>{sectionLabel("Registered Owner", extra.ownHead, locale)}</span>
+          {displayLatin ? (
+            <div className={styles.ownerScriptBox}>
+              <p ref={ownerScriptRef} className={styles.ownerScript}>
+                {displayLatin}
+              </p>
+            </div>
+          ) : null}
+          <div className={styles.ownerLine}>
+            {showNative && (
+              <span className={displayLatin ? styles.ownerNative : styles.ownerNativeOnly}>{displayName}</span>
+            )}
+            {displayEmail && <span className={styles.ownerEmail}>{displayEmail}</span>}
+          </div>
+          <div className={styles.ownerStatus}>
+            <span className={styles.statusDot} aria-hidden />
+            <span>
+              {authed ? extra.ownAuthed : extra.ownVerified}
+              {registered ? ` · ${registered}` : ""}
+            </span>
+          </div>
+          {authed ? (
+            <button type="button" className={ui.linkD} onClick={onSignOut}>
+              {extra.ownSignOut}
+            </button>
+          ) : (
+            <button type="button" className={ui.secondaryD} onClick={openAuth}>
+              <span>{extra.ownAuthOpen}</span>
+              <span className={ui.chev} aria-hidden>›</span>
+            </button>
           )}
         </section>
 
-        {/* ── 소유한 병 ──
-            소장품을 보는 자리다. 병 사진 없이 번호 상자만 두면 설정 행처럼 읽힌다.
-            사진(실체) → 에디션(몇 번째인가) → 이름 → 바다 기록 순으로 위계를 세운다. */}
-        <section className={styles.linked}>
-          <h2 className={styles.groupHead}>
-            {cards.length > 1 ? extra.ownBottleHeadPlural : extra.ownBottleHead}
-          </h2>
-          {cards.map((c) => (
-            <Link key={c.code} href={`/b/${c.code}/certificate`} className={styles.linkedCard}>
-              <span className={styles.linkedPlate}>
-                <Image
-                  src={c.meta.imagePortrait ?? c.meta.image}
-                  alt=""
-                  width={200}
-                  height={336}
-                  className={styles.linkedBottle}
-                />
-              </span>
-              <span className={styles.linkedInfo}>
-                <span className={styles.linkedEdition}>
-                  <span className={styles.linkedEdNo}>N°</span>
-                  <span className={styles.linkedEdNum}>{c.serial ?? "—"}</span>
-                  <span className={styles.linkedEdTotal}>/ {c.meta.quantity}</span>
+        {/* ── 소유한 병 — 병 사진(실체) → 번호 → 이름 → 바다 기록 순 ── */}
+        <section className={styles.collection}>
+          <div className={styles.collectionHead}>
+            <span className={styles.label}>
+              {sectionLabel("Collection", cards.length > 1 ? extra.ownBottleHeadPlural : extra.ownBottleHead, locale)}
+            </span>
+            <span className={styles.collectionCount}>{cards.length}</span>
+          </div>
+          <div className={styles.bottleList}>
+            {cards.map((c) => (
+              <Link key={c.code} href={`/b/${c.code}/certificate`} className={styles.bottleRow}>
+                <span className={styles.bottleTile}>
+                  <span className={styles.bottleTileImg}>
+                    <Image
+                      src={c.meta.imagePortrait ?? c.meta.image}
+                      alt=""
+                      fill
+                      sizes="96px"
+                      className={styles.bottleImg}
+                    />
+                  </span>
+                </span>
+                <span className={styles.bottleInfo}>
                   {/* 여러 병이 세워졌을 때만 지금 태그한 병을 짚어준다 */}
                   {cards.length > 1 && c.code === code && (
-                    <span className={styles.linkedHere}>{extra.ownThisBottle}</span>
+                    <span className={styles.bottleHere}>{extra.ownThisBottle}</span>
                   )}
-                </span>
-                <span className={styles.linkedName}>{c.meta.name}</span>
-                {/* 입수 연차 — 큐베명만으로는 이듬해 입수분과 같은 이름이 된다.
-                    숙성 기간은 붙이지 않는다: 아래 사실 칸이 같은 형식으로 이미 세우고 있다.
-                    배치가 없는 병은 세우지 않는다 — 없는 연도를 지어내지 않는다. */}
-                {c.year && <span className={styles.linkedYear}>{c.year}</span>}
-                {/* 품종·스타일은 제품마다 있을 수도 없을 수도 있다(first_edition은 둘 다 없음) */}
-                {(c.meta.cepage || c.meta.style) && (
-                  <span className={styles.linkedTrait}>
-                    {[c.meta.cepage, c.meta.style].filter(Boolean).join(" · ")}
+                  <span className={styles.bottleEdition}>
+                    <span className={styles.bottleNo}>N°</span>
+                    <span className={styles.bottleNum}>{c.serial ?? "—"}</span>
+                    <span className={styles.bottleTotal}>/ {c.meta.quantity}</span>
                   </span>
-                )}
-                <span className={styles.linkedRule} aria-hidden />
-                {/* 값은 전부 실제 기록에서 파생 — 하드코딩 "12개월"은 걷어냈다 */}
-                <span className={styles.linkedFacts}>
-                  <span className={styles.linkedFact}>
-                    <span className={styles.linkedFactLabel}>{extra.seaLabels.depth}</span>
-                    <span className={styles.linkedFactValue}>
-                      <span className={styles.linkedFactNum}>{c.depth}</span>
-                      <span className={styles.linkedFactUnit}>m</span>
-                    </span>
+                  <span className={styles.bottleName}>{c.year ? `${c.meta.name} · ${c.year}` : c.meta.name}</span>
+                  <span className={styles.bottleFacts}>
+                    {extra.ownBottleFacts.replace("{d}", String(c.depth)).replace("{n}", String(c.months))}
                   </span>
-                  <span className={styles.linkedFact}>
-                    <span className={styles.linkedFactLabel}>{extra.seaLabels.duration}</span>
-                    <span className={styles.linkedFactValue}>
-                      <span className={styles.linkedFactNum}>{c.months}</span>
-                      {/* 로케일 문자열에서 숫자 자리만 비워 단위만 남긴다("{n}개월" → "개월") */}
-                      <span className={styles.linkedFactUnit}>
-                        {extra.ownMonths.replace("{n}", "").trim()}
-                      </span>
-                    </span>
+                  <span className={styles.bottleCert}>
+                    {extra.ownViewCert} <span aria-hidden>›</span>
                   </span>
                 </span>
-              </span>
-              {/* 셰브론은 뺐다. 카드 자체가 큼직한 탭 대상이라 행 화살표는 군더더기이고,
-                  그 28px이 품종 줄을 두 줄로 쪼개고 있었다. */}
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
         </section>
 
         {/* ── 소유자 정보 ── */}
-        <section className={styles.group}>
-          <h2 className={styles.groupHead}>{extra.ownAccountHead}</h2>
-          <button
-            type="button"
-            className={`${styles.settingRow} ${panel === "edit" ? styles.settingRowOpen : ""}`}
-            onClick={openEdit}
-            aria-expanded={panel === "edit"}
-          >
-            <span className={styles.settingText}>
-              <span className={styles.settingTitle}>{extra.ownEditName}</span>
-              <span className={styles.settingSub}>{extra.ownEditNameSub}</span>
-            </span>
-            <span className={styles.settingArrow} aria-hidden>
-              <svg width="5" height="9" viewBox="0 0 5 9">
-                <polyline
-                  points="0.9,0.9 4.1,4.5 0.9,8.1"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-          </button>
+        <section className={styles.settings}>
+          <span className={`${styles.label} ${styles.settingsHead}`}>
+            {sectionLabel("Settings", extra.ownAccountHead, locale)}
+          </span>
+          <div className={styles.settingsList}>
+            <button type="button" className={styles.settingRow} onClick={openEdit}>
+              <span className={styles.settingText}>
+                <span className={styles.settingTitle}>{extra.ownEditName}</span>
+                <span className={styles.settingSub}>{extra.ownEditNameSub}</span>
+              </span>
+              {chevron}
+            </button>
+            <button
+              type="button"
+              className={styles.settingRow}
+              onClick={() => setLangOpen(true)}
+              aria-haspopup="dialog"
+            >
+              <span className={styles.settingText}>
+                <span className={styles.settingTitle}>{extra.ownLanguage}</span>
+                <span className={styles.settingSub}>{activeLocale.native}</span>
+              </span>
+              {chevron}
+            </button>
+            {/* 이메일은 읽기 전용 — 본인 인증의 근거라 여기서 바꾸면 동의도 기록도 없는
+                소유권 이전이 된다. 변경은 문의로만. */}
+            <div className={styles.settingRow}>
+              <span className={styles.settingText}>
+                <span className={styles.settingTitle}>{extra.ownFieldEmail}</span>
+                <span className={styles.settingSub}>{extra.ownEmailRowSub}</span>
+              </span>
+            </div>
+          </div>
+        </section>
+      </div>
 
-          {panel === "edit" && (
-            <form className={`${styles.panel} ${styles.rowPanel}`} onSubmit={onSaveEdit}>
-              <label className={styles.panelField}>
-                <span className={styles.panelLabel}>{extra.ownFieldName}</span>
-                <input className={`${styles.panelInput} ${styles.panelInputLead}`} value={editName} onChange={(ev) => setEditName(ev.target.value)} autoComplete="name" />
-              </label>
-              {/* 이메일은 읽기 전용. 여기서 바꾸면 OTP를 받는 사람이 달라져
-                  동의도 기록도 없는 소유권 이전이 된다. */}
-              <div className={`${styles.panelField} ${styles.panelReadonly}`}>
-                <span className={`${styles.panelLabel} ${styles.panelLabelMuted}`}>{extra.ownFieldEmail}</span>
-                <span className={styles.panelStatic}>{displayEmail}</span>
-                {/* 줄바꿈을 브라우저에 맡기면 "문의해 / 주세요"로 쪼개진다 */}
-                <span className={styles.panelNote}>
-                  {extra.ownEmailLocked}
-                  <br />
-                  {extra.ownEmailLockedTo.replace("{email}", OWNER_CONTACT_EMAIL)}
-                </span>
-              </div>
-              {err && <p className={styles.panelErr}>{err}</p>}
-              <div className={styles.panelRow}>
-                <button type="button" className={styles.panelCancel} onClick={() => setPanel("none")}>{extra.ownCancel}</button>
-                <button
-                    type="submit"
-                    className={`${styles.panelBtn} ${busy ? styles.panelBtnBusy : ""}`}
-                    disabled={busy}
-                    aria-busy={busy}
-                  >{busy ? extra.ownSaving : extra.ownSave}</button>
-              </div>
-            </form>
-          )}
-
-          <button
-            type="button"
-            className={`${styles.settingRow} ${panel === "lang" ? styles.settingRowOpen : ""}`}
-            onClick={() => setPanel(panel === "lang" ? "none" : "lang")}
-            aria-expanded={panel === "lang"}
-          >
-            <span className={styles.settingText}>
-              <span className={styles.settingTitle}>{extra.ownLanguage}</span>
-              <span className={styles.settingSub}>{activeLocale.native}</span>
-            </span>
-            <span className={styles.settingArrow} aria-hidden>
-              <svg width="5" height="9" viewBox="0 0 5 9">
-                <polyline
-                  points="0.9,0.9 4.1,4.5 0.9,8.1"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-          </button>
-
-          {panel === "lang" && (
-            <div className={`${styles.rowPanel} ${styles.langList}`} role="listbox">
-              {BOTTLE_LOCALES.map((l) => (
+      {/* ── 03D 언어 선택 — 하단 시트 ── */}
+      <dialog
+        ref={langRef}
+        className={styles.langDialog}
+        aria-labelledby="owner-lang-title"
+        onClose={() => setLangOpen(false)}
+        onClick={(e) => {
+          /* 시트 바깥(배경 막)을 누르면 닫는다 — dialog 자신이 눌린 경우만 바깥이다 */
+          if (e.target === e.currentTarget) setLangOpen(false);
+        }}
+      >
+        <div className={`${styles.langSheet} ${scriptClass}`}>
+          <span className={styles.langHandle} aria-hidden />
+          <span id="owner-lang-title" className={`${styles.label} ${styles.langHead}`}>
+            {sectionLabel("Language", extra.ownLanguage, locale)}
+          </span>
+          <div className={styles.langList} role="listbox" aria-labelledby="owner-lang-title">
+            {BOTTLE_LOCALES.map((l) => {
+              const on = l.code === locale;
+              const latinName = l.code === "en" || l.code === "fr";
+              return (
                 <button
                   key={l.code}
                   type="button"
                   role="option"
-                  aria-selected={l.code === locale}
-                  className={`${styles.langOpt} ${l.code === locale ? styles.langOptActive : ""}`}
+                  aria-selected={on}
+                  lang={l.code}
+                  className={`${styles.langRow} ${on ? styles.langRowOn : ""} ${latinName ? styles.langRowLatin : ""}`}
                   onClick={() => chooseLocale(l.code)}
                 >
-                  <span className={styles.langOptCode}>{l.short}</span>
-                  <span className={styles.langOptNative}>{l.native}</span>
-                  {l.code === locale && (
-                    <svg className={styles.langCheck} width="9" height="7" viewBox="0 0 9 7" aria-hidden>
-                      <polyline points="1,3.5 3.5,6 8,1" fill="none" stroke="currentColor" strokeWidth="1" />
-                    </svg>
-                  )}
+                  <span>{l.native}</span>
+                  {on && <span className={styles.langDot} aria-hidden />}
                 </button>
-              ))}
-            </div>
-          )}
-
-          {/* "소식 알림" 행은 걷어냈다. 설정 토글처럼 보이는데 실제로는 record 페이지로
-              보내기만 했고, 구독 상태를 조회할 방법이 없어 켜졌는지 꺼졌는지 보여줄 수도 없었다.
-              동작하는 구독 폼은 record 하단에 있다. */}
-        </section>
-
-        {/* 푸터를 걷어냈다. 백링크가 헤더 ‹와 목적지(/record)까지 완전히 같은 중복이었고,
-            페이지가 63px만 스크롤돼 하단 탈출구가 필요 없다. "소유 기록 · N° 89"는
-            바로 위 병 카드에 이미 있는 정보였다. */}
-      </div>
+              );
+            })}
+          </div>
+        </div>
+      </dialog>
     </main>
   );
 }

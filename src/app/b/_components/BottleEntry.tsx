@@ -1,24 +1,25 @@
 "use client";
 
 /**
- * /b 입장 페이지 — NFC 태그가 가장 먼저 여는 화면.
- * 로고 인트로(디졸브) → 풀필름 히어로 → Bottle Identity(N°·에디션) →
- * Provenance(세 가지 증거) → Claim Ownership(이름·이메일 → "N° {serial}을 소장하기").
- * 등록 성공 시 등록 완료 화면(BottleInscription)으로 전환, CTA로 기록 페이지(/record) 진입.
- * 표기 규칙: 병 번호 N°/총량. 커머스 문구 금지. 다크·앰버·시네마틱(기록 페이지와 동일 톤).
+ * /b 입장 페이지 — NFC 태그가 가장 먼저 여는 화면 (Paper 01 · 01B · 02).
+ * 로고 인트로(디졸브) → 풀필름 히어로 → 소유 등록 시트(이름·로마자·이메일 → 「N° {serial}를 소장하기」).
+ * 등록 성공 시 등록 완료 · 인증서 발급 화면(02, BottleIssued)으로 전환한다.
+ * 이미 등록된 병이면 폼 대신 01B(BottleClaimed)를 연다 — 번호와 소유자 이름, 기록 입구.
+ * 표기 규칙: 병 번호 N°/총량. 커머스 문구 금지.
  */
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import styles from "./entry.module.css";
-import { entryCopy, PRODUCT_META, RECORD_EXTRA, BOTTLE_LOCALES, type BottleLocale } from "../_lib/copy";
+import ui from "./ui.module.css";
+import { entryCopy, PRODUCT_META, BOTTLE_LOCALES, type BottleLocale } from "../_lib/copy";
 import { persistBottleLocale } from "../_lib/locale";
 import { agingMonths, immersionYear } from "../_lib/duration";
-import { formatOwnerLatin } from "../_lib/owner-name";
 import { submitBottleRegistration } from "@/lib/forms";
-import BottleInscription from "./BottleInscription";
+import BottleClaimed from "./BottleClaimed";
+import BottleIssued from "./BottleIssued";
 import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
+
+type FieldKey = "name" | "latin" | "email";
 
 /** 실제 풀필름 소스가 확보되면 지정 (예: "/videos/entry-loop.mp4"). null이면 포스터 상태로 렌더. */
 const ENTRY_VIDEO_SRC: string | null = null;
@@ -53,13 +54,11 @@ export default function BottleEntry({
   /* 인증서와 같은 얼굴로 보여주기 위한 로마자 표기 */
   registeredToLatin?: string | null;
 }) {
-  const router = useRouter();
   const meta = PRODUCT_META[productId] ?? PRODUCT_META.atomes_crochus_1y;
 
   const [locale, setLocale] = useState<BottleLocale>(initialLocale);
   const [langOpen, setLangOpen] = useState(false);
-  /* 숙성 기간이 문장 안에 박힌 카피가 있다(등록 완료 화면의 "사계절의 기록") —
-     어느 묶음을 세울지 배치 기간이 정한다. copy.ts의 2년물 오버레이 참고. */
+  /* 기간이 문장 안에 박힌 카피를 고르는 기준 — copy.ts의 2년물 오버레이 참고 */
   const months = agingMonths(immersion, retrieval);
   const copy = entryCopy(locale, months);
   /* 라틴 로케일은 이름 자체가 로마자라 자국어 칸을 따로 두지 않는다 */
@@ -79,10 +78,11 @@ export default function BottleEntry({
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  /* 이미 등록된 병으로 들어오면 각인 화면부터 — 등록 직후 본 화면과 같은 얼굴이다. */
-  const [inscribed, setInscribed] = useState(registered);
-  const [inscribedName, setInscribedName] = useState(registeredTo ?? "");
-  const [inscribedLatin, setInscribedLatin] = useState<string | null>(registeredToLatin);
+  /* 어느 칸의 오류인가 — 오류는 그 칸 바로 아래 한 줄로 낸다(MDM 가이드 Form).
+     서버 오류처럼 칸에 속하지 않는 것은 null로 폼 아래에 둔다. */
+  const [errorField, setErrorField] = useState<FieldKey | null>(null);
+  /* 방금 등록을 마쳤다 — 02(인증서 발급)로 넘어간다 */
+  const [issued, setIssued] = useState(false);
   /* 등록 시트 — 필름이 끝나면 히어로 위로 올라온다.
      위로 남은 필름 조각을 누르면 다시 내려가고(다시 보기), 끝나면 또 올라온다 */
   const [sheetUp, setSheetUp] = useState(false);
@@ -96,9 +96,9 @@ export default function BottleEntry({
     sheetTimerRef.current = window.setTimeout(() => setSheetUp(true), ms);
   };
 
-  /* 안전영역은 한 페이지에 한 색이다(상·하단 분리 불가 — use-safe-area-tint.ts 참고).
-     각인 화면은 종이 단색, 필름 화면은 위아래 다 검정. */
-  useSafeAreaTint(inscribed);
+  /* 안전영역은 한 페이지에 한 색이다(use-safe-area-tint.ts 참고).
+     필름 화면·01B·02 모두 위아래가 검정이다. */
+  useSafeAreaTint(false);
 
   /* 로고 인트로 디졸브 — 마운트 후 정착. reduced-motion이면 즉시(0ms) 해제, CSS로도 숨김 */
   useEffect(() => {
@@ -114,13 +114,13 @@ export default function BottleEntry({
      video의 onLoadedMetadata가 실제 길이로 이 타이머를 대체한다(아래 JSX).
      reduced-motion은 기다림 자체가 연출이므로 즉시 올린다. */
   useEffect(() => {
-    if (inscribed || sheetUp) return;
+    if (registered || issued || sheetUp) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     /* reduce여도 0ms 타이머로 미룬다 — 이펙트 본문의 동기 setState는 연쇄 렌더가 된다 */
     if (!reduce && ENTRY_VIDEO_SRC) return; // 영상이 있으면 영상 길이가 결정한다
     const t = setTimeout(() => setSheetUp(true), reduce ? 0 : 3200);
     return () => clearTimeout(t);
-  }, [inscribed, sheetUp]);
+  }, [registered, issued, sheetUp]);
 
   /* 영상 예약 타이머는 언마운트 때만 정리한다 — sheetUp 변화에 정리하면 예약이 죽는다 */
   useEffect(() => {
@@ -153,7 +153,7 @@ export default function BottleEntry({
   /* 개체는 대명사가 아니라 번호로 부른다 — 번호가 없으면 부르지 않는다 */
   const ownTitle =
     serial !== null ? copy.ownTitle.replace("{serial}", String(serial)) : copy.ownTitleNoSerial;
-  /* 버튼도 번호를 부른다("N° 2를 소장하다"). 한국어 목적격 조사는 숫자 끝자리의
+  /* 버튼도 번호를 부른다("N° 2를 소장하기"). 한국어 목적격 조사는 숫자 끝자리의
      한자어 읽기로 갈린다 — 이(2)·사(4)·오(5)·구(9)는 모음으로 끝나 "를", 나머지는 "을".
      {acc}는 ko 문자열에만 있고 다른 로케일에서는 치환할 자리가 없어 그대로 통과한다. */
   const submitLabel =
@@ -175,18 +175,15 @@ export default function BottleEntry({
     const family = cap(latinFamily.trim());
     const n = isLatinLocale ? [given, family].filter(Boolean).join(" ") : name.trim();
     const em = email.trim();
-    if (!n) {
-      setError(copy.errName);
-      return;
-    }
-    if (!given || !family) {
-      setError(copy.errLatinName);
-      return;
-    }
-    if (!EMAIL_RE.test(em)) {
-      setError(copy.errEmail);
-      return;
-    }
+    const fail = (field: FieldKey, msg: string) => {
+      setErrorField(field);
+      setError(msg);
+    };
+    /* 라틴 지면은 이름 칸이 없다 — 이름이 비는 것은 곧 로마자가 비는 것이다 */
+    if (!n) return fail(isLatinLocale ? "latin" : "name", isLatinLocale ? copy.errLatinName : copy.errName);
+    if (!given || !family) return fail("latin", copy.errLatinName);
+    if (!EMAIL_RE.test(em)) return fail("email", copy.errEmail);
+    setErrorField(null);
     setError(null);
     setSubmitting(true);
     try {
@@ -201,11 +198,9 @@ export default function BottleEntry({
         locale,
       });
       if (res.ok) {
-        setInscribedName(isLatinLocale ? n : name.trim());
-        /* 인증서와 같은 순서(이름 성)·같은 표기 규칙(첫 글자만 대문자)으로 합쳐 넘긴다 —
-           등록 직후 본 이름과 인증서의 이름이 다르면 다른 문서로 읽힌다 */
-        setInscribedLatin(formatOwnerLatin(given, family));
-        setInscribed(true);
+        /* 이름·로마자는 넘기지 않는다 — 02의 카드는 서버에 저장된 값으로 다시 그린다.
+           저장 시점 정규화(첫 글자 대문자)를 거친 값이라야 인증서와 같은 이름이다. */
+        setIssued(true);
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       } else {
         setError(res.error ?? copy.errGeneric);
@@ -217,39 +212,32 @@ export default function BottleEntry({
     }
   }
 
-  if (inscribed) {
+  /* 02 — 방금 등록을 마쳤다 */
+  if (issued) {
     return (
-      <main className={`${styles.page} ${scriptClass} b-paper`}>
+      <main className={`${styles.page} ${scriptClass}`}>
         <div className={styles.frame}>
-          <BottleInscription
+          <BottleIssued copy={copy} code={code} serial={serial} locale={locale} />
+        </div>
+      </main>
+    );
+  }
+
+  /* 01B — 이미 등록된 병. 재등록은 서버 액션에서도 막히지만, 쓸 수 없는 폼을 보여줄 이유가 없다 */
+  if (registered) {
+    return (
+      <main className={`${styles.page} ${scriptClass}`}>
+        <div className={styles.frame}>
+          <BottleClaimed
             copy={copy}
-            name={inscribedName}
-            nameLatin={inscribedLatin}
+            code={code}
             serial={serial}
             total={total}
-            /* 세로 프레임에는 세로 누끼를 쓴다 — entry Identity·인증서와 같은 자산 */
-            image={meta.imagePortrait ?? meta.image}
             productName={meta.name}
-            /* 이 화면에는 숙성 기간을 담은 표가 없다 — 제품 식별 세 조각이 여기서 다 끝나야 한다.
-               기간 표기는 record·certificate·owner가 쓰는 것과 같은 로케일 문자열을 쓴다.
-               배치가 없는 병은 세우지 않는다 — 없는 연도를 지어내지 않는다. */
-            productSub={
-              immersion
-                ? `${immersionYear(immersion)} · ${RECORD_EXTRA[locale].ownMonths.replace("{n}", String(months))}`
-                : null
-            }
-            onContinue={() => router.push(`/b/${code}/record`)}
-            /* 등록된 병으로 들어온 경우에만 — 방금 등록을 마친 사람에게는 주지 않는다 */
-            onBrowse={
-              registered
-                ? () => {
-                    setInscribed(false);
-                    /* 각인 화면에서 내려온 스크롤 위치가 남아 있으면
-                       입장 화면 중간부터 열린다 — 히어로부터 보여준다. */
-                    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-                  }
-                : undefined
-            }
+            /* 입수 연차 — 배치가 없는 병은 세우지 않는다(없는 연도를 지어내지 않는다) */
+            year={immersion ? immersionYear(immersion) : null}
+            name={registeredTo ?? ""}
+            nameLatin={registeredToLatin}
           />
         </div>
       </main>
@@ -370,53 +358,35 @@ export default function BottleEntry({
         >
         <section className={styles.claim}>
           <div className={styles.claimEyebrow}>{copy.ownEyebrow}</div>
-          <h2 className={styles.claimTitle}>{registered ? copy.claimedTitle : ownTitle}</h2>
-          {registered ? (
-            /* 이미 등록된 병. 폼을 지우고 그 자리에 소유자와 기록 입구를 놓는다 —
-               재등록은 서버 액션에서도 막히지만, 애초에 쓸 수 없는 폼을 보여줄 이유가 없다. */
-            <>
-              <p className={styles.claimBody}>{copy.claimedBody}</p>
-              <div className={styles.claimed}>
-                <span className={styles.claimedLabel}>OWNED BY</span>
-                {/* 인증서·각인 화면과 같은 조판 — 로마자 서명체 위, 한글 정자 아래 */}
-                {registeredToLatin ? (
-                  <>
-                    <span className={styles.claimedScript}>{registeredToLatin}</span>
-                    <span className={styles.claimedNative}>{registeredTo}</span>
-                  </>
-                ) : (
-                  <span className={styles.claimedName}>{registeredTo ?? "—"}</span>
-                )}
-              </div>
-              <Link href={`/b/${code}/record`} className={styles.claimedCta}>
-                {copy.claimedCta}
-              </Link>
-            </>
-          ) : (
+          <h2 className={styles.claimTitle}>{ownTitle}</h2>
           <p className={styles.claimBody}>{ownBody}</p>
-          )}
 
-          {!registered && (
           <form className={styles.form} onSubmit={onSubmit} noValidate>
             {/* 라틴 로케일은 아래 로마자 칸이 곧 이름이라 자국어 칸을 두지 않는다 */}
             {!isLatinLocale && (
-              <label className={styles.field}>
-                <span className={styles.fieldLabel}>{copy.nameLabel}</span>
-                <input
-                  type="text"
-                  className={styles.input}
-                  placeholder={copy.namePlaceholder}
-                  value={name}
-                  onChange={(ev) => setName(ev.target.value)}
-                  autoComplete="name"
-                  enterKeyHint="next"
-                />
-              </label>
+              <>
+                <label className={`${styles.field} ${errorField === "name" ? styles.fieldError : ""}`}>
+                  <span className={styles.fieldLabel}>{copy.nameLabel}</span>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    placeholder={copy.namePlaceholder}
+                    value={name}
+                    onChange={(ev) => setName(ev.target.value)}
+                    autoComplete="name"
+                    enterKeyHint="next"
+                    aria-invalid={errorField === "name"}
+                  />
+                </label>
+                {errorField === "name" && <p className={styles.error}>{error}</p>}
+              </>
             )}
 
-            {/* 인증서에 새겨질 로마자 — 성과 이름을 나눠 받아야 순서를 정할 수 있다 */}
+            {/* 인증서에 서명체로 올라갈 로마자 — 성과 이름을 나눠 받아야 순서를 정할 수 있다 */}
             <div className={styles.fieldRow}>
-              <label className={`${styles.field} ${styles.fieldHalf}`}>
+              <label
+                className={`${styles.field} ${styles.fieldHalf} ${errorField === "latin" && !latinGiven.trim() ? styles.fieldError : ""}`}
+              >
                 <span className={styles.fieldLabel}>{copy.latinGivenLabel}</span>
                 <input
                   type="text"
@@ -426,9 +396,12 @@ export default function BottleEntry({
                   onChange={(ev) => setLatinGiven(ev.target.value)}
                   autoComplete="given-name"
                   enterKeyHint="next"
+                  aria-invalid={errorField === "latin" && !latinGiven.trim()}
                 />
               </label>
-              <label className={`${styles.field} ${styles.fieldHalf}`}>
+              <label
+                className={`${styles.field} ${styles.fieldHalf} ${errorField === "latin" && !latinFamily.trim() ? styles.fieldError : ""}`}
+              >
                 <span className={styles.fieldLabel}>{copy.latinFamilyLabel}</span>
                 <input
                   type="text"
@@ -438,12 +411,17 @@ export default function BottleEntry({
                   onChange={(ev) => setLatinFamily(ev.target.value)}
                   autoComplete="family-name"
                   enterKeyHint="next"
+                  aria-invalid={errorField === "latin" && !latinFamily.trim()}
                 />
               </label>
             </div>
-            <p className={styles.latinNote}>{copy.latinNote}</p>
+            {errorField === "latin" ? (
+              <p className={styles.latinError}>{error}</p>
+            ) : (
+              <p className={styles.latinNote}>{copy.latinNote}</p>
+            )}
 
-            <label className={styles.field}>
+            <label className={`${styles.field} ${errorField === "email" ? styles.fieldError : ""}`}>
               <span className={styles.fieldLabel}>{copy.emailLabel}</span>
               <input
                 type="email"
@@ -454,27 +432,31 @@ export default function BottleEntry({
                 autoComplete="email"
                 inputMode="email"
                 enterKeyHint="go"
+                aria-invalid={errorField === "email"}
               />
             </label>
-
-            {error && <p className={styles.error}>{error}</p>}
+            {errorField === "email" && <p className={styles.error}>{error}</p>}
 
             <p className={styles.privacyNote}>{copy.privacyNote}</p>
+            {/* 칸에 속하지 않는 오류(서버) — 폼 아래 한 줄 */}
+            {error && errorField === null && <p className={styles.formError}>{error}</p>}
 
             {/* 버튼은 시트 바닥에 고정한다 — 작은 화면에서 접히는 선 아래로 밀리면
                 등록으로 가는 길이 안 보인다. 위 내용은 이 독 아래로 흘러 지나간다. */}
             <div className={styles.submitDock}>
               <button
                 type="submit"
-                className={`${styles.submit} ${submitting ? styles.submitBusy : ""}`}
+                className={`${ui.primaryL} ${submitting ? styles.submitBusy : ""}`}
                 disabled={submitting}
                 aria-busy={submitting}
               >
-                {submitting ? copy.submitting : submitLabel}
+                <span>{submitting ? copy.submitting : submitLabel}</span>
+                {!submitting && (
+                  <span className={ui.chev} aria-hidden>›</span>
+                )}
               </button>
             </div>
           </form>
-          )}
         </section>
         </div>
       </div>

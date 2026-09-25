@@ -1,32 +1,31 @@
 "use client";
 
 /**
- * /b 병 기록 페이지 — Paper "NFC 병 페이지 v2 — 여덟 줄기의 수렴" 시안 구현.
+ * /b 병 기록 페이지 — Paper "03 — 바다의 기록 · 여덟 줄기" 시안 구현.
  * S1 병사진 히어로 → S3 여덟 줄기 하강 → S4 수렴 →
- * S5 개체 선언 + 원산지/해저 2개 표 → S6 뉴스레터 → 푸터(언어 선택 포함).
+ * S5 병 사진 → S6 인증서 미리보기 + 버튼 3개 → 푸터(언어 선택 포함).
+ * 원산지·해저 숙성 표는 04(인증서)에만 둔다 — 같은 지면에 같은 값을 두 번 쓰지 않는다(SPEC A).
  * S2 여정(depth profile)은 Paper 캔버스에서 지워져 코드에서도 걷어냈다 —
  * 번호는 Paper 아트보드와 맞춰 그대로 둔다(S2 자리는 비어 있다).
  * 표기 규칙: 입수·인양은 월·계절만(날짜·일수 금지), 좌표는 도 단위. 용어는 "입수".
- * 모션: S3 8줄기 스크럽 성장 + 연평균 카운트업, S4 수렴 스크럽, S5 N° 카운트업.
+ * 모션: S3 8줄기 스크럽 성장 + 관측값 기입, S4 수렴 스크럽, S6 카드 페이드 업.
  */
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./bottle.module.css";
+import ui from "./ui.module.css";
 import BottleFooter from "./BottleFooter";
-import {
-  bottleCopy,
-  MAISON_NAME,
-  PRODUCT_META,
-  recordExtra,
-  PROVENANCE,
-  TWO_YEAR_FROM_MONTHS,
-  type BottleLocale,
-} from "../_lib/copy";
+import CertificateCard from "./CertificateCard";
+/* 서문 제목(ko) — J1950은 이 사이트에서 늘 이미지로 간다(tasks/lessons.md).
+   로컬 jj.ttf로 27px/40 · 자간 0.02em · #F1EFEB를 @3x로 구웠다(993×240 → 331×80) */
+import ecTitleKo from "./assets/ec-title-ko.png";
+import { bottleCopy, PRODUCT_META, recordExtra, TWO_YEAR_FROM_MONTHS, type BottleLocale } from "../_lib/copy";
 import type { BottleRecordData } from "../_lib/data";
+import type { CertCardData } from "../_lib/cert-card";
 import { submitNewsletter } from "@/lib/forms";
 import { agingMonths, immersionYear } from "../_lib/duration";
 import { useSafeAreaTint } from "../_lib/use-safe-area-tint";
@@ -99,7 +98,8 @@ const AXIS_BOTTOM = SEASON_TOPS_1Y[SEASON_TOPS_1Y.length - 1];
 const STATION_TOPS: Record<MetricKey, number> = {
   temp: 126, salinity: 266, tide: 406, current: 546, pressure: 696, tidal: 836, wave: 976, period: 1116,
 };
-/* 스테이션 라벨 접미 — 평균/최고/수심. data.ts 집계 방식과 일치해야 한다. */
+/* 스테이션 라벨 접미 — 최고/수심만 붙인다. 평균은 서문 본문이 한 번만 말한다(SPEC A).
+   data.ts 집계 방식과 일치해야 한다. */
 const STATION_AGG: Record<MetricKey, "avg" | "max" | "depth"> = {
   temp: "avg", salinity: "avg", tide: "max", current: "avg", pressure: "depth", tidal: "avg", wave: "max", period: "avg",
 };
@@ -108,11 +108,12 @@ interface StationValue { num: number | null; decimals: number; unit: string }
 
 export default function BottleRecord({
   data,
-  ownerName,
+  card,
   initialLocale = "ko",
 }: {
   data: BottleRecordData;
-  ownerName?: string | null;
+  /** S6 인증서 미리보기 — 04와 같은 한 장(서버가 확정한 값) */
+  card: CertCardData;
   initialLocale?: BottleLocale;
 }) {
   /* 서버가 쿠키에서 읽어 넘긴 값으로 시작 — 앞 화면의 선택이 이어진다 */
@@ -133,11 +134,9 @@ export default function BottleRecord({
   const flowSvgRef = useRef<SVGSVGElement>(null);
   const convergeSvgRef = useRef<SVGSVGElement>(null);
   const convergeDotRef = useRef<SVGGElement>(null);
-  /* 수렴 텍스트도 IO가 아니라 점이 나타나기 시작할 때 함께 연다 (아래 renderConverge) */
-  const convergeTextRef = useRef<HTMLParagraphElement>(null);
-  /* 병 사진은 IO가 아니라 수렴 점이 다 맺힌 뒤에 연다 (아래 renderConverge) */
+  /* 병 사진은 IO가 아니라 수렴 점이 다 맺힌 뒤에 연다 (아래 renderConverge).
+     수렴 아래 카피(「1년의 바다가 한 병에 담겼습니다」)는 걷어냈다(SPEC A — 수렴 아래 카피 없음). */
   const bottlePhotoRef = useRef<HTMLDivElement>(null);
-  const bottleSerialRef = useRef<HTMLParagraphElement>(null);
 
   /* 안드로이드 크롬은 루트 배경이 아니라 theme-color 메타를 본다 — 아래 b-root와 같은 값을 준다 */
   useSafeAreaTint(false);
@@ -153,10 +152,8 @@ export default function BottleRecord({
   const copy = bottleCopy(locale, durationMonths);
   const extra = recordExtra(locale, durationMonths);
   const meta = PRODUCT_META[data.bottle.productId] ?? PRODUCT_META.atomes_crochus_1y;
-  const prov = PROVENANCE[data.bottle.productId];
 
   const immMonth = monthIdxOf(data.aging.immersion, 0);
-  const retMonth = monthIdxOf(data.aging.retrieval, 11);
   const year = immersionYear(data.aging.immersion);
   /* 인양 연도 — 입수와 다르면 기간·축 표기에 두 해가 다 서야 한다.
      배치에 인양일이 없으면 입수 연도로 되돌려, 없는 해를 지어내지 않는다. */
@@ -169,51 +166,19 @@ export default function BottleRecord({
   const serial = data.bottle.serial;
   const serialLine = serial !== null ? `N° ${serial} / ${serialTotal}` : null;
 
-  /* 스테이션 라벨 접미 — "12개월 평균" / "12개월 최고" / "수심 30M" */
-  const aggSuffix = (key: MetricKey) => {
+  /* 스테이션 라벨 — 지표명만. 최고값(조위·파고)만 「· 최고」, 수압만 「· 수심 30M」을 붙인다.
+     「12개월 평균」은 서문 본문에 한 번만 적는다(SPEC A). */
+  const stationLabel = (key: MetricKey) => {
     const kind = STATION_AGG[key];
-    if (kind === "depth") return extra.metricAgg.depth.replace("{d}", String(data.aging.depth));
-    return extra.metricAgg[kind].replace("{n}", String(durationMonths));
+    if (kind === "depth") return `${copy.metrics[key]} · ${extra.metricAgg.depth.replace("{d}", String(data.aging.depth))}`;
+    if (kind === "max") return `${copy.metrics[key]} · ${extra.metricAgg.max}`;
+    return copy.metrics[key];
   };
 
-  /* 원산지 표 — Paper 03은 메종·지역·품종 3행. PROVENANCE 없으면 메타에서 가능한 항목만. */
-  const provRows: { label: string; value: string }[] = prov
-    ? [
-        { label: extra.provLabels.maison, value: prov.maison },
-        { label: extra.provLabels.region, value: prov.region },
-        { label: extra.provLabels.cepage, value: prov.cepage },
-      ]
-    : [
-        { label: extra.provLabels.maison, value: `Champagne ${MAISON_NAME}` },
-        ...(meta.cepage ? [{ label: extra.provLabels.cepage, value: meta.cepage }] : []),
-      ];
-
-  /* 해저 숙성 표 — Paper 03은 숙성 기간·숙성 환경·위치 3행.
-     입수·인양 시점은 아래 숙성 기간 행이 함께 세운다(S2 여정은 걷어냈다).
-     해를 넘긴 병은 연도를 하나만 세울 수 없다 — durationFmt는 「{y}년 {m1}–{m2}」라
-     입수 연도 하나에 두 해치 개월 수를 얹어, 2년물이 「2026년 1월–12월 · 24개월」이 됐다.
-     한 해에 24개월이 흐르지 않고, 같은 병의 인증서는 인양을 2027년 12월로 쓴다.
-     두 해가 걸리면 양끝에 각자의 연도를 붙인다(어순은 인증서와 같은 yearMonth).
-     개월 수 문자열은 소유 관리 화면과 같은 ownMonths를 쓴다 — 같은 값에 두 문안을 두지 않는다. */
-  const durationValue = crossesYear
-      ? `${yearMonth(year, immMonth)} – ${yearMonth(retYear, retMonth)} · ${extra.ownMonths.replace("{n}", String(durationMonths))}`
-      : extra.durationFmt
-          .replace("{y}", year)
-          .replace("{m1}", copy.months[immMonth])
-          .replace("{m2}", copy.months[retMonth])
-          .replace("{n}", String(durationMonths));
-
-  const seaRows: { label: string; value: string }[] = [
-    {
-      label: extra.seaLabels.duration,
-      value: durationValue,
-    },
-    {
-      label: extra.seaLabels.environment,
-      value: extra.envFmt.replace("{site}", extra.wando).replace("{d}", String(data.aging.depth)),
-    },
-    { label: extra.seaLabels.coords, value: "34°N 126°E" },
-  ];
+  const certTitle =
+    serial !== null
+      ? extra.certSectionTitle.replace("{serial}", String(serial))
+      : extra.certSectionTitleNoSerial;
 
   /* S3 왼쪽 세로축의 계절 눈금 — 입수 달부터 세 달마다 하나, 마지막은 숙성 마지막 달.
      이 축은 달력 한 해가 아니라 이 병이 바다에 있던 기간이다. 1월→12월 한 바퀴로 고정하면
@@ -332,7 +297,7 @@ export default function BottleRecord({
     }
   }
 
-  /* ── GSAP 스크럽 모션 (S3 8줄기 · S4 수렴 · S5 N° 카운트업) ─────────── */
+  /* ── GSAP 스크럽 모션 (히어로 N° 카운트업 · S3 8줄기 · S4 수렴) ─────────── */
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -367,14 +332,14 @@ export default function BottleRecord({
          더 길면 제목이 화면 위로 빠질 때까지 글자가 남아 서문과 겹친다
          (제목 아래끝이 화면 top에 닿는 지점이 100svh − 92px다).
 
-         opacity가 아니라 filter를 쓰는 이유: heroContent·heroStatus의 등장
+         opacity가 아니라 filter를 쓰는 이유: heroContent의 등장
          애니메이션(settle)이 forwards라 opacity: 1을 계속 주장해서 인라인 opacity가
-         먹지 않는다. 세 층을 한 트윈에 묶으려면 사진도 같은 속성을 써야 한다.
+         먹지 않는다. 두 층을 한 트윈에 묶으려면 사진도 같은 속성을 써야 한다.
          (모션 감축이면 이 블록 전체가 실행되지 않는다 — 사진이 남아 있는 히어로도
           레이아웃은 온전하다. 함께 밀려 올라갈 뿐이다) */
       if (heroRef.current) {
         const fading = heroRef.current.querySelectorAll<HTMLElement>(
-          `.${styles.heroPhoto}, .${styles.heroStatus}, .${styles.heroContent}`,
+          `.${styles.heroPhoto}, .${styles.heroContent}`,
         );
         gsap.fromTo(
           fading,
@@ -558,11 +523,6 @@ export default function BottleRecord({
             const e = 1 - Math.pow(1 - d, 3);
             gsap.set(dot, { opacity: e, scale: 0.72 + 0.28 * e });
           }
-          /* 점이 나타나기 "시작"하면 텍스트도 함께 뜬다 — 병 사진(d>=0.95)보다 앞서야
-             "점이 나타날 때 함께"라는 요구를 만족한다. */
-          if (d > 0.05 && convergeTextRef.current) {
-            convergeTextRef.current.classList.add(styles.revealIn);
-          }
           /* 점이 다 맺힌 다음에야 아래 병 사진이 열린다.
              p가 부동소수점 탓에 정확히 1에 닿지 않으므로 0.95로 본다.
              점은 이징(power3) 때문에 d≈0.79면 이미 눈에는 다 나타난 상태다. */
@@ -576,20 +536,7 @@ export default function BottleRecord({
         gateConverge = renderConverge;
       }
 
-      /* S5: N° 카운트업 (0.8s) */
-      if (serial !== null && bottleSerialRef.current) {
-        const el = bottleSerialRef.current;
-        const obj = { v: 0 };
-        gsap.to(obj, {
-          v: serial,
-          duration: 1.6,
-          ease: "expo.out",
-          scrollTrigger: { trigger: el, start: "top 85%", once: true },
-          onUpdate: () => {
-            el.textContent = `N° ${Math.round(obj.v)} / ${serialTotal}`;
-          },
-        });
-      }
+      /* S5의 N° 카운트업은 캡션과 함께 걷어냈다 — 번호는 바로 아래 인증서 카드가 세운다 */
     }, rootRef);
 
     return () => {
@@ -626,30 +573,7 @@ export default function BottleRecord({
           />
           <div className={styles.heroScrim} />
 
-          <div className={`${styles.heroStatus} ${styles.introFade} ${styles.introFadeD2}`}>
-            <div className={styles.heroStatusId}>
-              {ownerName && (
-                <span className={styles.heroStatusOwner}>
-                  {extra.ownedBy} <span className={styles.heroOwnerName}>{ownerName}</span>
-                </span>
-              )}
-            </div>
-            <div className={styles.heroVerified}>
-              {/* 자물쇠 — 초록 네모(상태 점)는 대시보드 관용구라 한정판의 무게와 안 맞고
-                  브랜드 팔레트 밖 색이었다. 몸통은 채우고 고리만 헤어라인으로 그려
-                  8px에서도 형태가 뭉개지지 않게 한다. */}
-              <svg className={styles.heroVerifiedLock} width="8" height="10" viewBox="0 0 8 10" aria-hidden>
-                <path
-                  d="M2.4 4.4 V3 a1.6 1.6 0 0 1 3.2 0 V4.4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="0.9"
-                />
-                <rect x="1" y="4.4" width="6" height="4.7" rx="0.9" fill="currentColor" />
-              </svg>
-              <span>NFC VERIFIED</span>
-            </div>
-          </div>
+          {/* 상단 라벨(OWNED BY · NFC VERIFIED)은 두지 않는다 — 소유자·검증은 04 인증서가 맡는다(SPEC A) */}
 
           <div className={`${styles.heroContent} ${styles.introFade} ${styles.introFadeD1}`}>
             {serialLine && (
@@ -682,7 +606,6 @@ export default function BottleRecord({
               ) : (
                 <h1 className={styles.titleText}>{copy.titleText}</h1>
               )}
-              <p className={styles.subLabel}>{copy.subLabel.replace("{year}", year)}</p>
             </div>
           </div>
         </section>
@@ -692,8 +615,23 @@ export default function BottleRecord({
           <div className={styles.reveal} data-reveal>
             {/* EIGHT CURRENTS 아이브로우는 걷어냈다 — 바로 아래 제목이
                 "여덟 개의 관측"이라고 같은 말을 하고 있었다. */}
-            <h2 className={styles.ecTitle}>{extra.ecTitle}</h2>
-            <p className={styles.ecBody}>{extra.ecBody}</p>
+            {/* 제목은 히어로 제목과 같은 활자(J1950)로 선다. ko는 PNG, 나머지는 같은 자리의 표제 활자 */}
+            {locale === "ko" ? (
+              <h2 className={styles.ecTitleImgWrap}>
+                <Image
+                  src={ecTitleKo}
+                  alt={extra.ecTitle.replace("\n", " ")}
+                  width={331}
+                  height={80}
+                  sizes="331px"
+                  quality={95}
+                  className={styles.ecTitleImg}
+                />
+              </h2>
+            ) : (
+              <h2 className={styles.ecTitle}>{extra.ecTitle}</h2>
+            )}
+            <p className={styles.ecBody}>{extra.ecBody.replace("{n}", String(durationMonths))}</p>
             <div className={styles.ecLegend}>
               <span className={styles.ecLegendLine} aria-hidden />
               <span className={styles.ecLegendText}>{extra.ecLegend}</span>
@@ -739,7 +677,7 @@ export default function BottleRecord({
                 const v = stationValues[key];
                 return (
                   <span key={`st-${key}`} className={styles.station} style={{ top: STATION_TOPS[key] }} data-stop={STATION_TOPS[key]}>
-                    <span className={styles.stationLabel}>{`${copy.metrics[key]} · ${aggSuffix(key)}`}</span>
+                    <span className={styles.stationLabel}>{stationLabel(key)}</span>
                     <span
                       className={styles.stationValue}
                       {...(v.num !== null ? { "data-count": v.num, "data-decimals": v.decimals, "data-unit": v.unit } : {})}
@@ -811,17 +749,9 @@ export default function BottleRecord({
               </g>
             </svg>
           </div>
-          {/* data-reveal(IO) 대신 수렴 점에 묶는다 — 점보다 먼저 뜨면 병 사진처럼 순서가 뒤집힌다 */}
-          <p className={`${styles.convergeText} ${styles.reveal}`} ref={convergeTextRef}>
-            {/* 인양이 끝나 고객 손에 있는 병에서 열리는 페이지다 —
-                진행형("담기고 있습니다")이 아니라 완료형으로 고정한다.
-                data.partial은 배치의 인양일이 미래로 남아 있을 때 참이 되는데,
-                그건 재고 데이터의 사정이지 이 화면을 보는 사람의 시점이 아니다. */}
-            {copy.converged}
-          </p>
         </section>
 
-        {/* ── S5 개체 선언 + 원산지/해저 표 ── */}
+        {/* ── S5 병 사진 — 캡션(번호·큐베명·연차) 없음: 바로 아래 인증서 카드와 같은 내용이다(SPEC A) ── */}
         <section className={styles.bottleSection}>
           {/* data-reveal(IO) 대신 수렴 점에 묶는다 — 점보다 먼저 뜨면 순서가 뒤집힌다 */}
           <div className={styles.reveal} ref={bottlePhotoRef}>
@@ -835,108 +765,65 @@ export default function BottleRecord({
               className={styles.bottlePhoto}
             />
           </div>
-          {serialLine && (
-            <p ref={bottleSerialRef} className={styles.bottleSerial}>
-              {serialLine}
-            </p>
-          )}
-          <h2 className={styles.bottleName}>{meta.name}</h2>
-          {/* 입수 연차 — 큐베명만으로는 이듬해 입수분과 같은 이름이 된다.
-              숙성 기간은 붙이지 않는다: 바로 아래 해저 숙성 표에 「숙성 기간」 행이 있다.
-              배치가 없는 병은 세우지 않는다 — 없는 연도를 지어내지 않는다. */}
-          {data.aging.immersion && <p className={styles.bottleYear}>{year}</p>}
-
-          {/* --i = 리빌 순번. 캡션·행이 한 줄씩 순차 기입된다. */}
-          <div className={styles.tables} data-reveal>
-            <div className={styles.tableCaption} style={{ "--i": 0 } as CSSProperties}>
-              <span className={styles.tableDot} />
-              <span>{extra.provHead}</span>
-            </div>
-            {provRows.map((r, i) => (
-              <div key={`p-${i}`} className={styles.tableRow} style={{ "--i": i + 1 } as CSSProperties}>
-                <span className={styles.tableLabel}>{r.label}</span>
-                <span className={styles.tableValue}>{r.value}</span>
-              </div>
-            ))}
-
-            <div
-              className={`${styles.tableCaption} ${styles.tableCaptionGap}`}
-              style={{ "--i": provRows.length + 1 } as CSSProperties}
-            >
-              <span className={styles.tableDot} />
-              <span>{extra.seaHead}</span>
-            </div>
-            {seaRows.map((r, i) => (
-              <div
-                key={`s-${i}`}
-                className={styles.tableRow}
-                style={{ "--i": provRows.length + 2 + i } as CSSProperties}
-              >
-                <span className={styles.tableLabel}>{r.label}</span>
-                <span className={styles.tableValue}>{r.value}</span>
-              </div>
-            ))}
-          </div>
         </section>
 
-        {/* ── Owner Services · Digital Passport ── */}
-        <section className={styles.passport}>
-          <span className={styles.passportEyebrow}>DIGITAL PASSPORT</span>
-          <h2 className={`${styles.passportTitle} ${styles.reveal}`} data-reveal>{extra.passportTitle}</h2>
-          <p className={styles.passportBody}>{extra.passportBody}</p>
-          {/* 화살표 없음 — 채워진 버튼은 이미 누르는 것임이 명백하다.
-              화살표는 맨몸 텍스트 링크에만 남겨 "링크"라는 신호를 되살린다. */}
-          <Link href={`/b/${data.bottle.nfcCode}/certificate`} className={styles.passportCta}>
-            {extra.passportCta}
+        {/* ── S6 인증서 — 미리보기 카드 페이드 업 → 버튼 3개 (Paper 03 Certificate CTA) ── */}
+        <section className={styles.certCta}>
+          <h2 className={styles.certCtaTitle}>{certTitle}</h2>
+          <Link
+            href={`/b/${data.bottle.nfcCode}/certificate`}
+            className={`${styles.certPreview} ${styles.reveal}`}
+            data-reveal
+            aria-label={extra.passportCta}
+          >
+            <CertificateCard card={card} locale={locale} elevated />
           </Link>
-          {/* "인증서 저장"은 위 CTA와 목적지가 같아 뺐다(같은 화면에서 같은 의도의 버튼 둘).
-              저장·공유는 인증서 페이지 안에 있다. */}
-          <div className={styles.passportRow}>
-            <Link href={`/b/${data.bottle.nfcCode}/owner`} className={styles.passportSub}>
-              {extra.passportManage}
+          <div className={styles.certCtaButtons}>
+            <Link href={`/b/${data.bottle.nfcCode}/certificate`} className={ui.primaryD}>
+              <span>{extra.passportCta}</span>
+              <span className={ui.chev} aria-hidden>›</span>
             </Link>
-          </div>
+            <Link href={`/b/${data.bottle.nfcCode}/owner`} className={ui.secondaryD}>
+              <span>{extra.passportManage}</span>
+              <span className={ui.chev} aria-hidden>›</span>
+            </Link>
 
-          {/* 뉴스레터 — Paper: 텍스트 링크로 열어 인라인 폼 */}
-          {nlStatus === "done" ? (
-            <p className={styles.passportNewsDone}>{extra.newsletterDone}</p>
-          ) : nlOpen ? (
-            <form className={styles.passportNewsForm} onSubmit={onSubscribe} noValidate>
-              <input
-                type="email"
-                className={styles.passportNewsInput}
-                placeholder={extra.newsletterPlaceholder}
-                value={nlEmail}
-                onChange={(e) => setNlEmail(e.target.value)}
-                autoComplete="email"
-                inputMode="email"
-                autoFocus
-              />
-              <button
-                type="submit"
-                className={`${styles.passportNewsSubmit} ${nlStatus === "submitting" ? styles.passportNewsSubmitBusy : ""}`}
-                disabled={nlStatus === "submitting"}
-                aria-busy={nlStatus === "submitting"}
-              >
-                {extra.newsletterConfirm}
+            {/* 다음 인양 소식 — 링크로 열어 그 자리에 구독 칸을 편다 */}
+            {nlStatus === "done" ? (
+              <p className={styles.newsDone}>{extra.newsletterDone}</p>
+            ) : nlOpen ? (
+              <form className={styles.newsForm} onSubmit={onSubscribe} noValidate>
+                <label className={`${ui.field} ${nlErr ? ui.fieldError : ""}`}>
+                  <span className={ui.fieldLabel}>{extra.passportNews}</span>
+                  <input
+                    type="email"
+                    className={ui.input}
+                    placeholder={extra.newsletterPlaceholder}
+                    value={nlEmail}
+                    onChange={(e) => setNlEmail(e.target.value)}
+                    autoComplete="email"
+                    inputMode="email"
+                    aria-invalid={!!nlErr}
+                    autoFocus
+                  />
+                </label>
+                {nlErr && <p className={ui.error}>{nlErr}</p>}
+                <button
+                  type="submit"
+                  className={`${ui.secondaryD} ${nlStatus === "submitting" ? styles.newsBusy : ""}`}
+                  disabled={nlStatus === "submitting"}
+                  aria-busy={nlStatus === "submitting"}
+                >
+                  <span>{extra.newsletterConfirm}</span>
+                  <span className={ui.chev} aria-hidden>›</span>
+                </button>
+              </form>
+            ) : (
+              <button type="button" className={`${ui.linkD} ${styles.newsLink}`} onClick={() => setNlOpen(true)}>
+                {extra.passportNews}
               </button>
-            </form>
-          ) : (
-            <button type="button" className={styles.passportNews} onClick={() => setNlOpen(true)}>
-              <span>{extra.passportNews}</span>
-              <svg className={styles.passportNewsArrow} width="5" height="9" viewBox="0 0 5 9" aria-hidden>
-                <polyline
-                  points="0.9,0.9 4.1,4.5 0.9,8.1"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          )}
-          {nlErr && <p className={styles.newsletterErr}>{nlErr}</p>}
+            )}
+          </div>
         </section>
 
         {/* ── 푸터 (컴팩트 · Paper 7AI-0) ── */}

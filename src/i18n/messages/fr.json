@@ -49,7 +49,7 @@
       "atomesCrochus1yr": "Petit Meslier, un cépage rare\nUne première année passée sous la mer",
       "atomesCrochus2yr": "Encore en train de mûrir sous la mer\nUn relevé au fil de huit saisons",
       "tag2yr": "2 ans",
-      "soldOut": "· ÉPUISÉ"
+      "archived": "ARCHIVED"
     },
     "cert": {
       "showcaseAlt": "En Lieu Sûr, avec sa carte de relevé",
@@ -64,13 +64,13 @@
     },
     "gift": {
       "eyebrow": "En cadeau",
-      "head": "Remis avec son relevé",
-      "body": "La bouteille se vide, le relevé demeure."
+      "head": "Remis avec le relevé écrit par la mer",
+      "body": "Le dernier verre bu, le relevé demeure."
     },
     "note": {
-      "numbering": "Numérotées individuellement",
-      "card": "Carte de relevé incluse",
-      "nfc": "Accès au relevé NFC"
+      "numbering": "Un numéro propre à chaque bouteille",
+      "card": "Carte de relevé",
+      "nfc": "Le relevé de la mer, par NFC"
     }
   },
   "maker": {
@@ -97,14 +97,14 @@
     "tags": {
       "schedule": "Les nouvelles cuvées en avant-première",
       "attend": "Autant de places que de bouteilles préparées",
-      "archive": "Le relevé de votre bouteille, conservé à vie"
+      "archive": "Le relevé de votre bouteille, consultable à tout moment"
     },
     "link": "Demander une invitation"
   },
   "partnership": {
     "eyebrow": "Professionnels",
     "title": "Partenariat",
-    "sub": "Le temps que la mer a inscrit, que prolonge votre table",
+    "sub": "Le temps de la mer, prolongé à table",
     "tags": {
       "fineDining": "Haute gastronomie",
       "hotelBar": "Bars de grands hôtels",
@@ -120,13 +120,23 @@
       "sending": "Envoi",
       "errNetwork": "Veuillez vérifier votre connexion et réessayer.",
       "errFailed": "Une erreur s’est produite. Veuillez réessayer dans un instant.",
+      "errRequired": "Veuillez renseigner ce champ.",
+      "errEmail": "Veuillez vérifier votre adresse e-mail.",
+      "backHome": "Retour à l’accueil",
       "placeholder": {
         "name": "Nom complet",
         "email": "Adresse e-mail",
         "venue": "Nom de l’établissement",
         "contact": "Personne à contacter",
         "affiliation": "Affiliation · Société",
-        "referral": "Comment nous avez-vous connus ? (facultatif)"
+        "referral": "Choisissez une réponse"
+      },
+      "label": {
+        "name": "Nom",
+        "email": "E-mail",
+        "venue": "Établissement",
+        "affiliation": "Affiliation",
+        "referral": "Comment vous nous avez connus (facultatif)"
       },
       "menu": {
         "open": "Ouvrir le menu",
@@ -150,7 +160,7 @@
       "metaDesc": "Les premiers à assister à chaque remontée. Demandez une invitation à Ocean Cellar Privé.",
       "eyebrow": "OCEAN CELLAR PRIVÉ",
       "title": "Demander une invitation",
-      "sub": "Vous, parmi les premiers invités.",
+      "sub": "Les premiers à découvrir chaque nouvelle cuvée.",
       "imageAlt": "Une bouteille remontée dans une colonne de lumière",
       "benefits": [
         {
@@ -158,23 +168,22 @@
           "desc": "Quand une nouvelle cuvée paraît, les membres sont informés en premier."
         },
         {
-          "title": "Le relevé de votre bouteille, à vie",
+          "title": "Le relevé de votre bouteille, à tout moment",
           "desc": "Consultez à tout moment le relevé du temps passé à 30 mètres de profondeur."
         }
       ],
-      "scarcity": "Les places n’ouvrent qu’à hauteur des bouteilles préparées.",
+      "scarcity": "Chaque personne qui en fait la demande recevra une invitation.",
       "submit": "Demander une invitation",
       "note": "Laissez vos coordonnées : nous vous écrirons en premier à l’ouverture des adhésions.",
-      "errValidation": "Veuillez saisir votre nom et une adresse e-mail valide.",
       "successLine": "Votre demande a bien été reçue.",
       "successNote": "L’invitation vous parviendra avec les nouvelles de la prochaine remontée."
     },
     "partner": {
       "metaTitle": "Contact partenaire | Partnership | Muse de Marée",
-      "metaDesc": "Le temps que la mer a inscrit, prolongé à votre table. Contact partenaire pour la haute gastronomie, les bars d’hôtel et les caves privées.",
+      "metaDesc": "Le temps de la mer, prolongé à table. Contact partenaire pour la haute gastronomie, les bars d’hôtel et les caves privées.",
       "eyebrow": "PARTNERSHIP",
       "title": "Contact partenaire",
-      "sub": "Poser le temps de la mer sur la table.",
+      "sub": "Le temps de la mer, prolongé à table.",
       "imageAlt": "Une main gantée posant une étiquette sur une bouteille couverte de balanes",
       "benefits": [
         {
@@ -186,8 +195,7 @@
           "desc": "Haute gastronomie, bars d’hôtel, caves privées. Nous préparons une proposition à la hauteur."
         }
       ],
-      "catLabel": "PARTNERSHIP TYPE",
-      "catHint": "Choisissez-en un.",
+      "catLabel": "Type de partenariat · Choisissez-en un",
       "categories": {
         "dining": {
           "label": "Restaurant · Carte des vins",
@@ -203,17 +211,17 @@
         },
         "other": {
           "label": "Autres propositions",
-          "desc": "Détail, cadeaux, collaboration"
+          "desc": "Détail · cadeaux · collaboration"
         }
       },
       "submit": "Envoyer la demande",
       "note": "Nous étudierons votre message et vous répondrons par une proposition sous deux jours ouvrés.",
       "errCategory": "Veuillez sélectionner un type de partenariat.",
-      "errValidation": "Veuillez saisir le nom de l’établissement, la personne à contacter et une adresse e-mail valide.",
       "successLine": "Votre demande a bien été reçue.",
-      "successNote": "Un membre de notre équipe vous répondra sous deux jours ouvrés."
+      "successNote": "Nous vous répondrons avec une proposition sous deux jours ouvrés."
     },
     "brandBook": {
+      "eyebrow": "BRAND BOOK",
       "metaTitle": "Dossier de marque | Muse de Marée",
       "metaDesc": "Écrit par la mer. La philosophie de la marque, le système de relevé, la gamme de cuvées et le partenariat, envoyés dans votre boîte mail.",
       "title": "Dossier de marque",
@@ -222,7 +230,7 @@
       "benefits": [
         {
           "title": "La marque en un seul dossier",
-          "desc": "Son commencement et sa philosophie, sa façon de mesurer, la gamme de cuvées et le partenariat."
+          "desc": "Son commencement et sa philosophie, sa méthode de relevé, la gamme de cuvées et le partenariat."
         },
         {
           "title": "PDF en coréen et en anglais",
@@ -231,9 +239,8 @@
       ],
       "submit": "Demander le dossier",
       "note": "Il suffit de votre nom, de votre affiliation et de votre e-mail.",
-      "errValidation": "Veuillez saisir votre nom, votre affiliation et une adresse e-mail valide.",
       "successLine": "Votre demande a bien été reçue.",
-      "successNote": "Après vérification, nous vous enverrons le dossier par e-mail."
+      "successNote": "Après vérification, nous vous enverrons le dossier à cette adresse."
     }
   },
   "footer": {

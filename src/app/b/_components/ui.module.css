@@ -1,0 +1,192 @@
+/* /b 공용 버튼·입력칸 — Paper "MDM 디자인 가이드 · Components — Form & Button (통일 · 2026-09-25)".
+ *
+ * 메인·서브페이지·NFC 병 페이지가 같은 버튼과 입력칸을 쓴다. /b 안에서는 이 파일 하나가 정본이다.
+ * 페이지 모듈은 `composes: primaryD from "./ui.module.css"`처럼 가져다 쓰고 자리(여백)만 더한다.
+ *
+ *   버튼  글꼴 Noto Sans KR 하나 · 15px · 자간 0.06em · 여백 15/28 · 글자와 › 사이 12 · 모서리 0
+ *         모바일은 전체 폭 · 높이 52 · 가운데 정렬
+ *         ›는 앞으로 가는 동작에만 붙인다(취소·닫기에는 없다) — 마크업의 <span className={ui.chev}>
+ *         비활성: 채움 25% · 글자 50%
+ *   입력  채운 상자 없이 밑줄 한 줄 · 라벨 12px 0.08em 금색 · 값 16px(모바일 확대 방지)
+ *         포커스 밑줄 2px 금색 · 오류는 필드 아래 한 줄 #A5533A
+ *
+ * 글꼴은 페이지가 --ui-sans로 넘긴다. 일본어·중국어 지면은 Noto Sans KR에 가나·간체가 없어
+ * 그 지면의 산세리프로 받는다(각 페이지 모듈의 .pageJa/.pageZh가 이미 그렇게 바꾼다).
+ * 터치 피드백은 Paper SPEC A 값 그대로 — 진입 0.2s 이징 · opacity 0.75 · scale 0.985.
+ */
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: 52px;
+  padding: 0 28px;
+  border: 0;
+  border-radius: 0;
+  font-family: var(--ui-sans, "Noto Sans KR"), sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.2s ease, color 0.2s ease;
+}
+.btn:active {
+  opacity: 0.75;
+  transform: scale(0.985);
+}
+.btn:disabled {
+  cursor: default;
+}
+.btn:disabled:active {
+  opacity: 1;
+  transform: none;
+}
+/* 화살표 — 글자와 같은 크기. 자간은 주지 않는다(한 글자라 뒤 여백만 생긴다) */
+.chev {
+  flex-shrink: 0;
+  font-size: 15px;
+  line-height: 18px;
+  letter-spacing: 0;
+}
+
+/* Primary-D — 어두운 바탕의 주 동작 */
+.primaryD {
+  composes: btn;
+  background: #ccad7b;
+  color: #0a0908;
+}
+.primaryD:disabled {
+  background: rgba(204, 173, 123, 0.25);
+  color: rgba(10, 9, 8, 0.5);
+}
+/* Secondary-D — 어두운 바탕의 보조 동작(선 ivory 45%) */
+.secondaryD {
+  composes: btn;
+  background: transparent;
+  color: #f1efeb;
+  border: 1px solid rgba(241, 239, 235, 0.45);
+}
+/* Primary-L — 밝은 바탕의 주 동작. 화살표만 금색 */
+.primaryL {
+  composes: btn;
+  background: #312e2a;
+  color: #f1efeb;
+}
+.primaryL .chev {
+  color: #ccad7b;
+}
+.primaryL:disabled {
+  background: rgba(49, 46, 42, 0.25);
+  color: rgba(241, 239, 235, 0.5);
+}
+
+/* Link-D — 밑줄 텍스트 링크(금색 60%). 버튼보다 한 단 작다(14px · 0.04em) */
+.linkD {
+  display: inline-block;
+  padding: 0 0 4px;
+  border: 0;
+  border-bottom: 0.5px solid rgba(204, 173, 123, 0.6);
+  border-radius: 0;
+  background: none;
+  font-family: var(--ui-sans, "Noto Sans KR"), sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0.04em;
+  color: rgba(241, 239, 235, 0.78);
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.linkD:active {
+  opacity: 0.75;
+}
+.linkD:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ── 입력칸 (밑줄형) ──────────────────────────
+   라벨과 값을 한 <label> 안에 세운다. 포커스는 칸 전체(밑줄)가 받는다 —
+   글자 주위에만 링이 뜨면 밑줄과 따로 논다. 두께가 1→2px로 바뀌는 만큼
+   아래 여백을 1px 줄여 글자가 밀리지 않게 한다. */
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ui-line, rgba(241, 239, 235, 0.3));
+  transition: border-color 0.2s ease;
+}
+.field:focus-within {
+  border-bottom: 2px solid var(--ui-accent, #ccad7b);
+  padding-bottom: 9px;
+}
+.fieldError,
+.fieldError:focus-within {
+  border-bottom-color: #a5533a;
+}
+.fieldLabel {
+  font-family: var(--ui-sans, "Noto Sans KR"), sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.08em;
+  color: var(--ui-accent, #ccad7b);
+}
+.fieldError .fieldLabel {
+  color: #a5533a;
+}
+.input {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--ui-sans, "Noto Sans KR"), sans-serif;
+  /* 16px 미만이면 iOS Safari가 포커스 시 화면을 확대한다 */
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--ui-ink, #f1efeb);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.input::placeholder {
+  font-weight: 300;
+  color: var(--ui-placeholder, rgba(241, 239, 235, 0.38));
+}
+.input:focus,
+.input:focus-visible {
+  outline: none;
+}
+.error {
+  font-family: var(--ui-sans, "Noto Sans KR"), sans-serif;
+  font-size: 12.5px;
+  font-weight: 300;
+  line-height: 18px;
+  color: #a5533a;
+  word-break: keep-all;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .linkD,
+  .field {
+    transition: none;
+  }
+}

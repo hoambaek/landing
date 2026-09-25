@@ -49,7 +49,7 @@
       "atomesCrochus1yr": "보기 드문 품종 프티 므슬리에\n바다에서 보낸 첫 1년",
       "atomesCrochus2yr": "아직 바다 아래에서 익는 중\n여덟 계절을 채워 가는 기록",
       "tag2yr": "2년",
-      "soldOut": "· SOLD OUT"
+      "archived": "ARCHIVED"
     },
     "cert": {
       "showcaseAlt": "En Lieu Sûr, 기록 카드와 함께",
@@ -64,13 +64,13 @@
     },
     "gift": {
       "eyebrow": "선물",
-      "head": "기록과 함께 건넵니다",
-      "body": "비워져도 기록은 남습니다."
+      "head": "바다가 쓴 기록을 함께 건넵니다",
+      "body": "잔이 비워진 뒤에도 기록은 남습니다."
     },
     "note": {
-      "numbering": "전 병 개별 넘버링",
-      "card": "기록 카드 동봉",
-      "nfc": "NFC 기록 열람"
+      "numbering": "병마다 고유 번호",
+      "card": "기록 카드",
+      "nfc": "바다의 기록 열람"
     }
   },
   "maker": {
@@ -97,14 +97,14 @@
     "tags": {
       "schedule": "출시 소식 가장 먼저",
       "attend": "준비된 병만큼만",
-      "archive": "소장 기록, 평생 열람"
+      "archive": "소장 기록, 언제든 다시 열람"
     },
     "link": "초대 신청하기"
   },
   "partnership": {
     "eyebrow": "Professional",
     "title": "Partnership",
-    "sub": "당신의 테이블에서 이어지는, 바다의 시간",
+    "sub": "테이블에서 이어지는 바다의 시간",
     "tags": {
       "fineDining": "파인다이닝",
       "hotelBar": "럭셔리 호텔 바",
@@ -120,13 +120,23 @@
       "sending": "전송 중",
       "errNetwork": "네트워크 연결을 확인한 뒤 다시 시도해 주세요.",
       "errFailed": "전송 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+      "errRequired": "입력해 주세요.",
+      "errEmail": "이메일 주소를 다시 확인해 주세요.",
+      "backHome": "처음으로 돌아가기",
       "placeholder": {
         "name": "성함",
         "email": "이메일 주소",
         "venue": "업장명",
-        "contact": "담당자",
+        "contact": "담당자 성함",
         "affiliation": "소속 · 회사",
-        "referral": "어떻게 알게 되셨나요 (선택)"
+        "referral": "어떻게 알게 되셨나요"
+      },
+      "label": {
+        "name": "이름",
+        "email": "이메일",
+        "venue": "업장",
+        "affiliation": "소속",
+        "referral": "알게 된 경로 (선택)"
       },
       "menu": {
         "open": "메뉴 열기",
@@ -150,31 +160,30 @@
       "metaDesc": "인양을 가장 먼저 지켜보는 사람들. Ocean Cellar Privé 초대 신청.",
       "eyebrow": "OCEAN CELLAR PRIVÉ",
       "title": "초대 신청",
-      "sub": "가장 먼저, 당신을 초대합니다.",
+      "sub": "출시를 가장 먼저 만나는 자리.",
       "imageAlt": "빛기둥 속에서 인양되는 병",
       "benefits": [
         {
           "title": "출시 소식을 가장 먼저",
-          "desc": "새로운 퀴베의 출시 소식을 멤버에게 가장 먼저 전해드립니다."
+          "desc": "새 에디션의 출시 소식을 멤버에게 가장 먼저 전해 드립니다."
         },
         {
-          "title": "소장 기록, 평생 열람",
+          "title": "소장 기록, 언제든 다시 열람",
           "desc": "수심 30m에서 보낸 시간의 기록을 언제든 다시 열어볼 수 있습니다."
         }
       ],
-      "scarcity": "자리는 준비된 병의 수만큼만 열립니다.",
+      "scarcity": "신청해 주신 분께 초대장을 보내 드립니다.",
       "submit": "초대 신청하기",
-      "note": "신청을 남겨주시면, 모집이 열릴 때 이메일로 가장 먼저 알려드립니다.",
-      "errValidation": "성함과 올바른 이메일 주소를 입력해 주세요.",
-      "successLine": "신청이 전해졌습니다.",
+      "note": "신청을 남겨 주시면 모집이 열릴 때 이메일로 가장 먼저 알려 드립니다.",
+      "successLine": "신청을 받았습니다.",
       "successNote": "초대장은 다음 인양 소식과 함께 전해집니다."
     },
     "partner": {
       "metaTitle": "파트너 문의 | Partnership | Muse de Marée",
-      "metaDesc": "당신의 테이블에서 이어지는 바다의 시간. 파인다이닝·호텔 바·프라이빗 셀러 파트너 문의.",
+      "metaDesc": "테이블에서 이어지는 바다의 시간. 파인다이닝·호텔 바·프라이빗 셀러 파트너 문의.",
       "eyebrow": "PARTNERSHIP",
       "title": "파트너 문의",
-      "sub": "바다의 시간을 테이블 위에 놓는 일.",
+      "sub": "테이블에서 이어지는 바다의 시간.",
       "imageAlt": "흰 장갑으로 따개비 병에 택을 다는 손",
       "benefits": [
         {
@@ -186,8 +195,7 @@
           "desc": "파인다이닝, 호텔 바, 프라이빗 셀러. 공간의 격에 맞는 제안서를 준비합니다."
         }
       ],
-      "catLabel": "PARTNERSHIP TYPE",
-      "catHint": "하나를 선택해 주세요",
+      "catLabel": "파트너십 유형 · 하나를 선택해 주세요",
       "categories": {
         "dining": {
           "label": "다이닝 · 바 리스트",
@@ -203,37 +211,36 @@
         },
         "other": {
           "label": "그 외 제안",
-          "desc": "리테일, 기프팅, 협업"
+          "desc": "리테일 · 기프팅 · 협업"
         }
       },
       "submit": "문의 보내기",
-      "note": "보내주신 내용을 검토한 뒤, 영업일 기준 2일 이내 담당자가 제안서로 회신드립니다.",
+      "note": "보내 주신 내용을 검토한 뒤 영업일 기준 2일 이내에 제안서와 함께 회신드리겠습니다.",
       "errCategory": "파트너십 유형을 선택해 주세요.",
-      "errValidation": "업장명, 담당자, 올바른 이메일 주소를 입력해 주세요.",
-      "successLine": "문의가 접수되었습니다.",
-      "successNote": "영업일 기준 2일 내, 담당자가 직접 답합니다."
+      "successLine": "문의를 받았습니다.",
+      "successNote": "영업일 기준 2일 이내에\n제안서와 함께 회신드리겠습니다."
     },
     "brandBook": {
+      "eyebrow": "BRAND BOOK",
       "metaTitle": "브랜드 소개서 | Brand Book | Muse de Marée",
       "metaDesc": "바다가 쓴 시간의 기록. 브랜드 철학과 기록 시스템, 에디션 라인업, 파트너십 안내를 이메일로 보내드립니다.",
       "title": "브랜드 소개서",
-      "sub": "바다가 쓴 시간.",
+      "sub": "바다의 시간을 한 권에.",
       "imageAlt": "석회암 위 따개비가 붙은 인양 병",
       "benefits": [
         {
           "title": "한 권으로 읽는 브랜드",
-          "desc": "시작과 철학, 측정의 방식, 에디션 라인업과 파트너십을 담았습니다."
+          "desc": "시작과 철학, 기록의 방법, 에디션 라인업과 파트너십을 담았습니다."
         },
         {
           "title": "한국어와 영문 PDF",
-          "desc": "확인 후 이메일로 바로 보내드립니다."
+          "desc": "확인 후 이메일로 바로 보내 드립니다."
         }
       ],
       "submit": "소개서 신청하기",
       "note": "성함, 소속, 이메일만 남기시면 됩니다.",
-      "errValidation": "성함, 소속, 올바른 이메일 주소를 입력해 주세요.",
-      "successLine": "요청이 접수되었습니다.",
-      "successNote": "확인 후, 소개서를 이메일로 보내드립니다."
+      "successLine": "요청을 받았습니다.",
+      "successNote": "확인한 뒤 이 메일로 소개서를 전해 드리겠습니다."
     }
   },
   "footer": {

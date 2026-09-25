@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { fetchBottleRecord, fetchBottleOwner } from "../../_lib/data";
 import { BOTTLE_LANG_COOKIE, parseBottleLocale } from "../../_lib/locale";
+import { buildCertCard } from "../../_lib/cert-card";
 import BottleRecord from "../../_components/BottleRecord";
 import BottleNotFound from "../../_components/BottleNotFound";
 
@@ -23,5 +24,7 @@ export default async function BottleRecordPage({ params }: { params: Promise<{ c
   if (!owner) redirect(`/b/${code}`);
   /* 앞 화면에서 고른 언어를 서버에서 읽어 첫 렌더부터 맞춘다 */
   const initialLocale = parseBottleLocale(jar.get(BOTTLE_LANG_COOKIE)?.value);
-  return <BottleRecord data={data} ownerName={owner?.name ?? null} initialLocale={initialLocale} />;
+  /* 하단 인증서 미리보기(S6) — 04와 같은 한 장을 서버가 확정해 내려보낸다 */
+  const card = buildCertCard(code, data, owner);
+  return <BottleRecord data={data} card={card} initialLocale={initialLocale} />;
 }

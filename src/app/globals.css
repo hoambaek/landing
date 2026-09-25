@@ -2135,14 +2135,26 @@ input:focus-visible,
   color: #8C857A;
 }
 
-/* 클로징 — 선물 카피 + 기록 태그필 (Paper "Closing — Gift & Record") */
+/* 클로징 — 선물 카피 + 기록 목록 + NFC 폰 (Paper "Closing — Gift & Record + NFC").
+   데스크톱: 왼쪽 열에 문구(위)·목록(아래), 오른쪽 열에 폰. 폰은 문구보다 커 보이지 않게 몸체 250px
+   (이미지는 그림자까지 담아 몸체보다 10% 넓다 — 그림자를 자르면 사각 경계가 비친다). */
 .s-col__closing {
+  display: grid;
+  grid-template-columns: auto 278px;
+  grid-template-rows: auto auto;
+  column-gap: 104px;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 24px 120px;
+}
+
+.s-col__closing-copy {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: end;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 16px;
-  text-align: center;
-  padding: 0 24px 110px;
 }
 
 .s-col__gift-head {
@@ -2167,25 +2179,52 @@ input:focus-visible,
   word-break: keep-all;
 }
 
-.s-col__tags {
-  display: flex;
-  gap: 10px;
-  padding-top: 6px;
-  flex-wrap: wrap;
-  justify-content: center;
+.s-col__phone {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  width: 278px;
 }
 
-.s-col__tag {
-  padding: 10px 20px;
-  border-radius: 999px;
-  border: 1px solid rgba(49, 46, 42, 0.16);
+.s-col__phone-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* 기록 목록 — 알약 태그 대신 가는 선으로 나눈 세 줄 (인증서 사양 표기와 같은 결) */
+.s-col__spec {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
+  width: 320px;
+  margin-top: 40px;
+  border-top: 1px solid rgba(49, 46, 42, 0.16);
+}
+
+.s-col__spec-row {
+  display: flex;
+  align-items: baseline;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(49, 46, 42, 0.12);
+}
+
+.s-col__spec-row dt {
+  width: 64px;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  color: #8C857B;
+}
+
+.s-col__spec-row dd {
   font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 12.5px;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 20px;
   letter-spacing: 0.02em;
-  line-height: 16px;
-  color: #55504A;
-  white-space: nowrap;
+  color: var(--color-earth);
+  word-break: keep-all;
 }
 
 /* ── Collection 모바일 ── */
@@ -2271,12 +2310,38 @@ input:focus-visible,
     padding: 28px 24px 24px;
   }
 
+  /* 모바일: 문구 → 폰 → 목록 한 줄로 쌓는다 */
   .s-col__closing {
-    padding: 0 24px 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 56px 24px 72px; /* Paper 모바일 04 Closing — 위 56은 퀴베 그리드와 떼어 두는 자리 */
+    text-align: center;
   }
 
-  .s-col__tags {
-    gap: 8px;
+  .s-col__closing-copy {
+    align-items: center;
+  }
+
+  /* Paper 모바일 04 — 24/32. 30px이면 390 폭에서 「건넵니다」만 둘째 줄로 떨어진다.
+     더 긴 로케일(en·fr)이 줄을 바꿀 때는 두 줄을 고르게 나눈다 */
+  .s-col__gift-head {
+    font-size: 24px;
+    line-height: 32px;
+    text-wrap: balance;
+  }
+
+  .s-col__phone {
+    width: 222px;
+    margin-top: 32px;
+  }
+
+  .s-col__spec {
+    width: 100%;
+    max-width: 300px;
+    margin-top: 40px;
+    align-self: center;
+    text-align: left;
   }
 }
 
@@ -2421,17 +2486,17 @@ input:focus-visible,
 
 .s-prive__links--row {
   flex-direction: row;
-  gap: 40px;
+  gap: 24px;
 }
 
-/* Filled CTA — amber 배경, 어두운 텍스트 (brand-guide) */
+/* Primary-D — 채움 #CCAD7B · 글자 #0A0908 (디자인 가이드 Form & Button 01) */
 .s-prive__link {
   display: inline-flex;
   align-items: center;
   width: fit-content;
   background: var(--color-amber);
-  border: 0.5px solid var(--color-amber);
-  padding: 14px 28px;
+  border: none;
+  padding: 15px 28px;
   transition: background 0.4s var(--ease-water);
 }
 
@@ -2442,7 +2507,7 @@ input:focus-visible,
 .s-prive__link-row {
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: 12px;
 }
 
 .s-prive__link-label {
@@ -2467,19 +2532,20 @@ input:focus-visible,
   display: none;
 }
 
-/* 보조 버튼(브랜드 소개서) — amber 보더, 투명 배경으로 위계 구분 */
+/* Secondary-D(브랜드 소개서) — 선 ivory 45% · 글자 #F1EFEB. 1px 선만큼 여백을 줄여 Primary와 높이를 맞춘다 */
 .s-prive__link--muted {
   background: transparent;
-  border: 0.5px solid var(--color-amber);
+  border: 1px solid rgba(241, 239, 235, 0.45);
+  padding: 14px 28px;
 }
 
 .s-prive__link--muted:hover {
-  background: rgba(204, 173, 123, 0.12);
+  background: rgba(241, 239, 235, 0.08);
 }
 
 .s-prive__link--muted .s-prive__link-label,
 .s-prive__link--muted .s-prive__link-arrow {
-  color: var(--color-amber);
+  color: #F1EFEB;
 }
 
 /* ── Privé / Partnership 모바일 ── */
@@ -2540,8 +2606,20 @@ input:focus-visible,
   .s-prive__links--row {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 24px;
+    gap: 12px;
   }
+
+  /* 버튼 폭은 글 길이에 맡긴다 — 한 줄에 들어가면 나란히 나눠 채우고(ko "파트너 문의"·"브랜드 소개서"),
+     넘치면 줄이 바뀐 버튼이 각자 가로를 꽉 채운다(en·fr·ja). 들쭉날쭉한 두 줄을 남기지 않는다. */
+  .s-prive__links--row .s-prive__link {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  /* Paper 모바일 07 — 14px · 여백 12/24 · 글자와 › 사이 10 (두 버튼 높이 동일) */
+  .s-prive__link { padding: 13px 24px; }
+  .s-prive__link--muted { padding: 12px 24px; }
+  .s-prive__link-row { gap: 10px; }
 
   .s-prive__link-label,
   .s-prive__link-arrow {
@@ -4323,7 +4401,7 @@ html:has(.b-paper) body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: #F5F1E8;
+  background: #E8E5E1;
 }
 
 /* ── 헤더 (01 Hero: 심볼 + 워드마크 + 햄버거, 이미지 위 오버레이) ── */
@@ -4557,8 +4635,8 @@ html:has(.b-paper) body {
   flex: 1;
   display: flex;
   justify-content: center;
-  padding: 64px 24px 96px;
-  background: #F5F1E8;
+  padding: 96px 24px 96px;
+  background: #E8E5E1;
 }
 
 .s-letter__col {
@@ -4570,31 +4648,15 @@ html:has(.b-paper) body {
   text-align: center;
 }
 
-/* ── 브랜드 마크 (브랜드 소개서 전용) ── */
-.s-letter__brandmark {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 48px;
-  margin-bottom: 76px;
-}
-
-.s-letter__brandmark-symbol {
-  width: 300px;
-  height: auto;
-  opacity: 0.9;
-}
-
-.s-letter__brandmark-word {
-  width: 216px;
-  height: auto;
-  opacity: 0.9;
+/* 한국어 본문 — 어절 단위로만 줄바꿈 (일본어는 공백이 없어 keep-all을 걸면 넘치므로 ko 한정) */
+html[lang="ko"] .s-letter__col {
+  word-break: keep-all;
 }
 
 /* ── 편지 칼럼 텍스트 ── */
 .s-letter__eyebrow {
   display: block;
-  font-family: var(--font-heading);
+  font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.24em;
   line-height: 14px;
@@ -4616,7 +4678,7 @@ html:has(.b-paper) body {
   font-family: var(--font-body);
   font-weight: 300;
   font-size: 16px;
-  line-height: 24px;
+  line-height: 20px;
   letter-spacing: 0.02em;
   color: #6E675D;
 }
@@ -4633,7 +4695,7 @@ html:has(.b-paper) body {
 .s-benefits {
   width: 100%;
   max-width: 480px;
-  margin-top: 36px;
+  margin-top: 26px;
   display: flex;
   flex-direction: column;
   text-align: left;
@@ -4643,11 +4705,11 @@ html:has(.b-paper) body {
   display: flex;
   gap: 18px;
   padding: 18px 0;
-  border-top: 1px solid #E3DCCF;
+  border-top: 1px solid rgba(49, 46, 42, 0.16);
   align-items: flex-start;
 }
 
-.s-benefits__row:last-of-type { border-bottom: 1px solid #E3DCCF; }
+.s-benefits__row:last-of-type { border-bottom: 1px solid rgba(49, 46, 42, 0.16); }
 
 .s-benefits__idx {
   font-family: var(--font-mono);
@@ -4692,11 +4754,9 @@ html:has(.b-paper) body {
   text-align: center;
 }
 
-/* ── 파트너십 유형 카테고리 카드 ── */
+/* ── 파트너십 유형 — 옵션 카드 (단일 선택 · 디자인 가이드 Form & Button 03) ── */
 .s-cat {
   margin-top: 52px;
-  padding-top: 40px;
-  border-top: 0.5px solid rgba(49, 46, 42, 0.14);
   width: 100%;
   max-width: 480px;
   text-align: left;
@@ -4704,22 +4764,13 @@ html:has(.b-paper) body {
 
 .s-cat__label {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  line-height: 12px;
-  color: #B89868;
-  margin-bottom: 14px;
-}
-
-.s-cat__hint {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 12px;
-  line-height: 1.6;
-  letter-spacing: 0.01em;
-  color: #8C857A;
-  margin-bottom: 24px;
+  letter-spacing: 0.08em;
+  line-height: 16px;
+  color: #8C6F49;
+  margin-bottom: 16px;
 }
 
 .s-cat__grid {
@@ -4734,22 +4785,27 @@ html:has(.b-paper) body {
   flex-direction: column;
   gap: 7px;
   padding: 18px 20px;
-  border: 1px solid #D8D2C8;
+  border: 0.5px solid rgba(49, 46, 42, 0.3);
   background: none;
   cursor: pointer;
   text-align: left;
   transition: border-color 0.25s, background-color 0.25s;
 }
 
-.s-cat__card:hover { border-color: #B89868; }
+.s-cat__card:hover { border-color: #8C6F49; }
+
+.s-cat__card.is-active {
+  border: 1px solid #8C6F49;
+  background: rgba(140, 111, 73, 0.06);
+}
 
 /* 선택 가능한 카드임을 바로 알리는 라디오 인디케이터 */
 .s-cat__radio {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 14px;
-  height: 14px;
+  top: 18px;
+  right: 18px;
+  width: 16px;
+  height: 16px;
   border: 1.2px solid #C9C2B4;
   border-radius: 50%;
   transition: border-color 0.25s;
@@ -4760,14 +4816,9 @@ html:has(.b-paper) body {
 .s-cat__card.is-active .s-cat__radio::after {
   content: "";
   position: absolute;
-  inset: 2.5px;
+  inset: 2.3px;
   border-radius: 50%;
   background: #B89868;
-}
-
-.s-cat__card.is-active {
-  border-color: #B89868;
-  background: rgba(184, 152, 104, 0.10);
 }
 
 .s-cat__idx {
@@ -4783,8 +4834,8 @@ html:has(.b-paper) body {
 .s-cat__name {
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 15px;
-  line-height: 22px;
+  font-size: 16px;
+  line-height: 20px;
   color: #312E2A;
 }
 
@@ -4807,60 +4858,95 @@ html:has(.b-paper) body {
   margin-top: 56px;
 }
 
+/* 파트너 — 유형 카드 바로 아래에서 필드가 이어진다 */
+.s-cat + .s-letter__form { margin-top: 36px; }
+
 .s-letter__form-row {
   display: flex;
   gap: 24px;
   width: 100%;
 }
 
+.s-letter-page--brand .s-letter__form-row { gap: 20px; }
+
 .s-letter__form-row .s-field {
   flex: 1 1 0;
 }
 
+/* ── 입력 필드 — 채운 상자 없이 밑줄 한 줄 (디자인 가이드 Form & Button 02) ── */
 .s-field {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   width: 100%;
   text-align: left;
 }
 
 .s-field__label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  line-height: 12px;
-  color: #B89868;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  line-height: 16px;
+  color: #8C6F49;
 }
 
+/* 입력칸 높이 38 = 위 6 + 글줄 22 + 아래 10 */
 .s-field__input {
   width: 100%;
   background: none;
   border: none;
-  padding: 0 0 14px;
+  border-radius: 0;
+  padding: 6px 0 10px;
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 16px;
-  line-height: 20px;
+  line-height: 22px;
   color: #312E2A;
   resize: none;
 }
 
-.s-field__input::placeholder { color: #9B9388; }
+.s-field__input::placeholder {
+  font-weight: 300;
+  color: rgba(49, 46, 42, 0.4);
+}
 
 .s-field__input:focus { outline: none; }
+
+.s-field__control {
+  display: flex;
+  flex-direction: column;
+}
 
 .s-field__rule {
   display: block;
   width: 100%;
   height: 1px;
-  background: #C9C2B6;
+  background: rgba(49, 46, 42, 0.3);
   transition: background-color 0.4s var(--ease-water);
 }
 
-.s-field:focus-within .s-field__rule { background: #B89868; }
+/* 포커스 — 밑줄 2px 금갈색 (위로 1px 올려 높이를 흔들지 않는다) */
+.s-field:focus-within .s-field__rule {
+  height: 2px;
+  margin-top: -1px;
+  background: #8C6F49;
+}
 
-/* ── REFERRAL 셀렉트 (언더라인 결 유지 + 쉐브론) ── */
+/* 오류 — 라벨·밑줄 #A5533A + 필드 아래 한 줄 */
+.s-field.is-invalid .s-field__label { color: #A5533A; }
+.s-field.is-invalid .s-field__rule { background: #A5533A; }
+
+.s-field__error {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 12.5px;
+  line-height: 16px;
+  color: #A5533A;
+  margin-top: 2px;
+}
+
+/* ── 알게 된 경로 셀렉트 (언더라인 결 유지 + 쉐브론) ── */
 .s-select {
   position: relative;
   width: 100%;
@@ -4874,11 +4960,14 @@ html:has(.b-paper) body {
   cursor: pointer;
 }
 
-.s-select__input.is-empty { color: #9B9388; }
+.s-select__input.is-empty {
+  font-weight: 300;
+  color: rgba(49, 46, 42, 0.4);
+}
 
 .s-select__chevron {
   position: absolute;
-  top: 5px;
+  top: 11px;
   right: 2px;
   color: #9B9388;
   pointer-events: none;
@@ -4892,16 +4981,18 @@ html:has(.b-paper) body {
   background-color: #FBF8F1;
 }
 
-/* ── 제출 버튼 (박스형) ── */
+/* ── 제출 버튼 — Primary-L (채움 #312E2A · 글자 #F1EFEB · › 금색) ── */
 .s-letter__submit {
   display: inline-flex;
   align-items: center;
-  gap: 40px;
+  justify-content: center;
+  gap: 12px;
   width: fit-content;
   margin-top: 8px;
-  padding: 18px 36px;
+  padding: 15px 28px;
   background: #312E2A;
   border: none;
+  border-radius: 0;
   cursor: pointer;
   transition: opacity 0.3s;
 }
@@ -4916,68 +5007,130 @@ html:has(.b-paper) body {
 .s-letter__submit-label {
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 14px;
-  letter-spacing: 0.12em;
+  font-size: 15px;
+  letter-spacing: 0.06em;
   line-height: 18px;
-  color: #F2EFE9;
+  color: #F1EFEB;
 }
 
 .s-letter__submit-arrow {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-weight: 300;
-  font-size: 18px;
-  line-height: 1;
+  font-size: 15px;
+  line-height: 18px;
   color: #CCAD7B;
 }
 
-/* ── 안내문 / 성공 메시지 ── */
+/* ── 하단 안내문 ── */
 .s-letter__note {
   margin-top: 8px;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 12px;
-  line-height: 18px;
-  color: #9B9388;
+  font-size: 13px;
+  line-height: 20px;
+  color: #6E675D;
 }
 
+/* 전송 실패(서버·네트워크) 안내 */
+.s-letter__note.is-error { color: #A5533A; }
+
+/* ── 완료 상태 — 폼 자리를 금색 헤어라인 + 한 줄 + 안내 + 링크로 바꾼다 ── */
 .s-letter__success {
-  margin-top: 36px;
+  margin-top: 24px;
+  padding: 48px 0 8px;
+  width: 100%;
+  max-width: 480px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 18px;
 }
 
 .s-letter__success-rule {
-  width: 40px;
+  width: 28px;
   height: 1px;
   background: #B89868;
 }
 
 .s-letter__success-line {
-  font-family: var(--font-body);
-  font-weight: 300;
-  font-size: 20px;
-  line-height: 30px;
+  font-family: var(--font-serif-kr), serif;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 32px;
   color: #312E2A;
 }
 
+/* 라틴은 표제 세리프로, 일본어는 KR 세리프(한국 자형 한자)를 피해 일본어 표제체로 */
+html[lang="en"] .s-letter__success-line,
+html[lang="fr"] .s-letter__success-line {
+  font-family: var(--font-heading);
+}
+
+html[lang="ja"] .s-letter__success-line {
+  font-family: var(--font-ja-title), "Hiragino Mincho ProN", "Yu Mincho", serif;
+}
+
+.s-letter__success-note {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 26px;
+  color: #4F4943;
+  text-align: center;
+  white-space: pre-line;
+}
+
+/* Link-L — 14px · 밑줄 금갈색 60% */
+.s-letter__success-link {
+  margin-top: 14px;
+  padding-bottom: 4px;
+  border-bottom: 0.5px solid rgba(140, 111, 73, 0.6);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  line-height: 18px;
+  color: #4F4943;
+  text-decoration: none;
+  transition: border-color 0.3s;
+}
+
+.s-letter__success-link:hover { border-color: #8C6F49; }
+
 /* ── 모바일 (≤768px) ── */
 @media (max-width: 768px) {
-  .s-letter__visual { aspect-ratio: 3 / 2; }
-  /* 파트너 — 원본 오른쪽에 있는 손과 병이 프레임 중앙에 오도록 */
-  .s-letter-page--partner .s-letter__visual img { object-position: 83% center; }
-  /* 브랜드 소개서 — 병이 살짝 아래로 내려오도록 소폭 확대 (위 기준 확대 → 아래로 이동) */
-  .s-letter-page--brand .s-letter__visual img { transform: scale(1.08); transform-origin: 50% 0%; }
+  /* 상단 사진 390×520 — 3:4 세로 크롭, 페이지별 초점은 Paper 모바일 시안 값 */
+  .s-letter__visual { aspect-ratio: 3 / 4; }
+  .s-letter-page--invite .s-letter__visual img { object-position: 57% 50%; }
+  .s-letter-page--partner .s-letter__visual img { object-position: 72% 50%; }
+  .s-letter-page--brand .s-letter__visual img { object-position: 50% 50%; }
   .s-letter__panel { padding: 48px 24px 64px; }
-  .s-letter__title { font-size: 40px; line-height: 48px; }
+  .s-letter__eyebrow { font-size: 10px; line-height: 13px; margin-bottom: 16px; }
+  .s-letter__title { font-size: 40px; line-height: 48px; margin-bottom: 12px; }
   .s-letter__title-img { height: 34px; }
-  .s-benefits { margin-top: 28px; }
-  .s-letter__form-row { flex-direction: column; gap: 36px; }
+  .s-letter__sub { font-size: 14px; }
+  .s-benefits { margin-top: 24px; }
+  .s-benefits__row { gap: 14px; padding: 16px 0; }
+  .s-benefits__idx { font-size: 10px; line-height: 21px; width: 24px; }
+  .s-benefits__title { font-size: 14px; line-height: 21px; }
+  .s-benefits__desc { font-size: 12.5px; line-height: 19px; }
+  .s-benefits__foot { font-size: 12px; padding-top: 12px; }
+  .s-cat { margin-top: 40px; }
   .s-cat__grid { grid-template-columns: 1fr; }
-  .s-letter__brandmark-symbol { width: 150px; }
-  .s-letter__brandmark-word { width: 128px; }
-  .s-letter__brandmark { gap: 28px; margin-bottom: 48px; }
+  .s-letter__form { gap: 32px; margin-top: 44px; }
+  .s-cat + .s-letter__form { margin-top: 44px; }
+  .s-letter__form-row { flex-direction: column; gap: 32px; }
+  .s-letter__note { font-size: 12.5px; line-height: 19px; }
+}
+
+/* 버튼 — 모바일(≤640)은 전체 폭 · 높이 52 · 가운데 정렬 */
+@media (max-width: 640px) {
+  .s-letter__submit {
+    align-self: stretch;
+    width: 100%;
+    height: 52px;
+    padding: 0 28px;
+  }
 }
 
 /* ══════════════════════════════════════════

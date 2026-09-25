@@ -1,0 +1,348 @@
+/* 숙성 이력 인증서 카드 — Paper "04 — 디지털 인증서" 증서 한 장(342px) 1:1.
+ *
+ * 값은 전부 시안 실측(get_computed_styles)이다. 카드 폭은 342로 고정한다 — 안쪽 문양(띠 290 ·
+ * 인장 96)과 서명체 크기가 이 폭을 전제로 잡혀 있다. 작게 보일 자리(02·03·04A)는
+ * 부모가 zoom으로 줄인다. 폭을 흐르게 두면 자리마다 줄바꿈이 달라져 같은 한 장이 아니게 된다.
+ *
+ * 서체는 카드가 스스로 고른다 — 네 화면(entry·record·certificate·owner)의 페이지 토큰
+ * 이름이 제각각이라 상속에 기대면 한 곳에서 다른 얼굴이 된다.
+ */
+
+.card {
+  /* 지면 세리프 — 로케일이 아래에서 갈아끼운다(한자 자형이 KR·JP·SC마다 다르다) */
+  --cc-face: var(--font-serif-kr), "Noto Serif KR";
+  --cc-serif: var(--cc-face), serif;
+  /* 이름은 지면 언어와 스크립트가 다를 수 있다 — 지면 얼굴 뒤에 한글 얼굴을 받친다 */
+  --cc-name: var(--cc-face), var(--font-serif-kr), "Noto Serif KR", serif;
+  /* 브랜드 라틴 — /b 레이아웃이 500·700·이탤릭을 따로 싣는다(--font-cormorant-b) */
+  --cc-latin: var(--font-cormorant-b), var(--font-heading), "Cormorant Garamond", serif;
+  --cc-script: var(--font-delafield), "Mrs Saint Delafield", cursive;
+  --cc-mono: var(--font-mono), "DM Mono", monospace;
+  --cc-gold: #a8834a;
+  --cc-bronze: #8a6a38;
+  --cc-ink: #1c1a17;
+  --cc-ink-2: #3a352e;
+
+  flex-shrink: 0;
+  width: 342px;
+  padding: 10px;
+  border-radius: 2px;
+  background: #f3efe7;
+  color: var(--cc-ink);
+  text-align: center;
+  word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+}
+.ja { --cc-face: var(--font-serif-jp), "Noto Serif JP"; }
+.zh { --cc-face: var(--font-serif-sc), "Noto Serif SC"; }
+/* 어두운 바탕 위 — 시안 그대로 그림자 + 금빛 외곽선 한 줄 */
+.elevated {
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(204, 173, 123, 0.18);
+}
+
+/* 이중 테 — 1px 금 → 3px 틈 → 0.5px 금(55%) */
+.frameOuter {
+  display: flex;
+  flex-direction: column;
+  padding: 3px;
+  border: 1px solid var(--cc-gold);
+}
+.frameInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 540px;
+  padding: 40px 24px 28px;
+  border: 0.5px solid rgba(168, 131, 74, 0.55);
+}
+
+/* ── 표제 ── */
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.symbol {
+  display: block;
+  width: 50px;
+  height: 41px;
+  object-fit: contain;
+  opacity: 0.9;
+}
+.title {
+  margin: 0;
+  padding-top: 4px;
+  font-family: var(--cc-serif);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.3em;
+  /* 자간이 마지막 글자 뒤에도 붙어 가운데가 왼쪽으로 쏠린다 — 같은 만큼 앞을 민다 */
+  padding-left: 0.3em;
+  color: var(--cc-ink);
+}
+/* en·fr 문서명은 길다(CERTIFICATE OF PROVENANCE) — 브랜드 라틴 대문자로 폭을 줄인다 */
+.latin .title {
+  font-family: var(--cc-latin);
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  padding-left: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ── 번호 + 물결 띠 ── */
+.numberBlock {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  padding-top: 40px;
+}
+/* 시안 좌표 그대로 — 번호 블록 위에서 62px, 폭 290이 안쪽 폭(265)보다 넓어 좌우로 조금 넘친다 */
+.band {
+  position: absolute;
+  top: 62px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+/* 번호 뒤를 종이색으로 칠해 띠가 숫자에서 끊기게 한다 — 띠가 번호 양옆으로만 지나간다 */
+.numberRow {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0 14px;
+  background: #f3efe7;
+}
+.no {
+  font-family: var(--cc-latin);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.1em;
+  color: var(--cc-bronze);
+}
+.num {
+  font-family: var(--cc-latin);
+  font-size: 64px;
+  font-weight: 300;
+  line-height: 72px;
+  letter-spacing: -0.01em;
+  color: var(--cc-ink);
+  font-variant-numeric: lining-nums;
+}
+.total {
+  font-family: var(--cc-latin);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 18px;
+  letter-spacing: 0.06em;
+  color: var(--cc-bronze);
+  white-space: nowrap;
+}
+.product {
+  position: relative;
+  margin: 0;
+  padding-top: 2px;
+  font-family: var(--cc-latin);
+  font-size: 17px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--cc-ink);
+}
+
+/* ── 증명문 ── */
+.attest {
+  margin: 0;
+  padding-top: 36px;
+  font-family: var(--cc-serif);
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 24px;
+  color: var(--cc-ink-2);
+  /* ko·ja·zh는 줄바꿈을 문자열이 잡는다(cert-text.ts) */
+  white-space: pre-line;
+}
+/* en·fr은 띄어쓰기로 흐르게 두고 줄 길이만 고른다 */
+.latin .attest {
+  font-family: var(--cc-latin);
+  font-size: 14.5px;
+  line-height: 22px;
+  text-wrap: balance;
+}
+
+/* ── 소유자 ── */
+.owner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  padding-top: 44px;
+}
+.label {
+  font-family: var(--cc-serif);
+  font-size: 10.5px;
+  font-weight: 400;
+  line-height: 14px;
+  letter-spacing: 0.3em;
+  color: var(--cc-bronze);
+}
+.latin .label {
+  font-family: var(--cc-latin);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+/* 서명체 상자 — 폭 맞춤(use-fit-text)의 기준이 이 상자의 폭이다 */
+.scriptBox {
+  align-self: stretch;
+  padding-top: 6px;
+}
+.script {
+  margin: 0;
+  font-family: var(--cc-script);
+  font-size: 50px;
+  font-weight: 400;
+  line-height: 62px;
+  color: var(--cc-ink);
+  white-space: nowrap;
+}
+.ownerRule {
+  flex-shrink: 0;
+  width: 220px;
+  height: 0.5px;
+  background: var(--cc-gold);
+  opacity: 0.7;
+}
+.native {
+  margin: 0;
+  padding-top: 10px;
+  font-family: var(--cc-name);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.4em;
+  padding-left: 0.4em;
+  color: var(--cc-ink-2);
+}
+.nativeOnly {
+  margin: 0;
+  padding: 12px 0 14px;
+  font-family: var(--cc-name);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 32px;
+  letter-spacing: 0.2em;
+  padding-left: 0.2em;
+  color: var(--cc-ink);
+}
+
+/* ── 등록일 · 인증서 번호 | 인장 — 세로 가운데, 높이를 맞춘다 ── */
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+  padding-top: 48px;
+  text-align: left;
+}
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.bottom .label {
+  letter-spacing: 0.24em;
+}
+.fieldValue {
+  font-family: var(--cc-serif);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+  color: var(--cc-ink);
+}
+.latin .fieldValue {
+  font-family: var(--cc-latin);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0.04em;
+}
+.certId {
+  font-family: var(--cc-latin);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0.08em;
+  color: var(--cc-ink);
+  white-space: nowrap;
+}
+.seal {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+}
+.sealSvg {
+  position: absolute;
+  inset: 0;
+}
+/* 금박 위 각인 — 정자로 세운다(원호를 따라 돌리지 않는다) */
+.sealText {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--cc-latin);
+  font-size: 7.5px;
+  font-weight: 700;
+  line-height: 10px;
+  letter-spacing: 0.22em;
+  padding-left: 0.22em;
+  color: #fff8e8;
+  text-shadow: 0 0.7px 0 rgba(62, 44, 16, 0.75);
+}
+
+/* ── 미세 문자(HMAC) ── */
+.micro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  gap: 5px;
+  padding-top: 32px;
+}
+.microRule {
+  align-self: stretch;
+  height: 0.5px;
+  background: rgba(168, 131, 74, 0.55);
+}
+.microText {
+  max-width: 100%;
+  overflow: hidden;
+  font-family: var(--cc-mono);
+  font-size: 5.2px;
+  line-height: 8px;
+  letter-spacing: 0.12em;
+  color: var(--cc-bronze);
+  white-space: nowrap;
+  /* 브라우저 최소 글자 크기 설정이 5.2px를 끌어올리지 않게 — 크기가 곧 조형이다 */
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}

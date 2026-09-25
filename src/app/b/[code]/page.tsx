@@ -9,10 +9,11 @@ export const dynamic = "force-dynamic";
 
 /**
  * 입장 페이지 — NFC 태그(musedemaree.com/b/{code})가 가장 먼저 여는 화면.
- * 이미 등록된 병이면 각인 화면(BottleInscription)을 먼저 띄운다 — 태그한 사람이
- * 가장 먼저 확인하려는 것은 "이 병이 누구의 것인가"이고, 등록 직후 본 화면과 같아야
- * 같은 문서로 읽힌다. 필름·Identity·Provenance는 그 아래에서 이어서 볼 수 있다.
+ * 이미 등록된 병이면 폼 대신 01B(번호와 소유자 이름 증서 조각)를 띄운다 — 태그한 사람이
+ * 가장 먼저 확인하려는 것은 "누구의 것인가"이고, 기록은 누구에게나 열어 둔다.
  * 재등록 차단은 폼을 잠그는 것으로 충분하다(서버 액션에도 같은 가드가 있다).
+ * 등록 직후의 인증서 카드(02)는 이 페이지가 아니라 등록 뒤 서버 액션이 받아온다
+ * (cert-actions.ts) — 첫 화면에 해양 관측 질의를 얹지 않는다.
  */
 export default async function BottleEntryPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;

@@ -13,8 +13,14 @@ import BottleNotFound from "../../_components/BottleNotFound";
 
 export const dynamic = "force-dynamic";
 
-export default async function BottleOwnerPage({ params }: { params: Promise<{ code: string }> }) {
-  const { code } = await params;
+export default async function BottleOwnerPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ code: string }>;
+  searchParams: Promise<{ verify?: string }>;
+}) {
+  const [{ code }, sp] = await Promise.all([params, searchParams]);
   /* ownerRaw는 서버 안에서만 쓴다 — 소장품을 묶는 기준 이메일이 필요해서다.
      클라이언트로 내려가는 것은 인증을 통과했을 때의 ownerFull뿐이다. */
   const [data, ownerMasked, ownerRaw, session, jar] = await Promise.all([
@@ -29,7 +35,7 @@ export default async function BottleOwnerPage({ params }: { params: Promise<{ co
   /* 관리할 소유 정보가 아직 없다 — 등록부터 하도록 진입 화면으로 돌려보낸다 */
   if (!ownerMasked) redirect(`/b/${code}`);
 
-  /* 언어 선택기가 없는 화면 — 앞 화면(/b 공통 쿠키)에서 고른 언어를 그대로 따른다 */
+  /* 앞 화면(/b 공통 쿠키)에서 고른 언어를 따른다. 이 화면의 「언어」 행(03D)도 같은 쿠키를 쓴다 */
   const locale = parseBottleLocale(jar.get(BOTTLE_LANG_COOKIE)?.value);
 
   const authed = !!session;
@@ -44,9 +50,21 @@ export default async function BottleOwnerPage({ params }: { params: Promise<{ co
       data={data}
       ownerMasked={ownerMasked}
       authed={authed}
-      ownerFull={authed && ownerRaw ? { name: ownerRaw.name, email: ownerRaw.email } : null}
+      ownerFull={
+        authed && ownerRaw
+          ? {
+              name: ownerRaw.name,
+              email: ownerRaw.email,
+              givenLatin: ownerRaw.givenLatin,
+              familyLatin: ownerRaw.familyLatin,
+            }
+          : null
+      }
       ownedBottles={ownedBottles}
       locale={locale}
+      /* 01B 「소유자이신가요? 본인 인증」에서 왔다 — 본인 인증(03B)부터 연다.
+         인증된 세션이면 열 이유가 없다. 코드는 자동으로 보내지 않는다(누르면 보낸다). */
+      startVerify={sp.verify === "1" && !authed}
     />
   );
 }

@@ -5,10 +5,13 @@ import Image from "next/image";
 import UnderlineField from "./UnderlineField";
 import SubmitButton from "./SubmitButton";
 import BenefitList from "./BenefitList";
+import LetterSuccess from "./LetterSuccess";
 import { submitBrandBook } from "@/lib/forms";
 import { isValidEmail } from "@/lib/validation";
 import type { Dictionary } from "@/i18n/types";
 import type { Locale } from "@/i18n/config";
+
+type FieldErrors = { name?: string; affiliation?: string; email?: string };
 
 export default function BrandBookForm({
   dict,
@@ -23,15 +26,24 @@ export default function BrandBookForm({
   const [affiliation, setAffiliation] = useState("");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [error, setError] = useState("");
+
+  /* 입력을 고치면 그 필드의 오류 줄은 바로 걷는다 */
+  const clearError = (key: keyof FieldErrors) => {
+    if (fieldErrors[key]) setFieldErrors((f) => ({ ...f, [key]: undefined }));
+  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (!name.trim() || !affiliation.trim() || !isValidEmail(email)) {
-      setError(dict.errValidation);
-      return;
-    }
+    /* 오류는 해당 필드 아래 한 줄로 — 전송 실패만 하단 안내 자리에 */
+    const next: FieldErrors = {};
+    if (!name.trim()) next.name = common.errRequired;
+    if (!affiliation.trim()) next.affiliation = common.errRequired;
+    if (!isValidEmail(email)) next.email = email.trim() ? common.errEmail : common.errRequired;
+    setFieldErrors(next);
+    if (next.name || next.affiliation || next.email) return;
     setStatus("sending");
     try {
       const res = await submitBrandBook({
@@ -55,10 +67,7 @@ export default function BrandBookForm({
 
   return (
     <>
-      <div className="s-letter__brandmark">
-        <Image src="/images/logo/logo_trans.png" alt="" width={1000} height={829} className="s-letter__brandmark-symbol" />
-        <Image src="/images/logo/logo_text_trans.png" alt="MUSE DE MARÉE" width={1000} height={152} className="s-letter__brandmark-word" />
-      </div>
+      <span className="s-letter__eyebrow">{dict.eyebrow}</span>
       <h1 className="s-letter__title">
         {locale === "ko" ? (
           <Image
@@ -75,30 +84,58 @@ export default function BrandBookForm({
       </h1>
       <p className="s-letter__sub">{dict.sub}</p>
 
+      <BenefitList items={dict.benefits} numbered />
+
       {status === "done" ? (
-        <div className="s-letter__success">
-          <span className="s-letter__success-rule" />
-          <p className="s-letter__success-line">{dict.successLine}</p>
-          <p className="s-letter__note">{dict.successNote}</p>
-        </div>
+        <LetterSuccess line={dict.successLine} note={dict.successNote} backLabel={common.backHome} locale={locale} />
       ) : (
-        <>
-          <BenefitList items={dict.benefits} numbered />
+        <form className="s-letter__form" onSubmit={onSubmit} noValidate>
+          <div className="s-letter__form-row">
+            <UnderlineField
+              label={common.label.name}
+              placeholder={common.placeholder.name}
+              name="name"
+              value={name}
+              onChange={(v) => {
+                setName(v);
+                clearError("name");
+              }}
+              error={fieldErrors.name}
+              required
+            />
+            <UnderlineField
+              label={common.label.affiliation}
+              placeholder={common.placeholder.affiliation}
+              name="affiliation"
+              value={affiliation}
+              onChange={(v) => {
+                setAffiliation(v);
+                clearError("affiliation");
+              }}
+              error={fieldErrors.affiliation}
+              required
+            />
+          </div>
+          <UnderlineField
+            label={common.label.email}
+            placeholder={common.placeholder.email}
+            name="email"
+            type="email"
+            value={email}
+            onChange={(v) => {
+              setEmail(v);
+              clearError("email");
+            }}
+            error={fieldErrors.email}
+            required
+          />
 
-          <form className="s-letter__form" onSubmit={onSubmit} noValidate>
-            <div className="s-letter__form-row">
-              <UnderlineField label="NAME" placeholder={common.placeholder.name} name="name" value={name} onChange={setName} required />
-              <UnderlineField label="AFFILIATION" placeholder={common.placeholder.affiliation} name="affiliation" value={affiliation} onChange={setAffiliation} required />
-            </div>
-            <UnderlineField label="EMAIL" placeholder={common.placeholder.email} name="email" type="email" value={email} onChange={setEmail} required />
+          <SubmitButton label={dict.submit} sendingLabel={common.sending} sending={status === "sending"} />
 
-            <SubmitButton label={dict.submit} sendingLabel={common.sending} sending={status === "sending"} />
-
-            <p className="s-letter__note">
-              {error || dict.note}
-            </p>
-          </form>
-        </>
+          <p className={`s-letter__note${error ? " is-error" : ""}`} role={error ? "alert" : undefined}>
+            {error || dict.note}
+          </p>
+        </form>
       )}
     </>
   );

@@ -6,10 +6,13 @@ import UnderlineField from "./UnderlineField";
 import SelectField from "./SelectField";
 import SubmitButton from "./SubmitButton";
 import BenefitList from "./BenefitList";
+import LetterSuccess from "./LetterSuccess";
 import { submitInvite } from "@/lib/forms";
 import { isValidEmail } from "@/lib/validation";
 import type { Dictionary } from "@/i18n/types";
 import type { Locale } from "@/i18n/config";
+
+type FieldErrors = { name?: string; email?: string };
 
 export default function InviteForm({
   dict,
@@ -24,15 +27,18 @@ export default function InviteForm({
   const [email, setEmail] = useState("");
   const [referral, setReferral] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [error, setError] = useState("");
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (!name.trim() || !isValidEmail(email)) {
-      setError(dict.errValidation);
-      return;
-    }
+    /* 오류는 해당 필드 아래 한 줄로 — 전송 실패만 하단 안내 자리에 */
+    const next: FieldErrors = {};
+    if (!name.trim()) next.name = common.errRequired;
+    if (!isValidEmail(email)) next.email = email.trim() ? common.errEmail : common.errRequired;
+    setFieldErrors(next);
+    if (next.name || next.email) return;
     setStatus("sending");
     try {
       const res = await submitInvite({ name: name.trim(), email: email.trim(), referralSource: referral.trim() });
@@ -67,28 +73,45 @@ export default function InviteForm({
       </h1>
       <p className="s-letter__sub">{dict.sub}</p>
 
+      <BenefitList items={dict.benefits} numbered footnote={dict.scarcity} />
+
       {status === "done" ? (
-        <div className="s-letter__success">
-          <span className="s-letter__success-rule" />
-          <p className="s-letter__success-line">{dict.successLine}</p>
-          <p className="s-letter__note">{dict.successNote}</p>
-        </div>
+        <LetterSuccess line={dict.successLine} note={dict.successNote} backLabel={common.backHome} locale={locale} />
       ) : (
-        <>
-          <BenefitList items={dict.benefits} numbered footnote={dict.scarcity} />
+        <form className="s-letter__form" onSubmit={onSubmit} noValidate>
+          <UnderlineField
+            label={common.label.name}
+            placeholder={common.placeholder.name}
+            name="name"
+            value={name}
+            onChange={(v) => {
+              setName(v);
+              if (fieldErrors.name) setFieldErrors((f) => ({ ...f, name: undefined }));
+            }}
+            error={fieldErrors.name}
+            required
+          />
+          <UnderlineField
+            label={common.label.email}
+            placeholder={common.placeholder.email}
+            name="email"
+            type="email"
+            value={email}
+            onChange={(v) => {
+              setEmail(v);
+              if (fieldErrors.email) setFieldErrors((f) => ({ ...f, email: undefined }));
+            }}
+            error={fieldErrors.email}
+            required
+          />
+          <SelectField label={common.label.referral} placeholder={common.placeholder.referral} name="referral" options={common.referralOptions} value={referral} onChange={setReferral} />
 
-          <form className="s-letter__form" onSubmit={onSubmit} noValidate>
-            <UnderlineField label="NAME" placeholder={common.placeholder.name} name="name" value={name} onChange={setName} required />
-            <UnderlineField label="EMAIL" placeholder={common.placeholder.email} name="email" type="email" value={email} onChange={setEmail} required />
-            <SelectField label="REFERRAL" placeholder={common.placeholder.referral} name="referral" options={common.referralOptions} value={referral} onChange={setReferral} />
+          <SubmitButton label={dict.submit} sendingLabel={common.sending} sending={status === "sending"} />
 
-            <SubmitButton label={dict.submit} sendingLabel={common.sending} sending={status === "sending"} />
-
-            <p className="s-letter__note">
-              {error || dict.note}
-            </p>
-          </form>
-        </>
+          <p className={`s-letter__note${error ? " is-error" : ""}`} role={error ? "alert" : undefined}>
+            {error || dict.note}
+          </p>
+        </form>
       )}
     </>
   );

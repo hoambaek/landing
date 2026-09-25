@@ -10,7 +10,10 @@
 import { timingSafeEqual } from "node:crypto";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { resend, FROM_EMAIL, isResendConfigured } from "@/lib/resend/client";
-import { maskEmail } from "./data";
+import { mailShell } from "@/lib/resend/shell";
+import { MAIL_COLOR as MC, MAIL_FONT as MF } from "@/lib/resend/theme";
+import { maskEmail, fetchBottleIdentity, fetchAgingBatch } from "./data";
+import { PRODUCT_META } from "./copy";
 import {
   genOtp,
   hashCode,
@@ -59,19 +62,10 @@ async function sendMail(to: string, subject: string, html: string) {
 
 /* 메일 껍데기 — ApplicantEmail(신청 확인 메일)과 같은 종이·같은 토큰을 쓴다.
    같은 브랜드가 보내는 메일이 하나는 검고 하나는 밝으면 다른 곳에서 온 것으로 읽힌다.
-   색은 브랜드 정본값(ink #312E2A, brass-muted 계열 #8C6B33). */
-function shell(inner: string): string {
-  return `<div style="background:#DDD8D2;padding:40px 20px;font-family:'Noto Sans KR',-apple-system,'Apple SD Gothic Neo',sans-serif">
-    <div style="width:100%;max-width:520px;margin:0 auto;background:#C4BFBB">
-      <div style="padding:46px 40px 48px">
-        <div style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:12px;letter-spacing:.22em;color:#8C6B33;margin-bottom:20px">OCEAN CELLAR™</div>
-        ${inner}
-      </div>
-      <div style="padding:30px 40px 32px;background:#14110F;text-align:center">
-        <div style="font-size:12px;line-height:19px;color:rgba(242,239,233,.55)">바다의 시간을 기록합니다</div>
-      </div>
-    </div>
-  </div>`;
+   2026-09 라이트 v3(Paper NFC "03B-M — 확인 코드 메일")로 옮기며 마크업은 src/lib/resend/shell.ts로 뺐다 —
+   토큰(theme.ts)을 신청 확인 메일과 한 벌로 쓰기 위해서다. inner에는 카드 안의 <tr> 행을 넘긴다. */
+function shell(inner: string, preheader?: string): string {
+  return mailShell({ inner, preheader, locale: "ko" });
 }
 
 /* ── OTP ─────────────────────────────────────────── */
@@ -100,16 +94,69 @@ export async function requestOwnerOtp(nfc: string): Promise<Result & { emailMask
   });
   if (error) return { ok: false, error: "잠시 후 다시 시도해 주세요." };
 
+  /* 메일이 개체를 번호로 부른다(개체 지칭 규칙) — 번호·퀴베·입수 연도는 DB에서 읽은 값만 쓴다.
+     번호가 없으면 그 절을 통째로 뺀다. 연도는 입수 배치가 있을 때만 붙인다(현재 연도로 채우지 않는다).
+     퀴베 이름에 이미 연도가 들어 있으면(2025 First Edition) 연도를 또 붙이지 않는다. */
+  const identity = await fetchBottleIdentity(nfc);
+  const serial = identity?.serial ?? null;
+  const cuvee = identity ? PRODUCT_META[identity.productId]?.name ?? null : null;
+  const immersion = identity && cuvee ? (await fetchAgingBatch(identity.productId)).immersion : null;
+  const year = cuvee && !/\b\d{4}\b/.test(cuvee) ? immersion?.slice(0, 4) ?? null : null;
+  const bottleLabel =
+    serial != null ? [`N° ${serial}`, cuvee ? [cuvee, year].filter(Boolean).join(" ") : null].filter(Boolean).join(" · ") : null;
+  const lead = bottleLabel
+    ? `${bottleLabel}의 소유 정보를 열려면<br />아래 코드를 인증 화면에 입력해 주세요.`
+    : "아래 코드를 인증 화면에 입력해 주세요.";
+  const preheader =
+    serial != null
+      ? `N° ${serial}의 소유 정보를 여는 코드입니다. 5분 동안 유효합니다.`
+      : "소유 정보를 여는 코드입니다. 5분 동안 유효합니다.";
+  /* 코드는 3+3으로 끊어 보인다(407 318) — 여섯 자리를 한눈에 옮겨 적기 쉽다. 입력은 숫자만 받으므로 공백은 표시용이다 */
+  const codeShown = `${code.slice(0, 3)} ${code.slice(3)}`;
+  const hair = (w: number, top: number) =>
+    `<div style="width:${w}px;height:0;margin:${top}px auto 0;border-top:0.5px solid ${MC.gold};font-size:0;line-height:0">&nbsp;</div>`;
+
   /* 제목 형식은 다른 발송 메일과 맞춘다("... | Muse de Marée").
      대괄호 말머리는 이 브랜드가 쓰지 않는 어법이다. */
   await sendMail(
     email,
     "소유자 확인 코드 | Muse de Marée",
     shell(
-      `<div style="font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;font-size:32px;font-weight:300;line-height:40px;letter-spacing:-0.01em;color:#312E2A;margin-bottom:24px">소유자 확인 코드</div>
-       <div style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:38px;letter-spacing:.3em;color:#312E2A">${code}</div>
-       <hr style="width:36px;margin:30px 0 22px;border:none;border-top:1px solid #8C6B33" />
-       <div style="font-size:16px;line-height:28px;color:#4A453F;word-break:keep-all">5분 동안 유효합니다.<br />요청하지 않으셨다면 이 메일은 그냥 두셔도 됩니다.</div>`
+      `<tr>
+          <td class="m-pad" align="center" style="padding:48px 48px 0;text-align:center">
+            <div style="font-family:${MF.latin};font-size:12px;font-weight:500;letter-spacing:.34em;line-height:16px;color:${MC.goldText};text-transform:uppercase">VERIFICATION · 본인 인증</div>
+            <div style="margin-top:14px;font-family:${MF.serifKo};font-size:28px;font-weight:300;line-height:38px;color:${MC.ink};word-break:keep-all">소유자 확인 코드</div>
+            <div class="m-lead" style="margin-top:14px;font-family:${MF.serifKo};font-size:15px;font-weight:300;line-height:26px;color:${MC.body};word-break:keep-all">${lead}</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="m-pad" align="center" style="padding:36px 40px 0">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="360" style="width:100%;max-width:360px;background:${MC.paperLight}">
+              <tr><td style="padding:6px">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid ${MC.gold}">
+                  <tr><td style="padding:3px">
+                    <!-- 안쪽 테는 시안의 #A8834A 55%를 코드 판(#FBF8F2) 위에 미리 섞은 값이다(Outlook이 rgba 테두리를 못 읽는다) -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:0.5px solid #CDB896">
+                      <tr><td align="center" style="padding:26px 12px 22px;text-align:center">
+                        <div style="font-family:${MF.latin};font-size:10px;font-weight:500;letter-spacing:.34em;line-height:12px;color:${MC.goldText};text-transform:uppercase">YOUR CODE</div>
+                        <div style="margin-top:10px;padding-left:.28em;font-family:${MF.numeral};font-feature-settings:'lnum';font-variant-numeric:lining-nums;font-size:48px;font-weight:300;letter-spacing:.28em;line-height:56px;color:${MC.ink};white-space:nowrap">${codeShown}</div>
+                        ${hair(28, 10)}
+                        <div style="margin-top:10px;font-family:${MF.serifKo};font-size:13px;font-weight:300;line-height:16px;color:${MC.body}">5분 동안 유효합니다</div>
+                      </td></tr>
+                    </table>
+                  </td></tr>
+                </table>
+              </td></tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="m-pad" align="center" style="padding:36px 56px 52px;text-align:center">
+            ${hair(24, 0)}
+            <div style="margin-top:24px;font-family:${MF.serifKo};font-size:13px;font-weight:300;line-height:23px;color:${MC.body};word-break:keep-all">요청하신 적이 없다면 이 메일은 그냥 두셔도 됩니다.<br />코드를 입력하지 않으면 아무것도 바뀌지 않습니다.<br />뮤즈드마레는 전화나 메시지로 이 코드를 묻지 않습니다.</div>
+          </td>
+        </tr>`,
+      preheader
     )
   );
   return { ok: true, emailMasked: maskEmail(email) };
@@ -171,7 +218,17 @@ export async function signOutOwner(nfc: string): Promise<Result> {
  * 이름은 등록자가 "인증서에 새길 이름"으로 직접 정한 값이라 오타 수정 수요가 실제로 있고,
  * 바뀌어도 인증 주체가 달라지지 않는다.
  */
-export async function updateOwnerName(nfc: string, name: string): Promise<Result> {
+/* 로마자 표기(인증서 서명체) — 등록 시점과 같은 정규화(첫 글자만 대문자, src/lib/forms.ts
+   capitalizeFirst와 같은 규칙)로 저장한다. 이름 수정 화면(Paper 03C)이 세 칸을 함께 고친다. */
+function capFirst(v: string): string {
+  return v ? v.charAt(0).toUpperCase() + v.slice(1) : v;
+}
+
+export async function updateOwnerName(
+  nfc: string,
+  name: string,
+  latin?: { given: string; family: string },
+): Promise<Result> {
   if (!supabaseAdmin || !NFC_RE.test(nfc)) return { ok: false, error: "잘못된 요청입니다." };
   const session = await getOwnerSession(nfc);
   if (!session) return { ok: false, error: "본인 인증이 필요합니다." };
@@ -179,12 +236,18 @@ export async function updateOwnerName(nfc: string, name: string): Promise<Result
   const n = (name ?? "").trim();
   if (!n) return { ok: false, error: "이름을 입력해 주세요." };
   if (n.length > 60) return { ok: false, error: "이름이 너무 깁니다." };
+  /* 로마자는 넘어왔을 때만 고친다(옛 호출은 이름만 보낸다). 넘어왔으면 둘 다 있어야 한다 —
+     한쪽만 비면 인증서가 성이나 이름 하나로 선다. */
+  const given = latin ? capFirst((latin.given ?? "").trim()) : null;
+  const family = latin ? capFirst((latin.family ?? "").trim()) : null;
+  if (latin && (!given || !family)) return { ok: false, error: "영문 이름과 성을 입력해 주세요." };
+  if ((given?.length ?? 0) > 40 || (family?.length ?? 0) > 40) return { ok: false, error: "이름이 너무 깁니다." };
 
   /* 세션 이메일로 행을 특정한다. 최신 행만 집으면 그 사이 소유자가 바뀌었을 때
      인증한 사람과 다른 행을 고치게 된다. */
   const { data: latest } = await supabaseAdmin
     .from("bottle_registrations")
-    .select("id, name, email")
+    .select("id, name, email, given_name_latin, family_name_latin")
     .eq("nfc_code", nfc)
     .order("created_at", { ascending: false })
     .limit(1)
@@ -196,10 +259,20 @@ export async function updateOwnerName(nfc: string, name: string): Promise<Result
 
   const { error } = await supabaseAdmin
     .from("bottle_registrations")
-    .update({ name: n })
+    .update(latin ? { name: n, given_name_latin: given, family_name_latin: family } : { name: n })
     .eq("id", latest.id);
   if (error) return { ok: false, error: "저장 중 문제가 발생했습니다." };
 
-  await audit(nfc, "edit_name", session.email, { from: latest.name, to: n });
+  await audit(
+    nfc,
+    "edit_name",
+    session.email,
+    latin
+      ? {
+          from: { name: latest.name, given: latest.given_name_latin, family: latest.family_name_latin },
+          to: { name: n, given, family },
+        }
+      : { from: latest.name, to: n },
+  );
   return { ok: true };
 }

@@ -91,9 +91,11 @@ export function hashCode(nfc: string, code: string): string {
  */
 export function signCertificate(code: string, serial: number | null, productId: string): string | null {
   if (!SECRET) return null;
-  const hex = createHmac("sha256", SECRET)
+  /* 다이제스트 전체(64자)를 낸다 — 인증서 하단 미세 문자 줄(Paper 04)이 이 값을 그대로 싣는다.
+     예전 화면은 앞 16자를 네 자씩 끊어 보였다. 같은 키·같은 입력이라 그 16자는 이 값의 앞머리와 같다
+     (이미 저장된 옛 PNG와 대조해도 어긋나지 않는다). */
+  return createHmac("sha256", SECRET)
     .update(`mdm-cert-v1|${code}|${serial ?? "-"}|${productId}`)
     .digest("hex")
     .toUpperCase();
-  return hex.slice(0, 16).replace(/(.{4})(.{4})(.{4})(.{4})/, "$1 $2 $3 $4");
 }

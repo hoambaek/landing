@@ -22,6 +22,9 @@ import {
   getAdminSubject,
 } from "./resend/templates/AdminNotifyEmail";
 import type { Locale } from "@/i18n/config";
+import { PRODUCT_META } from "@/app/b/_lib/copy";
+import { fetchAgingBatch } from "@/app/b/_lib/data";
+import { formatOwnerLatin } from "@/app/b/_lib/owner-name";
 
 /**
  * 서브 페이지 폼 제출 — 서버 액션.
@@ -92,6 +95,14 @@ type NotifyArgs = {
   serial?: number | null;
   /** 신청자 메일의 언어. 운영자 알림(AdminNotifyEmail)은 이 값과 무관하게 한국어다 */
   locale?: EmailLocale;
+  /** bottle 메일 명판 — 인증서와 같은 출처(PRODUCT_META · 입수 배치 · 로마자 입력값)만 넘긴다.
+      값이 없으면 템플릿이 그 칸을 세우지 않는다. 지어낸 값으로 채우지 않는다. */
+  plate?: {
+    total?: number | null;
+    cuvee?: string | null;
+    vintage?: string | null;
+    nameLatin?: string | null;
+  };
 };
 
 /** insert 성공 후 이메일 2종 발송(병렬, 실패 무시) */
@@ -129,6 +140,7 @@ async function sendEmails({
   mode = "send",
   serial = null,
   locale = "ko",
+  plate,
 }: NotifyArgs): Promise<void> {
   if (!isResendConfigured() || !resend) {
     console.warn("[forms] Resend 미설정 — 이메일 발송 건너뜀");
@@ -144,7 +156,7 @@ async function sendEmails({
   try {
     /* 언어를 타는 것은 신청자 메일뿐이다 — 운영자 알림은 대표가 읽으므로 한국어 한 벌이다 */
     const [applicantHtml, adminHtml] = await Promise.all([
-      render(ApplicantEmail({ kind, name: applicantName, mode, serial, locale })),
+      render(ApplicantEmail({ kind, name: applicantName, mode, serial, locale, ...plate })),
       render(AdminNotifyEmail({ kind, fields: adminFields, receivedAt })),
     ]);
 
@@ -353,6 +365,16 @@ export async function submitBottleRegistration(
   /* 저장 시점에 한 번만 정규화한다 — 인증서·메일·관리자 알림이 모두 같은 값을 본다 */
   const given = capitalizeFirst(p.givenNameLatin);
   const family = capitalizeFirst(p.familyNameLatin);
+  /* 명판 값 — 인증서와 같은 출처를 쓴다. 연도는 입수 배치가 있을 때만 붙인다
+     (immersionYear는 없으면 올해로 채우므로 여기서는 쓰지 않는다). */
+  const meta = p.productId ? PRODUCT_META[p.productId] : undefined;
+  const aging = p.productId ? await fetchAgingBatch(p.productId) : null;
+  const plate = {
+    total: meta?.quantity ?? null,
+    cuvee: meta?.name ?? null,
+    vintage: aging?.immersion?.slice(0, 4) ?? null,
+    nameLatin: formatOwnerLatin(given, family),
+  };
   return insertAndNotify(
     "bottle_registrations",
     {
@@ -371,6 +393,7 @@ export async function submitBottleRegistration(
       applicantEmail: p.email,
       applicantName: p.name,
       serial: p.serial ?? null,
+      plate,
       adminFields: {
         성함: p.name,
         "로마자 표기": [given, family].filter(Boolean).join(" ") || "—",

@@ -9,6 +9,15 @@ import {
   Hr,
   Img,
 } from "@react-email/components";
+import {
+  MAIL_BASE_URL,
+  MAIL_COLOR,
+  MAIL_FONT,
+  MAIL_FONT_HREF,
+  MAIL_FOOTER_INFO,
+  MAIL_MOTTO,
+  MAIL_COPYRIGHT,
+} from "../theme";
 
 export type FormKind = "invite" | "partner" | "brandbook" | "bottle" | "newsletter";
 
@@ -50,14 +59,23 @@ interface ApplicantEmailProps {
   /** 병 번호 — bottle 메일의 헤드라인이 개체를 번호로 부른다. 없으면 부르지 않는다 */
   serial?: number | null;
   locale?: EmailLocale;
+  /* ── 소유 명판(bottle 메일 전용) ──
+     아래 네 값은 호출부가 DB·제품 메타에서 읽어 넘길 때만 명판에 선다. 없으면 그 자리를 비운다 —
+     없는 수량·퀴베·로마자를 지어내 새기지 않는다. 명판 자체는 번호(serial)가 있을 때만 선다. */
+  /** 에디션 총수량 — "N° 89 / 100"의 100 */
+  total?: number | null;
+  /** 퀴베 이름 — 명판 둘째 줄 */
+  cuvee?: string | null;
+  /** 입수 연도 — 명판 둘째 줄, 퀴베 뒤 */
+  vintage?: string | null;
+  /** 인증서용 로마자 표기(서명체로 선다). 없으면 한글 이름을 세리프로 세운다 */
+  nameLatin?: string | null;
 }
 
-/** 발송 메일의 이미지(로고)용 절대 URL */
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://musedemaree.com";
-
 /**
- * 신청자 확인 메일 — Paper v2 시안(프레임 + 카드 + 법적 푸터).
- * 외곽 연회색 프레임 안에 #C4BFBB 카드, 브랜드 로고 헤더, 본문, 다크 법적 푸터.
+ * 신청자 확인 메일 — Paper 라이트 v3 시안(2026-09, Home Page "Email — …" 아트보드).
+ * 연회색 바탕 위 종이색(#F3EFE7) 카드, 블랙 로고 헤더 + 금색 헤어라인, 본문, 서명,
+ * 라이트 법적 푸터(#EDE8E0). 병 등록 메일에만 소유 명판이 붙는다.
  */
 export function ApplicantEmail({
   kind,
@@ -65,6 +83,10 @@ export function ApplicantEmail({
   mode = "send",
   serial = null,
   locale = "ko",
+  total = null,
+  cuvee = null,
+  vintage = null,
+  nameLatin = null,
 }: ApplicantEmailProps) {
   const t = pickCopy(kind, mode, locale);
   const greeting =
@@ -78,58 +100,80 @@ export function ApplicantEmail({
   /* 번호가 있으면 헤드라인이 개체를 부르고, 없으면 부르지 않는다(정본 규칙 2) */
   const title =
     kind === "bottle" && serial == null ? BOTTLE_TITLE_NO_SERIAL : t.title.replace("{serial}", String(serial));
+  /* 본문이 실제로 영문인지 — locale="en"이어도 영문 문안이 없는 kind는 한국어로 폴백하므로
+     (pickCopy 주석) locale이 아니라 고른 문안으로 판정한다. 제목 서체(영문 = Cormorant 38px)와
+     keep-all이 이 값을 따른다. */
+  const isEnglishCopy = t === BRANDBOOK_ACK_COPY_EN || t === COPY_EN[kind];
   /* wordBreak: keep-all은 한국어 줄바꿈 규칙(어절 단위로 끊는다)이다. 영문에 걸면
      긴 단어가 줄 끝에서 통째로 다음 줄로 밀려 오른쪽이 크게 비므로 영문에서는 뺀다.
      빈 객체를 펼치는 것이므로 다른 값(색·크기·여백)은 그대로다. */
-  const keepAll = locale === "ko" ? KEEP_ALL : {};
+  const keepAll = isEnglishCopy ? {} : KEEP_ALL;
+  const footerLocale = locale === "en" ? "en" : "ko";
+  const latinName = nameLatin?.trim() || null;
+  const ownerName = latinName ?? name?.trim() ?? null;
+  const showPlate = kind === "bottle" && serial != null;
+  const plateSub = cuvee ? [cuvee, vintage].filter(Boolean).join(" · ") : null;
 
   return (
     <Html lang={locale}>
       <Head>
-        {/* 모바일: 인라인 스타일보다 우선하도록 !important 필수 (지원 안 하는 클라이언트는 상향된 기본값으로 동작) */}
+        {/* 웹폰트를 읽는 Apple Mail·iOS 메일만 받는다. Gmail·Outlook은 버리고 스택의 대체 서체로 간다 */}
+        <link href={MAIL_FONT_HREF} rel="stylesheet" />
+        {/* 모바일: 인라인 스타일보다 우선하도록 !important 필수 (지원 안 하는 클라이언트는 데스크톱 값으로 동작).
+            값은 Paper "Mobile Email — …" 아트보드(390px) 기준 */}
         <style>{`
           @media only screen and (max-width: 480px) {
-            .email-card { margin: 0 auto !important; }
-            .email-header { padding: 40px 0 34px !important; }
-            .email-content { padding: 40px 24px 44px !important; }
-            .email-title { font-size: 28px !important; line-height: 36px !important; }
-            .email-footer { padding: 36px 24px 40px !important; }
+            .email-card { margin: 0 auto !important; border: 0 !important; }
+            .email-header { padding: 40px 24px 0 !important; }
+            .email-content { padding: 36px 24px 40px !important; }
+            .email-title { font-size: 25px !important; line-height: 35px !important; }
+            .email-plate-l { padding: 16px 0 16px 16px !important; }
+            .email-plate-r { padding: 16px 16px 16px 8px !important; }
+            .email-plate-num { font-size: 32px !important; line-height: 36px !important; }
+            .email-plate-script { font-size: 30px !important; line-height: 40px !important; }
+            .email-footer { padding: 28px 24px 32px !important; }
+            .email-finfo { font-size: 10px !important; line-height: 17px !important; }
           }
         `}</style>
       </Head>
       <Body style={styles.body}>
         <Container className="email-card" style={styles.card}>
-          {/* ── 헤더 (로고 + 모토) ──
+          {/* ── 헤더 (심볼 + 워드마크 + 금색 헤어라인) ──
               2026-07-27 흰색 → 블랙. 헤더 바탕이 그레이지(#C4BFBB)라 흰 로고는 명도차가 좁아
               하프톤 점이 뭉개졌다. 블랙은 점 하나하나가 살아난다.
-              푸터는 다크 배경이라 계속 흰색(_W)을 쓰고, 본문 서명은 원래 블랙이다. */}
+              2026-09 라이트 v3 — 바탕이 종이색으로 밝아지고 푸터도 밝아져 흰 로고(_W)는 더 쓰지 않는다. */}
           <Section className="email-header" style={styles.header}>
             <Img
-              src={`${BASE_URL}/images/logo/logo_trans.png`}
-              width="132"
-              height="110"
+              src={`${MAIL_BASE_URL}/images/logo/logo_trans.png`}
+              width="64"
+              height="53"
               alt=""
               style={styles.symbol}
             />
             <Img
-              src={`${BASE_URL}/images/logo/logo_text_trans.png`}
+              src={`${MAIL_BASE_URL}/images/logo/logo_text_trans.png`}
               width="95"
               height="14"
               alt="MUSE DE MARÉE"
               style={styles.wordmark}
             />
+            <Hr style={styles.headRule} />
           </Section>
 
           {/* ── 본문 ── */}
           <Section className="email-content" style={styles.content}>
             <Text style={styles.eyebrow}>{t.eyebrow}</Text>
-            <Text className="email-title" style={{ ...styles.title, ...keepAll }}>
-              {title}
-            </Text>
+            {isEnglishCopy ? (
+              <Text style={styles.titleEn}>{title}</Text>
+            ) : (
+              <Text className="email-title" style={{ ...styles.title, ...keepAll }}>
+                {title}
+              </Text>
+            )}
             <Text style={styles.hello}>{greeting}</Text>
-            {/* 목록은 ul/li 대신 Text 반복이다 — 클라이언트마다 li 기본 여백이 달라
-                간격을 통제할 수 없다. 불릿은 문자 ·, 마지막 항목만 아래 여백을 벌려
-                뒤따르는 문단이 목록에 붙지 않게 한다(문단 para는 margin-top이 0이다). */}
+            {/* 목록은 ul/li 대신 table 행이다 — 클라이언트마다 li 기본 여백이 달라
+                간격을 통제할 수 없다. 시안(v3)은 불릿 대신 0.5px 구분선 행에 항목명(왼쪽)·설명(오른쪽)을 둔다.
+                flex는 Outlook·일부 Gmail에서 풀리므로 두 칸 table로 짠다. */}
             {t.body.map((line, i) =>
               typeof line === "string" ? (
                 <Text key={i} style={{ ...styles.para, ...keepAll }}>
@@ -138,26 +182,74 @@ export function ApplicantEmail({
               ) : (
                 <Fragment key={i}>
                   <Text style={{ ...styles.listHeading, ...keepAll }}>{line.heading}</Text>
-                  {line.items.map((item, j) => (
-                    <Text
-                      key={item.name}
-                      style={
-                        j === line.items.length - 1
-                          ? { ...styles.listItem, ...keepAll, marginBottom: "26px" }
-                          : { ...styles.listItem, ...keepAll }
-                      }
-                    >
-                      {"· "}
-                      <span style={styles.listName}>{item.name}</span>
-                      {` — ${item.desc}`}
-                    </Text>
-                  ))}
+                  <table role="presentation" width="100%" cellPadding={0} cellSpacing={0} border={0} style={styles.listTable}>
+                    <tbody>
+                      {line.items.map((item, j) => {
+                        const last = j === line.items.length - 1;
+                        const edge = last ? styles.listRowLast : styles.listRow;
+                        return (
+                          <tr key={item.name}>
+                            <td style={{ ...edge, ...styles.listName, ...keepAll }}>{item.name}</td>
+                            <td align="right" style={{ ...edge, ...styles.listDesc, ...keepAll }}>
+                              {item.desc}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </Fragment>
               )
             )}
-            <Hr style={styles.rule} />
+
+            {/* ── 소유 명판 (bottle 메일) ──
+                금색 1px 테 + 3px 여백 + 0.5px 안쪽 테. 좌: 번호·퀴베, 우: 소유자.
+                좌우 배치는 flex 대신 두 칸 table이다(Outlook·Gmail 안전). */}
+            {showPlate && (
+              <div style={styles.plateWrap}>
+                <table role="presentation" width="100%" cellPadding={0} cellSpacing={0} border={0} style={styles.plateOuter}>
+                  <tbody>
+                    <tr>
+                      <td style={styles.plateGap}>
+                        <table role="presentation" width="100%" cellPadding={0} cellSpacing={0} border={0} style={styles.plateInner}>
+                          <tbody>
+                            <tr>
+                              <td className="email-plate-l" valign="middle" style={styles.plateLeft}>
+                                <div style={styles.plateNumLine}>
+                                  <span style={styles.plateNo}>N°</span>
+                                  <span className="email-plate-num" style={styles.plateNum}>
+                                    {serial}
+                                  </span>
+                                  {total != null && <span style={styles.plateTotal}>/ {total}</span>}
+                                </div>
+                                {plateSub && <div style={styles.plateSub}>{plateSub}</div>}
+                              </td>
+                              {ownerName && (
+                                <td className="email-plate-r" valign="middle" align="right" style={styles.plateRight}>
+                                  <div style={styles.plateLabel}>REGISTERED TO</div>
+                                  {latinName ? (
+                                    <div className="email-plate-script" style={styles.plateScript}>
+                                      {latinName}
+                                    </div>
+                                  ) : (
+                                    <div style={{ ...styles.plateNative, ...keepAll }}>{ownerName}</div>
+                                  )}
+                                </td>
+                              )}
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* ── 서명 ── */}
+            <Hr style={styles.signRule} />
             <Img
-              src={`${BASE_URL}/images/logo/logo_text_trans.png`}
+              src={`${MAIL_BASE_URL}/images/logo/logo_text_trans.png`}
               width="150"
               height="23"
               alt="Muse de Marée"
@@ -165,25 +257,19 @@ export function ApplicantEmail({
             />
           </Section>
 
-          {/* ── 법적 푸터 (다크) ── */}
+          {/* ── 법적 푸터 (라이트) ── 모토 · 회사정보 세 줄(언어를 따른다) · 카피라이트 */}
           <Section className="email-footer" style={styles.footer}>
-            <Img
-              src={`${BASE_URL}/images/logo/logo_text_trans_W.png`}
-              width="112"
-              height="16"
-              alt="MUSE DE MARÉE"
-              style={styles.fName}
-            />
-            {FOOTER_INFO[locale].map((line) => (
-              <Text key={line} style={styles.fInfo}>
-                {line}
-              </Text>
-            ))}
-            <Hr style={styles.fRule} />
-            {/* 카피라이트 줄은 지금도 영문이라 언어를 타지 않는다 */}
-            <Text style={styles.fCopy}>
-              © 2026 MUSE DE MARÉE. ALL RIGHTS RESERVED.
+            <Text style={styles.fMotto}>{MAIL_MOTTO}</Text>
+            <Text className="email-finfo" style={styles.fInfo}>
+              {MAIL_FOOTER_INFO[footerLocale].map((line, i) => (
+                <Fragment key={line}>
+                  {i > 0 && <br />}
+                  {line}
+                </Fragment>
+              ))}
             </Text>
+            {/* 카피라이트 줄은 영문이라 언어를 타지 않는다 */}
+            <Text style={styles.fCopy}>{MAIL_COPYRIGHT}</Text>
           </Section>
         </Container>
       </Body>
@@ -226,19 +312,7 @@ function pickCopy(
   return (locale === "en" ? COPY_EN[kind] : undefined) ?? COPY[kind];
 }
 
-/** 푸터 회사정보 — 카피라이트 줄을 뺀 세 줄. 언어를 따른다 */
-const FOOTER_INFO: Record<EmailLocale, string[]> = {
-  ko: [
-    "주식회사 오크니 · 대표 정설화 · 사업자등록번호 859-85-03139",
-    "서울특별시 강남구 압구정로 306, B1 #6-J14",
-    "고객 문의 info@musedemaree.com",
-  ],
-  en: [
-    "Orkney Corp. · CEO Seolhwa Jeong · Reg. No. 859-85-03139",
-    "306 Apgujeong-ro, Gangnam-gu, Seoul, Korea · B1 #6-J14",
-    "Enquiries info@musedemaree.com",
-  ],
-};
+/* 푸터 회사정보(세 줄, 언어를 따른다)는 인증 메일과 한 벌로 쓰려고 ../theme.ts의 MAIL_FOOTER_INFO로 옮겼다 */
 
 /** 한국어 렌더에만 얹는 줄바꿈 규칙 — 어디에 왜 얹는지는 컴포넌트의 keepAll 주석에 있다 */
 const KEEP_ALL = { wordBreak: "keep-all" as const };
@@ -472,23 +546,35 @@ const COPY_EN: Partial<Record<FormKind, EmailCopy>> = {
   },
 };
 
-/* ── 스타일 (Paper v2 토큰, 이메일 인라인) ── */
+/* ── 스타일 (Paper 라이트 v3 토큰, 이메일 인라인 — 값의 정본은 ../theme.ts) ── */
 /* 제목 전용 스택. 메일 제목은 현재 전부 한글이라 실질적으로 한글 세리프가 결정한다.
    이메일은 웹폰트(@font-face)가 Gmail·Outlook에서 막히므로 수신자 기기에 설치된 것만 잡힌다.
    그래서 되는 환경만 챙긴다 — 랜딩 정본과 같은 Noto Serif KR을 먼저 두고,
    안드로이드가 같은 폰트를 "Noto Serif CJK KR"로 등록하는 경우를 뒤에서 덮는다.
    둘 다 없으면 끝의 serif가 시스템 명조(맥 AppleMyungjo / 윈도우 바탕)로 받는다.
-   iOS에는 한글 세리프가 없어 고딕으로 떨어지는데, 이건 어느 스택을 써도 같다. */
-const serif =
-  '"Cormorant Garamond", "Noto Serif KR", "Noto Serif CJK KR", Georgia, serif';
-const sans = '"Noto Sans KR", -apple-system, "Apple SD Gothic Neo", sans-serif';
-const mono = '"IBM Plex Mono", "Courier New", monospace';
+   iOS에는 한글 세리프가 없어 고딕으로 떨어지는데, 이건 어느 스택을 써도 같다.
+   2026-09 v3 — 영문 문안(브랜드 소개서 2통)은 제목을 한글 세리프가 아닌 Cormorant 38px로 세운다(시안 "Email EN").
+   그래서 스택이 둘로 갈렸다: serifKo(한글 제목) · latin(영문 제목·아이브로·모토). */
+const C = MAIL_COLOR;
+const serifKo = MAIL_FONT.serifKo;
+const latin = MAIL_FONT.latin;
+const sans = MAIL_FONT.sans;
+
+/** 0.5px 금색 헤어라인 — 헤더·서명 공용 */
+const hairline = {
+  width: "28px",
+  height: "0",
+  border: "none",
+  borderTop: `0.5px solid ${C.gold}`,
+};
+/** 뉴스레터 목록 행 구분선 */
+const rowLine = `0.5px solid ${C.line}`;
 
 const styles = {
   body: {
     margin: "0",
     padding: "0",
-    backgroundColor: "#DDD8D2",
+    backgroundColor: C.canvas,
     fontFamily: sans,
   },
   card: {
@@ -499,118 +585,241 @@ const styles = {
     // 바깥 상하 여백은 body padding이 아닌 여기에 둔다 — react-email이
     // body padding을 내부 td로 옮겨서 미디어쿼리 body 셀렉터가 안 닿음
     margin: "40px auto",
-    backgroundColor: "#C4BFBB",
+    backgroundColor: C.paper,
+    border: `0.5px solid ${C.line}`,
   },
   header: {
-    padding: "52px 0 44px",
+    padding: "52px 56px 0",
     textAlign: "center" as const,
-    borderBottom: "1px solid rgba(49,46,42,0.12)",
   },
-  // 로고에 opacity·그림자 등 효과 금지 — 배경(#C4BFBB)이 로고보다 어두워서
-  // 투과시키면 배경이 흰 획 안으로 비쳐 그림자처럼 보인다. 순백 그대로 둘 것.
+  // 로고에 opacity·그림자 등 효과 금지 — 하프톤 점이 뭉개진다. 원본 그대로 둘 것.
   symbol: {
     display: "block",
     margin: "0 auto",
   },
   wordmark: {
     display: "block",
-    margin: "18px auto 0",
+    margin: "14px auto 0",
+  },
+  headRule: {
+    ...hairline,
+    margin: "14px auto 0",
   },
   content: {
     padding: "48px 56px 52px",
   },
   eyebrow: {
-    margin: "0 0 18px",
-    fontFamily: mono,
+    margin: "0",
+    fontFamily: latin,
     fontSize: "12px",
-    letterSpacing: "0.22em",
-    color: "#8C6B33",
+    fontWeight: 500,
+    lineHeight: "16px",
+    letterSpacing: "0.32em",
+    textTransform: "uppercase" as const,
+    color: C.goldText,
   },
   title: {
-    margin: "0 0 26px",
-    fontFamily: serif,
-    fontSize: "34px",
+    margin: "16px 0 0",
+    fontFamily: serifKo,
+    fontSize: "30px",
     fontWeight: 300,
-    lineHeight: "40px",
+    lineHeight: "42px",
     letterSpacing: "-0.01em",
-    color: "#312E2A",
+    color: C.ink,
+  },
+  titleEn: {
+    margin: "16px 0 0",
+    fontFamily: latin,
+    fontSize: "38px",
+    fontWeight: 300,
+    lineHeight: "46px",
+    letterSpacing: "-0.01em",
+    color: C.ink,
   },
   hello: {
-    margin: "0 0 18px",
+    margin: "28px 0 0",
     fontFamily: sans,
-    fontSize: "16px",
+    fontSize: "15px",
     fontWeight: 400,
     lineHeight: "26px",
-    color: "#312E2A",
+    color: C.ink,
   },
   para: {
-    margin: "0 0 14px",
+    margin: "14px 0 0",
     fontFamily: sans,
-    fontSize: "16px",
-    fontWeight: 400,
-    lineHeight: "28px",
-    color: "#4A453F",
+    fontSize: "15px",
+    fontWeight: 300,
+    lineHeight: "27px",
+    color: C.body,
   },
-  /* 목록 소제목 — 세리프 제목과 구분되게 sans를 쓰고, 굵기(500)와 본문색(#312E2A)으로만
-     문단과 층위를 가른다. 위 여백이 문단 간격(14px)보다 넓어야 목록이 앞 문단에 딸려 붙지 않는다 */
+  /* 목록 소제목 — 굵기(500)와 잉크색으로만 문단과 층위를 가른다.
+     위 여백 20px = 문단 간격 14 + 목록 블록 여백 6(시안) */
   listHeading: {
-    margin: "26px 0 12px",
+    margin: "20px 0 0",
     fontFamily: sans,
-    fontSize: "16px",
+    fontSize: "14px",
     fontWeight: 500,
-    lineHeight: "26px",
-    color: "#312E2A",
+    lineHeight: "24px",
+    color: C.ink,
   },
-  listItem: {
-    margin: "0 0 8px",
-    fontFamily: sans,
-    fontSize: "16px",
-    fontWeight: 400,
-    lineHeight: "28px",
-    color: "#4A453F",
+  /* 목록 아래 4px + 다음 문단 14px = 18px(시안) */
+  listTable: {
+    margin: "8px 0 4px",
+    borderCollapse: "collapse" as const,
   },
-  /* 항목명만 본문색으로 올린다 — 굵기를 건드리면 소제목과 무게가 겹친다 */
+  listRow: {
+    padding: "11px 0",
+    borderTop: rowLine,
+  },
+  listRowLast: {
+    padding: "11px 0",
+    borderTop: rowLine,
+    borderBottom: rowLine,
+  },
   listName: {
-    color: "#312E2A",
+    fontFamily: sans,
+    fontSize: "14px",
+    fontWeight: 400,
+    lineHeight: "18px",
+    color: C.ink,
   },
-  rule: {
-    width: "36px",
-    margin: "30px 0 22px",
-    border: "none",
-    borderTop: "1px solid #8C6B33",
+  listDesc: {
+    paddingLeft: "12px",
+    textAlign: "right" as const,
+    fontFamily: sans,
+    fontSize: "13.5px",
+    fontWeight: 300,
+    lineHeight: "18px",
+    color: C.muted,
+  },
+  /* ── 소유 명판 ── */
+  plateWrap: {
+    paddingTop: "32px",
+  },
+  plateOuter: {
+    border: `1px solid ${C.gold}`,
+    borderCollapse: "separate" as const,
+  },
+  plateGap: {
+    padding: "3px",
+  },
+  plateInner: {
+    border: `0.5px solid ${C.goldSoft}`,
+    borderCollapse: "separate" as const,
+  },
+  plateLeft: {
+    padding: "20px 0 20px 26px",
+    verticalAlign: "middle" as const,
+  },
+  plateRight: {
+    padding: "20px 26px 20px 12px",
+    textAlign: "right" as const,
+    verticalAlign: "middle" as const,
+  },
+  plateNumLine: {
+    whiteSpace: "nowrap" as const,
+    lineHeight: "42px",
+  },
+  plateNo: {
+    fontFamily: latin,
+    fontSize: "11px",
+    fontWeight: 500,
+    lineHeight: "14px",
+    color: C.goldText,
+  },
+  /* 번호는 라이닝 숫자 스택(Georgia 제외)에 lnum을 건다 — Georgia 숫자는 키가 들쭉날쭉하다 */
+  plateNum: {
+    marginLeft: "6px",
+    fontFamily: MAIL_FONT.numeral,
+    fontFeatureSettings: "'lnum'",
+    fontVariantNumeric: "lining-nums",
+    fontSize: "38px",
+    fontWeight: 300,
+    lineHeight: "42px",
+    color: C.ink,
+  },
+  plateTotal: {
+    marginLeft: "6px",
+    fontFamily: MAIL_FONT.numeral,
+    fontFeatureSettings: "'lnum'",
+    fontVariantNumeric: "lining-nums",
+    fontSize: "13px",
+    fontWeight: 300,
+    lineHeight: "16px",
+    color: C.goldText,
+  },
+  plateSub: {
+    marginTop: "4px",
+    fontFamily: latin,
+    fontSize: "15px",
+    fontStyle: "italic" as const,
+    lineHeight: "18px",
+    color: C.body,
+  },
+  plateLabel: {
+    fontFamily: latin,
+    fontSize: "9.5px",
+    fontWeight: 500,
+    lineHeight: "12px",
+    letterSpacing: "0.28em",
+    textTransform: "uppercase" as const,
+    color: C.goldText,
+  },
+  plateScript: {
+    marginTop: "2px",
+    fontFamily: MAIL_FONT.script,
+    fontSize: "36px",
+    fontWeight: 400,
+    lineHeight: "46px",
+    color: C.ink,
+  },
+  /* 로마자가 없을 때 — 한글 이름에 서명체를 걸면 대체 서체로 떨어지므로 한글 세리프로 세운다(시안에 없는 경우) */
+  plateNative: {
+    marginTop: "8px",
+    fontFamily: serifKo,
+    fontSize: "22px",
+    fontWeight: 300,
+    lineHeight: "32px",
+    color: C.ink,
+  },
+  signRule: {
+    ...hairline,
+    margin: "40px 0 0",
   },
   sign: {
     display: "block",
-    margin: "0",
+    margin: "18px 0 0",
   },
   footer: {
-    padding: "40px 48px 44px",
-    backgroundColor: "#14110F",
+    padding: "32px 56px 36px",
+    backgroundColor: C.paperDeep,
+    borderTop: `0.5px solid ${C.line}`,
     textAlign: "center" as const,
   },
-  fName: {
-    display: "block",
-    margin: "0 auto 12px",
+  fMotto: {
+    margin: "0",
+    fontFamily: latin,
+    fontSize: "18px",
+    fontStyle: "italic" as const,
+    fontWeight: 400,
+    lineHeight: "22px",
+    color: C.body,
   },
   fInfo: {
-    margin: "0 0 5px",
+    margin: "14px 0 0",
     fontFamily: sans,
-    fontSize: "12px",
+    fontSize: "11px",
     fontWeight: 400,
-    lineHeight: "19px",
-    color: "rgba(242,239,233,0.55)",
-  },
-  fRule: {
-    width: "300px",
-    margin: "18px auto",
-    border: "none",
-    borderTop: "1px solid rgba(242,239,233,0.12)",
+    lineHeight: "18px",
+    color: C.muted,
   },
   fCopy: {
-    margin: "0",
-    fontFamily: mono,
-    fontSize: "11px",
-    letterSpacing: "0.1em",
-    color: "rgba(242,239,233,0.4)",
+    margin: "14px 0 0",
+    fontFamily: latin,
+    fontSize: "10px",
+    fontWeight: 500,
+    lineHeight: "12px",
+    letterSpacing: "0.28em",
+    color: C.faint,
   },
 };

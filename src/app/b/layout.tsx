@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Noto_Serif_JP, Noto_Serif_SC, Noto_Sans_SC } from "next/font/google";
+import { IBM_Plex_Mono, Noto_Serif_JP, Noto_Serif_SC, Noto_Sans_SC, Cormorant_Garamond } from "next/font/google";
 
 const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
@@ -54,6 +54,20 @@ const notoSansSC = Noto_Sans_SC({
   preload: false,
 });
 
+/* 인증서 카드의 라틴 활자 (2026-09-25, Paper 04). 루트 layout의 Cormorant는 300·400·600
+   정자뿐이라 카드가 쓰는 500(N°·인증서 번호)·700(인장 OCEAN CELLAR)·이탤릭(큐베명)이
+   브라우저 합성으로 그려졌다 — 가짜 굵기·가짜 기울임이다. /b에서만 쓰므로 여기서 싣는다
+   (루트에 두면 마케팅 지면이 쓰지 않을 파일을 받는다 — 위 세리프 주석과 같은 이유).
+   preload는 끈다. 쓰인 굵기·스타일의 파일만 받는다. */
+const cormorantCert = Cormorant_Garamond({
+  subsets: ["latin", "latin-ext"],
+  weight: ["300", "400", "500", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant-b",
+  display: "swap",
+  preload: false,
+});
+
 export const metadata: Metadata = {
   title: "Muse de Marée · Record",
   description: "바다가 새긴 일 년 — 병 단위 해저 숙성 기록",
@@ -67,9 +81,12 @@ export const viewport: Viewport = {
 export default function BottleLayout({ children }: { children: React.ReactNode }) {
   /* b-root — globals.css가 이 마커로 루트 배경을 void로 돌린다(안전영역 틴트).
      themeColor 메타는 iOS 26이 무시하므로 html 배경이 유일한 수단이다. */
+  /* 숫자는 전부 라이닝으로 세운다 — Cormorant의 기본 올드스타일 숫자에서 1은 소문자 i/로마자 I처럼,
+     0은 o처럼 읽혀 "N° 1"이 "N° I", "MDM-2026-0001"이 "ooo1"로 보였다(2026-09-25 실화면). */
   return (
     <div
-      className={`b-root ${plexMono.variable} ${notoSerifJP.variable} ${notoSerifSC.variable} ${notoSansSC.variable}`}
+      className={`b-root ${plexMono.variable} ${notoSerifJP.variable} ${notoSerifSC.variable} ${notoSansSC.variable} ${cormorantCert.variable}`}
+      style={{ fontVariantNumeric: "lining-nums" }}
     >
       {children}
     </div>

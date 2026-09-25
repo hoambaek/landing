@@ -49,7 +49,7 @@
       "atomesCrochus1yr": "Petit Meslier, a rare grape\nOne year spent beneath the sea",
       "atomesCrochus2yr": "Still maturing beneath the sea\nA record filling eight seasons",
       "tag2yr": "2 yr",
-      "soldOut": "· SOLD OUT"
+      "archived": "ARCHIVED"
     },
     "cert": {
       "showcaseAlt": "En Lieu Sûr, with its record card",
@@ -64,13 +64,13 @@
     },
     "gift": {
       "eyebrow": "A Gift",
-      "head": "Given with its record",
-      "body": "The bottle empties, the record remains."
+      "head": "Given with the record the sea wrote",
+      "body": "Long after the last glass, the record remains."
     },
     "note": {
-      "numbering": "Individually numbered",
-      "card": "Record card enclosed",
-      "nfc": "NFC record access"
+      "numbering": "A number for every bottle",
+      "card": "Record card",
+      "nfc": "The sea's record, by NFC"
     }
   },
   "maker": {
@@ -97,14 +97,14 @@
     "tags": {
       "schedule": "Releases first",
       "attend": "Only as many as prepared",
-      "archive": "Your bottle's record, for life"
+      "archive": "Your bottle's record, open anytime"
     },
     "link": "Request an invitation"
   },
   "partnership": {
     "eyebrow": "Professional",
     "title": "Partnership",
-    "sub": "The time the sea has recorded, continued at your table",
+    "sub": "The sea's time, continued at the table",
     "tags": {
       "fineDining": "Fine dining",
       "hotelBar": "Grand hotel bars",
@@ -120,13 +120,23 @@
       "sending": "Sending",
       "errNetwork": "Please check your connection and try again.",
       "errFailed": "Something went wrong. Please try again in a moment.",
+      "errRequired": "Please fill this in.",
+      "errEmail": "Please check your email address.",
+      "backHome": "Back to home",
       "placeholder": {
         "name": "Full name",
         "email": "Email address",
         "venue": "Venue name",
-        "contact": "Contact person",
+        "contact": "Contact name",
         "affiliation": "Affiliation · Company",
-        "referral": "How did you find us? (optional)"
+        "referral": "Select one"
+      },
+      "label": {
+        "name": "Name",
+        "email": "Email",
+        "venue": "Venue",
+        "affiliation": "Affiliation",
+        "referral": "How you found us (optional)"
       },
       "menu": {
         "open": "Open menu",
@@ -150,31 +160,30 @@
       "metaDesc": "The first to witness each recovery. Request an invitation to Ocean Cellar Privé.",
       "eyebrow": "OCEAN CELLAR PRIVÉ",
       "title": "Request an Invitation",
-      "sub": "You, among the first to be invited.",
+      "sub": "The first to meet each release.",
       "imageAlt": "A bottle raised through a column of light",
       "benefits": [
         {
           "title": "First to know each release",
-          "desc": "When a new cuvée is released, members hear first."
+          "desc": "When a new edition is released, members hear first."
         },
         {
-          "title": "Your bottle's record, for life",
-          "desc": "Revisit the record of its time at 30 metres, anytime."
+          "title": "Your bottle's record, open anytime",
+          "desc": "Revisit the record of its time at 30 metres whenever you wish."
         }
       ],
-      "scarcity": "Seats open only to the number of bottles prepared.",
+      "scarcity": "Everyone who applies will receive an invitation.",
       "submit": "Request an invitation",
       "note": "Leave your details and we'll write to you first when membership opens.",
-      "errValidation": "Please enter your name and a valid email address.",
       "successLine": "Your request has been received.",
       "successNote": "The invitation will arrive with news of the next recovery."
     },
     "partner": {
       "metaTitle": "Partnership Inquiry | Partnership | Muse de Marée",
-      "metaDesc": "The time the sea has recorded, continued at your table. Partnership inquiries for fine dining, hotel bars, and private cellars.",
+      "metaDesc": "The sea's time, continued at the table. Partnership inquiries for fine dining, hotel bars, and private cellars.",
       "eyebrow": "PARTNERSHIP",
       "title": "Partnership Inquiry",
-      "sub": "Bringing the sea's time to the table.",
+      "sub": "The sea's time, continued at the table.",
       "imageAlt": "A gloved hand tagging a barnacled bottle",
       "benefits": [
         {
@@ -186,8 +195,7 @@
           "desc": "Fine dining, hotel bars, private cellars. We prepare a proposal to match."
         }
       ],
-      "catLabel": "PARTNERSHIP TYPE",
-      "catHint": "Choose one.",
+      "catLabel": "Partnership type · Choose one",
       "categories": {
         "dining": {
           "label": "Dining · Bar list",
@@ -203,26 +211,26 @@
         },
         "other": {
           "label": "Other proposals",
-          "desc": "Retail, gifting, collaboration"
+          "desc": "Retail · gifting · collaboration"
         }
       },
       "submit": "Send inquiry",
       "note": "We'll review your message and reply with a proposal within two business days.",
       "errCategory": "Please select a partnership type.",
-      "errValidation": "Please enter your venue, contact name, and a valid email address.",
-      "successLine": "Your inquiry has been received.",
-      "successNote": "A member of our team will reply within two business days."
+      "successLine": "We've received your inquiry.",
+      "successNote": "We'll reply with a proposal within two business days."
     },
     "brandBook": {
+      "eyebrow": "BRAND BOOK",
       "metaTitle": "Brand Book | Muse de Marée",
       "metaDesc": "Written by the sea. The brand philosophy, recording system, edition lineup, and partnership, sent to your inbox.",
       "title": "Brand Book",
-      "sub": "Written by the sea.",
+      "sub": "The sea's time, in one book.",
       "imageAlt": "A barnacled bottle on limestone after recovery",
       "benefits": [
         {
           "title": "The brand in a single book",
-          "desc": "Its beginning and philosophy, way of measuring, edition lineup, and partnership."
+          "desc": "Its beginning and philosophy, how it records, the edition lineup, and partnership."
         },
         {
           "title": "Korean and English PDF",
@@ -231,9 +239,8 @@
       ],
       "submit": "Request the book",
       "note": "Just your name, affiliation, and email.",
-      "errValidation": "Please enter your name, affiliation, and a valid email address.",
       "successLine": "Your request has been received.",
-      "successNote": "After review, we'll send the book to your email."
+      "successNote": "After review, we'll send the book to this email."
     }
   },
   "footer": {

@@ -52,6 +52,12 @@ export interface BottleRecordData {
      고쳐 두느니 지운다. 월별 곡선을 되살릴 때는 달력 월이 아니라 입수부터의
      경과 월(0..n-1)로 모아야 한다. */
   partial: boolean; // 인양 전(기록 진행 중)
+  /* 입수~인양(또는 오늘)의 주간 평균 수온(표층, °C) — 입수 주부터 순서대로.
+     인증서의 물결 띠·인장이 이 값으로 그려진다(cert-pattern.ts). 병마다 창이 달라
+     문양이 갈린다. 관측이 빈 주는 건너뛴다(없는 값을 지어 채우지 않는다).
+     표층값을 쓰는 이유: 문양은 계절의 굴곡을 그리는 것이라 진폭이 큰 쪽이 맞고,
+     40m 보정값은 여름 진폭을 절반으로 눌러 병끼리 차이가 흐려진다. */
+  weeklyTemps: number[];
 }
 
 interface OceanRow {
@@ -250,6 +256,9 @@ export async function fetchBottleOwner(code: string): Promise<BottleOwner | null
 export interface BottleOwnerRaw {
   name: string;
   email: string;
+  /* 로마자 표기 원본(저장값) — 이름 수정 화면(03C)이 칸을 채우는 데 쓴다 */
+  givenLatin: string | null;
+  familyLatin: string | null;
   registeredAt: string | null;
 }
 
@@ -258,7 +267,7 @@ export async function fetchBottleOwnerRaw(code: string): Promise<BottleOwnerRaw 
   if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return null;
   const { data } = await supabaseAdmin
     .from("bottle_registrations")
-    .select("name, email, created_at")
+    .select("name, email, given_name_latin, family_name_latin, created_at")
     .eq("nfc_code", code)
     .order("created_at", { ascending: false })
     .limit(1)
@@ -267,6 +276,8 @@ export async function fetchBottleOwnerRaw(code: string): Promise<BottleOwnerRaw 
   return {
     name: data.name,
     email: data.email ?? "",
+    givenLatin: data.given_name_latin ?? null,
+    familyLatin: data.family_name_latin ?? null,
     registeredAt: issuedDate(data.created_at),
   };
 }
@@ -303,7 +314,7 @@ export async function fetchBottleRecord(code: string): Promise<BottleRecordData 
   const { data: oceanRows } = await query;
   const rows: OceanRow[] = (oceanRows ?? []) as OceanRow[];
 
-  // 4) 집계 — 8지표 평균 + 월별 수온
+  // 4) 집계 — 8지표 평균 + 주간 수온(인증서 문양)
   const averages: OceanAverages = {
     temp: round1(mean(rows.map((r) => bottomTemp40(r.sea_temperature_avg, Number(r.date.slice(5, 7)))))),
     salinity: round1(mean(rows.map((r) => r.salinity))),
@@ -321,7 +332,29 @@ export async function fetchBottleRecord(code: string): Promise<BottleRecordData 
     aging: { immersion, retrieval, depth, retrieved },
     averages,
     partial: Boolean(immersion) && !retrieved,
+    /* 같은 행에서 뽑는다 — 질의를 하나 더 두지 않는다 */
+    weeklyTemps: weeklyMeans(rows, immersion),
   };
+}
+
+/** 주간 평균 수온 — 입수일(없으면 첫 관측일)부터 7일 단위로 묶는다. */
+function weeklyMeans(rows: OceanRow[], from: string | null): number[] {
+  if (!rows.length) return [];
+  const start = Date.parse(from ?? rows[0].date);
+  if (!Number.isFinite(start)) return [];
+  const buckets: number[][] = [];
+  for (const r of rows) {
+    const v = r.sea_temperature_avg;
+    if (v === null || !Number.isFinite(v)) continue;
+    const t = Date.parse(r.date);
+    if (!Number.isFinite(t) || t < start) continue;
+    const w = Math.floor((t - start) / (7 * 86_400_000));
+    (buckets[w] ??= []).push(v);
+  }
+  /* 빈 주(구멍)는 filter가 건너뛴다 — 희소 배열의 빈 칸은 순회되지 않는다 */
+  return buckets
+    .filter((b) => b && b.length)
+    .map((b) => Math.round((b.reduce((a, x) => a + x, 0) / b.length) * 100) / 100);
 }
 
 function divOrNull(v: number | null, by: number): number | null {
