@@ -44,7 +44,7 @@
   word-break: keep-all;
 }
 
-/* ── 헤더 — ‹ · MUSE DE MARÉE · 빈 칸(대칭) ── */
+/* ── 헤더 — ‹ · 워드마크 로고 · 빈 칸(대칭) ── */
 .header {
   display: flex;
   align-items: center;
@@ -67,14 +67,12 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
+/* 워드마크 원본 1000×152 — 폭 118에 높이 18 */
 .brand {
-  font-family: var(--o-latin);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 16px;
-  letter-spacing: 0.34em;
-  padding-left: 0.34em;
-  color: var(--o-ivory);
+  display: block;
+  width: 118px;
+  height: auto;
+  opacity: 0.92;
 }
 .headerSpacer {
   width: 20px;

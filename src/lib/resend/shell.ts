@@ -4,6 +4,8 @@
  * 신청 확인 메일(ApplicantEmail)과 같은 토큰(theme.ts)을 쓴다.
  *
  * 레이아웃은 전부 table이다 — Outlook(Word 렌더러)은 div의 max-width·margin auto·flex를 읽지 못한다.
+ * 여백 기본값은 좁은 화면(375) 기준이다 — 네이버 메일 앱처럼 <style>의 @media를 버리는 클라이언트가 있어
+ * 모바일 보정이 아니라 인라인 기본값이 폰에서 맞아야 한다(Paper "03B-M 모바일", 2026-09-26).
  * inner에는 카드 안에 들어갈 <tr>…</tr> 행을 넘긴다.
  */
 import {
@@ -69,10 +71,10 @@ export function mailShell({
 ${pre}
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${C.canvas}">
   <tr>
-    <td class="m-outer" align="center" style="padding:40px">
+    <td class="m-outer" align="center" style="padding:24px 12px">
       <table class="m-card" role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:520px;background:${C.paper};border:0.5px solid ${C.line};border-collapse:separate">
         <tr>
-          <td class="m-head" align="center" style="padding:52px 40px 0">
+          <td class="m-head" align="center" style="padding:44px 24px 0">
             <img src="${MAIL_BASE_URL}/images/logo/logo_trans.png" width="64" height="53" alt="" style="display:block;margin:0 auto;border:0" />
             <img src="${MAIL_BASE_URL}/images/logo/logo_text_trans.png" width="95" height="14" alt="MUSE DE MARÉE" style="display:block;margin:14px auto 0;border:0" />
             <div style="width:28px;height:0;margin:14px auto 0;border-top:0.5px solid ${C.gold};font-size:0;line-height:0">&nbsp;</div>
@@ -80,7 +82,7 @@ ${pre}
         </tr>
         ${inner}
         <tr>
-          <td class="m-foot" align="center" style="padding:34px 40px 36px;background:${C.paperDeep};border-top:0.5px solid ${C.line};text-align:center">
+          <td class="m-foot" align="center" style="padding:30px 24px 34px;background:${C.paperDeep};border-top:0.5px solid ${C.line};text-align:center">
             <div style="font-family:${F.latin};font-size:17px;font-style:italic;line-height:22px;color:${C.body}">${MAIL_MOTTO}</div>
             <div class="m-foot-info" style="margin-top:12px;font-family:${F.sans};font-size:10.5px;line-height:17px;color:${C.muted}">${footerInfo}</div>
             <div style="margin-top:12px;font-family:${F.latin};font-size:10px;font-weight:500;letter-spacing:.28em;line-height:12px;color:${C.faint}">${MAIL_COPYRIGHT}</div>

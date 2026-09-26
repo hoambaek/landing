@@ -105,8 +105,8 @@ export async function requestOwnerOtp(nfc: string): Promise<Result & { emailMask
   const bottleLabel =
     serial != null ? [`N° ${serial}`, cuvee ? [cuvee, year].filter(Boolean).join(" ") : null].filter(Boolean).join(" · ") : null;
   const lead = bottleLabel
-    ? `${bottleLabel}의 소유 정보를 열려면<br />아래 버튼을 눌러 주세요.`
-    : "소유 정보를 열려면 아래 버튼을 눌러 주세요.";
+    ? `${bottleLabel}의<br />소유 정보를 열려면<br />아래 버튼을 눌러 주세요.`
+    : "소유 정보를 열려면<br />아래 버튼을 눌러 주세요.";
   const preheader =
     serial != null
       ? `N° ${serial}의 소유 정보를 여는 링크입니다. 5분 동안 유효합니다.`
@@ -129,24 +129,25 @@ export async function requestOwnerOtp(nfc: string): Promise<Result & { emailMask
     "소유자 확인 링크 | Muse de Marée",
     shell(
       `<tr>
-          <td class="m-pad" align="center" style="padding:48px 48px 0;text-align:center">
-            <div style="font-family:${MF.latin};font-size:12px;font-weight:500;letter-spacing:.34em;line-height:16px;color:${MC.goldText};text-transform:uppercase">VERIFICATION · 본인 인증</div>
-            <div style="margin-top:14px;font-family:${MF.serifKo};font-size:28px;font-weight:300;line-height:38px;color:${MC.ink};word-break:keep-all">소유자 본인 인증</div>
-            <div class="m-lead" style="margin-top:14px;font-family:${MF.serifKo};font-size:15px;font-weight:300;line-height:26px;color:${MC.body};word-break:keep-all">${lead}</div>
+          <td class="m-pad" align="center" style="padding:40px 24px 0;text-align:center">
+            <div style="font-family:${MF.latin};font-size:11px;font-weight:500;letter-spacing:.28em;line-height:16px;color:${MC.goldText};text-transform:uppercase">VERIFICATION</div>
+            <div style="margin-top:12px;font-family:${MF.serifKo};font-size:25px;font-weight:300;line-height:34px;color:${MC.ink};word-break:keep-all">소유자 본인 인증</div>
+            <div class="m-lead" style="margin-top:12px;font-family:${MF.serifKo};font-size:15px;font-weight:300;line-height:26px;color:${MC.body};word-break:keep-all">${lead}</div>
           </td>
         </tr>
         <tr>
-          <td class="m-pad" align="center" style="padding:28px 40px 0;text-align:center">
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto">
+          <td class="m-pad" align="center" style="padding:28px 24px 0;text-align:center">
+            <!-- 버튼은 카드 폭을 채우고(최대 320) 링크를 블록으로 — 좁은 화면에서 글자가 테두리에 붙지 않게 -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" width="100%" style="width:100%;max-width:320px;margin:0 auto">
               <tr><td align="center" bgcolor="${MC.ink}" style="background:${MC.ink}">
-                <a href="${verifyUrl}" target="_blank" style="display:inline-block;width:280px;padding:16px 0;font-family:${MF.sans};font-size:14px;letter-spacing:.06em;line-height:18px;color:${MC.paper};text-decoration:none;text-align:center">본인 인증하기&nbsp;&nbsp;<span style="color:${MC.gold}">›</span></a>
+                <a href="${verifyUrl}" target="_blank" style="display:block;padding:17px 12px;font-family:${MF.sans};font-size:14px;letter-spacing:.06em;line-height:18px;color:${MC.paper};text-decoration:none;text-align:center">본인 인증하기&nbsp;&nbsp;<span style="color:${MC.gold}">›</span></a>
               </td></tr>
             </table>
             <div style="margin-top:12px;font-family:${MF.serifKo};font-size:12px;font-weight:300;line-height:18px;color:${MC.muted}">5분 동안 유효합니다</div>
           </td>
         </tr>
         <tr>
-          <td class="m-pad" align="center" style="padding:32px 40px 0">
+          <td class="m-pad" align="center" style="padding:32px 24px 0">
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="360" style="width:100%;max-width:360px;background:${MC.paperLight}">
               <tr><td style="padding:6px">
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid ${MC.gold}">
@@ -166,9 +167,9 @@ export async function requestOwnerOtp(nfc: string): Promise<Result & { emailMask
           </td>
         </tr>
         <tr>
-          <td class="m-pad" align="center" style="padding:36px 56px 52px;text-align:center">
+          <td class="m-pad" align="center" style="padding:36px 24px 44px;text-align:center">
             ${hair(24, 0)}
-            <div style="margin-top:24px;font-family:${MF.serifKo};font-size:13px;font-weight:300;line-height:23px;color:${MC.body};word-break:keep-all">요청하신 적이 없다면 이 메일은 그냥 두셔도 됩니다.<br />버튼을 누르지 않으면 아무것도 바뀌지 않습니다.<br />뮤즈드마레는 전화나 메시지로 이 코드를 묻지 않습니다.</div>
+            <div style="margin-top:24px;font-family:${MF.serifKo};font-size:12.5px;font-weight:300;line-height:22px;color:${MC.body};word-break:keep-all">요청하신 적이 없다면 이 메일은 그냥 두셔도 됩니다.<br />버튼을 누르지 않으면 아무것도 바뀌지 않습니다.<br />뮤즈드마레는 전화나 메시지로<br />이 코드를 묻지 않습니다.</div>
           </td>
         </tr>`,
       preheader

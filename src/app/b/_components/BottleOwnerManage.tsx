@@ -320,7 +320,9 @@ export default function BottleOwnerManage({
           </svg>
         </button>
       )}
-      <span className={styles.brand}>MUSE DE MARÉE</span>
+      {/* 브랜드는 글자가 아니라 워드마크 로고로 선다(Paper 03A·03B·03C·03D 헤더) */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/images/logo/logo_text_trans_W.png" alt="Muse de Marée" className={styles.brand} />
       <span className={styles.headerSpacer} aria-hidden />
     </header>
   );
