@@ -11,7 +11,7 @@ import { timingSafeEqual } from "node:crypto";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { resend, FROM_EMAIL, isResendConfigured } from "@/lib/resend/client";
 import { mailShell } from "@/lib/resend/shell";
-import { MAIL_COLOR as MC, MAIL_FONT as MF } from "@/lib/resend/theme";
+import { MAIL_BASE_URL, MAIL_COLOR as MC, MAIL_FONT as MF } from "@/lib/resend/theme";
 import { maskEmail, fetchBottleIdentity, fetchAgingBatch } from "./data";
 import { PRODUCT_META } from "./copy";
 import {
@@ -105,14 +105,20 @@ export async function requestOwnerOtp(nfc: string): Promise<Result & { emailMask
   const bottleLabel =
     serial != null ? [`N° ${serial}`, cuvee ? [cuvee, year].filter(Boolean).join(" ") : null].filter(Boolean).join(" · ") : null;
   const lead = bottleLabel
-    ? `${bottleLabel}의 소유 정보를 열려면<br />아래 코드를 인증 화면에 입력해 주세요.`
-    : "아래 코드를 인증 화면에 입력해 주세요.";
+    ? `${bottleLabel}의 소유 정보를 열려면<br />아래 버튼을 눌러 주세요.`
+    : "소유 정보를 열려면 아래 버튼을 눌러 주세요.";
   const preheader =
     serial != null
-      ? `N° ${serial}의 소유 정보를 여는 코드입니다. 5분 동안 유효합니다.`
-      : "소유 정보를 여는 코드입니다. 5분 동안 유효합니다.";
-  /* 코드는 3+3으로 끊어 보인다(407 318) — 여섯 자리를 한눈에 옮겨 적기 쉽다. 입력은 숫자만 받으므로 공백은 표시용이다 */
-  const codeShown = `${code.slice(0, 3)} ${code.slice(3)}`;
+      ? `N° ${serial}의 소유 정보를 여는 링크입니다. 5분 동안 유효합니다.`
+      : "소유 정보를 여는 링크입니다. 5분 동안 유효합니다.";
+  /* 확인 링크가 주인공이다(Paper "03B-M", 2026-09-26 대표 지시) — 누르면 인증 화면이 스스로
+     인증을 마치고 소유 관리를 연다. 링크를 GET으로 미리 여는 메일 보안 검사기는 인증을 소모하지 못한다
+     (인증은 화면이 뜬 뒤 서버 액션 POST로 한다). 주소의 코드는 화면이 곧바로 지운다. */
+  const verifyUrl = `${MAIL_BASE_URL}/b/${nfc}/owner?otp=${code}`;
+  /* 코드는 보조다 — 메일을 다른 기기(PC)에서 보는 사람이 NFC를 태그한 휴대폰에 옮겨 적는다.
+     3+3 끊음은 공백 문자가 아니라 여백으로 낸다: 공백이 있으면 길게 누르기·두 번 탭이 세 자리만 잡는다.
+     user-select:all은 지원하는 클라이언트(Apple Mail 등)에서 한 번 눌러 전체를 잡게 한다 */
+  const codeShown = `<span>${code.slice(0, 3)}</span><span style="padding-left:.36em">${code.slice(3)}</span>`;
   const hair = (w: number, top: number) =>
     `<div style="width:${w}px;height:0;margin:${top}px auto 0;border-top:0.5px solid ${MC.gold};font-size:0;line-height:0">&nbsp;</div>`;
 
@@ -120,28 +126,37 @@ export async function requestOwnerOtp(nfc: string): Promise<Result & { emailMask
      대괄호 말머리는 이 브랜드가 쓰지 않는 어법이다. */
   await sendMail(
     email,
-    "소유자 확인 코드 | Muse de Marée",
+    "소유자 확인 링크 | Muse de Marée",
     shell(
       `<tr>
           <td class="m-pad" align="center" style="padding:48px 48px 0;text-align:center">
             <div style="font-family:${MF.latin};font-size:12px;font-weight:500;letter-spacing:.34em;line-height:16px;color:${MC.goldText};text-transform:uppercase">VERIFICATION · 본인 인증</div>
-            <div style="margin-top:14px;font-family:${MF.serifKo};font-size:28px;font-weight:300;line-height:38px;color:${MC.ink};word-break:keep-all">소유자 확인 코드</div>
+            <div style="margin-top:14px;font-family:${MF.serifKo};font-size:28px;font-weight:300;line-height:38px;color:${MC.ink};word-break:keep-all">소유자 본인 인증</div>
             <div class="m-lead" style="margin-top:14px;font-family:${MF.serifKo};font-size:15px;font-weight:300;line-height:26px;color:${MC.body};word-break:keep-all">${lead}</div>
           </td>
         </tr>
         <tr>
-          <td class="m-pad" align="center" style="padding:36px 40px 0">
+          <td class="m-pad" align="center" style="padding:28px 40px 0;text-align:center">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto">
+              <tr><td align="center" bgcolor="${MC.ink}" style="background:${MC.ink}">
+                <a href="${verifyUrl}" target="_blank" style="display:inline-block;width:280px;padding:16px 0;font-family:${MF.sans};font-size:14px;letter-spacing:.06em;line-height:18px;color:${MC.paper};text-decoration:none;text-align:center">본인 인증하기&nbsp;&nbsp;<span style="color:${MC.gold}">›</span></a>
+              </td></tr>
+            </table>
+            <div style="margin-top:12px;font-family:${MF.serifKo};font-size:12px;font-weight:300;line-height:18px;color:${MC.muted}">5분 동안 유효합니다</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="m-pad" align="center" style="padding:32px 40px 0">
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="360" style="width:100%;max-width:360px;background:${MC.paperLight}">
               <tr><td style="padding:6px">
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid ${MC.gold}">
                   <tr><td style="padding:3px">
                     <!-- 안쪽 테는 시안의 #A8834A 55%를 코드 판(#FBF8F2) 위에 미리 섞은 값이다(Outlook이 rgba 테두리를 못 읽는다) -->
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:0.5px solid #CDB896">
-                      <tr><td align="center" style="padding:26px 12px 22px;text-align:center">
-                        <div style="font-family:${MF.latin};font-size:10px;font-weight:500;letter-spacing:.34em;line-height:12px;color:${MC.goldText};text-transform:uppercase">YOUR CODE</div>
-                        <div style="margin-top:10px;padding-left:.28em;font-family:${MF.numeral};font-feature-settings:'lnum';font-variant-numeric:lining-nums;font-size:48px;font-weight:300;letter-spacing:.28em;line-height:56px;color:${MC.ink};white-space:nowrap">${codeShown}</div>
-                        ${hair(28, 10)}
-                        <div style="margin-top:10px;font-family:${MF.serifKo};font-size:13px;font-weight:300;line-height:16px;color:${MC.body}">5분 동안 유효합니다</div>
+                      <tr><td align="center" style="padding:18px 12px 16px;text-align:center">
+                        <div style="font-family:${MF.serifKo};font-size:13px;font-weight:300;line-height:18px;color:${MC.body}">다른 기기에서 보고 계시면</div>
+                        <div style="margin-top:8px;padding-left:.28em;font-family:${MF.numeral};font-feature-settings:'lnum';font-variant-numeric:lining-nums;font-size:30px;font-weight:300;letter-spacing:.28em;line-height:36px;color:${MC.ink};white-space:nowrap;-webkit-user-select:all;user-select:all">${codeShown}</div>
+                        <div style="margin-top:8px;font-family:${MF.serifKo};font-size:13px;font-weight:300;line-height:18px;color:${MC.body}">이 코드를 입력해 주세요</div>
                       </td></tr>
                     </table>
                   </td></tr>
@@ -153,7 +168,7 @@ export async function requestOwnerOtp(nfc: string): Promise<Result & { emailMask
         <tr>
           <td class="m-pad" align="center" style="padding:36px 56px 52px;text-align:center">
             ${hair(24, 0)}
-            <div style="margin-top:24px;font-family:${MF.serifKo};font-size:13px;font-weight:300;line-height:23px;color:${MC.body};word-break:keep-all">요청하신 적이 없다면 이 메일은 그냥 두셔도 됩니다.<br />코드를 입력하지 않으면 아무것도 바뀌지 않습니다.<br />뮤즈드마레는 전화나 메시지로 이 코드를 묻지 않습니다.</div>
+            <div style="margin-top:24px;font-family:${MF.serifKo};font-size:13px;font-weight:300;line-height:23px;color:${MC.body};word-break:keep-all">요청하신 적이 없다면 이 메일은 그냥 두셔도 됩니다.<br />버튼을 누르지 않으면 아무것도 바뀌지 않습니다.<br />뮤즈드마레는 전화나 메시지로 이 코드를 묻지 않습니다.</div>
           </td>
         </tr>`,
       preheader

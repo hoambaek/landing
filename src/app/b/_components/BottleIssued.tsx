@@ -78,9 +78,6 @@ export default function BottleIssued({
           <span>{cta}</span>
           <span className={ui.chev} aria-hidden>›</span>
         </Link>
-        <Link href={`/b/${code}/certificate`} className={ui.linkD}>
-          {copy.inscribedCertLink}
-        </Link>
       </div>
     </section>
   );

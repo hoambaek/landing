@@ -59,6 +59,7 @@ export default function BottleOwnerManage({
   ownedBottles = [],
   locale = "ko",
   startVerify = false,
+  prefillCode = null,
 }: {
   code: string;
   data: BottleRecordData;
@@ -68,8 +69,10 @@ export default function BottleOwnerManage({
   /* 같은 이메일로 등록된 병 전부. 인증과 무관하게 채워져 온다 */
   ownedBottles?: OwnedBottle[];
   locale?: BottleLocale;
-  /** 01B 「본인 인증」에서 왔다 — 03B부터 연다 */
+  /** ?verify=1 또는 메일 링크로 왔다 — 03B부터 연다 */
   startVerify?: boolean;
+  /** 확인 링크(메일 「본인 인증하기」)로 왔다 — 받은 코드로 스스로 인증한다 */
+  prefillCode?: string | null;
 }) {
   const router = useRouter();
   const extra = RECORD_EXTRA[locale];
@@ -132,12 +135,21 @@ export default function BottleOwnerManage({
   const localized = (msg: string | undefined, fallback: string) => (locale === "ko" && msg ? msg : fallback);
 
   // ── 03B OTP
-  const [otpEmail, setOtpEmail] = useState<string | null>(null);
-  const [otpCode, setOtpCode] = useState("");
+  /* 메일 링크로 왔으면 코드는 이미 보내진 상태다 — 보낸 곳(마스킹)을 그대로 보여 준다 */
+  const [otpEmail, setOtpEmail] = useState<string | null>(prefillCode ? (ownerMasked?.emailMasked ?? "") : null);
+  const [otpCode, setOtpCode] = useState(prefillCode ?? "");
   const [otpFocused, setOtpFocused] = useState(false);
   const [expiresAt, setExpiresAt] = useState<number | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const otpInputRef = useRef<HTMLInputElement>(null);
+
+  /* 주소창의 코드는 채우자마자 지운다 — 기록·공유·화면 캡처에 코드가 남지 않게 */
+  useEffect(() => {
+    if (!prefillCode) return;
+    const url = new URL(window.location.href);
+    url.searchParams.delete("otp");
+    window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+  }, [prefillCode]);
 
   useEffect(() => {
     if (expiresAt === null) return;
@@ -191,12 +203,10 @@ export default function BottleOwnerManage({
     if (otpEmail === null || remaining === 0) void sendCode();
   }
 
-  async function onVerifyCode(e: FormEvent) {
-    e.preventDefault();
-    if (busy || otpCode.length !== OTP_LEN) return;
+  async function verifyWith(value: string) {
     setBusy(true);
     setErr(null);
-    const res = await verifyOwnerOtp(code, otpCode);
+    const res = await verifyOwnerOtp(code, value);
     setBusy(false);
     if (res.ok) {
       setOtpCode("");
@@ -208,6 +218,24 @@ export default function BottleOwnerManage({
       setErr(localized(res.error, extra.ownErrCode));
     }
   }
+
+  async function onVerifyCode(e: FormEvent) {
+    e.preventDefault();
+    if (busy || otpCode.length !== OTP_LEN) return;
+    await verifyWith(otpCode);
+  }
+
+  /* 확인 링크로 왔다 — 화면이 뜨자마자 스스로 인증한다(서버 액션 POST).
+     링크를 GET으로 미리 여는 메일 보안 검사기는 여기까지 오지 않아 인증을 소모하지 못한다.
+     개발 모드의 이펙트 두 번 실행에 코드가 두 번 제출되지 않게 ref로 한 번만 보낸다.
+     실패하면(만료·사용됨) 코드가 채워진 03B에 오류를 띄워 둔다 — 재전송으로 이어진다 */
+  const autoVerified = useRef(false);
+  useEffect(() => {
+    if (!prefillCode || authed || autoVerified.current) return;
+    autoVerified.current = true;
+    void verifyWith(prefillCode);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 마운트 1회
+  }, []);
 
   async function onSignOut() {
     await signOutOwner(code);

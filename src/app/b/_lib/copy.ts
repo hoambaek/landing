@@ -271,8 +271,6 @@ export interface EntryCopy {
   claimedTitle: string;
   claimedBody: string;
   claimedCta: string;
-  /* 01B — 소유자 본인이 다른 기기에서 태그했을 때 본인 인증(03B)으로 가는 길 */
-  claimedVerify: string;
   /* 01B → 01C 필름 다시 보기 입구, 필름이 끝난 뒤 01B로 돌아가는 링크 */
   claimedFilm: string;
   filmBack: string;
@@ -300,7 +298,6 @@ export interface EntryCopy {
   inscribedTitleNoSerial: string;
   inscribedCta: string; // 「N° {serial}의 바다 기록 보기」
   inscribedCtaNoSerial: string;
-  inscribedCertLink: string; // 「인증서 전체 보기」
   /* 검증 */
   errName: string;
   errLatinName: string;
@@ -337,8 +334,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedTitle: "이름이 등록된 병입니다",
     claimedBody: "기록은 누구에게나 열려 있습니다.",
     claimedCta: "바다의 기록 보기",
-    claimedVerify: "소유자이신가요? 본인 인증",
-    claimedFilm: "필름 보기",
+    claimedFilm: "필름 다시 보기",
     filmBack: "돌아가기",
     nameLabel: "이름",
     namePlaceholder: "인증서에 남길 이름",
@@ -358,7 +354,6 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedTitleNoSerial: "소유자로\n등록했습니다",
     inscribedCta: "N° {serial}의 바다 기록 보기",
     inscribedCtaNoSerial: "바다의 기록 보기",
-    inscribedCertLink: "인증서 전체 보기",
     errName: "이름을 입력해 주세요.",
     errLatinName: "인증서에 등록할 영문 이름과 성을 입력해 주세요.",
     errEmail: "이메일 주소를 확인해 주세요.",
@@ -392,8 +387,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedTitle: "This bottle already bears a name",
     claimedBody: "The record stays open to everyone.",
     claimedCta: "View the sea's record",
-    claimedVerify: "Are you the owner? Verify",
-    claimedFilm: "Watch the film",
+    claimedFilm: "Watch the film again",
     filmBack: "Back",
     nameLabel: "Name",
     namePlaceholder: "Name for the certificate",
@@ -413,7 +407,6 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedTitleNoSerial: "Registered\nas the owner",
     inscribedCta: "View the sea's record of N° {serial}",
     inscribedCtaNoSerial: "View the sea's record",
-    inscribedCertLink: "View the full certificate",
     errName: "Please enter your name.",
     errLatinName: "Please enter your given name and family name.",
     errEmail: "Please check your email address.",
@@ -447,8 +440,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedTitle: "Cette bouteille porte déjà un nom",
     claimedBody: "Le relevé reste ouvert à tous.",
     claimedCta: "Voir le relevé de la mer",
-    claimedVerify: "Vous en êtes le propriétaire ? Vérifier",
-    claimedFilm: "Voir le film",
+    claimedFilm: "Revoir le film",
     filmBack: "Retour",
     nameLabel: "Nom",
     namePlaceholder: "Nom pour le certificat",
@@ -468,7 +460,6 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedTitleNoSerial: "Enregistré\ncomme propriétaire",
     inscribedCta: "Voir le relevé de la mer du N° {serial}",
     inscribedCtaNoSerial: "Voir le relevé de la mer",
-    inscribedCertLink: "Voir le certificat complet",
     errName: "Veuillez saisir votre nom.",
     errLatinName: "Veuillez saisir votre prénom et votre nom.",
     errEmail: "Veuillez vérifier votre adresse e-mail.",
@@ -502,8 +493,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedTitle: "すでに登録された一本です",
     claimedBody: "記録は、どなたでもご覧いただけます。",
     claimedCta: "海の記録を見る",
-    claimedVerify: "所有者の方ですか？ 本人確認",
-    claimedFilm: "フィルムを見る",
+    claimedFilm: "フィルムをもう一度見る",
     filmBack: "戻る",
     nameLabel: "お名前",
     namePlaceholder: "証明書に残すお名前",
@@ -523,7 +513,6 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedTitleNoSerial: "所有者として\n登録しました",
     inscribedCta: "N° {serial} の海の記録を見る",
     inscribedCtaNoSerial: "海の記録を見る",
-    inscribedCertLink: "証明書をすべて見る",
     errName: "お名前を入力してください。",
     errLatinName: "証明書に登録するローマ字の名と姓を入力してください。",
     errEmail: "メールアドレスをご確認ください。",
@@ -557,8 +546,7 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     claimedTitle: "这一瓶已登记姓名",
     claimedBody: "记录向所有人开放。",
     claimedCta: "查看大海的记录",
-    claimedVerify: "您是所有者吗？本人验证",
-    claimedFilm: "观看影片",
+    claimedFilm: "重看影片",
     filmBack: "返回",
     nameLabel: "姓名",
     namePlaceholder: "留在证书上的名字",
@@ -578,7 +566,6 @@ export const ENTRY_COPY: Record<BottleLocale, EntryCopy> = {
     inscribedTitleNoSerial: "已登记为\n所有者",
     inscribedCta: "查看 N° {serial} 的大海记录",
     inscribedCtaNoSerial: "查看大海的记录",
-    inscribedCertLink: "查看完整证书",
     errName: "请输入你的名字。",
     errLatinName: "请输入证书上登记的拼音名与姓。",
     errEmail: "请检查你的邮箱地址。",

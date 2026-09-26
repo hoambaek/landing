@@ -163,6 +163,17 @@
     #0a0908 100%
   );
 }
+/* 브랜드 심볼 — 사진 위 어두운 상단(스크림 62%) 가운데. 스크롤 디졸브에 사진·글자와 함께 태운다 */
+.heroLogo {
+  position: absolute;
+  top: max(18px, calc(env(safe-area-inset-top) + 10px));
+  left: 50%;
+  z-index: 2;
+  width: 64px;
+  height: auto;
+  margin-left: -32px;
+  opacity: 0.94;
+}
 .heroContent {
   position: relative;
   z-index: 2;

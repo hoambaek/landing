@@ -5,8 +5,8 @@
  *
  * 등록된 병을 다른 사람이 태그했을 때 폼 대신 번호와 소유자 이름 증서 조각을 보여준다.
  * 기록은 누구에게나 열어 둔다. 이메일은 어떤 형태로도 노출하지 않는다(마스킹 값도).
- * 소유자 본인이면 본인 인증(03B)으로 간다.
- * "필름 보기"는 입장 필름을 화면 전체로 다시 튼다(01C, BottleFilm).
+ * 소유자 본인 인증 입구는 걷었다(2026-09-26 대표 지시) — 소유 관리는 기록 페이지에서 들어간다.
+ * "필름 다시 보기"는 입장 필름을 화면 전체로 다시 튼다(01C, BottleFilm).
  */
 
 import Link from "next/link";
@@ -93,9 +93,6 @@ export default function BottleClaimed({
             <span>{copy.claimedFilm}</span>
           </button>
         )}
-        <Link href={`/b/${code}/owner?verify=1`} className={ui.linkD}>
-          {copy.claimedVerify}
-        </Link>
       </div>
     </section>
   );

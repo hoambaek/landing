@@ -339,7 +339,7 @@ export default function BottleRecord({
           레이아웃은 온전하다. 함께 밀려 올라갈 뿐이다) */
       if (heroRef.current) {
         const fading = heroRef.current.querySelectorAll<HTMLElement>(
-          `.${styles.heroPhoto}, .${styles.heroContent}`,
+          `.${styles.heroPhoto}, .${styles.heroContent}, .${styles.heroLogo}`,
         );
         gsap.fromTo(
           fading,
@@ -574,6 +574,14 @@ export default function BottleRecord({
           <div className={styles.heroScrim} />
 
           {/* 상단 라벨(OWNED BY · NFC VERIFIED)은 두지 않는다 — 소유자·검증은 04 인증서가 맡는다(SPEC A) */}
+
+          {/* 브랜드 심볼 — 히어로 맨 위 가운데(Paper 03 "Hero Logo" 64px). 아래 번호·타이틀과 한 축에 선다 */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/logo/logo_trans_W_lg.png"
+            alt="Muse de Marée"
+            className={`${styles.heroLogo} ${styles.introFade} ${styles.introFadeD1}`}
+          />
 
           <div className={`${styles.heroContent} ${styles.introFade} ${styles.introFadeD1}`}>
             {serialLine && (
